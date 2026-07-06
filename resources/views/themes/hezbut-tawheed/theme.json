@@ -1,0 +1,9 @@
+{
+    "name": "Hezbut Tawheed",
+    "folder": "hezbut-tawheed",
+    "version": "1.0.0",
+    "author": "Antigravity",
+    "description": "A smart, professional, responsive political portal theme for Hezbut Tawheed.",
+    "is_core": true,
+    "settings": {}
+}

@@ -1,0 +1,111 @@
+# Composer
+/vendor/
+composer.phar
+composer.lock
+
+# NPM
+/node_modules/
+npm-debug.log
+yarn-error.log
+package-lock.json
+
+# Environment
+.env
+.env.backup
+.env.production
+.env.local
+.env.testing
+
+# IDE & OS Files
+/.idea/
+/.vscode/
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+storage/logs/
+storage/framework/
+storage/pail/
+
+# Cache & Build
+.phpunit.result.cache
+/public/build/
+/public/hot
+/public/storage
+/public_html/storage/
+/public_html/hot/
+/bootstrap/compiled.php
+/bootstrap/cache/
+/storage/app/public/
+/storage/*.key
+/storage/debugbar/
+
+# Archive Files
+*.zip
+*.rar
+*.tar.gz
+*.sql
+*.gz
+bograbazar.zip
+
+# Laravel Specific
+Homestead.yaml
+Homestead.json
+/.vagrant
+auth.json
+.phpactor.json
+.env.production
+
+# Testing
+/coverage
+/.phpunit.cache
+/.phan
+
+# Temporary Files
+/tmp
+/temp
+*.tmp
+*.cache
+
+# Session Files
+storage/framework/sessions
+storage/framework/cache
+storage/framework/views
+
+# Git
+!.gitignore
+!.gitattributes
+
+# PHPUnit
+.phpunit.result.cache
+.phpunit.cache/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+.project
+.classpath
+.settings/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Others
+*.patch
+*.diff
+*.pid
+*.seed
+*.out

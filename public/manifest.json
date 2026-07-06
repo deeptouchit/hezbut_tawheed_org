@@ -1,0 +1,18 @@
+{
+  "name": "Rider Delivery Portal",
+  "short_name": "Rider Portal",
+  "description": "Rider Delivery Portal App",
+  "start_url": "/delivery/dashboard",
+  "display": "standalone",
+  "background_color": "#080c14",
+  "theme_color": "#0f172a",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/uploads/settings/favicon_1780753332.png",
+      "type": "image/png",
+      "sizes": "192x192 512x512",
+      "purpose": "any maskable"
+    }
+  ]
+}

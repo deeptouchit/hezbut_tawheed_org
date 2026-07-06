@@ -1,0 +1,34 @@
+[
+    {
+        "badge_icon": "fas fa-fire",
+        "badge_text": "লিমিটেড অফার",
+        "title": "সাপ্তাহিক মেগা সেল",
+        "description": "৩০% পর্যন্ত ছাড় | ফ্রি ডেলিভারি",
+        "show_timer": true,
+        "timer_end_date": "2026-06-30 23:59:59",
+        "button_text": "অর্ডার করুন",
+        "button_link": "\/products",
+        "rank_icon": "fas fa-chart-line",
+        "rank_text": "সাপ্তাহিক অফার",
+        "bg_class": "promo-banner-1",
+        "floating_icons": []
+    },
+    {
+        "badge_icon": "fas fa-truck-fast",
+        "badge_text": "ফ্রি ডেলিভারি",
+        "title": "১৫০০+ টাকায়",
+        "description": "সারাদেশে ৬০ মিনিটে ডেলিভারি",
+        "show_timer": false,
+        "timer_end_date": "",
+        "button_text": "কেনাকাটা করুন",
+        "button_link": "\/products",
+        "rank_icon": "fas fa-star",
+        "rank_text": "সেরা অফার",
+        "bg_class": "promo-banner-2",
+        "floating_icons": [
+            "fas fa-truck-fast",
+            "fas fa-clock",
+            "fas fa-check-circle"
+        ]
+    }
+]
