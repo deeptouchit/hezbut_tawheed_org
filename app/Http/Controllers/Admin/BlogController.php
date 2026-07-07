@@ -1116,46 +1116,6 @@ public function reorder(Request $request)
     }
 
     /**
-     * Reorder gallery posts.
-     */
-    public function reorderGallery(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'order' => 'required|array',
-            'order.*' => 'required|integer|exists:blogs,id',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => $validator->errors()->first()
-            ], 422);
-        }
-
-        try {
-            foreach ($request->order as $index => $id) {
-                Blog::where('id', $id)->update(['gallery_order' => $index + 1]);
-            }
-
-            // Clear cache
-            \Cache::forget('home_gallery_posts');
-            \Cache::forget('api_gallery_posts');
-
-            return response()->json([
-                'success' => true,
-                'message' => 'গ্যালারি সর্ট অর্ডার সফলভাবে আপডেট করা হয়েছে!'
-            ]);
-
-        } catch (\Exception $e) {
-            Log::error('Gallery reorder failed: ' . $e->getMessage());
-            return response()->json([
-                'success' => false,
-                'message' => 'গ্যালারি সর্ট অর্ডার আপডেট করতে ব্যর্থ হয়েছে!'
-            ], 500);
-        }
-    }
-
-    /**
      * Display a listing of the gallery posts and all media library files.
      */
     public function galleryIndex()
