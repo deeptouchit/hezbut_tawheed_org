@@ -4,9 +4,10 @@
 
 @push('styles')
 <style>
+    /* BNP-style Banner */
     .gallery-banner {
         background: linear-gradient(135deg, #022c22 0%, #064e3b 100%);
-        padding: 60px 0;
+        padding: 50px 0;
         position: relative;
         overflow: hidden;
     }
@@ -16,36 +17,38 @@
         bottom: 0;
         left: 0;
         right: 0;
-        height: 10px;
+        height: 8px;
         background: linear-gradient(to right, #10b981, #f59e0b);
     }
+    
+    /* BNP-style Grid & Photo Frames */
     .gallery-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
         gap: 25px;
     }
     .gallery-item-card {
         border-radius: 12px;
-        overflow: hidden;
         background: #fff;
-        border: 1px solid rgba(0,0,0,0.06);
-        box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
         transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-        display: flex;
-        flex-direction: column;
-        height: 380px;
+        padding: 12px; /* Thick white frame/border like real photo frames */
+        height: 250px;
+        position: relative;
     }
     .gallery-item-card:hover {
         transform: translateY(-8px);
-        box-shadow: 0 12px 25px rgba(0,0,0,0.12);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.15);
         border-color: #10b981;
     }
     .gallery-item-img-wrapper {
         position: relative;
-        height: 230px;
+        width: 100%;
+        height: 100%;
+        border-radius: 8px;
         overflow: hidden;
         background-color: #f8f9fa;
-        cursor: pointer;
     }
     .gallery-item-img {
         width: 100%;
@@ -54,7 +57,7 @@
         transition: transform 0.5s ease;
     }
     .gallery-item-card:hover .gallery-item-img {
-        transform: scale(1.06);
+        transform: scale(1.08);
     }
     .gallery-item-zoom {
         position: absolute;
@@ -62,7 +65,7 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background: rgba(2, 44, 34, 0.6);
+        background: rgba(2, 44, 34, 0.75); /* Dark green overlay matching BNP/HT colors */
         display: flex;
         align-items: center;
         justify-content: center;
@@ -74,68 +77,26 @@
         opacity: 1;
     }
     .gallery-zoom-btn {
-        width: 50px;
-        height: 50px;
+        width: 44px;
+        height: 44px;
         border-radius: 50%;
         background: #10b981;
         color: white;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 20px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        font-size: 18px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.3);
         transform: scale(0.8);
         transition: transform 0.3s ease;
+        cursor: pointer;
+    }
+    .gallery-zoom-btn:hover {
+        background: #f59e0b;
+        transform: scale(1.1) !important;
     }
     .gallery-item-card:hover .gallery-zoom-btn {
         transform: scale(1);
-    }
-    .gallery-item-info {
-        padding: 18px;
-        display: flex;
-        flex-direction: column;
-        flex-grow: 1;
-        justify-content: space-between;
-    }
-    .gallery-item-cat {
-        font-size: 11px;
-        font-weight: 700;
-        text-transform: uppercase;
-        color: #10b981;
-        letter-spacing: 1px;
-        margin-bottom: 6px;
-    }
-    .gallery-item-title {
-        font-size: 15px;
-        font-weight: 700;
-        color: #1f2937;
-        line-height: 22px;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-        height: 44px;
-        margin-bottom: 8px;
-        font-family: 'Baloo Da 2', sans-serif;
-    }
-    .gallery-item-footer {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-top: auto;
-        border-top: 1px solid #f3f4f6;
-        padding-top: 12px;
-        font-size: 12px;
-        color: #6b7280;
-    }
-    .gallery-item-link {
-        color: #10b981;
-        font-weight: 600;
-        text-decoration: none;
-        transition: color 0.2s ease;
-    }
-    .gallery-item-link:hover {
-        color: #f59e0b;
     }
 
     /* Lightbox Modal */
@@ -152,8 +113,8 @@
 <!-- Header Banner -->
 <div class="gallery-banner text-center text-white">
     <div class="container">
-        <h1 class="display-5 fw-bold mb-3" style="font-family: 'Baloo Da 2', sans-serif;">স্থিরচিত্র চিত্রশালা</h1>
-        <p class="lead opacity-75 mb-0" style="font-family: 'Hind Siliguri', sans-serif;">আন্দোলনের বিভিন্ন কর্মসূচী, সেমিনার ও সামাজিক কার্যক্রমের ফটো গ্যালারি</p>
+        <h1 class="display-6 fw-bold mb-2" style="font-family: 'Baloo Da 2', sans-serif;">স্থিরচিত্র চিত্রশালা</h1>
+        <p class="lead opacity-75 mb-0" style="font-family: 'Hind Siliguri', sans-serif; font-size: 1.05rem;">আন্দোলনের বিভিন্ন কর্মসূচী, সেমিনার ও সামাজিক কার্যক্রমের গ্যালারি</p>
     </div>
 </div>
 
@@ -164,40 +125,39 @@
             <div class="gallery-grid">
                 @foreach($galleryPosts as $post)
                     <div class="gallery-item-card">
-                        <!-- Image Container with Lightbox Trigger -->
-                        <div class="gallery-item-img-wrapper gallery-lightbox-trigger"
-                             data-image="{{ asset($post->image_path) }}"
-                             data-title="{{ $post->title ?? ($post->blog ? $post->blog->title : 'চিত্রশালা') }}"
-                             data-category="{{ ($post->blog && $post->blog->category) ? $post->blog->category->name : 'চিত্রশালা' }}"
-                             data-url="{{ $post->blog ? route('blog.detail', $post->blog->slug) : '#' }}">
-                            
+                        <!-- Image Container with Hover Overlay -->
+                        <div class="gallery-item-img-wrapper">
                             <img src="{{ asset($post->image_path) }}" alt="{{ $post->title ?? '' }}" class="gallery-item-img" loading="lazy">
                             
+                            <!-- Hover Green Overlay containing title, date, and zoom btn -->
                             <div class="gallery-item-zoom">
-                                <div class="gallery-zoom-btn">
-                                    <i class="fas fa-search-plus"></i>
-                                </div>
-                            </div>
-                        </div>
+                                <div class="d-flex flex-column align-items-center justify-content-center text-center p-3 h-100 w-100">
+                                    <!-- Zoom Trigger -->
+                                    <div class="gallery-zoom-btn mb-2 gallery-lightbox-trigger"
+                                         data-image="{{ asset($post->image_path) }}"
+                                         data-title="{{ $post->title ?? ($post->blog ? $post->blog->title : 'চিত্রশালা') }}"
+                                         data-category="{{ ($post->blog && $post->blog->category) ? $post->blog->category->name : 'চিত্রশালা' }}"
+                                         data-url="{{ $post->blog ? route('blog.detail', $post->blog->slug) : '#' }}">
+                                        <i class="fas fa-search-plus"></i>
+                                    </div>
+                                    
+                                    <!-- Caption/Title -->
+                                    <h4 class="text-white fw-bold mb-1 px-1" style="font-family: 'Baloo Da 2', sans-serif; font-size: 13px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                                        {{ $post->title ?? ($post->blog ? $post->blog->title : 'স্থিরচিত্র') }}
+                                    </h4>
 
-                        <!-- Card Body -->
-                        <div class="gallery-item-info">
-                            <div>
-                                <div class="gallery-item-cat">
-                                    {{ ($post->blog && $post->blog->category) ? $post->blog->category->name : 'চিত্রশালা' }}
+                                    <!-- Date -->
+                                    <span class="text-white-50 small mb-2" style="font-size: 10px;">
+                                        <i class="far fa-calendar-alt me-1"></i> {{ $post->created_at->format('d M, Y') }}
+                                    </span>
+
+                                    <!-- Blog Detail Link -->
+                                    @if($post->blog)
+                                        <a href="{{ route('blog.detail', $post->blog->slug) }}" class="btn btn-gold btn-xs py-1 px-3 text-white" style="font-size: 10px; background: #f59e0b; border-radius: 20px; font-family: 'Hind Siliguri', sans-serif;">
+                                            বিস্তারিত খবর <i class="fas fa-arrow-right ms-1" style="font-size: 8px;"></i>
+                                        </a>
+                                    @endif
                                 </div>
-                                <h3 class="gallery-item-title">
-                                    {{ $post->title ?? ($post->blog ? $post->blog->title : 'স্থিরচিত্র চিত্রশালা') }}
-                                </h3>
-                            </div>
-                            
-                            <div class="gallery-item-footer">
-                                <span><i class="far fa-calendar-alt me-1"></i> {{ $post->created_at->format('d M, Y') }}</span>
-                                @if($post->blog)
-                                    <a href="{{ route('blog.detail', $post->blog->slug) }}" class="gallery-item-link">
-                                        বিস্তারিত পড়ুন <i class="fas fa-arrow-right ms-1"></i>
-                                    </a>
-                                @endif
                             </div>
                         </div>
                     </div>
