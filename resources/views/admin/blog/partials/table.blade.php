@@ -17,6 +17,7 @@
                 <th>লেখক</th>
                 <th>ভিউ</th>
                 <th>স্ট্যাটাস</th>
+                <th>গ্যালারি</th>
                 <th>তারিখ</th>
                 <th width="180">অ্যাকশন</th>
             </tr>
@@ -72,6 +73,15 @@
                             <span class="badge bg-success">প্রকাশিত</span>
                         @else
                             <span class="badge bg-warning">খসড়া</span>
+                        @endif
+                    </button>
+                </td>
+                <td>
+                    <button class="btn btn-sm toggle-gallery status-badge" data-id="{{ $blog->id }}">
+                        @if($blog->is_gallery)
+                            <span class="badge bg-success">যুক্ত</span>
+                        @else
+                            <span class="badge bg-secondary">যুক্ত নয়</span>
                         @endif
                     </button>
                 </td>

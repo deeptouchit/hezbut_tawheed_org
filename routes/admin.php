@@ -301,6 +301,9 @@ Route::post('blog/posts/{id}/increment-views', [BlogController::class, 'incremen
 Route::get('blog/posts/{id}/related', [BlogController::class, 'getRelatedPosts'])->name('blog.posts.related');
 Route::post('blog/posts/bulk-status', [BlogController::class, 'bulkStatusUpdate'])->name('blog.posts.bulk-status');
 Route::post('blog/posts/bulk-category', [BlogController::class, 'bulkCategoryUpdate'])->name('blog.posts.bulk-category');
+Route::post('blog/posts/bulk-gallery', [BlogController::class, 'bulkGalleryUpdate'])->name('blog.posts.bulk-gallery');
+Route::post('blog/posts/{id}/toggle-gallery', [BlogController::class, 'toggleGallery'])->name('blog.posts.toggle-gallery');
+Route::post('blog/posts/reorder-gallery', [BlogController::class, 'reorderGallery'])->name('blog.posts.reorder-gallery');
 Route::get('blog/posts/by-category/{categoryId}', [BlogController::class, 'getPostsByCategory'])->name('blog.posts.by-category');
 Route::get('blog/posts/by-tag/{tag}', [BlogController::class, 'getPostsByTag'])->name('blog.posts.by-tag');
 Route::get('blog/posts/search', [BlogController::class, 'searchPosts'])->name('blog.posts.search');

@@ -52,10 +52,18 @@ class BlogController extends Controller
             $query->where('author_id', $request->author);
         }
 
+        if ($request->filled('gallery')) {
+            if ($request->gallery == 'gallery') {
+                $query->where('is_gallery', true);
+            } elseif ($request->gallery == 'non_gallery') {
+                $query->where('is_gallery', false);
+            }
+        }
+
           // Sorting
         $sortField         = $request->get('sort', 'published_at');
         $sortDirection     = $request->get('direction', 'desc');
-        $allowedSortFields = ['id', 'title', 'views', 'status', 'published_at', 'created_at', 'sort_order'];
+        $allowedSortFields = ['id', 'title', 'views', 'status', 'published_at', 'created_at', 'sort_order', 'gallery_order'];
 
         if (in_array($sortField, $allowedSortFields)) {
             $query->orderBy($sortField, $sortDirection);
@@ -135,11 +143,19 @@ class BlogController extends Controller
             'status'            => 'boolean',
             'published_at'      => 'nullable|date',
             'sort_order'        => 'nullable|integer',
+            'is_gallery'        => 'nullable|boolean',
+            'gallery_order'     => 'nullable|integer',
         ]);
 
         if ($validator->fails()) {
             return redirect()->back()
                 ->withErrors($validator)
+                ->withInput();
+        }
+
+        if ($request->has('is_gallery') && !$request->hasFile('featured_image')) {
+            return redirect()->back()
+                ->withErrors(['featured_image' => 'গ্যালারিতে যুক্ত করার জন্য ফিচার্ড ইমেজ দেওয়া আবশ্যক!'])
                 ->withInput();
         }
 
@@ -176,10 +192,16 @@ class BlogController extends Controller
               // Set default values
             $data['views']      = 0;
             $data['sort_order'] = $data['sort_order'] ?? Blog::max('sort_order') + 1;
+            $data['is_gallery'] = $request->has('is_gallery') ? 1 : 0;
+            $data['gallery_order'] = $request->input('gallery_order', 0);
 
             $blog = Blog::create($data);
 
             DB::commit();
+
+            // Clear gallery cache
+            \Cache::forget('home_gallery_posts');
+            \Cache::forget('api_gallery_posts');
 
             return redirect()->route('admin.blog.posts.index')
                 ->with('success', 'ব্লগ পোস্ট সফলভাবে তৈরি করা হয়েছে!');
@@ -248,11 +270,19 @@ class BlogController extends Controller
             'published_at'      => 'nullable|date',
             'sort_order'        => 'nullable|integer',
             'remove_image'      => 'nullable|boolean',
+            'is_gallery'        => 'nullable|boolean',
+            'gallery_order'     => 'nullable|integer',
         ]);
 
         if ($validator->fails()) {
             return redirect()->back()
                 ->withErrors($validator)
+                ->withInput();
+        }
+
+        if ($request->has('is_gallery') && !$request->hasFile('featured_image') && !$blog->featured_image && $request->remove_image != 1) {
+            return redirect()->back()
+                ->withErrors(['featured_image' => 'গ্যালারিতে যুক্ত করার জন্য ফিচার্ড ইমেজ থাকা আবশ্যক!'])
                 ->withInput();
         }
 
@@ -298,9 +328,16 @@ class BlogController extends Controller
                 $data['published_at'] = $blog->published_at ?? now();
             }
 
+            $data['is_gallery'] = $request->has('is_gallery') ? 1 : 0;
+            $data['gallery_order'] = $request->input('gallery_order', 0);
+
             $blog->update($data);
 
             DB::commit();
+
+            // Clear gallery cache
+            \Cache::forget('home_gallery_posts');
+            \Cache::forget('api_gallery_posts');
 
             return redirect()->route('admin.blog.posts.index')
                 ->with('success', 'ব্লগ পোস্ট সফলভাবে আপডেট করা হয়েছে!');
@@ -950,6 +987,172 @@ public function reorder(Request $request)
         ], 500);
     }
 }
+
+    /**
+     * Toggle blog gallery status.
+     */
+    public function toggleGallery($id)
+    {
+        try {
+            $blog = Blog::findOrFail($id);
+
+            if (!$blog->is_gallery && !$blog->featured_image) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'ফিচার্ড ইমেজ ছাড়া কোনো পোস্ট গ্যালারিতে যুক্ত করা যাবে না!'
+                ], 422);
+            }
+
+            $blog->is_gallery = !$blog->is_gallery;
+            $blog->save();
+
+            // Clear cache
+            \Cache::forget('home_gallery_posts');
+            \Cache::forget('api_gallery_posts');
+
+            // Log activity
+            try {
+                \App\Models\ActivityLog::create([
+                    'user_id' => auth()->id(),
+                    'action' => 'gallery_toggle',
+                    'model' => 'Blog',
+                    'model_id' => $blog->id,
+                    'details' => 'গ্যালারি স্ট্যাটাস পরিবর্তন: ' . ($blog->is_gallery ? 'যুক্ত' : 'বাদ'),
+                    'ip_address' => request()->ip(),
+                    'user_agent' => request()->userAgent()
+                ]);
+            } catch (\Exception $e) {
+                Log::warning('Activity log failed: ' . $e->getMessage());
+            }
+
+            return response()->json([
+                'success'    => true,
+                'message'    => 'গ্যালারি সেটিং পরিবর্তন করা হয়েছে!',
+                'is_gallery' => $blog->is_gallery,
+                'badge'      => $blog->is_gallery ? '<span class="badge bg-success">গ্যালারিতে যুক্ত</span>' : '<span class="badge bg-secondary">যুক্ত নয়</span>'
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Gallery toggle failed: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'গ্যালারি সেটিং পরিবর্তন করতে ব্যর্থ হয়েছে!'
+            ], 500);
+        }
+    }
+
+    /**
+     * Bulk gallery update.
+     */
+    public function bulkGalleryUpdate(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'ids'        => 'required|array',
+            'ids.*'      => 'required|integer|exists:blogs,id',
+            'is_gallery' => 'required|boolean',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->first()
+            ], 422);
+        }
+
+        try {
+            $is_gallery = $request->is_gallery;
+
+            if ($is_gallery) {
+                // Verify all selected posts have featured images
+                $hasNoImageCount = Blog::whereIn('id', $request->ids)
+                    ->where(function($q) {
+                        $q->whereNull('featured_image')->orWhere('featured_image', '');
+                    })
+                    ->count();
+
+                if ($hasNoImageCount > 0) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'ফিচার্ড ইমেজ ছাড়া কোনো পোস্ট গ্যালারিতে যুক্ত করা যাবে না!'
+                    ], 422);
+                }
+            }
+
+            Blog::whereIn('id', $request->ids)->update([
+                'is_gallery' => $is_gallery
+            ]);
+
+            // Clear cache
+            \Cache::forget('home_gallery_posts');
+            \Cache::forget('api_gallery_posts');
+
+            // Log activity
+            try {
+                \App\Models\ActivityLog::create([
+                    'user_id' => auth()->id(),
+                    'action' => 'gallery_bulk_update',
+                    'model' => 'Blog',
+                    'details' => count($request->ids) . ' টি ব্লগ পোস্ট গ্যালারি সেটিং আপডেট: ' . ($is_gallery ? 'যুক্ত' : 'বাদ'),
+                    'ip_address' => request()->ip(),
+                    'user_agent' => request()->userAgent()
+                ]);
+            } catch (\Exception $e) {
+                Log::warning('Activity log failed: ' . $e->getMessage());
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => count($request->ids) . ' টি ব্লগ পোস্ট গ্যালারি সেটিং আপডেট করা হয়েছে!'
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Bulk gallery update failed: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'বাল্ক গ্যালারি আপডেট করতে ব্যর্থ হয়েছে!'
+            ], 500);
+        }
+    }
+
+    /**
+     * Reorder gallery posts.
+     */
+    public function reorderGallery(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'order' => 'required|array',
+            'order.*' => 'required|integer|exists:blogs,id',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->first()
+            ], 422);
+        }
+
+        try {
+            foreach ($request->order as $index => $id) {
+                Blog::where('id', $id)->update(['gallery_order' => $index + 1]);
+            }
+
+            // Clear cache
+            \Cache::forget('home_gallery_posts');
+            \Cache::forget('api_gallery_posts');
+
+            return response()->json([
+                'success' => true,
+                'message' => 'গ্যালারি সর্ট অর্ডার সফলভাবে আপডেট করা হয়েছে!'
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Gallery reorder failed: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'গ্যালারি সর্ট অর্ডার আপডেট করতে ব্যর্থ হয়েছে!'
+            ], 500);
+        }
+    }
 
     /**
      * Generate SEO-friendly slug supporting Unicode/Bengali characters

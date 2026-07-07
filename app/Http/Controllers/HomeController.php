@@ -79,14 +79,25 @@ class HomeController extends Controller
             ->take(3)
             ->get();
 
-        // ৫.১. চিত্রশালার জন্য ফিচার্ড ইমেজ যুক্ত সর্বশেষ ৮টি ব্লগ পোস্ট
-        $galleryPosts = Blog::published()
-            ->whereNotNull('featured_image')
-            ->where('featured_image', '!=', '')
-            ->with('category')
-            ->orderBy('published_at', 'desc')
-            ->take(8)
-            ->get();
+        // ৫.১. চিত্রশালার জন্য ফিচার্ড ইমেজ যুক্ত সর্বশেষ ৮টি ব্লগ পোস্ট (এন্টারপ্রাইজ গ্যালারি কুয়েরি ও ক্যাশিং)
+        $galleryPosts = \Cache::remember('home_gallery_posts', 3600, function () {
+            return Blog::published()
+                ->where('is_gallery', true)
+                ->whereNotNull('featured_image')
+                ->where('featured_image', '!=', '')
+                ->select('id', 'title', 'slug', 'featured_image', 'category_id', 'published_at')
+                ->with('category:id,name,slug')
+                ->orderBy('gallery_order', 'asc')
+                ->orderBy('published_at', 'desc')
+                ->orderBy('id', 'desc')
+                ->take(8)
+                ->get()
+                ->filter(function($post) {
+                    if (empty($post->featured_image)) return false;
+                    $path = public_path($post->featured_image);
+                    return file_exists($path) && filesize($path) > 0;
+                });
+        });
 
         // ভিউতে ডেটা পাঠানো
         return view('theme::pages.home', compact(

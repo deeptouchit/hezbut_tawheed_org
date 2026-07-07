@@ -104,7 +104,7 @@
 @section('filter_input')
 <div class="filter-card">
     <div class="row align-items-end">
-        <div class="col-md-3 mb-3">
+        <div class="col-md-2 mb-3">
             <div class="input-group">
                 <span class="input-group-text"><i class="fas fa-search"></i></span>
                 <input type="text" id="search-input" class="form-control" placeholder="শিরোনাম, কন্টেন্ট..." autocomplete="off" value="{{ request('search') }}">
@@ -138,6 +138,13 @@
             </select>
         </div>
         <div class="col-md-2 mb-3">
+            <select id="gallery-filter" class="form-select">
+                <option value="">সব গ্যালারি</option>
+                <option value="gallery" {{ request('gallery') == 'gallery' ? 'selected' : '' }}>গ্যালারি পোস্ট</option>
+                <option value="non_gallery" {{ request('gallery') == 'non_gallery' ? 'selected' : '' }}>গ্যালারি ব্যতীত</option>
+            </select>
+        </div>
+        <div class="col-md-1 mb-3">
             <select id="per-page-filter" class="form-select">
                 <option value="10" {{ request('per_page') == 10 ? 'selected' : '' }}>১০</option>
                 <option value="20" {{ request('per_page') == 20 ? 'selected' : '' }}>২০</option>
@@ -171,6 +178,12 @@
                     <a href="{{ route('admin.blog.posts.export', request()->query()) }}" class="btn btn-success btn-sm">
                         <i class="fas fa-download"></i> এক্সপোর্ট
                     </a>
+                    <button id="bulk-add-gallery-btn" class="btn btn-success btn-sm" style="display: none;">
+                        <i class="fas fa-image"></i> গ্যালারিতে যুক্ত করুন
+                    </button>
+                    <button id="bulk-remove-gallery-btn" class="btn btn-warning btn-sm text-white" style="display: none;">
+                        <i class="fas fa-image-slash"></i> গ্যালারি থেকে মুছুন
+                    </button>
                     <button id="bulk-delete-btn" class="btn btn-danger btn-sm" style="display: none;">
                         <i class="fas fa-trash"></i> ডিলিট (<span id="selected-count">0</span>)
                     </button>
@@ -354,6 +367,7 @@ $(document).ready(function() {
         var category = $('#category-filter').val();
         var status = $('#status-filter').val();
         var author = $('#author-filter').val();
+        var gallery = $('#gallery-filter').val();
         var perPage = $('#per-page-filter').val();
 
         isAjaxLoading = true;
@@ -368,6 +382,7 @@ $(document).ready(function() {
                 category: category,
                 status: status,
                 author: author,
+                gallery: gallery,
                 per_page: perPage,
                 page: page,
                 _: Date.now()
@@ -426,8 +441,12 @@ $(document).ready(function() {
             $('#selected-count').text(checkedCount);
             if (checkedCount > 0) {
                 $('#bulk-delete-btn').show();
+                $('#bulk-add-gallery-btn').show();
+                $('#bulk-remove-gallery-btn').show();
             } else {
                 $('#bulk-delete-btn').hide();
+                $('#bulk-add-gallery-btn').hide();
+                $('#bulk-remove-gallery-btn').hide();
             }
         }
 
@@ -533,6 +552,82 @@ $(document).ready(function() {
         });
 
         // ============================================
+        // Bulk Gallery Add
+        // ============================================
+        $('#bulk-add-gallery-btn').off('click').on('click', function() {
+            var ids = $('.blog-checkbox:checked').map(function() {
+                return $(this).val();
+            }).get();
+
+            if (ids.length === 0) return;
+
+            if (confirm('আপনি কি নির্বাচিত ' + ids.length + ' টি ব্লগ পোস্ট গ্যালারিতে যুক্ত করতে চান?')) {
+                $.ajax({
+                    url: "{{ route('admin.blog.posts.bulk-gallery') }}",
+                    type: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        ids: ids,
+                        is_gallery: 1
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            toastr.success(response.message);
+                            loadBlogs();
+                        } else {
+                            toastr.error(response.message);
+                        }
+                    },
+                    error: function(xhr) {
+                        var message = 'বাল্ক গ্যালারি আপডেট করতে ব্যর্থ হয়েছে';
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            message = xhr.responseJSON.message;
+                        }
+                        toastr.error(message);
+                    }
+                });
+            }
+        });
+
+        // ============================================
+        // Bulk Gallery Remove
+        // ============================================
+        $('#bulk-remove-gallery-btn').off('click').on('click', function() {
+            var ids = $('.blog-checkbox:checked').map(function() {
+                return $(this).val();
+            }).get();
+
+            if (ids.length === 0) return;
+
+            if (confirm('আপনি কি নির্বাচিত ' + ids.length + ' টি ব্লগ পোস্ট গ্যালারি থেকে বাদ দিতে চান?')) {
+                $.ajax({
+                    url: "{{ route('admin.blog.posts.bulk-gallery') }}",
+                    type: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        ids: ids,
+                        is_gallery: 0
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            toastr.success(response.message);
+                            loadBlogs();
+                        } else {
+                            toastr.error(response.message);
+                        }
+                    },
+                    error: function(xhr) {
+                        var message = 'বাল্ক গ্যালারি আপডেট করতে ব্যর্থ হয়েছে';
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            message = xhr.responseJSON.message;
+                        }
+                        toastr.error(message);
+                    }
+                });
+            }
+        });
+
+        // ============================================
         // Duplicate Blog
         // ============================================
         $('.duplicate-blog').off('click').on('click', function() {
@@ -591,6 +686,39 @@ $(document).ready(function() {
         });
 
         // ============================================
+        // Toggle Gallery
+        // ============================================
+        $('.toggle-gallery').off('click').on('click', function() {
+            var id = $(this).data('id');
+            var btn = $(this);
+
+            btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i>');
+
+            $.ajax({
+                url: '{{ url("admin/blog/posts") }}/' + id + '/toggle-gallery',
+                type: 'POST',
+                data: { _token: '{{ csrf_token() }}' },
+                success: function(response) {
+                    if (response.success) {
+                        toastr.success(response.message);
+                        loadBlogs();
+                    } else {
+                        toastr.error(response.message);
+                        loadBlogs();
+                    }
+                },
+                error: function(xhr) {
+                    var message = 'গ্যালারি স্ট্যাটাস পরিবর্তন করতে ব্যর্থ হয়েছে';
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                        message = xhr.responseJSON.message;
+                    }
+                    toastr.error(message);
+                    loadBlogs();
+                }
+            });
+        });
+
+        // ============================================
         // Pagination
         // ============================================
         $(document).off('click', '.pagination a').on('click', '.pagination a', function(e) {
@@ -618,8 +746,11 @@ $(document).ready(function() {
                             order.push($(this).data('id'));
                         });
 
+                        var isGalleryFilter = $('#gallery-filter').val() === 'gallery';
+                        var targetUrl = isGalleryFilter ? "{{ route('admin.blog.posts.reorder-gallery') }}" : "{{ route('admin.blog.posts.reorder') }}";
+
                         $.ajax({
-                            url: "{{ route('admin.blog.posts.reorder') }}",
+                            url: targetUrl,
                             type: 'POST',
                             data: {
                                 _token: '{{ csrf_token() }}',
@@ -649,7 +780,7 @@ $(document).ready(function() {
         searchTimeout = setTimeout(() => loadBlogs(), 500);
     });
 
-    $('#category-filter, #status-filter, #author-filter, #per-page-filter').on('change', function() {
+    $('#category-filter, #status-filter, #author-filter, #gallery-filter, #per-page-filter').on('change', function() {
         loadBlogs();
     });
 
@@ -658,6 +789,7 @@ $(document).ready(function() {
         $('#category-filter').val('');
         $('#status-filter').val('');
         $('#author-filter').val('');
+        $('#gallery-filter').val('');
         $('#per-page-filter').val('20');
         loadBlogs();
     });

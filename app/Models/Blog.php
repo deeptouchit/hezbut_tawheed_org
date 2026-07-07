@@ -30,6 +30,8 @@ class Blog extends Model
         'status',
         'published_at',
         'sort_order',
+        'is_gallery',
+        'gallery_order',
     ];
 
     protected $casts = [
@@ -38,6 +40,8 @@ class Blog extends Model
         'published_at' => 'datetime',
         'views'        => 'integer',
         'sort_order'   => 'integer',
+        'is_gallery'   => 'boolean',
+        'gallery_order'=> 'integer',
     ];
 
       // =============================================

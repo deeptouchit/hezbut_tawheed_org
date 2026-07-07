@@ -571,6 +571,37 @@
                             <small class="text-muted">পোস্ট প্রকাশিত বা খসড়া হিসেবে সংরক্ষণ করুন</small>
                         </div>
 
+                        <!-- Gallery Switch -->
+                        <div class="form-section">
+                            <h5 class="form-section-title">
+                                <i class="fas fa-image me-2"></i> গ্যালারিতে দেখান
+                            </h5>
+                            <div class="form-check form-switch">
+                                <input type="checkbox"
+                                       name="is_gallery"
+                                       class="form-check-input"
+                                       id="isGallerySwitch"
+                                       value="1"
+                                       {{ old('is_gallery', $blog->is_gallery) ? 'checked' : '' }}>
+                                <label class="form-check-label" for="isGallerySwitch">
+                                    <span id="galleryLabel">{{ old('is_gallery', $blog->is_gallery) ? 'যুক্ত' : 'যুক্ত নয়' }}</span>
+                                </label>
+                            </div>
+                            <small class="text-muted">এই পোস্টের Featured Image হোমপেজের চিত্রশালা গ্যালারিতে প্রদর্শন করুন</small>
+                        </div>
+
+                        <!-- Gallery Order -->
+                        <div class="form-section" id="galleryOrderSection" style="{{ old('is_gallery', $blog->is_gallery) ? '' : 'display: none;' }}">
+                            <h5 class="form-section-title">
+                                <i class="fas fa-sort-numeric-down me-2"></i> গ্যালারি সর্ট অর্ডার
+                            </h5>
+                            <input type="number"
+                                   name="gallery_order"
+                                   class="form-control"
+                                   value="{{ old('gallery_order', $blog->gallery_order ?? 0) }}">
+                            <small class="text-muted">গ্যালারিতে প্রদর্শনের ক্রম নির্ধারণ করুন (ছোট ক্রম আগে দেখাবে)</small>
+                        </div>
+
                         <!-- Publish Date -->
                         <div class="form-section">
                             <h5 class="form-section-title">
@@ -860,6 +891,19 @@ $(document).ready(function() {
         } else {
             $('#statusLabel').text('খসড়া');
             $('#previewStatus').removeClass('bg-success').addClass('bg-warning').text('খসড়া');
+        }
+    });
+
+    // ============================================
+    // Gallery Switch
+    // ============================================
+    $('#isGallerySwitch').change(function() {
+        if ($(this).is(':checked')) {
+            $('#galleryLabel').text('যুক্ত');
+            $('#galleryOrderSection').slideDown();
+        } else {
+            $('#galleryLabel').text('যুক্ত নয়');
+            $('#galleryOrderSection').slideUp();
         }
     });
 
