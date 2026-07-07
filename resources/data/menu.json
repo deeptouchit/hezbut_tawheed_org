@@ -271,7 +271,7 @@
             "is_featured": "false",
             "parent_id": "menu_desktop_publications_parent",
             "name": "প্রবন্ধ ও কলাম",
-            "url": "/articles"
+            "url": "/articles/category/articles-and-editorials"
         },
         {
             "id": "menu_desktop_research",
@@ -673,7 +673,7 @@
             "is_featured": false,
             "parent_id": "menu_mobile_publications_parent",
             "name": "প্রবন্ধ ও কলাম",
-            "url": "/articles"
+            "url": "/articles/category/articles-and-editorials"
         },
         {
             "id": "menu_mobile_research",

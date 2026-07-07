@@ -212,47 +212,58 @@ class MenuHelper
         $type = $item['type'] ?? 'url';
         $url = $item['url'];
 
-        // If it's a route, check by route name first
+        // Get current route name
+        $currentRoute = request()->route();
+        $currentRouteName = $currentRoute ? $currentRoute->getName() : null;
+
+        // Clean paths for comparison
+        $itemUrl = self::getMenuUrl($item);
+        $itemPath = trim(parse_url($itemUrl, PHP_URL_PATH), '/');
+        $currentPath = trim(request()->getPathInfo(), '/');
+
+        // 1. Precise Route Name matching first
         if ($type === 'route') {
-            $currentRoute = request()->route();
-            if ($currentRoute) {
-                $currentRouteName = $currentRoute->getName();
-                if ($currentRouteName === $url) {
-                    // If it has slug param, check slug as well
-                    if (isset($item['params']) && isset($item['params']['slug'])) {
-                        $currentSlug = request()->route('slug');
-                        return $currentSlug === $item['params']['slug'];
-                    }
-                    return true;
+            if ($currentRouteName === $url) {
+                // If it has slug param, check slug as well
+                if (isset($item['params']) && isset($item['params']['slug'])) {
+                    $currentSlug = request()->route('slug');
+                    return $currentSlug === $item['params']['slug'];
                 }
-            }
-            
-            // Fallback: resolve route URL and check if current URL matches it
-            try {
-                $params = $item['params'] ?? [];
-                $routeUrl = route($url, $params);
-                $routePath = parse_url($routeUrl, PHP_URL_PATH);
-                $routePath = trim($routePath, '/');
-                if ($routePath !== '') {
-                    if (request()->is($routePath) || request()->is($routePath . '/*')) {
-                        return true;
-                    }
-                } else {
-                    return request()->is('/');
-                }
-            } catch (\Exception $e) {
-                // Ignore route generation errors
-            }
-        } else {
-            // For url type, check if current path matches
-            $path = trim($url, '/');
-            if ($path === '') {
-                return request()->is('/');
-            }
-            
-            if (request()->is($path) || request()->is($path . '/*')) {
                 return true;
             }
+        }
+
+        // 2. Exact Path Match (highest priority)
+        if ($currentPath === $itemPath) {
+            return true;
+        }
+
+        // 3. Special Route-based Context Matching to prevent broad wildcard collision
+        if ($currentRouteName !== null) {
+            // If we are on a blog category page, only match if the item is that specific category
+            if ($currentRouteName === 'blog.category') {
+                return $currentPath === $itemPath;
+            }
+
+            // If we are on a blog tag page, only match if the item is that specific tag
+            if ($currentRouteName === 'blog.tag') {
+                return $currentPath === $itemPath;
+            }
+
+            // If we are on announcements or events page, only match if the item path matches
+            if ($currentRouteName === 'announcements.index' || $currentRouteName === 'events.index') {
+                return $currentPath === $itemPath;
+            }
+
+            // If we are on a blog details page, highlight the parent blog/articles menu
+            if ($currentRouteName === 'blog.detail') {
+                return $itemPath === 'articles' || $url === 'blog';
+            }
+        }
+
+        // 4. Safe Wildcard Match (fallback) - do not match /articles/* if we are on sub-modules
+        if ($itemPath !== '' && $itemPath !== 'articles' && (request()->is($itemPath) || request()->is($itemPath . '/*'))) {
+            return true;
         }
 
         return false;
