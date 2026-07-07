@@ -108,31 +108,33 @@
         background-color: #f8fafc;
         position: relative;
     }
-    .gallery-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 20px;
-    }
-    @media (max-width: 991.98px) {
-        .gallery-grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
-    }
-    @media (max-width: 575.98px) {
-        .gallery-grid {
-            grid-template-columns: 1fr;
-        }
-    }
     
     .gallery-card {
         position: relative;
-        height: 280px;
-        border-radius: 20px;
         overflow: hidden;
+        border-radius: 24px;
         background: #ffffff;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
         transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         border: 1px solid rgba(226, 232, 240, 0.8) !important;
+    }
+    
+    .gallery-card.featured-card {
+        height: 580px;
+    }
+    
+    .gallery-card.small-card {
+        height: 180px;
+    }
+    
+    @media (max-width: 991.98px) {
+        .gallery-card.featured-card {
+            height: 420px;
+            margin-bottom: 20px;
+        }
+        .gallery-card.small-card {
+            height: 220px;
+        }
     }
     
     .gallery-card img {
@@ -148,11 +150,22 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background: linear-gradient(to top, rgba(2, 44, 34, 0.9) 0%, rgba(2, 44, 34, 0.2) 60%, transparent 100%) !important;
+        background: linear-gradient(to top, rgba(2, 44, 34, 0.95) 0%, rgba(2, 44, 34, 0.15) 60%, transparent 100%) !important;
         padding: 20px;
         display: flex;
         flex-direction: column;
         justify-content: flex-end;
+        z-index: 2;
+        transition: all 0.4s ease;
+    }
+    
+    .gallery-featured-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(to bottom, rgba(2, 44, 34, 0.85) 0%, rgba(2, 44, 34, 0.15) 45%, rgba(2, 44, 34, 0.95) 100%) !important;
         z-index: 2;
         transition: all 0.4s ease;
     }
@@ -179,17 +192,21 @@
     }
 
     .gallery-card:hover {
-        transform: translateY(-10px);
+        transform: translateY(-8px);
         box-shadow: 0 20px 40px rgba(16, 185, 129, 0.18) !important;
         border-color: rgba(16, 185, 129, 0.35) !important;
     }
     
     .gallery-card:hover img {
-        transform: scale(1.08) rotate(1deg);
+        transform: scale(1.06) rotate(0.5deg);
     }
     
     .gallery-card:hover .gallery-card-overlay {
-        background: linear-gradient(to top, rgba(0, 106, 78, 0.98) 0%, rgba(0, 106, 78, 0.5) 60%, transparent 100%) !important;
+        background: linear-gradient(to top, rgba(0, 106, 78, 0.95) 0%, rgba(0, 106, 78, 0.4) 60%, transparent 100%) !important;
+    }
+    
+    .gallery-card.featured-card:hover .gallery-featured-overlay {
+        background: linear-gradient(to bottom, rgba(0, 106, 78, 0.85) 0%, rgba(0, 106, 78, 0.3) 45%, rgba(0, 106, 78, 0.98) 100%) !important;
     }
     
     .gallery-card:hover .gallery-zoom-icon {
@@ -681,35 +698,105 @@
             </div>
 
             <div class="row g-4">
-                @forelse($galleryPosts as $post)
-                    <div class="col-lg-3 col-md-6">
-                        <a href="#" class="d-block text-decoration-none gallery-lightbox-trigger"
-                           data-image="{{ $post->featured_image_url }}"
-                           data-title="{{ $post->title }}"
-                           data-category="{{ $post->category->name ?? 'কর্মসূচী' }}"
-                           data-url="{{ route('blog.detail', $post->slug) }}">
-                            <div class="gallery-card">
-                                <div class="gallery-zoom-icon">
-                                    <i class="fas fa-search-plus"></i>
-                                </div>
-                                <img src="{{ $post->featured_image_url }}" alt="{{ $post->title }}">
-                                <div class="gallery-card-overlay">
-                                    <div class="gallery-card-info">
-                                        <span class="cat-badge">
-                                            {{ $post->category->name ?? 'কর্মসূচী' }}
-                                        </span>
-                                        <h6 class="title-text text-truncate mb-0" title="{{ $post->title }}">{{ $post->title }}</h6>
+                @if(count($galleryPosts) > 0)
+                    <!-- Left Column (3 Images stacked vertically) -->
+                    <div class="col-lg-3 col-md-6 order-2 order-lg-1">
+                        <div class="d-flex flex-column gap-3 h-100 justify-content-between">
+                            @for($i = 1; $i <= 3; $i++)
+                                @if(isset($galleryPosts[$i]))
+                                    @php $post = $galleryPosts[$i]; @endphp
+                                    <a href="#" class="d-block text-decoration-none gallery-lightbox-trigger"
+                                       data-image="{{ $post->featured_image_url }}"
+                                       data-title="{{ $post->title }}"
+                                       data-category="{{ $post->category->name ?? 'কর্মসূচী' }}"
+                                       data-url="{{ route('blog.detail', $post->slug) }}">
+                                        <div class="gallery-card small-card">
+                                            <div class="gallery-zoom-icon">
+                                                <i class="fas fa-search-plus"></i>
+                                            </div>
+                                            <img src="{{ $post->featured_image_url }}" alt="{{ $post->title }}" loading="lazy">
+                                            <div class="gallery-card-overlay">
+                                                <div class="gallery-card-info">
+                                                    <span class="cat-badge">{{ $post->category->name ?? 'কর্মসূচী' }}</span>
+                                                    <h6 class="title-text text-truncate mb-0" title="{{ $post->title }}">{{ $post->title }}</h6>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                @endif
+                            @endfor
+                        </div>
+                    </div>
+
+                    <!-- Center Column (1 large Featured Image) -->
+                    <div class="col-lg-6 order-1 order-lg-2">
+                        @if(isset($galleryPosts[0]))
+                            @php $featuredPost = $galleryPosts[0]; @endphp
+                            <a href="#" class="d-block text-decoration-none gallery-lightbox-trigger"
+                               data-image="{{ $featuredPost->featured_image_url }}"
+                               data-title="{{ $featuredPost->title }}"
+                               data-category="{{ $featuredPost->category->name ?? 'কর্মসূচী' }}"
+                               data-url="{{ route('blog.detail', $featuredPost->slug) }}">
+                                <div class="gallery-card featured-card h-100">
+                                    <div class="gallery-zoom-icon">
+                                        <i class="fas fa-search-plus fa-2x"></i>
+                                    </div>
+                                    <img src="{{ $featuredPost->featured_image_url }}" alt="{{ $featuredPost->title }}" loading="lazy">
+                                    
+                                    <!-- Overlay content -->
+                                    <div class="gallery-featured-overlay d-flex flex-column justify-content-between p-4 p-md-5 h-100">
+                                        <div class="featured-header text-white">
+                                            <span class="text-gold fw-bold text-uppercase tracking-wider fs-6 px-3 py-1 rounded-pill" style="background: rgba(212, 175, 55, 0.15); color: #fbbf24; border: 1px solid rgba(212, 175, 55, 0.25);">চিত্রশালা</span>
+                                            <h2 class="section-title text-white mt-3 fw-bold display-6" style="font-family: 'Baloo Da 2', sans-serif;">ছবি গ্যালারি</h2>
+                                            <p class="text-white-50 mt-2 fs-6" style="font-family: 'Hind Siliguri', sans-serif;">আন্দোলনের বিভিন্ন কর্মসূচী ও কর্মকাণ্ডের স্থিরচিত্রসমূহ</p>
+                                        </div>
+                                        
+                                        <div class="gallery-card-info mt-auto">
+                                            <span class="cat-badge" style="background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%); color: #002c1f;">
+                                                ফিচার্ড: {{ $featuredPost->category->name ?? 'কর্মসূচী' }}
+                                            </span>
+                                            <h4 class="title-text text-white fw-bold mt-2" style="font-family: 'Baloo Da 2', sans-serif; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">{{ $featuredPost->title }}</h4>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </a>
+                            </a>
+                        @endif
                     </div>
-                @empty
+
+                    <!-- Right Column (3 Images stacked vertically) -->
+                    <div class="col-lg-3 col-md-6 order-3">
+                        <div class="d-flex flex-column gap-3 h-100 justify-content-between">
+                            @for($i = 4; $i <= 6; $i++)
+                                @if(isset($galleryPosts[$i]))
+                                    @php $post = $galleryPosts[$i]; @endphp
+                                    <a href="#" class="d-block text-decoration-none gallery-lightbox-trigger"
+                                       data-image="{{ $post->featured_image_url }}"
+                                       data-title="{{ $post->title }}"
+                                       data-category="{{ $post->category->name ?? 'কর্মসূচী' }}"
+                                       data-url="{{ route('blog.detail', $post->slug) }}">
+                                        <div class="gallery-card small-card">
+                                            <div class="gallery-zoom-icon">
+                                                <i class="fas fa-search-plus"></i>
+                                            </div>
+                                            <img src="{{ $post->featured_image_url }}" alt="{{ $post->title }}" loading="lazy">
+                                            <div class="gallery-card-overlay">
+                                                <div class="gallery-card-info">
+                                                    <span class="cat-badge">{{ $post->category->name ?? 'কর্মসূচী' }}</span>
+                                                    <h6 class="title-text text-truncate mb-0" title="{{ $post->title }}">{{ $post->title }}</h6>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                @endif
+                            @endfor
+                        </div>
+                    </div>
+                @else
                     <div class="col-12 text-center py-5 text-muted">
                         <i class="far fa-images fa-3x mb-3 text-muted opacity-50"></i>
                         <p class="mb-0">কোনো স্থিরচিত্র পাওয়া যায়নি!</p>
                     </div>
-                @endforelse
+                @endif
             </div>
         </div>
     </section>
