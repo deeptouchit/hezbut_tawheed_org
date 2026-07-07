@@ -690,13 +690,6 @@
     <!-- Photo Gallery Section -->
     <section class="photo-gallery-section py-6">
         <div class="container">
-            <div class="text-center mb-5">
-                <span class="text-gold fw-bold text-uppercase tracking-wider">চিত্রশালা</span>
-                <h2 class="section-title text-dark-green">ছবি গ্যালারি</h2>
-                <p class="text-muted mt-2">আন্দোলনের বিভিন্ন কর্মসূচী ও কর্মকাণ্ডের স্থিরচিত্রসমূহ</p>
-                <div class="title-underline bg-gold mx-auto mt-3" style="width: 80px; height: 3px;"></div>
-            </div>
-
             <div class="row g-4">
                 @if(count($galleryPosts) > 0)
                     <!-- Left Column (3 Images stacked vertically) -->
@@ -728,39 +721,44 @@
                         </div>
                     </div>
 
-                    <!-- Center Column (1 large Featured Image) -->
+                    <!-- Center Column (Text header at top, Featured Image at bottom) -->
                     <div class="col-lg-6 order-1 order-lg-2">
-                        @if(isset($galleryPosts[0]))
-                            @php $featuredPost = $galleryPosts[0]; @endphp
-                            <a href="#" class="d-block text-decoration-none gallery-lightbox-trigger"
-                               data-image="{{ $featuredPost->featured_image_url }}"
-                               data-title="{{ $featuredPost->title }}"
-                               data-category="{{ $featuredPost->category->name ?? 'কর্মসূচী' }}"
-                               data-url="{{ route('blog.detail', $featuredPost->slug) }}">
-                                <div class="gallery-card featured-card h-100">
-                                    <div class="gallery-zoom-icon">
-                                        <i class="fas fa-search-plus fa-2x"></i>
-                                    </div>
-                                    <img src="{{ $featuredPost->featured_image_url }}" alt="{{ $featuredPost->title }}" loading="lazy">
-                                    
-                                    <!-- Overlay content -->
-                                    <div class="gallery-featured-overlay d-flex flex-column justify-content-between p-4 p-md-5 h-100">
-                                        <div class="featured-header text-white">
-                                            <span class="text-gold fw-bold text-uppercase tracking-wider fs-6 px-3 py-1 rounded-pill" style="background: rgba(212, 175, 55, 0.15); color: #fbbf24; border: 1px solid rgba(212, 175, 55, 0.25);">চিত্রশালা</span>
-                                            <h2 class="section-title text-white mt-3 fw-bold display-6" style="font-family: 'Baloo Da 2', sans-serif;">ছবি গ্যালারি</h2>
-                                            <p class="text-white-50 mt-2 fs-6" style="font-family: 'Hind Siliguri', sans-serif;">আন্দোলনের বিভিন্ন কর্মসূচী ও কর্মকাণ্ডের স্থিরচিত্রসমূহ</p>
+                        <div class="d-flex flex-column justify-content-between h-100 pb-1" style="min-height: 580px;">
+                            <!-- Header Text Area (formerly at the top of the section) -->
+                            <div class="text-center py-2 d-flex flex-column justify-content-center align-items-center" style="height: 180px;">
+                                <span class="fw-bold text-gold text-uppercase tracking-wider fs-6 px-3 py-1 rounded-pill" style="background: rgba(16, 185, 129, 0.08); color: #059669; font-size: 0.85rem; border: 1px solid rgba(16, 185, 129, 0.15);">চিত্রশালা</span>
+                                <h2 class="section-title text-dark-green mt-3 fw-bold display-6" style="font-family: 'Baloo Da 2', sans-serif;">ছবি গ্যালারি</h2>
+                                <p class="text-muted mt-2 mb-0" style="font-family: 'Hind Siliguri', sans-serif;">আন্দোলনের বিভিন্ন কর্মসূচী ও কর্মকাণ্ডের স্থিরচিত্রসমূহ</p>
+                                <div class="mt-2" style="width: 60px; height: 3px; border-radius: 2px; background-color: #10b981;"></div>
+                            </div>
+
+                            <!-- Featured Image Card -->
+                            @if(isset($galleryPosts[0]))
+                                @php $featuredPost = $galleryPosts[0]; @endphp
+                                <a href="#" class="d-block text-decoration-none gallery-lightbox-trigger mt-auto"
+                                   data-image="{{ $featuredPost->featured_image_url }}"
+                                   data-title="{{ $featuredPost->title }}"
+                                   data-category="{{ $featuredPost->category->name ?? 'কর্মসূচী' }}"
+                                   data-url="{{ route('blog.detail', $featuredPost->slug) }}">
+                                    <div class="gallery-card featured-card">
+                                        <div class="gallery-zoom-icon">
+                                            <i class="fas fa-search-plus fa-2x"></i>
                                         </div>
+                                        <img src="{{ $featuredPost->featured_image_url }}" alt="{{ $featuredPost->title }}" loading="lazy">
                                         
-                                        <div class="gallery-card-info mt-auto">
-                                            <span class="cat-badge" style="background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%); color: #002c1f;">
-                                                ফিচার্ড: {{ $featuredPost->category->name ?? 'কর্মসূচী' }}
-                                            </span>
-                                            <h4 class="title-text text-white fw-bold mt-2" style="font-family: 'Baloo Da 2', sans-serif; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">{{ $featuredPost->title }}</h4>
+                                        <!-- Overlay info details -->
+                                        <div class="gallery-card-overlay">
+                                            <div class="gallery-card-info">
+                                                <span class="cat-badge" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white;">
+                                                    ফিচার্ড: {{ $featuredPost->category->name ?? 'কর্মসূচী' }}
+                                                </span>
+                                                <h5 class="title-text text-white fw-bold mt-2 mb-0 text-truncate" style="font-family: 'Baloo Da 2', sans-serif; text-shadow: 0 2px 4px rgba(0,0,0,0.8);" title="{{ $featuredPost->title }}">{{ $featuredPost->title }}</h5>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </a>
-                        @endif
+                                </a>
+                            @endif
+                        </div>
                     </div>
 
                     <!-- Right Column (3 Images stacked vertically) -->
