@@ -14,25 +14,20 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-use App\Models\Blog;
+use App\Models\Gallery;
 use Illuminate\Support\Facades\Cache;
 
 Route::get('/gallery', function () {
     $posts = Cache::remember('api_gallery_posts', 3600, function () {
-        return Blog::published()
-            ->where('is_gallery', true)
-            ->whereNotNull('featured_image')
-            ->where('featured_image', '!=', '')
-            ->select('id', 'title', 'slug', 'featured_image', 'category_id', 'published_at')
-            ->with('category:id,name,slug')
+        return Gallery::where('is_active', true)
             ->orderBy('gallery_order', 'asc')
-            ->orderBy('published_at', 'desc')
-            ->orderBy('id', 'desc')
+            ->orderBy('updated_at', 'desc')
             ->take(8)
+            ->with(['blog', 'blog.category'])
             ->get()
             ->filter(function($post) {
-                if (empty($post->featured_image)) return false;
-                $path = public_path($post->featured_image);
+                if (empty($post->image_path)) return false;
+                $path = public_path($post->image_path);
                 return file_exists($path) && filesize($path) > 0;
             })
             ->values();
@@ -43,12 +38,11 @@ Route::get('/gallery', function () {
         'data' => $posts->map(function ($post) {
             return [
                 'id' => $post->id,
-                'title' => $post->title,
-                'slug' => $post->slug,
-                'url' => url('/articles/' . $post->slug),
-                'image_url' => asset($post->featured_image),
-                'category' => $post->category ? $post->category->name : null,
-                'published_at' => $post->published_at ? $post->published_at->toIso8601String() : null,
+                'title' => $post->title ?? ($post->blog ? $post->blog->title : null),
+                'url' => $post->blog ? url('/articles/' . $post->blog->slug) : null,
+                'image_url' => asset($post->image_path),
+                'category' => ($post->blog && $post->blog->category) ? $post->blog->category->name : null,
+                'published_at' => $post->blog && $post->blog->published_at ? $post->blog->published_at->toIso8601String() : null,
             ];
         })
     ]);

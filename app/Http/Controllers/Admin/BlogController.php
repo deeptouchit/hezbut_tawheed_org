@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Blog;
 use App\Models\BlogCategory;
 use App\Models\BlogComment;
+use App\Models\Gallery;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -1155,38 +1156,190 @@ public function reorder(Request $request)
     }
 
     /**
-     * Display a listing of the gallery posts.
+     * Display a listing of the gallery posts and all media library files.
      */
     public function galleryIndex()
     {
-        // Fetch all published posts currently in the gallery
-        $galleryPosts = Blog::published()
-            ->where('is_gallery', true)
+        // 1. Auto-sync: Find published blog posts with featured images not in galleries table and insert them
+        $blogImages = Blog::published()
             ->whereNotNull('featured_image')
             ->where('featured_image', '!=', '')
+            ->select('id', 'title', 'featured_image')
+            ->get();
+
+        foreach ($blogImages as $blogImage) {
+            $exists = Gallery::where('image_path', $blogImage->featured_image)->exists();
+            if (!$exists) {
+                $path = public_path($blogImage->featured_image);
+                if (file_exists($path) && filesize($path) > 0) {
+                    Gallery::create([
+                        'title' => $blogImage->title,
+                        'image_path' => $blogImage->featured_image,
+                        'blog_id' => $blogImage->id,
+                        'is_custom' => false,
+                        'is_active' => false,
+                    ]);
+                }
+            }
+        }
+
+        // 2. Fetch active gallery images
+        $galleryPosts = Gallery::where('is_active', true)
             ->orderBy('gallery_order', 'asc')
-            ->orderBy('published_at', 'desc')
-            ->orderBy('id', 'desc')
+            ->orderBy('updated_at', 'desc')
             ->get();
 
-        // Fetch eligible published posts NOT in the gallery (having featured image)
-        $availablePosts = Blog::published()
-            ->where('is_gallery', false)
-            ->whereNotNull('featured_image')
-            ->where('featured_image', '!=', '')
-            ->orderBy('published_at', 'desc')
-            ->get();
+        // 3. Fetch all library images (WordPress-style grid)
+        $libraryImages = Gallery::orderBy('created_at', 'desc')->get();
 
-        return view('admin.gallery.index', compact('galleryPosts', 'availablePosts'));
+        return view('admin.gallery.index', compact('galleryPosts', 'libraryImages'));
     }
 
     /**
-     * Add a post to the gallery.
+     * Add a custom image upload directly to the gallery library.
      */
-    public function galleryAdd(Request $request)
+    public function galleryAddCustom(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'blog_id' => 'required|integer|exists:blogs,id',
+            'title' => 'nullable|string|max:255',
+            'image' => 'required|image|mimes:jpeg,png,jpg,webp|max:5120',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        try {
+            if ($request->hasFile('image')) {
+                $imagePath = $this->uploadImage($request->file('image'));
+
+                Gallery::create([
+                    'title' => $request->input('title'),
+                    'image_path' => $imagePath,
+                    'is_custom' => true,
+                    'is_active' => false,
+                ]);
+
+                // Clear caches
+                \Cache::forget('home_gallery_posts');
+                \Cache::forget('api_gallery_posts');
+
+                return redirect()->back()->with('success', 'মিডিয়া লাইব্রেরিতে ছবি সফলভাবে আপলোড করা হয়েছে!');
+            }
+
+            return redirect()->back()->with('error', 'কোনো ছবি পাওয়া যায়নি!');
+
+        } catch (\Exception $e) {
+            Log::error('Gallery custom upload failed: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'ছবি আপলোড করতে ব্যর্থ হয়েছে!');
+        }
+    }
+
+    /**
+     * Delete custom upload from database and physical disk storage.
+     */
+    public function galleryDeleteCustom($id)
+    {
+        try {
+            $gallery = Gallery::findOrFail($id);
+
+            if ($gallery->is_custom) {
+                $this->deleteImage($gallery->image_path);
+                $gallery->delete();
+
+                // Clear caches
+                \Cache::forget('home_gallery_posts');
+                \Cache::forget('api_gallery_posts');
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'ছবিটি লাইব্রেরি ও স্টোরেজ থেকে ডিলিট করা হয়েছে!'
+                ]);
+            }
+
+            return response()->json([
+                'success' => false,
+                'message' => 'ব্লগ পোস্টের ছবি এখান থেকে সরাসরি ডিলিট করা যাবে না!'
+            ], 403);
+
+        } catch (\Exception $e) {
+            Log::error('Gallery destroy failed: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'ছবি ডিলিট করতে ব্যর্থ হয়েছে!'
+            ], 500);
+        }
+    }
+
+    /**
+     * Toggle is_active status of any library image.
+     */
+    public function galleryToggleActive($id)
+    {
+        try {
+            $gallery = Gallery::findOrFail($id);
+
+            $path = public_path($gallery->image_path);
+            if (!file_exists($path) || filesize($path) == 0) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'সার্ভারে ছবিটির মূল ফাইল পাওয়া যায়নি!'
+                ], 422);
+            }
+
+            $gallery->is_active = !$gallery->is_active;
+
+            if ($gallery->is_active) {
+                $nextOrder = Gallery::where('is_active', true)->max('gallery_order') + 1;
+                $gallery->gallery_order = $nextOrder;
+            }
+
+            $gallery->save();
+
+            // Clear caches
+            \Cache::forget('home_gallery_posts');
+            \Cache::forget('api_gallery_posts');
+
+            // Log activity
+            try {
+                \App\Models\ActivityLog::create([
+                    'user_id' => auth()->id(),
+                    'action' => 'gallery_active_toggle',
+                    'model' => 'Gallery',
+                    'model_id' => $gallery->id,
+                    'details' => 'চিত্রশালা স্ট্যাটাস পরিবর্তন: ' . ($gallery->is_active ? 'সক্রিয়' : 'নিষ্ক্রিয়'),
+                    'ip_address' => request()->ip(),
+                    'user_agent' => request()->userAgent()
+                ]);
+            } catch (\Exception $e) {
+                Log::warning('Activity log failed: ' . $e->getMessage());
+            }
+
+            return response()->json([
+                'success' => true,
+                'is_active' => $gallery->is_active,
+                'message' => $gallery->is_active ? 'গ্যালারিতে যুক্ত করা হয়েছে!' : 'গ্যালারি থেকে বাদ দেওয়া হয়েছে!'
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Gallery toggle active failed: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'স্ট্যাটাস পরিবর্তন করতে ব্যর্থ হয়েছে!'
+            ], 500);
+        }
+    }
+
+    /**
+     * Reorder active gallery images.
+     */
+    public function reorderGallery(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'order' => 'required|array',
+            'order.*' => 'required|integer|exists:galleries,id',
         ]);
 
         if ($validator->fails()) {
@@ -1197,51 +1350,24 @@ public function reorder(Request $request)
         }
 
         try {
-            $blog = Blog::findOrFail($request->blog_id);
-
-            if (!$blog->featured_image) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'ফিচার্ড ইমেজ ছাড়া কোনো পোস্ট গ্যালারিতে যুক্ত করা যাবে না!'
-                ], 422);
+            foreach ($request->order as $index => $id) {
+                Gallery::where('id', $id)->update(['gallery_order' => $index + 1]);
             }
 
-            // Find next sort order
-            $nextOrder = Blog::where('is_gallery', true)->max('gallery_order') + 1;
-
-            $blog->is_gallery = true;
-            $blog->gallery_order = $nextOrder;
-            $blog->save();
-
-            // Clear cache
+            // Clear caches
             \Cache::forget('home_gallery_posts');
             \Cache::forget('api_gallery_posts');
 
-            // Log activity
-            try {
-                \App\Models\ActivityLog::create([
-                    'user_id' => auth()->id(),
-                    'action' => 'gallery_add',
-                    'model' => 'Blog',
-                    'model_id' => $blog->id,
-                    'details' => 'গ্যালারিতে পোস্ট যুক্ত করা হয়েছে: ' . $blog->title,
-                    'ip_address' => request()->ip(),
-                    'user_agent' => request()->userAgent()
-                ]);
-            } catch (\Exception $e) {
-                Log::warning('Activity log failed: ' . $e->getMessage());
-            }
-
             return response()->json([
                 'success' => true,
-                'message' => 'পোস্ট সফলভাবে গ্যালারিতে যুক্ত করা হয়েছে!'
+                'message' => 'গ্যালারি সর্ট অর্ডার সফলভাবে আপডেট করা হয়েছে!'
             ]);
 
         } catch (\Exception $e) {
-            Log::error('Gallery add failed: ' . $e->getMessage());
+            Log::error('Gallery reorder failed: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
-                'message' => 'গ্যালারিতে পোস্ট যুক্ত করতে ব্যর্থ হয়েছে!'
+                'message' => 'গ্যালারি সর্ট অর্ডার আপডেট করতে ব্যর্থ হয়েছে!'
             ], 500);
         }
     }

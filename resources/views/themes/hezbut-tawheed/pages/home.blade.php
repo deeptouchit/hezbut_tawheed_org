@@ -699,19 +699,19 @@
                                 @if(isset($galleryPosts[$i]))
                                     @php $post = $galleryPosts[$i]; @endphp
                                     <a href="#" class="d-block text-decoration-none gallery-lightbox-trigger"
-                                       data-image="{{ $post->featured_image_url }}"
-                                       data-title="{{ $post->title }}"
-                                       data-category="{{ $post->category->name ?? 'কর্মসূচী' }}"
-                                       data-url="{{ route('blog.detail', $post->slug) }}">
+                                       data-image="{{ asset($post->image_path) }}"
+                                       data-title="{{ $post->title ?? ($post->blog ? $post->blog->title : 'চিত্রশালা') }}"
+                                       data-category="{{ ($post->blog && $post->blog->category) ? $post->blog->category->name : 'চিত্রশালা' }}"
+                                       data-url="{{ $post->blog ? route('blog.detail', $post->blog->slug) : '#' }}">
                                         <div class="gallery-card small-card">
                                             <div class="gallery-zoom-icon">
                                                 <i class="fas fa-search-plus"></i>
                                             </div>
-                                            <img src="{{ $post->featured_image_url }}" alt="{{ $post->title }}" loading="lazy">
+                                            <img src="{{ asset($post->image_path) }}" alt="{{ $post->title ?? ($post->blog ? $post->blog->title : '') }}" loading="lazy">
                                             <div class="gallery-card-overlay">
                                                 <div class="gallery-card-info">
-                                                    <span class="cat-badge">{{ $post->category->name ?? 'কর্মসূচী' }}</span>
-                                                    <h6 class="title-text text-truncate mb-0" title="{{ $post->title }}">{{ $post->title }}</h6>
+                                                    <span class="cat-badge">{{ ($post->blog && $post->blog->category) ? $post->blog->category->name : 'চিত্রশালা' }}</span>
+                                                    <h6 class="title-text text-truncate mb-0" title="{{ $post->title ?? ($post->blog ? $post->blog->title : '') }}">{{ $post->title ?? ($post->blog ? $post->blog->title : '') }}</h6>
                                                 </div>
                                             </div>
                                         </div>
@@ -736,23 +736,23 @@
                             @if(isset($galleryPosts[0]))
                                 @php $featuredPost = $galleryPosts[0]; @endphp
                                 <a href="#" class="d-block text-decoration-none gallery-lightbox-trigger mt-auto"
-                                   data-image="{{ $featuredPost->featured_image_url }}"
-                                   data-title="{{ $featuredPost->title }}"
-                                   data-category="{{ $featuredPost->category->name ?? 'কর্মসূচী' }}"
-                                   data-url="{{ route('blog.detail', $featuredPost->slug) }}">
+                                   data-image="{{ asset($featuredPost->image_path) }}"
+                                   data-title="{{ $featuredPost->title ?? ($featuredPost->blog ? $featuredPost->blog->title : 'চিত্রশালা') }}"
+                                   data-category="{{ ($featuredPost->blog && $featuredPost->blog->category) ? $featuredPost->blog->category->name : 'চিত্রশালা' }}"
+                                   data-url="{{ $featuredPost->blog ? route('blog.detail', $featuredPost->blog->slug) : '#' }}">
                                     <div class="gallery-card featured-card">
                                         <div class="gallery-zoom-icon">
                                             <i class="fas fa-search-plus fa-2x"></i>
                                         </div>
-                                        <img src="{{ $featuredPost->featured_image_url }}" alt="{{ $featuredPost->title }}" loading="lazy">
+                                        <img src="{{ asset($featuredPost->image_path) }}" alt="{{ $featuredPost->title ?? ($featuredPost->blog ? $featuredPost->blog->title : '') }}" loading="lazy">
                                         
                                         <!-- Overlay info details -->
                                         <div class="gallery-card-overlay">
                                             <div class="gallery-card-info">
                                                 <span class="cat-badge" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white;">
-                                                    ফিচার্ড: {{ $featuredPost->category->name ?? 'কর্মসূচী' }}
+                                                    ফিচার্ড: {{ ($featuredPost->blog && $featuredPost->blog->category) ? $featuredPost->blog->category->name : 'চিত্রশালা' }}
                                                 </span>
-                                                <h5 class="title-text text-white fw-bold mt-2 mb-0 text-truncate" style="font-family: 'Baloo Da 2', sans-serif; text-shadow: 0 2px 4px rgba(0,0,0,0.8);" title="{{ $featuredPost->title }}">{{ $featuredPost->title }}</h5>
+                                                <h5 class="title-text text-white fw-bold mt-2 mb-0 text-truncate" style="font-family: 'Baloo Da 2', sans-serif; text-shadow: 0 2px 4px rgba(0,0,0,0.8);" title="{{ $featuredPost->title ?? ($featuredPost->blog ? $featuredPost->blog->title : '') }}">{{ $featuredPost->title ?? ($featuredPost->blog ? $featuredPost->blog->title : '') }}</h5>
                                             </div>
                                         </div>
                                     </div>
@@ -768,19 +768,19 @@
                                 @if(isset($galleryPosts[$i]))
                                     @php $post = $galleryPosts[$i]; @endphp
                                     <a href="#" class="d-block text-decoration-none gallery-lightbox-trigger"
-                                       data-image="{{ $post->featured_image_url }}"
-                                       data-title="{{ $post->title }}"
-                                       data-category="{{ $post->category->name ?? 'কর্মসূচী' }}"
-                                       data-url="{{ route('blog.detail', $post->slug) }}">
+                                       data-image="{{ asset($post->image_path) }}"
+                                       data-title="{{ $post->title ?? ($post->blog ? $post->blog->title : 'চিত্রশালা') }}"
+                                       data-category="{{ ($post->blog && $post->blog->category) ? $post->blog->category->name : 'চিত্রশালা' }}"
+                                       data-url="{{ $post->blog ? route('blog.detail', $post->blog->slug) : '#' }}">
                                         <div class="gallery-card small-card">
                                             <div class="gallery-zoom-icon">
                                                 <i class="fas fa-search-plus"></i>
                                             </div>
-                                            <img src="{{ $post->featured_image_url }}" alt="{{ $post->title }}" loading="lazy">
+                                            <img src="{{ asset($post->image_path) }}" alt="{{ $post->title ?? ($post->blog ? $post->blog->title : '') }}" loading="lazy">
                                             <div class="gallery-card-overlay">
                                                 <div class="gallery-card-info">
-                                                    <span class="cat-badge">{{ $post->category->name ?? 'কর্মসূচী' }}</span>
-                                                    <h6 class="title-text text-truncate mb-0" title="{{ $post->title }}">{{ $post->title }}</h6>
+                                                    <span class="cat-badge">{{ ($post->blog && $post->blog->category) ? $post->blog->category->name : 'চিত্রশালা' }}</span>
+                                                    <h6 class="title-text text-truncate mb-0" title="{{ $post->title ?? ($post->blog ? $post->blog->title : '') }}">{{ $post->title ?? ($post->blog ? $post->blog->title : '') }}</h6>
                                                 </div>
                                             </div>
                                         </div>
@@ -1118,7 +1118,12 @@ $(document).ready(function() {
         $('#lightbox-image').attr('src', imageSrc);
         $('#lightbox-category').text(category);
         $('#lightbox-title').text(title);
-        $('#lightbox-article-link').attr('href', articleUrl);
+        
+        if (articleUrl && articleUrl !== '#' && articleUrl !== '') {
+            $('#lightbox-article-link').attr('href', articleUrl).show();
+        } else {
+            $('#lightbox-article-link').hide();
+        }
 
         lightboxModal.show();
     });

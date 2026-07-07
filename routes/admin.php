@@ -305,7 +305,10 @@ Route::post('blog/posts/bulk-gallery', [BlogController::class, 'bulkGalleryUpdat
 Route::post('blog/posts/{id}/toggle-gallery', [BlogController::class, 'toggleGallery'])->name('blog.posts.toggle-gallery');
 Route::post('blog/posts/reorder-gallery', [BlogController::class, 'reorderGallery'])->name('blog.posts.reorder-gallery');
 Route::get('gallery', [BlogController::class, 'galleryIndex'])->name('gallery.index');
-Route::post('gallery/add', [BlogController::class, 'galleryAdd'])->name('gallery.add');
+Route::post('gallery/upload', [BlogController::class, 'galleryAddCustom'])->name('gallery.upload');
+Route::post('gallery/{id}/toggle-active', [BlogController::class, 'galleryToggleActive'])->name('gallery.toggle-active');
+Route::delete('gallery/{id}', [BlogController::class, 'galleryDeleteCustom'])->name('gallery.destroy');
+Route::post('gallery/reorder', [BlogController::class, 'reorderGallery'])->name('gallery.reorder');
 Route::get('blog/posts/by-category/{categoryId}', [BlogController::class, 'getPostsByCategory'])->name('blog.posts.by-category');
 Route::get('blog/posts/by-tag/{tag}', [BlogController::class, 'getPostsByTag'])->name('blog.posts.by-tag');
 Route::get('blog/posts/search', [BlogController::class, 'searchPosts'])->name('blog.posts.search');

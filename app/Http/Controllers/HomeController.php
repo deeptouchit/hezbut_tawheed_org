@@ -7,6 +7,7 @@ use App\Models\Blog;
 use App\Models\TeamMember;
 use App\Models\Testimonial;
 use App\Models\Activity;
+use App\Models\Gallery;
 use App\Models\Book;
 use Illuminate\Http\Request;
 
@@ -79,22 +80,17 @@ class HomeController extends Controller
             ->take(3)
             ->get();
 
-        // ৫.১. চিত্রশালার জন্য ফিচার্ড ইমেজ যুক্ত সর্বশেষ ৮টি ব্লগ পোস্ট (এন্টারপ্রাইজ গ্যালারি কুয়েরি ও ক্যাশিং)
+        // ৫.১. চিত্রশালার জন্য ফিচার্ড ইমেজ যুক্ত সর্বশেষ ৮টি পোস্ট (মিডিয়া লাইব্রেরি থেকে ক্যাশ ও ফাইল অস্তিত্ব যাচাই)
         $galleryPosts = \Cache::remember('home_gallery_posts', 3600, function () {
-            return Blog::published()
-                ->where('is_gallery', true)
-                ->whereNotNull('featured_image')
-                ->where('featured_image', '!=', '')
-                ->select('id', 'title', 'slug', 'featured_image', 'category_id', 'published_at')
-                ->with('category:id,name,slug')
+            return Gallery::where('is_active', true)
                 ->orderBy('gallery_order', 'asc')
-                ->orderBy('published_at', 'desc')
-                ->orderBy('id', 'desc')
+                ->orderBy('updated_at', 'desc')
                 ->take(8)
+                ->with(['blog', 'blog.category'])
                 ->get()
                 ->filter(function($post) {
-                    if (empty($post->featured_image)) return false;
-                    $path = public_path($post->featured_image);
+                    if (empty($post->image_path)) return false;
+                    $path = public_path($post->image_path);
                     return file_exists($path) && filesize($path) > 0;
                 });
         });
