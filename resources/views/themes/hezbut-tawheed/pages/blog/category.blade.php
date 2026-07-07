@@ -5,8 +5,8 @@
 @section('content')
 
     @include('theme::partials.hero_banner', [
-        'title' => $category->name,
-        'subtitle' => 'ক্যাটাগরি: ' . $category->name . ' এর অধীনে প্রকাশিত সকল নিবন্ধ ও প্রকাশনাসমূহ',
+        'title'      => $category->name,
+        'subtitle'   => 'ক্যাটাগরি: ' . $category->name . ' এর অধীনে প্রকাশিত সকল নিবন্ধ ও প্রকাশনাসমূহ',
         'badge_text' => 'ক্যাটাগরি ভিত্তিক নিবন্ধ',
         'badge_icon' => 'fas fa-folder-open'
     ])
@@ -15,7 +15,7 @@
     <div class="py-5" style="background-color: #f8fafc; min-height: 70vh;">
         <div class="container">
             <div class="row">
-                
+
                 <!-- Blog Listing Column (Left: col-lg-8) -->
                 <div class="col-lg-8">
                     <!-- Category active filter notice -->
@@ -35,7 +35,7 @@
                                         <!-- Image Header -->
                                         <div class="position-relative overflow-hidden w-100" style="height: 180px; background-color: #f8fafc;">
                                             <img src="{{ $blog->featured_image_url }}" alt="{{ $blog->title }}" class="w-100 h-100 object-cover zoom-img-hover">
-                                            <span class="position-absolute badge rounded px-3 py-2 fw-bold text-white bg-success-brand" 
+                                            <span class="position-absolute badge rounded px-3 py-2 fw-bold text-white bg-success-brand"
                                                   style="font-size: 9px; right: 15px; top: 15px; z-index: 10; font-family: 'Baloo Da 2', sans-serif;">
                                                 {{ $blog->category->name ?? 'নিবন্ধ' }}
                                             </span>
@@ -90,7 +90,7 @@
                 <!-- Sidebar Column (Right: col-lg-4) -->
                 <div class="col-lg-4 mt-5 mt-lg-0">
                     <div class="ps-lg-2">
-                        
+
                         <!-- Search Widget -->
                         <div class="card border-0 shadow-sm rounded-4 p-4 mb-4 bg-white">
                             <h5 class="fw-bold text-dark mb-3 widget-title" style="font-family: 'Baloo Da 2', sans-serif; font-size: 1.05rem;">
@@ -98,7 +98,7 @@
                             </h5>
                             <form action="{{ route('blog') }}" method="GET" class="search-form-sidebar">
                                 <div class="input-group border rounded-pill bg-white overflow-hidden p-0.5" id="search-wrapper">
-                                    <input type="text" name="search" class="form-control border-0 py-2 ps-3 pe-1" 
+                                    <input type="text" name="search" class="form-control border-0 py-2 ps-3 pe-1"
                                            placeholder="কীওয়ার্ড লিখুন..." value="{{ request('search') }}" style="font-size: 0.9rem; box-shadow: none; font-family: 'Baloo Da 2', sans-serif;">
                                     <button type="submit" class="btn btn-success rounded-circle d-flex align-items-center justify-content-center" style="width: 36px; height: 36px; padding: 0;"><i class="fas fa-search"></i></button>
                                 </div>
@@ -112,7 +112,7 @@
                             </h5>
                             <div class="d-flex flex-column gap-1.5" style="font-family: 'Baloo Da 2', sans-serif;">
                                 @foreach($categories as $catItem)
-                                    <a href="{{ route('blog.category', $catItem->slug) }}" 
+                                    <a href="{{ route('blog.category', $catItem->slug) }}"
                                        class="category-premium-row transition {{ $category->id == $catItem->id ? 'active' : '' }}">
                                         <span class="d-flex align-items-center">
                                             <i class="far fa-folder folder-icon me-3"></i>

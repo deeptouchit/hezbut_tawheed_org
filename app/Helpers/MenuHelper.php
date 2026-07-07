@@ -246,6 +246,10 @@ class MenuHelper
         if ($currentRouteName !== null) {
             // If we are on a blog category page, only match if the item is that specific category
             if ($currentRouteName === 'blog.category') {
+                $currentSlug = request()->route('slug');
+                if ($currentSlug === 'activities' && ($itemPath === 'activities' || $itemPath === 'articles/category/activities')) {
+                    return true;
+                }
                 return $currentPath === $itemPath;
             }
 
