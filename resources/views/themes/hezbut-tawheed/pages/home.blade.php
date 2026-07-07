@@ -120,7 +120,7 @@
     }
     
     .gallery-card.featured-card {
-        height: 580px;
+        height: 388px;
     }
     
     .gallery-card.small-card {
@@ -694,7 +694,7 @@
                 @if(count($galleryPosts) > 0)
                     <!-- Left Column (3 Images stacked vertically) -->
                     <div class="col-lg-3 col-md-6 order-2 order-lg-1">
-                        <div class="d-flex flex-column gap-3 h-100 justify-content-between">
+                        <div class="d-flex flex-column gap-2">
                             @for($i = 1; $i <= 3; $i++)
                                 @if(isset($galleryPosts[$i]))
                                     @php $post = $galleryPosts[$i]; @endphp
@@ -723,9 +723,9 @@
 
                     <!-- Center Column (Text header at top, Featured Image at bottom) -->
                     <div class="col-lg-6 order-1 order-lg-2">
-                        <div class="d-flex flex-column justify-content-between h-100 pb-1" style="min-height: 580px;">
+                        <div class="d-flex flex-column justify-content-between h-100 pb-1" style="min-height: 556px;">
                             <!-- Header Text Area (formerly at the top of the section) -->
-                            <div class="text-center py-2 d-flex flex-column justify-content-center align-items-center" style="height: 180px;">
+                            <div class="text-center py-2 d-flex flex-column justify-content-center align-items-center" style="height: 160px;">
                                 <span class="fw-bold text-gold text-uppercase tracking-wider fs-6 px-3 py-1 rounded-pill" style="background: rgba(16, 185, 129, 0.08); color: #059669; font-size: 0.85rem; border: 1px solid rgba(16, 185, 129, 0.15);">চিত্রশালা</span>
                                 <h2 class="section-title text-dark-green mt-3 fw-bold display-6" style="font-family: 'Baloo Da 2', sans-serif;">ছবি গ্যালারি</h2>
                                 <p class="text-muted mt-2 mb-0" style="font-family: 'Hind Siliguri', sans-serif;">আন্দোলনের বিভিন্ন কর্মসূচী ও কর্মকাণ্ডের স্থিরচিত্রসমূহ</p>
@@ -763,7 +763,7 @@
 
                     <!-- Right Column (3 Images stacked vertically) -->
                     <div class="col-lg-3 col-md-6 order-3">
-                        <div class="d-flex flex-column gap-3 h-100 justify-content-between">
+                        <div class="d-flex flex-column gap-2">
                             @for($i = 4; $i <= 6; $i++)
                                 @if(isset($galleryPosts[$i]))
                                     @php $post = $galleryPosts[$i]; @endphp
