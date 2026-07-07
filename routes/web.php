@@ -74,6 +74,12 @@ Route::post('/articles/{blogId}/comment', [BlogController::class, 'comment'])->n
 Route::delete('/articles/comment/{id}', [BlogController::class, 'deleteComment'])->name('blog.comment.delete');
 Route::post('/articles/refresh-cache', [BlogController::class, 'refreshCache'])->name('blog.refresh.cache');
 Route::get('/feed', [BlogController::class, 'feed'])->name('blog.feed');
+
+// 301 Redirects for legacy category slugs to preserve SEO link equity
+Route::redirect('/articles/category/approval', '/articles/category/approval-and-legality', 301);
+Route::redirect('/articles/category/mamla', '/articles/category/rebuttal-and-legal', 301);
+Route::redirect('/articles/category/attack-on-us', '/articles/category/history-of-persecution', 301);
+
 Route::get('/announcements', [BlogController::class, 'announcements'])->name('announcements.index');
 Route::get('/events', [BlogController::class, 'events'])->name('events.index');
 

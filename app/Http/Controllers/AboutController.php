@@ -141,7 +141,7 @@ class AboutController extends Controller
     private function getStats()
     {
         return Cache::remember('about_stats', 3600 * 24, function () {
-            $postCount        = Blog::where('status', 'published')->count();
+            $postCount        = Blog::published()->count();
             $categoryCount    = BlogCategory::where('status', true)->count();
             $teamCount        = TeamMember::where('is_active', true)->count();
             $testimonialCount = Testimonial::where('is_active', true)->count();

@@ -17,7 +17,7 @@ class SitemapController extends Controller
             ->orderBy('name')
             ->get();
 
-        $blogs = Blog::where('status', 'published')
+        $blogs = Blog::published()
             ->orderBy('created_at', 'desc')
             ->take(100)
             ->get();
@@ -63,7 +63,7 @@ class SitemapController extends Controller
             });
 
         // ব্লগ URL
-        $blogs = Blog::where('status', 'published')
+        $blogs = Blog::published()
             ->select('slug', 'updated_at')
             ->orderBy('id', 'desc')
             ->take(1000)

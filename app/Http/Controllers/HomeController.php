@@ -73,7 +73,7 @@ class HomeController extends Controller
         // ৫. আমাদের কার্যক্রম (ব্লগ পোস্টের 'activities' ক্যাটাগরি থেকে - সর্বোচ্চ ৩টি)
         $activities = Blog::where('status', true)
             ->whereHas('category', function ($q) {
-                $q->where('slug', 'other-activities');
+                $q->where('slug', 'activities');
             })
             ->orderBy('published_at', 'desc')
             ->take(3)

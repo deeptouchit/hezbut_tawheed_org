@@ -73,8 +73,8 @@
                             <li><a href="/programs"><i class="fas fa-chevron-right text-success small"></i> কর্মসূচি</a></li>
                             <li><a href="/publications"><i class="fas fa-chevron-right text-success small"></i> প্রকাশনা</a></li>
                             <li><a href="/library"><i class="fas fa-chevron-right text-success small"></i> লাইব্রেরি</a></li>
-                            <li><a href="/articles/category/approval"><i class="fas fa-chevron-right text-success small"></i> অনুমোদন</a></li>
-                            <li><a href="/articles/category/attack-on-us"><i class="fas fa-chevron-right text-success small"></i> নির্যাতন</a></li>
+                            <li><a href="/articles/category/approval-and-legality"><i class="fas fa-chevron-right text-success small"></i> অনুমোদন</a></li>
+                            <li><a href="/articles/category/history-of-persecution"><i class="fas fa-chevron-right text-success small"></i> নির্যাতন</a></li>
                         </ul>
                     </div>
                 </div>

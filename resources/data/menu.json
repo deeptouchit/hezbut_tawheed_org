@@ -181,7 +181,7 @@
             "is_featured": "false",
             "parent_id": "menu_desktop_philosophy_parent",
             "name": "কার্যক্রমের অনুমোদন",
-            "url": "/articles/category/approval"
+            "url": "/articles/category/approval-and-legality"
         },
         {
             "id": "menu_desktop_activities_parent",
@@ -291,7 +291,7 @@
             "is_featured": "false",
             "parent_id": "menu_desktop_publications_parent",
             "name": "অপপ্রচারের জবাব",
-            "url": "/articles/category/mamla"
+            "url": "/articles/category/rebuttal-and-legal"
         },
         {
             "id": "menu_desktop_oppression",
@@ -301,7 +301,7 @@
             "is_featured": "false",
             "parent_id": "menu_desktop_publications_parent",
             "name": "নির্যাতনের ইতিহাস",
-            "url": "/articles/category/attack-on-us"
+            "url": "/articles/category/history-of-persecution"
         },
         {
             "id": "menu_desktop_sonaimuri",
@@ -583,7 +583,7 @@
             "is_featured": false,
             "parent_id": "menu_mobile_philosophy_parent",
             "name": "কার্যক্রমের অনুমোদন",
-            "url": "/articles/category/approval"
+            "url": "/articles/category/approval-and-legality"
         },
         {
             "id": "menu_mobile_activities_parent",
@@ -693,7 +693,7 @@
             "is_featured": false,
             "parent_id": "menu_mobile_publications_parent",
             "name": "অপপ্রচারের জবাব",
-            "url": "/articles/category/mamla"
+            "url": "/articles/category/rebuttal-and-legal"
         },
         {
             "id": "menu_mobile_oppression",
@@ -703,7 +703,7 @@
             "is_featured": false,
             "parent_id": "menu_mobile_publications_parent",
             "name": "নির্যাতনের ইতিহাস",
-            "url": "/articles/category/attack-on-us"
+            "url": "/articles/category/history-of-persecution"
         },
         {
             "id": "menu_mobile_sonaimuri",

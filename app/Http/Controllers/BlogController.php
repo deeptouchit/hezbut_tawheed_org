@@ -435,10 +435,7 @@ public function archive(Request $request)
         try {
             $blogs = Blog::published()
                 ->whereHas('category', function ($query) {
-                    $query->where('name', 'বিবৃতি')
-                          ->orWhere('id', 19)
-                          ->orWhere('slug', 'like', '%bibriti%')
-                          ->orWhere('slug', '%e0%a6%ac%e0%a6%bf%e0%a6%ac%e0%a7%83%e0%a6%a3%e0%a6%bf');
+                    $query->where('slug', 'movement-news');
                 })
                 ->with(['author', 'category'])
                 ->orderBy('published_at', 'desc')
@@ -492,11 +489,7 @@ public function archive(Request $request)
         try {
             $blogs = Blog::published()
                 ->whereHas('category', function ($query) {
-                    $query->whereIn('id', [4, 23])
-                          ->orWhere('slug', 'like', '%event%')
-                          ->orWhere('slug', 'like', '%recent-topics%')
-                          ->orWhere('name', 'like', '%ইভেন্ট%')
-                          ->orWhere('name', 'like', '%অনুষ্ঠান%');
+                    $query->where('slug', 'events-and-programs');
                 })
                 ->with(['author', 'category'])
                 ->orderBy('published_at', 'desc')
