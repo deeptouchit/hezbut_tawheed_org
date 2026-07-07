@@ -4,7 +4,7 @@
 
 @push('styles')
 <style>
-    /* BNP-style Banner */
+    /* Banner styles */
     .gallery-banner {
         background: linear-gradient(135deg, #022c22 0%, #064e3b 100%);
         padding: 50px 0;
@@ -17,94 +17,212 @@
         bottom: 0;
         left: 0;
         right: 0;
-        height: 8px;
+        height: 6px;
         background: linear-gradient(to right, #10b981, #f59e0b);
     }
     
-    /* BNP-style Grid & Photo Frames */
+    /* Clean grid matching the user's second screenshot */
     .gallery-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        gap: 25px;
+        gap: 15px; /* Clean gap */
+        padding: 15px 0;
     }
     .gallery-item-card {
-        border-radius: 12px;
-        background: #fff;
-        border: 1px solid rgba(0, 0, 0, 0.08);
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-        padding: 12px; /* Thick white frame/border like real photo frames */
-        height: 250px;
-        position: relative;
+        border-radius: 8px; /* Rounded corners matching screenshot */
+        overflow: hidden;
+        aspect-ratio: 16/10; /* Clean photo ratio */
+        cursor: pointer;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        background: #e5e7eb;
     }
     .gallery-item-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 15px 30px rgba(0,0,0,0.15);
-        border-color: #10b981;
-    }
-    .gallery-item-img-wrapper {
-        position: relative;
-        width: 100%;
-        height: 100%;
-        border-radius: 8px;
-        overflow: hidden;
-        background-color: #f8f9fa;
+        transform: scale(1.02);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
     }
     .gallery-item-img {
         width: 100%;
         height: 100%;
         object-fit: cover;
-        transition: transform 0.5s ease;
+        display: block;
     }
-    .gallery-item-card:hover .gallery-item-img {
-        transform: scale(1.08);
-    }
-    .gallery-item-zoom {
-        position: absolute;
+
+    /* Custom Split Lightbox matching bnpbd.org screenshot */
+    #custom-lightbox {
+        position: fixed;
         top: 0;
         left: 0;
         right: 0;
         bottom: 0;
-        background: rgba(2, 44, 34, 0.75); /* Dark green overlay matching BNP/HT colors */
+        background: rgba(0, 0, 0, 0.95);
+        z-index: 10000;
+        display: none; /* Hidden by default */
+    }
+    
+    /* Lightbox main container splitting into left (preview) and right (thumbnails) */
+    .lightbox-container {
         display: flex;
-        align-items: center;
+        width: 100%;
+        height: 100%;
+        position: relative;
+    }
+    
+    /* Left / Center Area: Main Preview */
+    .lightbox-preview-area {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
         justify-content: center;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-        z-index: 2;
+        align-items: center;
+        position: relative;
+        padding: 40px;
+        background: #000;
     }
-    .gallery-item-card:hover .gallery-item-zoom {
-        opacity: 1;
+    
+    .lightbox-main-img {
+        max-width: 90%;
+        max-height: 75vh;
+        object-fit: contain;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        border: 3px solid rgba(255,255,255,0.05);
+        border-radius: 4px;
+        transition: opacity 0.2s ease-in-out;
     }
-    .gallery-zoom-btn {
-        width: 44px;
-        height: 44px;
-        border-radius: 50%;
-        background: #10b981;
+    
+    /* Navigation arrows floating on left and right edges */
+    .lightbox-nav-btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(0,0,0,0.6);
         color: white;
+        border: 1px solid rgba(255,255,255,0.15);
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 18px;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-        transform: scale(0.8);
-        transition: transform 0.3s ease;
         cursor: pointer;
+        font-size: 20px;
+        transition: all 0.3s ease;
+        z-index: 100;
     }
-    .gallery-zoom-btn:hover {
-        background: #f59e0b;
-        transform: scale(1.1) !important;
+    .lightbox-nav-btn:hover {
+        background: #10b981;
+        border-color: #10b981;
+        transform: translateY(-50%) scale(1.1);
     }
-    .gallery-item-card:hover .gallery-zoom-btn {
-        transform: scale(1);
+    .lightbox-prev {
+        left: 20px;
     }
-
-    /* Lightbox Modal */
-    .lightbox-modal-content {
-        background: #0b1512 !important;
-        border: 1px solid rgba(16, 185, 129, 0.25) !important;
-        border-radius: 20px;
+    .lightbox-next {
+        right: 20px;
+    }
+    
+    /* Close button on top-right of preview */
+    .lightbox-close-btn {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: rgba(0,0,0,0.5);
+        color: white;
+        border: none;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        font-size: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: background 0.3s ease;
+        z-index: 1000;
+    }
+    .lightbox-close-btn:hover {
+        background: #dc3545;
+    }
+    
+    /* Info bar below preview */
+    .lightbox-info-bar {
+        position: absolute;
+        bottom: 20px;
+        left: 40px;
+        right: 40px;
+        text-align: center;
+        color: white;
+        z-index: 90;
+        background: rgba(0,0,0,0.7);
+        padding: 15px;
+        border-radius: 8px;
+        border: 1px solid rgba(255,255,255,0.1);
+        backdrop-filter: blur(5px);
+    }
+    .lightbox-title {
+        font-family: 'Baloo Da 2', sans-serif;
+        font-size: 16px;
+        font-weight: 700;
+        margin-bottom: 5px;
+    }
+    .lightbox-meta {
+        font-size: 12px;
+        color: #9ca3af;
+    }
+    .lightbox-link {
+        display: inline-block;
+        margin-top: 8px;
+        color: #10b981;
+        text-decoration: none;
+        font-size: 12px;
+        font-weight: 600;
+    }
+    .lightbox-link:hover {
+        color: #f59e0b;
+    }
+    
+    /* Right Area: Vertical Thumbnails Sidebar */
+    .lightbox-sidebar {
+        width: 140px;
+        min-width: 140px;
+        background: #111;
+        border-left: 1px solid rgba(255,255,255,0.1);
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding: 15px;
+        z-index: 95;
+    }
+    .lightbox-sidebar::-webkit-scrollbar {
+        width: 6px;
+    }
+    .lightbox-sidebar::-webkit-scrollbar-thumb {
+        background: #333;
+        border-radius: 3px;
+    }
+    .lightbox-sidebar-thumb {
+        width: 100%;
+        aspect-ratio: 4/3;
+        border-radius: 4px;
         overflow: hidden;
+        cursor: pointer;
+        border: 2px solid transparent;
+        transition: all 0.2s ease;
+        opacity: 0.6;
+    }
+    .lightbox-sidebar-thumb:hover {
+        opacity: 0.9;
+    }
+    .lightbox-sidebar-thumb.active {
+        border-color: #007bff; /* Bright blue border matching BNP site active thumb */
+        opacity: 1;
+        box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+    }
+    .lightbox-sidebar-thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
     }
 </style>
 @endpush
@@ -123,43 +241,9 @@
     <div class="container">
         @if(count($galleryPosts) > 0)
             <div class="gallery-grid">
-                @foreach($galleryPosts as $post)
-                    <div class="gallery-item-card">
-                        <!-- Image Container with Hover Overlay -->
-                        <div class="gallery-item-img-wrapper">
-                            <img src="{{ asset($post->image_path) }}" alt="{{ $post->title ?? '' }}" class="gallery-item-img" loading="lazy">
-                            
-                            <!-- Hover Green Overlay containing title, date, and zoom btn -->
-                            <div class="gallery-item-zoom">
-                                <div class="d-flex flex-column align-items-center justify-content-center text-center p-3 h-100 w-100">
-                                    <!-- Zoom Trigger -->
-                                    <div class="gallery-zoom-btn mb-2 gallery-lightbox-trigger"
-                                         data-image="{{ asset($post->image_path) }}"
-                                         data-title="{{ $post->title ?? ($post->blog ? $post->blog->title : 'চিত্রশালা') }}"
-                                         data-category="{{ ($post->blog && $post->blog->category) ? $post->blog->category->name : 'চিত্রশালা' }}"
-                                         data-url="{{ $post->blog ? route('blog.detail', $post->blog->slug) : '#' }}">
-                                        <i class="fas fa-search-plus"></i>
-                                    </div>
-                                    
-                                    <!-- Caption/Title -->
-                                    <h4 class="text-white fw-bold mb-1 px-1" style="font-family: 'Baloo Da 2', sans-serif; font-size: 13px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
-                                        {{ $post->title ?? ($post->blog ? $post->blog->title : 'স্থিরচিত্র') }}
-                                    </h4>
-
-                                    <!-- Date -->
-                                    <span class="text-white-50 small mb-2" style="font-size: 10px;">
-                                        <i class="far fa-calendar-alt me-1"></i> {{ $post->created_at->format('d M, Y') }}
-                                    </span>
-
-                                    <!-- Blog Detail Link -->
-                                    @if($post->blog)
-                                        <a href="{{ route('blog.detail', $post->blog->slug) }}" class="btn btn-gold btn-xs py-1 px-3 text-white" style="font-size: 10px; background: #f59e0b; border-radius: 20px; font-family: 'Hind Siliguri', sans-serif;">
-                                            বিস্তারিত খবর <i class="fas fa-arrow-right ms-1" style="font-size: 8px;"></i>
-                                        </a>
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
+                @foreach($galleryPosts as $index => $post)
+                    <div class="gallery-item-card open-lightbox" data-index="{{ $index }}">
+                        <img src="{{ asset($post->image_path) }}" alt="{{ $post->title ?? '' }}" class="gallery-item-img" loading="lazy">
                     </div>
                 @endforeach
             </div>
@@ -177,27 +261,42 @@
     </div>
 </div>
 
-<!-- Photo Gallery Lightbox Modal -->
-<div class="modal fade" id="galleryLightboxModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content lightbox-modal-content text-white">
-            <div class="modal-header border-0 pb-0 position-absolute end-0 top-0" style="z-index: 10;">
-                <button type="button" class="btn-close btn-close-white p-3" data-bs-dismiss="modal" aria-label="Close" style="background-color: rgba(0,0,0,0.55); border-radius: 50%;"></button>
-            </div>
-            <div class="modal-body p-0 position-relative">
-                <img id="lightbox-image" src="" alt="Gallery Image" class="w-100 object-fit-contain" style="max-height: 70vh; background-color: #000;">
-                
-                <div class="p-4" style="background: linear-gradient(transparent, rgba(2, 44, 34, 0.95) 20%, #022c22 100%);">
-                    <span id="lightbox-category" class="badge text-white mb-2 rounded-pill px-3 py-2" style="font-size: 0.75rem; font-weight: 700; background: linear-gradient(135deg, #10b981 0%, #059669 100%);"></span>
-                    <h4 id="lightbox-title" class="fw-bold text-white mb-3" style="font-family: 'Baloo Da 2', sans-serif;"></h4>
-                    <div class="d-flex justify-content-between align-items-center mt-3 pt-3" style="border-top: 1px solid rgba(255,255,255,0.15);">
-                        <span class="small text-muted">হেযবুত তওহীদ চিত্রশালা</span>
-                        <a id="lightbox-article-link" href="" class="btn btn-outline-success btn-sm rounded-pill px-4 py-2 text-white hover-bg-gold" style="border: 2px solid #10b981; transition: all 0.3s ease;">
-                            বিস্তারিত খবর পড়ুন <i class="fas fa-arrow-right ms-1"></i>
-                        </a>
-                    </div>
+<!-- Custom Split-Screen Lightbox Modal (bnpbd.org Style) -->
+<div id="custom-lightbox">
+    <div class="lightbox-container">
+        <!-- Close Button -->
+        <button class="lightbox-close-btn">&times;</button>
+        
+        <!-- Left: Main Image Preview Area -->
+        <div class="lightbox-preview-area">
+            <!-- Navigation Prev -->
+            <button class="lightbox-nav-btn lightbox-prev"><i class="fas fa-chevron-left"></i></button>
+            
+            <!-- Large Image -->
+            <img class="lightbox-main-img" src="" alt="">
+            
+            <!-- Navigation Next -->
+            <button class="lightbox-nav-btn lightbox-next"><i class="fas fa-chevron-right"></i></button>
+            
+            <!-- Bottom Description Details -->
+            <div class="lightbox-info-bar">
+                <div class="lightbox-title" id="lb-title"></div>
+                <div class="lightbox-meta">
+                    <span id="lb-category"></span> | <i class="far fa-calendar-alt"></i> <span id="lb-date"></span>
                 </div>
+                <a href="" id="lb-link" class="lightbox-link" target="_blank">
+                    বিস্তারিত খবর পড়ুন <i class="fas fa-arrow-right ms-1"></i>
+                </a>
             </div>
+        </div>
+        
+        <!-- Right: Vertical Thumbnails List Sidebar -->
+        <div class="lightbox-sidebar">
+            @foreach($galleryPosts as $index => $post)
+                <div class="lightbox-sidebar-thumb" id="thumb-{{ $index }}" data-index="{{ $index }}">
+                    <img src="{{ asset($post->image_path) }}" alt="">
+                </div>
+            @endforeach
         </div>
     </div>
 </div>
@@ -206,26 +305,100 @@
 @push('scripts')
 <script>
 $(document).ready(function() {
-    var lightboxModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('galleryLightboxModal'));
+    // Generate JS array of images for fast navigation
+    var galleryImages = [
+        @foreach($galleryPosts as $index => $post)
+        {
+            index: {{ $index }},
+            image: "{{ asset($post->image_path) }}",
+            title: "{{ $post->title ?? ($post->blog ? $post->blog->title : 'স্থিরচিত্র') }}",
+            category: "{{ ($post->blog && $post->blog->category) ? $post->blog->category->name : 'চিত্রশালা' }}",
+            date: "{{ $post->created_at->format('d M, Y') }}",
+            url: "{{ $post->blog ? route('blog.detail', $post->blog->slug) : '' }}"
+        },
+        @endforeach
+    ];
 
-    $(document).on('click', '.gallery-lightbox-trigger', function(e) {
-        e.preventDefault();
-        var imageSrc = $(this).data('image');
-        var title = $(this).data('title');
-        var category = $(this).data('category');
-        var articleUrl = $(this).data('url');
+    var currentIndex = 0;
 
-        $('#lightbox-image').attr('src', imageSrc);
-        $('#lightbox-category').text(category);
-        $('#lightbox-title').text(title);
-        
-        if (articleUrl && articleUrl !== '#' && articleUrl !== '') {
-            $('#lightbox-article-link').attr('href', articleUrl).show();
+    // Open Lightbox
+    $(document).on('click', '.open-lightbox', function() {
+        var index = parseInt($(this).data('index'));
+        showImage(index);
+        $('#custom-lightbox').fadeIn(300);
+    });
+
+    // Close Lightbox
+    $(document).on('click', '.lightbox-close-btn', function() {
+        $('#custom-lightbox').fadeOut(300);
+    });
+
+    // Prev Button
+    $(document).on('click', '.lightbox-prev', function(e) {
+        e.stopPropagation();
+        var prevIndex = (currentIndex === 0) ? galleryImages.length - 1 : currentIndex - 1;
+        showImage(prevIndex);
+    });
+
+    // Next Button
+    $(document).on('click', '.lightbox-next', function(e) {
+        e.stopPropagation();
+        var nextIndex = (currentIndex === galleryImages.length - 1) ? 0 : currentIndex + 1;
+        showImage(nextIndex);
+    });
+
+    // Thumbnail Click inside sidebar
+    $(document).on('click', '.lightbox-sidebar-thumb', function() {
+        var index = parseInt($(this).data('index'));
+        showImage(index);
+    });
+
+    // Function to render active image and highlight sidebar thumbnail
+    function showImage(index) {
+        currentIndex = index;
+        var data = galleryImages[index];
+
+        // Animate main image transition
+        $('.lightbox-main-img').css('opacity', '0');
+        setTimeout(function() {
+            $('.lightbox-main-img').attr('src', data.image).css('opacity', '1');
+        }, 150);
+
+        // Update descriptions
+        $('#lb-title').text(data.title);
+        $('#lb-category').text(data.category);
+        $('#lb-date').text(data.date);
+
+        // Details link condition
+        if (data.url && data.url !== '') {
+            $('#lb-link').attr('href', data.url).show();
         } else {
-            $('#lightbox-article-link').hide();
+            $('#lb-link').hide();
         }
 
-        lightboxModal.show();
+        // Highlight active thumbnail and scroll into view
+        $('.lightbox-sidebar-thumb').removeClass('active');
+        var activeThumb = $('#thumb-' + index);
+        activeThumb.addClass('active');
+
+        // Scroll sidebar
+        var container = $('.lightbox-sidebar');
+        container.animate({
+            scrollTop: activeThumb.offset().top - container.offset().top + container.scrollTop() - 50
+        }, 300);
+    }
+
+    // Keyboard navigation (Left, Right, Escape)
+    $(document).keydown(function(e) {
+        if ($('#custom-lightbox').is(':visible')) {
+            if (e.keyCode === 37) { // Left arrow
+                $('.lightbox-prev').click();
+            } else if (e.keyCode === 39) { // Right arrow
+                $('.lightbox-next').click();
+            } else if (e.keyCode === 27) { // Escape
+                $('.lightbox-close-btn').click();
+            }
+        }
     });
 });
 </script>
