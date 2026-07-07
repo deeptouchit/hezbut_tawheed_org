@@ -102,6 +102,33 @@
         border-color: rgba(52, 211, 153, 0.45) !important;
         background: rgba(255, 255, 255, 0.08) !important;
     }
+
+    /* Gallery Hover Effects */
+    .gallery-item {
+        position: relative;
+        overflow: hidden;
+        border-radius: 16px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .gallery-item img {
+        transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .gallery-item:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 30px rgba(16, 185, 129, 0.2);
+    }
+    .gallery-item:hover img {
+        transform: scale(1.1);
+    }
+    .gallery-overlay {
+        background: linear-gradient(to top, rgba(2, 44, 34, 0.9) 0%, rgba(2, 44, 34, 0.4) 60%, transparent 100%) !important;
+        opacity: 0.95;
+        transition: all 0.4s ease;
+    }
+    .gallery-item:hover .gallery-overlay {
+        background: linear-gradient(to top, rgba(0, 106, 78, 0.95) 0%, rgba(0, 106, 78, 0.6) 60%, transparent 100%) !important;
+    }
 </style>
 @if(!empty($homepageCss))
 <style>
@@ -547,49 +574,23 @@
             </div>
 
             <div class="row g-3">
-                <!-- Photo 1 -->
-                <div class="col-lg-3 col-md-6 col-6">
-                    <div class="gallery-item position-relative overflow-hidden rounded-4 shadow-sm" style="height: 220px; border-radius: 16px;">
-                        <img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=600" alt="মহাসমাবেশ" class="w-100 h-100 object-fit-cover transition" style="transition: transform 0.4s ease;">
-                        <div class="gallery-overlay position-absolute bottom-0 start-0 w-100 p-3 text-white" style="background: linear-gradient(transparent, rgba(0,0,0,0.85));">
-                            <span class="small fw-bold text-gold" style="font-size: 0.75rem;">সমাবেশ</span>
-                            <h6 class="mb-0 small fw-bold" style="font-size: 0.85rem;">উগ্রবাদ বিরোধী মহাসমাবেশ</h6>
-                        </div>
+                @forelse($galleryPosts as $post)
+                    <div class="col-lg-3 col-md-6 col-6">
+                        <a href="{{ route('blog.detail', $post->slug) }}" class="d-block text-decoration-none">
+                            <div class="gallery-item position-relative overflow-hidden rounded-4 shadow-sm" style="height: 220px; border-radius: 16px;">
+                                <img src="{{ $post->featured_image_url }}" alt="{{ $post->title }}" class="w-100 h-100 object-fit-cover transition" style="transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);">
+                                <div class="gallery-overlay position-absolute bottom-0 start-0 w-100 p-3 text-white d-flex flex-column justify-content-end h-100" style="background: linear-gradient(transparent, rgba(0,0,0,0.85));">
+                                    <span class="small fw-bold text-gold" style="font-size: 0.75rem;">{{ $post->category->name ?? 'কর্মসূচী' }}</span>
+                                    <h6 class="mb-0 small fw-bold text-truncate" style="font-size: 0.85rem;" title="{{ $post->title }}">{{ $post->title }}</h6>
+                                </div>
+                            </div>
+                        </a>
                     </div>
-                </div>
-
-                <!-- Photo 2 -->
-                <div class="col-lg-3 col-md-6 col-6">
-                    <div class="gallery-item position-relative overflow-hidden rounded-4 shadow-sm" style="height: 220px; border-radius: 16px;">
-                        <img src="https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?q=80&w=600" alt="গোলটেবিল আলোচনা" class="w-100 h-100 object-fit-cover transition" style="transition: transform 0.4s ease;">
-                        <div class="gallery-overlay position-absolute bottom-0 start-0 w-100 p-3 text-white" style="background: linear-gradient(transparent, rgba(0,0,0,0.85));">
-                            <span class="small fw-bold text-gold" style="font-size: 0.75rem;">সেমিনার</span>
-                            <h6 class="mb-0 small fw-bold" style="font-size: 0.85rem;">জাতীয় ঐক্য ও শান্তি আলোচনা</h6>
-                        </div>
+                @empty
+                    <div class="col-12 text-center py-4 text-muted">
+                        কোনো স্থিরচিত্র পাওয়া যায়নি!
                     </div>
-                </div>
-
-                <!-- Photo 3 -->
-                <div class="col-lg-3 col-md-6 col-6">
-                    <div class="gallery-item position-relative overflow-hidden rounded-4 shadow-sm" style="height: 220px; border-radius: 16px;">
-                        <img src="https://images.unsplash.com/photo-1509099836639-18ba1795216d?q=80&w=600" alt="ত্রাণ বিতরণ" class="w-100 h-100 object-fit-cover transition" style="transition: transform 0.4s ease;">
-                        <div class="gallery-overlay position-absolute bottom-0 start-0 w-100 p-3 text-white" style="background: linear-gradient(transparent, rgba(0,0,0,0.85));">
-                            <span class="small fw-bold text-gold" style="font-size: 0.75rem;">ত্রাণ বিতরণ</span>
-                            <h6 class="mb-0 small fw-bold" style="font-size: 0.85rem;">অসহায় মানুষের পাশে হেযবুত তওহীদ</h6>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Photo 4 -->
-                <div class="col-lg-3 col-md-6 col-6">
-                    <div class="gallery-item position-relative overflow-hidden rounded-4 shadow-sm" style="height: 220px; border-radius: 16px;">
-                        <img src="https://images.unsplash.com/photo-1556761175-4b46a572b786?q=80&w=600" alt="প্রেস কনফারেন্স" class="w-100 h-100 object-fit-cover transition" style="transition: transform 0.4s ease;">
-                        <div class="gallery-overlay position-absolute bottom-0 start-0 w-100 p-3 text-white" style="background: linear-gradient(transparent, rgba(0,0,0,0.85));">
-                            <span class="small fw-bold text-gold" style="font-size: 0.75rem;">মিডিয়া</span>
-                            <h6 class="mb-0 small fw-bold" style="font-size: 0.85rem;">সংবাদ সম্মেলন ও প্রেস ব্রিফিং</h6>
-                        </div>
-                    </div>
-                </div>
+                @endforelse
             </div>
         </div>
     </section>

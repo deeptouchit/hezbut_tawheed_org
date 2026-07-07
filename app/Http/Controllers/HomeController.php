@@ -79,6 +79,15 @@ class HomeController extends Controller
             ->take(3)
             ->get();
 
+        // ৫.১. চিত্রশালার জন্য ফিচার্ড ইমেজ যুক্ত সর্বশেষ ৮টি ব্লগ পোস্ট
+        $galleryPosts = Blog::published()
+            ->whereNotNull('featured_image')
+            ->where('featured_image', '!=', '')
+            ->with('category')
+            ->orderBy('published_at', 'desc')
+            ->take(8)
+            ->get();
+
         // ভিউতে ডেটা পাঠানো
         return view('theme::pages.home', compact(
             'sliders',
@@ -91,7 +100,8 @@ class HomeController extends Controller
             'homepageLayout',
             'homepageContent',
             'homepageCss',
-            'activities'
+            'activities',
+            'galleryPosts'
         ));
     }
 
