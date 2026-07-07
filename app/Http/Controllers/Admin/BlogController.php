@@ -1118,7 +1118,7 @@ public function reorder(Request $request)
     /**
      * Display a listing of the gallery posts and all media library files.
      */
-    public function galleryIndex()
+    public function galleryIndex(Request $request)
     {
         // 1. Auto-sync: Find published blog posts with featured images not in galleries table and insert them
         $blogImages = Blog::published()
@@ -1149,8 +1149,17 @@ public function reorder(Request $request)
             ->orderBy('updated_at', 'desc')
             ->get();
 
-        // 3. Fetch all library images (WordPress-style grid)
-        $libraryImages = Gallery::orderBy('created_at', 'desc')->get();
+        // 3. Fetch library images with AJAX-friendly pagination (24 per page)
+        $libraryImages = Gallery::orderBy('created_at', 'desc')->paginate(24);
+
+        if ($request->ajax()) {
+            $html = view('admin.gallery.partials.media_cards', compact('libraryImages'))->render();
+            return response()->json([
+                'success' => true,
+                'html' => $html,
+                'hasMore' => $libraryImages->hasMorePages()
+            ]);
+        }
 
         return view('admin.gallery.index', compact('galleryPosts', 'libraryImages'));
     }

@@ -221,55 +221,16 @@
                         <i class="fas fa-th text-muted me-2"></i> সমস্ত মিডিয়া ফাইলসমূহ
                     </h5>
                     <div class="media-grid">
-                        @forelse($libraryImages as $item)
-                            <div class="media-card" id="card-{{ $item->id }}">
-                                <div class="media-img-wrapper">
-                                    <!-- Badges -->
-                                    @if($item->is_custom)
-                                        <span class="badge bg-purple media-badge"><i class="fas fa-cloud me-1"></i> কাস্টম</span>
-                                    @else
-                                        <span class="badge bg-primary media-badge"><i class="fas fa-blog me-1"></i> ব্লগ ইমেজ</span>
-                                    @endif
-
-                                    <!-- Active indicator -->
-                                    @if($item->is_active)
-                                        <div class="active-indicator" title="গ্যালারিতে সক্রিয় আছে">
-                                            <i class="fas fa-check"></i>
-                                        </div>
-                                    @endif
-
-                                    <img src="{{ asset($item->image_path) }}" alt="{{ $item->title }}" class="media-img">
-                                </div>
-                                <div class="media-info">
-                                    <div class="media-title" title="{{ $item->title ?? 'শিরোনামহীন ছবি' }}">
-                                        {{ $item->title ?? 'শিরোনামহীন ছবি' }}
-                                    </div>
-                                    <div class="media-actions">
-                                        <!-- Add/Remove Toggle -->
-                                        <button class="btn btn-xs btn-sm flex-grow-1 toggle-active {{ $item->is_active ? 'btn-danger' : 'btn-success' }}" data-id="{{ $item->id }}">
-                                            @if($item->is_active)
-                                                <i class="fas fa-times-circle me-1"></i> বাদ দিন
-                                            @else
-                                                <i class="fas fa-check-circle me-1"></i> গ্যালারিতে দিন
-                                            @endif
-                                        </button>
-
-                                        <!-- Delete Custom Uploads -->
-                                        @if($item->is_custom)
-                                            <button class="btn btn-xs btn-sm btn-outline-danger delete-custom" data-id="{{ $item->id }}" title="লাইব্রেরি থেকে মুছুন">
-                                                <i class="fas fa-trash-alt"></i>
-                                            </button>
-                                        @endif
-                                    </div>
-                                </div>
-                            </div>
-                        @empty
-                            <div class="col-12 text-center py-5">
-                                <i class="fas fa-photo-video text-muted" style="font-size: 50px;"></i>
-                                <p class="text-muted mt-3">মিডিয়া লাইব্রেরিতে কোনো ছবি নেই!</p>
-                            </div>
-                        @endforelse
+                        @include('admin.gallery.partials.media_cards')
                     </div>
+
+                    @if($libraryImages->hasMorePages())
+                        <div class="text-center my-4" id="load-more-container">
+                            <button id="load-more-btn" class="btn btn-outline-success px-4" data-page="2">
+                                <i class="fas fa-sync-alt me-1"></i> আরো ছবি লোড করুন
+                            </button>
+                        </div>
+                    @endif
                 </div>
 
                 <!-- Tab 2: Active Homepage Gallery (Sortable) -->
@@ -415,6 +376,37 @@ $(document).ready(function() {
                     message = xhr.responseJSON.message;
                 }
                 toastr.error(message);
+            }
+    });
+
+    // ============================================
+    // Load More Media Items
+    // ============================================
+    $(document).on('click', '#load-more-btn', function() {
+        var btn = $(this);
+        var page = btn.data('page');
+        btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-1"></i> লোড হচ্ছে...');
+
+        $.ajax({
+            url: "{{ route('admin.gallery.index') }}?page=" + page,
+            type: "GET",
+            success: function(response) {
+                if (response.success && response.html) {
+                    $('.media-grid').append(response.html);
+                    
+                    if (response.hasMore) {
+                        btn.data('page', page + 1);
+                        btn.prop('disabled', false).html('<i class="fas fa-sync-alt me-1"></i> আরো ছবি লোড করুন');
+                    } else {
+                        $('#load-more-container').fadeOut(400, function() {
+                            $(this).remove();
+                        });
+                    }
+                }
+            },
+            error: function() {
+                toastr.error('ছবি লোড করতে ব্যর্থ হয়েছে');
+                btn.prop('disabled', false).html('<i class="fas fa-sync-alt me-1"></i> আরো ছবি লোড করুন');
             }
         });
     });
