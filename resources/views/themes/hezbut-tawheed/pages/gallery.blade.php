@@ -241,17 +241,17 @@
     <div class="container">
         @if(count($galleryPosts) > 0)
             <div class="gallery-grid">
-                @foreach($galleryPosts as $index => $post)
-                    <div class="gallery-item-card open-lightbox" data-index="{{ $index }}">
-                        <img src="{{ asset($post->image_path) }}" alt="{{ $post->title ?? '' }}" class="gallery-item-img" loading="lazy">
-                    </div>
-                @endforeach
+                @include('theme::pages.gallery_cards')
             </div>
 
-            <!-- Custom Pagination -->
-            <div class="d-flex justify-content-center mt-5">
-                {{ $galleryPosts->links('pagination::bootstrap-5') }}
-            </div>
+            <!-- Custom Load More Button -->
+            @if($galleryPosts->hasMorePages())
+                <div class="text-center mt-5" id="load-more-container">
+                    <button id="load-more-btn" class="btn btn-outline-success px-5 py-2 fw-bold" style="border: 2px solid #10b981; border-radius: 30px; color: #022c22;" data-page="2">
+                        <i class="fas fa-sync-alt me-2"></i> আরো ছবি লোড করুন
+                    </button>
+                </div>
+            @endif
         @else
             <div class="text-center py-6">
                 <i class="far fa-images text-muted opacity-50" style="font-size: 60px;"></i>
@@ -387,6 +387,53 @@ $(document).ready(function() {
             scrollTop: activeThumb.offset().top - container.offset().top + container.scrollTop() - 50
         }, 300);
     }
+
+    // ============================================
+    // Load More Images via AJAX
+    // ============================================
+    $(document).on('click', '#load-more-btn', function() {
+        var btn = $(this);
+        var page = parseInt(btn.attr('data-page'));
+        btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-2"></i> লোড হচ্ছে...');
+
+        $.ajax({
+            url: "{{ route('gallery.index') }}?page=" + page + "&ajax=1",
+            type: "GET",
+            success: function(response) {
+                if (response.success && response.html) {
+                    // 1. Append new cards to grid
+                    $('.gallery-grid').append(response.html);
+
+                    // 2. Append new images to the galleryImages JS array & sidebar thumbnails
+                    response.newImages.forEach(function(imgData) {
+                        var globalIndex = galleryImages.length;
+                        imgData.index = globalIndex;
+                        galleryImages.push(imgData);
+
+                        // Append thumbnail to sidebar
+                        var thumbHtml = '<div class="lightbox-sidebar-thumb" id="thumb-' + globalIndex + '" data-index="' + globalIndex + '">' +
+                                            '<img src="' + imgData.image + '" alt="">' +
+                                        '</div>';
+                        $('.lightbox-sidebar').append(thumbHtml);
+                    });
+
+                    // 3. Update load more button
+                    if (response.hasMore) {
+                        btn.attr('data-page', page + 1);
+                        btn.prop('disabled', false).html('<i class="fas fa-sync-alt me-2"></i> আরো ছবি লোড করুন');
+                    } else {
+                        $('#load-more-container').fadeOut(400, function() {
+                            $(this).remove();
+                        });
+                    }
+                }
+            },
+            error: function() {
+                alert('ছবি লোড করতে ব্যর্থ হয়েছে');
+                btn.prop('disabled', false).html('<i class="fas fa-sync-alt me-2"></i> আরো ছবি লোড করুন');
+            }
+        });
+    });
 
     // Keyboard navigation (Left, Right, Escape)
     $(document).keydown(function(e) {
