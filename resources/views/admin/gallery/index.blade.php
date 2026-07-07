@@ -375,8 +375,8 @@ $(document).ready(function() {
                 if (xhr.responseJSON && xhr.responseJSON.message) {
                     message = xhr.responseJSON.message;
                 }
-                toastr.error(message);
             }
+        });
     });
 
     // ============================================

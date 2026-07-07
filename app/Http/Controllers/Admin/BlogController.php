@@ -1258,6 +1258,17 @@ public function reorder(Request $request)
                 ], 422);
             }
 
+            if (!$gallery->is_active) {
+                // Check if already 8 images are active
+                $activeCount = Gallery::where('is_active', true)->count();
+                if ($activeCount >= 8) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'হোমপেজ গ্যালারিতে সর্বোচ্চ ৮টি ছবি সক্রিয় রাখা সম্ভব! দয়া করে অন্য ছবি নিষ্ক্রিয় করুন।'
+                    ], 422);
+                }
+            }
+
             $gallery->is_active = !$gallery->is_active;
 
             if ($gallery->is_active) {
