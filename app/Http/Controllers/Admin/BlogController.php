@@ -1155,6 +1155,98 @@ public function reorder(Request $request)
     }
 
     /**
+     * Display a listing of the gallery posts.
+     */
+    public function galleryIndex()
+    {
+        // Fetch all published posts currently in the gallery
+        $galleryPosts = Blog::published()
+            ->where('is_gallery', true)
+            ->whereNotNull('featured_image')
+            ->where('featured_image', '!=', '')
+            ->orderBy('gallery_order', 'asc')
+            ->orderBy('published_at', 'desc')
+            ->orderBy('id', 'desc')
+            ->get();
+
+        // Fetch eligible published posts NOT in the gallery (having featured image)
+        $availablePosts = Blog::published()
+            ->where('is_gallery', false)
+            ->whereNotNull('featured_image')
+            ->where('featured_image', '!=', '')
+            ->orderBy('published_at', 'desc')
+            ->get();
+
+        return view('admin.gallery.index', compact('galleryPosts', 'availablePosts'));
+    }
+
+    /**
+     * Add a post to the gallery.
+     */
+    public function galleryAdd(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'blog_id' => 'required|integer|exists:blogs,id',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->first()
+            ], 422);
+        }
+
+        try {
+            $blog = Blog::findOrFail($request->blog_id);
+
+            if (!$blog->featured_image) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'ফিচার্ড ইমেজ ছাড়া কোনো পোস্ট গ্যালারিতে যুক্ত করা যাবে না!'
+                ], 422);
+            }
+
+            // Find next sort order
+            $nextOrder = Blog::where('is_gallery', true)->max('gallery_order') + 1;
+
+            $blog->is_gallery = true;
+            $blog->gallery_order = $nextOrder;
+            $blog->save();
+
+            // Clear cache
+            \Cache::forget('home_gallery_posts');
+            \Cache::forget('api_gallery_posts');
+
+            // Log activity
+            try {
+                \App\Models\ActivityLog::create([
+                    'user_id' => auth()->id(),
+                    'action' => 'gallery_add',
+                    'model' => 'Blog',
+                    'model_id' => $blog->id,
+                    'details' => 'গ্যালারিতে পোস্ট যুক্ত করা হয়েছে: ' . $blog->title,
+                    'ip_address' => request()->ip(),
+                    'user_agent' => request()->userAgent()
+                ]);
+            } catch (\Exception $e) {
+                Log::warning('Activity log failed: ' . $e->getMessage());
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'পোস্ট সফলভাবে গ্যালারিতে যুক্ত করা হয়েছে!'
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Gallery add failed: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'গ্যালারিতে পোস্ট যুক্ত করতে ব্যর্থ হয়েছে!'
+            ], 500);
+        }
+    }
+
+    /**
      * Generate SEO-friendly slug supporting Unicode/Bengali characters
      */
     protected function generateSlug($title)

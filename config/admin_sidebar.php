@@ -92,8 +92,8 @@ return [
             'order'       => 4,
             'title'       => 'Page Management',
             'icon'        => 'fas fa-file-invoice',
-            'active'      => ['admin/pages*', 'admin/activities*', 'admin/books*', 'admin/videos*', 'admin/live-broadcasts*', 'admin/leaders*', 'admin/branches*'],
-            'activeRoute' => ['admin.pages.*', 'admin.activities.*', 'admin.books.*', 'admin.videos.*', 'admin.live-broadcasts.*', 'admin.leaders.*', 'admin.branches.*'],
+            'active'      => ['admin/pages*', 'admin/activities*', 'admin/books*', 'admin/videos*', 'admin/live-broadcasts*', 'admin/leaders*', 'admin/branches*', 'admin/gallery*'],
+            'activeRoute' => ['admin.pages.*', 'admin.activities.*', 'admin.books.*', 'admin.videos.*', 'admin.live-broadcasts.*', 'admin.leaders.*', 'admin.branches.*', 'admin.gallery.*'],
             'roles'       => ['super_admin', 'admin', 'manager'],
             'items'       => [
                 [
@@ -143,6 +143,14 @@ return [
                     'icon'        => 'fas fa-map-marked-alt nav-icon ml-2',
                     'active'      => ['admin/branches*'],
                     'activeRoute' => ['admin.branches.*'],
+                ],
+                [
+                    'order'       => 8,
+                    'route'       => 'admin.gallery.index',
+                    'label'       => 'Photo Gallery',
+                    'icon'        => 'fas fa-images nav-icon ml-2',
+                    'active'      => ['admin/gallery*'],
+                    'activeRoute' => ['admin.gallery.*'],
                 ],
             ],
         ],
