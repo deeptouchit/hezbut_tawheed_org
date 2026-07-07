@@ -103,31 +103,138 @@
         background: rgba(255, 255, 255, 0.08) !important;
     }
 
-    /* Gallery Hover Effects */
-    .gallery-item {
+    /* Ultra-Premium Photo Gallery Styles */
+    .photo-gallery-section {
+        background-color: #f8fafc;
         position: relative;
+    }
+    .gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+    }
+    @media (max-width: 991.98px) {
+        .gallery-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+    @media (max-width: 575.98px) {
+        .gallery-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+    
+    .gallery-card {
+        position: relative;
+        height: 280px;
+        border-radius: 20px;
         overflow: hidden;
-        border-radius: 16px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        background: #ffffff;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 1px solid rgba(226, 232, 240, 0.8) !important;
     }
-    .gallery-item img {
-        transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    .gallery-card img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    .gallery-item:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 12px 30px rgba(16, 185, 129, 0.2);
-    }
-    .gallery-item:hover img {
-        transform: scale(1.1);
-    }
-    .gallery-overlay {
-        background: linear-gradient(to top, rgba(2, 44, 34, 0.9) 0%, rgba(2, 44, 34, 0.4) 60%, transparent 100%) !important;
-        opacity: 0.95;
+    
+    .gallery-card-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(to top, rgba(2, 44, 34, 0.9) 0%, rgba(2, 44, 34, 0.2) 60%, transparent 100%) !important;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        z-index: 2;
         transition: all 0.4s ease;
     }
-    .gallery-item:hover .gallery-overlay {
-        background: linear-gradient(to top, rgba(0, 106, 78, 0.95) 0%, rgba(0, 106, 78, 0.6) 60%, transparent 100%) !important;
+    
+    /* Zoom Icon Indicator */
+    .gallery-zoom-icon {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0.7);
+        width: 54px;
+        height: 54px;
+        border-radius: 50%;
+        background: rgba(16, 185, 129, 0.95);
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        opacity: 0;
+        z-index: 3;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+    }
+
+    .gallery-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(16, 185, 129, 0.18) !important;
+        border-color: rgba(16, 185, 129, 0.35) !important;
+    }
+    
+    .gallery-card:hover img {
+        transform: scale(1.08) rotate(1deg);
+    }
+    
+    .gallery-card:hover .gallery-card-overlay {
+        background: linear-gradient(to top, rgba(0, 106, 78, 0.98) 0%, rgba(0, 106, 78, 0.5) 60%, transparent 100%) !important;
+    }
+    
+    .gallery-card:hover .gallery-zoom-icon {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+    
+    .gallery-card-info {
+        transition: all 0.4s ease;
+    }
+    
+    .gallery-card-info .cat-badge {
+        align-self: flex-start;
+        font-size: 0.68rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: white;
+        padding: 4px 12px;
+        border-radius: 50px;
+        margin-bottom: 8px;
+        box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);
+        display: inline-block;
+    }
+    
+    .gallery-card-info .title-text {
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: #ffffff;
+        line-height: 1.4;
+        font-family: 'Baloo Da 2', sans-serif;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    }
+
+    /* Glassmorphism Lightbox Modal */
+    #galleryLightboxModal .modal-content {
+        backdrop-filter: blur(15px);
+        background: rgba(11, 21, 18, 0.88) !important;
+        border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    }
+    
+    #galleryLightboxModal .btn-close {
+        transition: transform 0.3s ease;
+    }
+    #galleryLightboxModal .btn-close:hover {
+        transform: rotate(90deg);
     }
 </style>
 @if(!empty($homepageCss))
@@ -573,26 +680,34 @@
                 <div class="title-underline bg-gold mx-auto mt-3" style="width: 80px; height: 3px;"></div>
             </div>
 
-            <div class="row g-3">
+            <div class="row g-4">
                 @forelse($galleryPosts as $post)
-                    <div class="col-lg-3 col-md-6 col-6">
+                    <div class="col-lg-3 col-md-6">
                         <a href="#" class="d-block text-decoration-none gallery-lightbox-trigger"
                            data-image="{{ $post->featured_image_url }}"
                            data-title="{{ $post->title }}"
                            data-category="{{ $post->category->name ?? 'কর্মসূচী' }}"
                            data-url="{{ route('blog.detail', $post->slug) }}">
-                            <div class="gallery-item position-relative overflow-hidden rounded-4 shadow-sm" style="height: 220px; border-radius: 16px;">
-                                <img src="{{ $post->featured_image_url }}" alt="{{ $post->title }}" class="w-100 h-100 object-fit-cover transition" style="transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);">
-                                <div class="gallery-overlay position-absolute bottom-0 start-0 w-100 p-3 text-white d-flex flex-column justify-content-end h-100" style="background: linear-gradient(transparent, rgba(0,0,0,0.85));">
-                                    <span class="small fw-bold text-gold" style="font-size: 0.75rem;">{{ $post->category->name ?? 'কর্মসূচী' }}</span>
-                                    <h6 class="mb-0 small fw-bold text-truncate" style="font-size: 0.85rem;" title="{{ $post->title }}">{{ $post->title }}</h6>
+                            <div class="gallery-card">
+                                <div class="gallery-zoom-icon">
+                                    <i class="fas fa-search-plus"></i>
+                                </div>
+                                <img src="{{ $post->featured_image_url }}" alt="{{ $post->title }}">
+                                <div class="gallery-card-overlay">
+                                    <div class="gallery-card-info">
+                                        <span class="cat-badge">
+                                            {{ $post->category->name ?? 'কর্মসূচী' }}
+                                        </span>
+                                        <h6 class="title-text text-truncate mb-0" title="{{ $post->title }}">{{ $post->title }}</h6>
+                                    </div>
                                 </div>
                             </div>
                         </a>
                     </div>
                 @empty
-                    <div class="col-12 text-center py-4 text-muted">
-                        কোনো স্থিরচিত্র পাওয়া যায়নি!
+                    <div class="col-12 text-center py-5 text-muted">
+                        <i class="far fa-images fa-3x mb-3 text-muted opacity-50"></i>
+                        <p class="mb-0">কোনো স্থিরচিত্র পাওয়া যায়নি!</p>
                     </div>
                 @endforelse
             </div>
