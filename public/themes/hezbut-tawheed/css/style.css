@@ -13,10 +13,11 @@
     --gold-hover: #059669;
     --dark: #1E293B;
     --light: #F8FAFC;
-    --off-white: #F1F5F9;
+    --off-white: #f8fafc;
+    --off-white-gray: #F1F5F9;
     --gray-text: #64748B;
     --border-color: #E2E8F0;
-    --font-bengali:  "Baloo Da 2", "Baloo Da 2", "Source Sans Pro", sans-serif;
+    --font-bengali: "Baloo Da 2", "Hind Siliguri", "Source Sans Pro", sans-serif;
     --font-english: 'Inter', sans-serif;
 }
 
@@ -39,8 +40,20 @@ h1, h2, h3, h4, h5, h6 {
     color: var(--gold) !important;
 }
 
+.bg-gold {
+    background-color: var(--gold) !important;
+}
+
+.border-gold {
+    border-color: var(--gold) !important;
+}
+
+.text-dark-green {
+    color: var(--primary-green) !important;
+}
+
 .bg-dark-green {
-    background-color: var(--dark-green) !important;
+    background-color: var(--primary-green) !important;
 }
 
 .bg-light-green {
@@ -49,6 +62,10 @@ h1, h2, h3, h4, h5, h6 {
 
 .bg-off-white {
     background-color: var(--off-white) !important;
+}
+
+.bg-gradient-cta {
+    background: linear-gradient(135deg, var(--primary-green), var(--dark-green)) !important;
 }
 
 .text-gray {
@@ -62,8 +79,8 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Utility Paddings */
 .py-6 {
-    padding-top: 5rem;
-    padding-bottom: 5rem;
+    padding-top: 4.5rem !important;
+    padding-bottom: 4.5rem !important;
 }
 
 /* Underline decoration */
@@ -80,15 +97,16 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Buttons */
 .btn-gold {
-    background-color: var(--gold);
-    color: white;
-    border: none;
+    background-color: var(--gold) !important;
+    color: #fff !important;
+    border: 1px solid var(--gold) !important;
     transition: all 0.3s ease;
 }
 
 .btn-gold:hover {
-    background-color: var(--gold-hover);
-    color: white;
+    background-color: var(--gold-hover) !important;
+    color: #fff !important;
+    transform: translateY(-1px);
 }
 
 .btn-dark-green {
@@ -104,16 +122,16 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .btn-outline-dark-green {
-    border: 2px solid var(--dark-green);
-    color: var(--dark-green);
+    border: 2px solid var(--primary-green) !important;
+    color: var(--primary-green) !important;
     background: transparent;
     font-weight: 600;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
 }
 
 .btn-outline-dark-green:hover {
-    background-color: var(--dark-green);
-    color: white;
+    background: var(--primary-green) !important;
+    color: #fff !important;
 }
 
 .hover-grow {
@@ -701,55 +719,6 @@ h1, h2, h3, h4, h5, h6 {
 }
 .activity-card:hover .activity-img-wrapper img {
     transform: scale(1.08);
-}
-
-/* --- Helper Classes --- */
-.py-6 {
-    padding-top: 4.5rem !important;
-    padding-bottom: 4.5rem !important;
-}
-.bg-off-white {
-    background-color: #f8fafc !important;
-}
-.text-dark-green {
-    color: #006A4E !important;
-}
-.bg-dark-green {
-    background-color: #006A4E !important;
-}
-.text-gold {
-    color: #10B981 !important;
-}
-.bg-gold {
-    background-color: #10B981 !important;
-}
-.btn-gold {
-    background-color: #10B981 !important;
-    color: #fff !important;
-    border: 1px solid #10B981 !important;
-    transition: all 0.3s ease;
-}
-.btn-gold:hover {
-    background-color: #059669 !important;
-    color: #fff !important;
-    transform: translateY(-1px);
-}
-.btn-outline-dark-green {
-    border: 2px solid #006A4E !important;
-    color: #006A4E !important;
-    background: transparent;
-    font-weight: 600;
-    transition: all 0.2s ease;
-}
-.btn-outline-dark-green:hover {
-    background: #006A4E !important;
-    color: #fff !important;
-}
-.border-gold {
-    border-color: #10B981 !important;
-}
-.bg-gradient-cta {
-    background: linear-gradient(135deg, #006A4E, #004D38) !important;
 }
 
 /* --- Photo Gallery Hover Effects --- */

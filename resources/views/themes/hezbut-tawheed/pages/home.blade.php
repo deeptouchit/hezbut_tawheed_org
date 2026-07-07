@@ -4,14 +4,14 @@
 
 @push('styles')
 <style>
-    .carousel-item {
+    #heroCarousel .carousel-item {
         height: 75vh;
         min-height: 480px;
         position: relative;
         overflow: hidden;
         background-color: #0b1a13;
     }
-    .carousel-item-bg {
+    #heroCarousel .carousel-item-bg {
         position: absolute;
         top: 0;
         left: 0;
@@ -23,24 +23,24 @@
         z-index: 1;
         transition: transform 8s ease-out;
     }
-    .carousel-item.active .carousel-item-bg {
+    #heroCarousel .carousel-item.active .carousel-item-bg {
         transform: scale(1.08);
     }
-    .carousel-item-overlay {
+    #heroCarousel .carousel-item-overlay {
         position: relative;
         z-index: 2;
     }
     .text-shadow-premium {
         text-shadow: 0 4px 15px rgba(0, 0, 0, 0.75);
     }
-    .slider-title {
+    #heroCarousel .slider-title {
         font-family: 'Baloo Da 2', sans-serif;
         font-weight: 800;
         line-height: 1.25;
         letter-spacing: -0.5px;
         color: #ffffff !important; /* Force crisp white color on headings */
     }
-    .slider-subtitle {
+    #heroCarousel .slider-subtitle {
         font-family: 'Baloo Da 2', sans-serif;
         font-size: 1.25rem;
         font-weight: 500;
@@ -48,7 +48,7 @@
         opacity: 0.95;
         color: #f8f9fa !important; /* Force off-white for description text */
     }
-    .slider-badge {
+    #heroCarousel .slider-badge {
         background-color: rgba(255, 255, 255, 0.12) !important;
         backdrop-filter: blur(8px);
         -webkit-backdrop-filter: blur(8px);
@@ -59,7 +59,7 @@
         letter-spacing: 0.5px;
         font-size: 0.85rem;
     }
-    .btn-slider-premium {
+    #heroCarousel .btn-slider-premium {
         font-family: 'Baloo Da 2', sans-serif;
         font-weight: 700;
         padding: 12px 40px;
@@ -69,26 +69,26 @@
         font-size: 1.05rem;
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
     }
-    .btn-slider-premium:hover {
+    #heroCarousel .btn-slider-premium:hover {
         transform: translateY(-3px);
         box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3) !important;
     }
-    .btn-slider-primary {
+    #heroCarousel .btn-slider-primary {
         background-color: #006A4E !important;
         color: #ffffff !important;
         border: 2px solid #006A4E !important;
     }
-    .btn-slider-primary:hover {
+    #heroCarousel .btn-slider-primary:hover {
         background-color: #004D38 !important;
         color: #ffffff !important;
         border-color: #004D38 !important;
     }
-    .btn-slider-secondary {
+    #heroCarousel .btn-slider-secondary {
         background-color: transparent !important;
         color: #ffffff !important;
         border: 2px solid rgba(255, 255, 255, 0.65) !important;
     }
-    .btn-slider-secondary:hover {
+    #heroCarousel .btn-slider-secondary:hover {
         background-color: #ffffff !important;
         color: #006A4E !important;
         border-color: #ffffff !important;

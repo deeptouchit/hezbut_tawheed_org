@@ -35,19 +35,19 @@
                 </p>
                 <div class="social-icons mb-4 mb-lg-0">
                     @if($setting->getSetting('facebook_url'))
-                        <a href="{{ $setting->getSetting('facebook_url') }}" class="social-btn facebook" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="{{ $setting->getSetting('facebook_url') }}" class="footer-social-btn facebook" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
                     @endif
                     @if($setting->getSetting('youtube_url'))
-                        <a href="{{ $setting->getSetting('youtube_url') }}" class="social-btn youtube" target="_blank" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                        <a href="{{ $setting->getSetting('youtube_url') }}" class="footer-social-btn youtube" target="_blank" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
                     @endif
                     @if($setting->getSetting('twitter_url'))
-                        <a href="{{ $setting->getSetting('twitter_url') }}" class="social-btn twitter" target="_blank" aria-label="Twitter"><i class="fab fa-x-twitter"></i></a>
+                        <a href="{{ $setting->getSetting('twitter_url') }}" class="footer-social-btn twitter" target="_blank" aria-label="Twitter"><i class="fab fa-x-twitter"></i></a>
                     @endif
                     @if($setting->getSetting('instagram_url'))
-                        <a href="{{ $setting->getSetting('instagram_url') }}" class="social-btn instagram" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="{{ $setting->getSetting('instagram_url') }}" class="footer-social-btn instagram" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
                     @endif
                     @if($setting->getSetting('linkedin_url'))
-                        <a href="{{ $setting->getSetting('linkedin_url') }}" class="social-btn linkedin" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="{{ $setting->getSetting('linkedin_url') }}" class="footer-social-btn linkedin" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
                     @endif
                 </div>
             </div>
@@ -171,7 +171,7 @@
         color: #34d399 !important;
     }
     /* Social Button Styles */
-    .social-btn {
+    .footer-social-btn {
         display: inline-flex;
         justify-content: center;
         align-items: center;
@@ -185,23 +185,23 @@
         transition: all 0.3s ease;
         text-decoration: none;
     }
-    .social-btn:hover {
+    .footer-social-btn:hover {
         color: #ffffff;
         transform: translateY(-3px);
     }
-    .social-btn.facebook:hover {
+    .footer-social-btn.facebook:hover {
         background-color: #3b5998;
     }
-    .social-btn.youtube:hover {
+    .footer-social-btn.youtube:hover {
         background-color: #ff0000;
     }
-    .social-btn.twitter:hover {
+    .footer-social-btn.twitter:hover {
         background-color: #1da1f2;
     }
-    .social-btn.instagram:hover {
+    .footer-social-btn.instagram:hover {
         background-color: #e1306c;
     }
-    .social-btn.linkedin:hover {
+    .footer-social-btn.linkedin:hover {
         background-color: #0077b5;
     }
 
