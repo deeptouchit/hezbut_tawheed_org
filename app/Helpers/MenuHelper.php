@@ -212,6 +212,10 @@ class MenuHelper
         $type = $item['type'] ?? 'url';
         $url = $item['url'];
 
+        if ($url === '#') {
+            return false;
+        }
+
         // Get current route name
         $currentRoute = request()->route();
         $currentRouteName = $currentRoute ? $currentRoute->getName() : null;
