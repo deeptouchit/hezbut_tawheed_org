@@ -4,18 +4,12 @@
 
 @section('content')
 
-    <!-- Classic Banner Header with Correct Brand Colors -->
-    <div class="py-5 text-white position-relative" 
-         style="background: linear-gradient(135deg, #006A4E 0%, #004D38 100%); border-bottom: 4px solid #10B981;">
-        <div class="container text-center py-2">
-            <h1 class="fw-bold mb-2 text-white" style="font-family: 'Baloo Da 2', sans-serif; font-size: 2.2rem;">
-                <i class="fas fa-hashtag me-2" style="color: #34D399;"></i> {{ $tag }}
-            </h1>
-            <p class="lead small mb-0 opacity-90 text-white" style="font-family: 'Baloo Da 2', sans-serif; font-size: 1.05rem;">
-                ট্যাগ: #{{ $tag }} এর অধীনে প্রকাশিত সকল নিবন্ধ ও প্রকাশনাসমূহ
-            </p>
-        </div>
-    </div>
+    @include('theme::partials.hero_banner', [
+        'title' => '#' . $tag,
+        'subtitle' => 'ট্যাগ: #' . $tag . ' এর অধীনে প্রকাশিত সকল নিবন্ধ ও প্রকাশনাসমূহ',
+        'badge_text' => 'ট্যাগ ভিত্তিক নিবন্ধ',
+        'badge_icon' => 'fas fa-hashtag'
+    ])
 
     <!-- Blog Archive Main Section -->
     <div class="py-5" style="background-color: #f8fafc; min-height: 70vh;">
