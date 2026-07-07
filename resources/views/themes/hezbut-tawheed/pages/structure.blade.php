@@ -220,13 +220,12 @@
 
 @section('content')
 
-    <!-- Header Banner -->
-    <div class="py-4 text-white position-relative" style="background: linear-gradient(135deg, rgba(0,106,78,0.95), rgba(0,120,88,0.9)), url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1200') no-repeat center center; background-size: cover; border-bottom: 4px solid #10B981;">
-        <div class="container text-center">
-            <h1 class="fw-bold mb-1 text-white" style="font-family: 'Baloo Da 2', sans-serif; font-size: 2.2rem;"><i class="fas fa-sitemap me-2 text-warning"></i> সাংগঠনিক কাঠামো</h1>
-            <p class="lead small mb-0 opacity-90 text-white" style="font-family: 'Baloo Da 2', sans-serif; font-size: 1.05rem;">হেযবুত তওহীদের নেতৃত্ব এবং সাংগঠনিক স্তর বিন্যাস ডায়াগ্রাম</p>
-        </div>
-    </div>
+    @include('theme::partials.hero_banner', [
+        'title' => 'সাংগঠনিক কাঠামো',
+        'subtitle' => 'হেযবুত তওহীদের নেতৃত্ব এবং সাংগঠনিক স্তর বিন্যাস ডায়াগ্রাম',
+        'badge_text' => 'আন্দোলনের স্তর বিন্যাস',
+        'badge_icon' => 'fas fa-sitemap'
+    ])
 
     <!-- Org Chart Canvas Section -->
     <section class="py-5" style="background-color: #f8fafc;">

@@ -4,13 +4,12 @@
 @section('meta_description', 'হেজবুত তওহীদ নিউজ পোর্টাল ও ব্লগ সাইটের সকল লিংক এবং সাইট ম্যাপ।')
 
 @section('content')
-<!-- Page Header -->
-<div class="py-5 bg-light border-bottom">
-    <div class="container text-center">
-        <h1 class="fw-bold text-dark-green mb-2"><i class="fas fa-sitemap me-2"></i>সাইটম্যাপ</h1>
-        <p class="text-muted leading-relaxed max-w-2xl mx-auto">আমাদের ওয়েবসাইটের সকল পৃষ্ঠা, সংবাদ বিভাগ ও প্রধান সংবাদগুলোর তালিকা নিচে দেওয়া হলো।</p>
-    </div>
-</div>
+    @include('theme::partials.hero_banner', [
+        'title' => 'সাইটম্যাপ',
+        'subtitle' => 'আমাদের ওয়েবসাইটের সকল পৃষ্ঠা, সংবাদ বিভাগ ও প্রধান সংবাদগুলোর তালিকা নিচে দেওয়া হলো।',
+        'badge_text' => 'ওয়েবসাইট ম্যাপ',
+        'badge_icon' => 'fas fa-sitemap'
+    ])
 
 <!-- Sitemap Content -->
 <div class="py-5">

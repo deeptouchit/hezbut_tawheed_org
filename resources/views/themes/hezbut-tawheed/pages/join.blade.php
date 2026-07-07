@@ -4,18 +4,12 @@
 
 @section('content')
 
-    <!-- Premium Inner Page Header Banner -->
-    <div class="py-5 text-white position-relative" 
-         style="background: linear-gradient(135deg, #006A4E 0%, #004D38 100%); border-bottom: 4px solid #F59E0B;">
-         <div class="container text-center py-2" style="font-family: 'Baloo Da 2', sans-serif;">
-            <h1 class="fw-bold mb-2 text-white animate-fade-in" style="font-size: 2.2rem; text-shadow: 0 2px 4px rgba(0,0,0,0.15);">
-                <i class="fas fa-user-plus me-2 text-warning animate-bounce-slow" style="color: #F59E0B !important;"></i> আন্দোলনে যোগদান করুন
-            </h1>
-            <p class="lead small mb-0 opacity-90 text-white" style="font-size: 1.05rem; letter-spacing: 0.5px;">
-                সত্যের আলো ছড়াতে এবং মানবকল্যাণে হেজবুত তওহীদের সাথে যুক্ত হোন
-            </p>
-         </div>
-    </div>
+    @include('theme::partials.hero_banner', [
+        'title' => 'আন্দোলনে যোগদান করুন',
+        'subtitle' => 'সত্যের আলো ছড়াতে এবং মানবকল্যাণে হেজবুত তওহীদের সাথে যুক্ত হোন',
+        'badge_text' => 'আন্দোলনে যোগদান',
+        'badge_icon' => 'fas fa-user-plus'
+    ])
 
     <!-- Join main container -->
     <div class="py-5" style="background-color: #f8fafc; font-family: 'Baloo Da 2', sans-serif;">

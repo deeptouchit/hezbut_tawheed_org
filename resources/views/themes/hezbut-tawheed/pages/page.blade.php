@@ -14,11 +14,12 @@
             {!! $page->content !!}
         </div>
     @else
-        <div class="py-5 text-white position-relative" style="background: linear-gradient(rgba(0,106,78,0.85), rgba(0,106,78,0.85)), url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1200') no-repeat center center; background-size: cover; border-bottom: 4px solid #10B981;">
-            <div class="container py-4 text-center">
-                <h1 class="display-4 fw-bold mb-0 text-shadow text-white">{{ $page->title }}</h1>
-            </div>
-        </div>
+        @include('theme::partials.hero_banner', [
+            'title' => $page->title,
+            'subtitle' => $page->meta_description ?? '',
+            'badge_text' => 'অফিশিয়াল পাতা',
+            'badge_icon' => 'fas fa-file-alt'
+        ])
 
         <!-- Page Content Area -->
         <section class="py-6 bg-off-white">

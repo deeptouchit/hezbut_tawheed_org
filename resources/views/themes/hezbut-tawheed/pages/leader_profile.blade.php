@@ -5,6 +5,13 @@
 
 @section('content')
 
+    @include('theme::partials.hero_banner', [
+        'title' => $leader->name,
+        'subtitle' => $leader->designation,
+        'badge_text' => 'নেতৃত্ব প্রোফাইল',
+        'badge_icon' => 'fas fa-user-tie'
+    ])
+
     <!-- Profile Page Container -->
     <section class="py-5 bg-off-white" style="background-color: #f4f6f8; min-height: 80vh;">
         <div class="container">
