@@ -309,165 +309,173 @@
                     @break
 
                 @case('activities_section')
-                    <!-- Social & Humanitarian Activities Section -->
-    <section class="activities-section py-6" style="background-color: #f8fafc;">
-        <div class="container">
-            <div class="text-center mb-5">
-                <span class="fw-bold text-uppercase tracking-wider fs-6 px-3 py-1 rounded-pill" style="background: rgba(16, 185, 129, 0.08); color: #059669; font-size: 0.85rem; border: 1px solid rgba(16, 185, 129, 0.15);">কর্মধারা</span>
-                <h2 class="section-title text-dark-green mt-3 fw-bold">সেবামূলক ও সচেতনতা কার্যক্রম</h2>
-                <div class="mx-auto mt-2" style="width: 60px; height: 3px; border-radius: 2px; background-color: #10b981;"></div>
-            </div>
-
-            <div class="row g-4">
-                @forelse($activities as $activity)
-                    <div class="col-lg-4 col-md-6">
-                        <div class="card activity-card border-0 shadow-sm overflow-hidden" 
-                             style="border-radius: 20px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); background: #ffffff;">
-                            
-                            <!-- Image Wrapper with zoom effect -->
-                            <div class="position-relative overflow-hidden" style="height: 220px;">
-                                <span class="badge position-absolute rounded-pill px-3 py-2" 
-                                      style="top: 15px; left: 15px; z-index: 10; font-size: 0.75rem; font-weight: 700; background: linear-gradient(135deg, #10b981 0%, #059669 100%); box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3); border: none; color: white;">
-                                    কার্যক্রম
-                                </span>
-                                <img src="{{ $activity->image_url }}" alt="{{ $activity->title }}" class="w-100 h-100 object-fit-cover activity-card-img" style="transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);">
-                            </div>
-                            
-                            <!-- Card Body -->
-                            <div class="card-body p-4 d-flex flex-column justify-content-between" style="min-height: 200px;">
-                                <div>
-                                    <h5 class="fw-bold mb-2">
-                                        <a href="{{ route('blog.detail', $activity->slug) }}" class="text-decoration-none activity-title" style="color: #0f172a; transition: color 0.3s ease; font-family: 'Baloo Da 2', sans-serif;">
-                                            {{ $activity->title }}
-                                        </a>
-                                    </h5>
-                                    <p class="text-muted lh-relaxed mb-4" style="font-size: 0.95rem; text-align: justify; font-family: 'Hind Siliguri', sans-serif;">
-                                        {{ Str::limit($activity->description, 140) }}
-                                    </p>
+                    <!-- Testimonials / Citizen Voices Section -->
+                        <section class="testimonials-section py-6 position-relative overflow-hidden" style="background: linear-gradient(135deg, #022c22 0%, #064e3b 100%) !important; border-top: 4px solid #10B981;">
+                            <!-- Subtle background glowing lights -->
+                            <div class="position-absolute rounded-circle" style="width: 250px; height: 250px; background: rgba(52, 211, 153, 0.1); top: -50px; right: -50px; filter: blur(60px); pointer-events: none;"></div>
+                            <div class="position-absolute rounded-circle" style="width: 250px; height: 250px; background: rgba(16, 185, 129, 0.08); bottom: -50px; left: -50px; filter: blur(60px); pointer-events: none;"></div>
+                    
+                            <div class="container position-relative" style="z-index: 2;">
+                                <div class="text-center mb-5">
+                                    <span class="fw-bold text-uppercase tracking-wider fs-6 px-3 py-1 rounded-pill" style="background: rgba(16, 185, 129, 0.15); color: #34d399; font-size: 0.85rem; border: 1px solid rgba(52, 211, 153, 0.25);">নাগরিক মতামত ও সুধী বাণী</span>
+                                    <h2 class="section-title text-white mt-3 fw-bold">শুভাকাঙ্ক্ষীদের বক্তব্য</h2>
+                                    <div class="mx-auto mt-2" style="width: 60px; height: 3px; border-radius: 2px; background-color: #10b981;"></div>
                                 </div>
-                                <div class="pt-3" style="border-top: 1px solid #f1f5f9;">
-                                    <a href="{{ route('blog.detail', $activity->slug) }}" class="activity-link d-inline-flex align-items-center gap-2 fw-bold text-decoration-none">
-                                        <span>বিস্তারিত দেখুন</span>
-                                        <i class="fas fa-arrow-right"></i>
+                    
+                                <!-- Testimonials Grid / Slider Container -->
+                                <div id="smartTestimonialCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="8000">
+                                    <div class="carousel-inner">
+                                        @php
+                                            // Chunk testimonials to show 3 cards per slide on desktop, 1 on mobile
+                                            $testimonialChunks = $testimonials->chunk(3);
+                                        @endphp
+                                        @forelse($testimonialChunks as $chunkIndex => $chunk)
+                                            <div class="carousel-item {{ $chunkIndex == 0 ? 'active' : '' }}">
+                                                <div class="row g-4 justify-content-center">
+                                                    @foreach($chunk as $testimonial)
+                                                        <div class="col-lg-4 col-md-6">
+                                                            <div class="testimonial-card">
+                    
+                                                                <!-- Quote icon watermark -->
+                                                                <i class="fas fa-quote-right position-absolute" style="font-size: 4.5rem; color: rgba(16, 185, 129, 0.04); bottom: 15px; right: 20px; pointer-events: none;"></i>
+                    
+                                                                <div>
+                                                                    <!-- Rating Stars -->
+                                                                    <div class="mb-3 text-warning fs-6">
+                                                                        @for($i = 1; $i <= 5; $i++)
+                                                                            @if($i <= $testimonial->rating)
+                                                                                <i class="fas fa-star" style="color: #fbbf24;"></i>
+                                                                            @else
+                                                                                <i class="far fa-star" style="color: #cbd5e1;"></i>
+                                                                            @endif
+                                                                        @endfor
+                                                                    </div>
+                    
+                                                                    <!-- Content -->
+                                                                    <p style="font-family: 'Hind Siliguri', sans-serif;">
+                                                                        @if(mb_strlen($testimonial->content) > 130)
+                                                                            {{ mb_substr($testimonial->content, 0, 125) }}...
+                                                                            <a href="javascript:void(0);" class="read-more-btn" data-name="{{ $testimonial->name }}" data-designation="{{ $testimonial->designation }}" data-content="{{ $testimonial->content }}" data-avatar="{{ $testimonial->avatar_url }}">বিস্তারিত পড়ুন</a>
+                                                                        @else
+                                                                            {{ $testimonial->content }}
+                                                                        @endif
+                                                                    </p>
+                                                                </div>
+                    
+                                                                <!-- User Meta -->
+                                                                <div class="d-flex align-items-center mt-auto pt-3" style="border-top: 1px solid #f1f5f9;">
+                                                                    <img src="{{ $testimonial->avatar_url }}" alt="{{ $testimonial->name }}" class="rounded-circle me-3" style="width: 48px; height: 48px; object-fit: cover; border: 2px solid rgba(16, 185, 129, 0.4);">
+                                                                    <div class="text-start">
+                                                                        <h6 class="mb-0 fs-6">{{ $testimonial->name }}</h6>
+                                                                        <span class="small text-emerald">{{ $testimonial->designation ?? 'শুভাকাঙ্ক্ষী' }}</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                            </div>
+                                        @empty
+                                            <!-- Default smart placeholder slide -->
+                                            <div class="carousel-item active">
+                                                <div class="row g-4 justify-content-center">
+                                                    <!-- Dummy Card 1 -->
+                                                    <div class="col-lg-4 col-md-6">
+                                                        <div class="testimonial-card">
+                                                            <div>
+                                                                <div class="mb-3 text-warning"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                                                                <p>উগ্রবাদ, সাম্প্রদায়িকতা ও জঙ্গিবাদের বিরুদ্ধে হেযবুত তওহীদের দেশব্যাপী বুদ্ধিবৃত্তিক প্রচারণা অত্যন্ত প্রশংসনীয়। সমাজে শান্তি রক্ষায় তাদের এই কর্মসূচি গুরুত্বপূর্ণ ভূমিকা রাখছে।</p>
+                                                            </div>
+                                                            <div class="d-flex align-items-center mt-3 pt-3" style="border-top: 1px solid #f1f5f9;">
+                                                                <div class="rounded-circle me-3 d-flex align-items-center justify-content-center text-white fw-bold bg-success" style="width: 48px; height: 48px;">শ</div>
+                                                                <div class="text-start">
+                                                                    <h6 class="mb-0">ড. এ. কে. এম. শাহনেওয়াজ</h6>
+                                                                    <span class="small text-emerald">অধ্যাপক, জাহাঙ্গীরনগর বিশ্ববিদ্যালয়</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- Dummy Card 2 -->
+                                                    <div class="col-lg-4 col-md-6">
+                                                        <div class="testimonial-card">
+                                                            <div>
+                                                                <div class="mb-3 text-warning"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                                                                <p>ধর্মান্ধতা ও কুসংস্কারের বিরুদ্ধে ইসলামের সঠিক অহিংস বাণী মানুষের কাছে তুলে ধরার ব্যাপারে হেযবুত তওহীদের ভূমিকা যুগোপযোগী। তাদের সেবামূলক কার্যক্রম সর্বস্তরের মানুষের প্রশংসা পাওয়ার যোগ্য।</p>
+                                                            </div>
+                                                            <div class="d-flex align-items-center mt-3 pt-3" style="border-top: 1px solid #f1f5f9;">
+                                                                <div class="rounded-circle me-3 d-flex align-items-center justify-content-center text-white fw-bold bg-success" style="width: 48px; height: 48px;">ই</div>
+                                                                <div class="text-start">
+                                                                    <h6 class="mb-0">হাসানুল হক ইনু</h6>
+                                                                    <span class="small text-emerald">সাবেক তথ্য ও সম্প্রচার মন্ত্রী</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- Dummy Card 3 -->
+                                                    <div class="col-lg-4 col-md-6">
+                                                        <div class="testimonial-card">
+                                                            <div>
+                                                                <div class="mb-3 text-warning"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                                                                <p>একটি শান্তিময় ও ধর্মীয় সম্প্রীতিপূর্ণ সমাজ বিনির্মাণে তাদের অরাজনৈতিক আন্দোলন ও আদর্শিক লড়াই সমাজে ইতিবাচক পরিবর্তন আনতে সক্ষম হয়েছে। তাদের সকল মানবিক কাজের সফলতা কামনা করি।</p>
+                                                            </div>
+                                                            <div class="d-flex align-items-center mt-3 pt-3" style="border-top: 1px solid #f1f5f9;">
+                                                                <div class="rounded-circle me-3 d-flex align-items-center justify-content-center text-white fw-bold bg-success" style="width: 48px; height: 48px;">ম</div>
+                                                                <div class="text-start">
+                                                                    <h6 class="mb-0">বিচারপতি সিকদার মকবুল হোসেন</h6>
+                                                                    <span class="small text-emerald">অবসরপ্রাপ্ত বিচারপতি, সুপ্রিম কোর্ট</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforelse
+                                    </div>
+                    
+                                    <!-- Slider Controls if chunks > 1 -->
+                                    @if($testimonialChunks->count() > 1)
+                                        <div class="d-flex justify-content-center gap-3 mt-4">
+                                            <button class="carousel-control-btn d-flex align-items-center justify-content-center rounded-circle" type="button" data-bs-target="#smartTestimonialCarousel" data-bs-slide="prev">
+                                                <i class="fas fa-chevron-left" style="font-size: 0.9rem;"></i>
+                                            </button>
+                                            <button class="carousel-control-btn d-flex align-items-center justify-content-center rounded-circle" type="button" data-bs-target="#smartTestimonialCarousel" data-bs-slide="next">
+                                                <i class="fas fa-chevron-right" style="font-size: 0.9rem;"></i>
+                                            </button>
+                                        </div>
+                                    @endif
+                                </div>
+                    
+                                <!-- Sleek feedback action link -->
+                                <div class="text-center mt-5">
+                                    <a href="{{ url('/feedback') }}" class="btn rounded-pill px-5 py-3 fw-bold transition-all" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); border: none; color: white; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3); font-size: 0.95rem;">
+                                        <i class="fas fa-comments me-2"></i> সকল সুধী মতামত দেখুন
                                     </a>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                @empty
-                    <!-- Fallback Static Cards -->
-                    <!-- Activity 1 -->
-                    <div class="col-lg-4 col-md-6">
-                        <div class="card activity-card border-0 shadow-sm overflow-hidden" 
-                             style="border-radius: 20px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); background: #ffffff;">
-                            <div class="position-relative overflow-hidden" style="height: 220px;">
-                                <span class="badge position-absolute rounded-pill px-3 py-2" 
-                                      style="top: 15px; left: 15px; z-index: 10; font-size: 0.75rem; font-weight: 700; background: linear-gradient(135deg, #10b981 0%, #059669 100%); box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3); border: none; color: white;">
-                                    সেবামূলক
-                                </span>
-                                <img src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?q=80&w=600" alt="রক্তদান কর্মসূচি" class="w-100 h-100 object-fit-cover activity-card-img" style="transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);">
-                            </div>
-                            <div class="card-body p-4 d-flex flex-column justify-content-between" style="min-height: 200px;">
-                                <div>
-                                    <h5 class="fw-bold mb-2">
-                                        <a href="{{ route('blog.category', 'activities') }}" class="text-decoration-none activity-title" style="color: #0f172a; transition: color 0.3s ease; font-family: 'Baloo Da 2', sans-serif;">
-                                            ফ্রি রক্তদান ও চিকিৎসা সেবা
-                                        </a>
-                                    </h5>
-                                    <p class="text-muted lh-relaxed mb-4" style="font-size: 0.95rem; text-align: justify; font-family: 'Hind Siliguri', sans-serif;">
-                                        দেশের বিভিন্ন অঞ্চলে মুমূর্ষু রোগীদের জন্য বিনামূল্যে রক্তদান কর্মসূচি ও রক্ত গ্রুপ পরীক্ষা ক্যাম্প আয়োজন করে থাকে আমাদের স্বেচ্ছাসেবীরা।
-                                    </p>
-                                </div>
-                                <div class="pt-3" style="border-top: 1px solid #f1f5f9;">
-                                    <a href="{{ route('blog.category', 'activities') }}" class="activity-link d-inline-flex align-items-center gap-2 fw-bold text-decoration-none">
-                                        <span>বিস্তারিত দেখুন</span>
-                                        <i class="fas fa-arrow-right"></i>
-                                    </a>
+                        </section>
+                    
+                        <!-- Testimonial Detail Modal -->
+                        <div class="modal fade" id="testimonialDetailModal" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content border-0 shadow-lg text-white" style="background: linear-gradient(135deg, #022c22 0%, #064e3b 100%) !important; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1) !important;">
+                                    <div class="modal-header border-0 pb-0">
+                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body p-4 pt-0 text-center">
+                                        <i class="fas fa-quote-left fa-3x mb-3 opacity-30" style="color: #10b981;"></i>
+                                        <p id="modal-testimonial-content" class="fs-5 lh-relaxed mb-4 text-white opacity-95" style="font-family: 'Hind Siliguri', sans-serif; font-style: italic;"></p>
+                    
+                                        <div class="d-flex align-items-center justify-content-center mt-4 pt-3" style="border-top: 1px solid rgba(255, 255, 255, 0.1);">
+                                            <img id="modal-testimonial-avatar" src="" alt="Avatar" class="rounded-circle me-3" style="width: 55px; height: 55px; object-fit: cover; border: 2px solid #10b981;">
+                                            <div class="text-start">
+                                                <h5 id="modal-testimonial-name" class="fw-bold mb-0 text-white"></h5>
+                                                <span id="modal-testimonial-designation" class="small text-emerald" style="color: #34d399;"></span>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-
-                    <!-- Activity 2 -->
-                    <div class="col-lg-4 col-md-6">
-                        <div class="card activity-card border-0 shadow-sm overflow-hidden" 
-                             style="border-radius: 20px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); background: #ffffff;">
-                            <div class="position-relative overflow-hidden" style="height: 220px;">
-                                <span class="badge position-absolute rounded-pill px-3 py-2" 
-                                      style="top: 15px; left: 15px; z-index: 10; font-size: 0.75rem; font-weight: 700; background: linear-gradient(135deg, #10b981 0%, #059669 100%); box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3); border: none; color: white;">
-                                    সচেতনতা
-                                </span>
-                                <img src="https://images.unsplash.com/photo-1593113598332-cd288d649433?q=80&w=600" alt="উগ্রবাদ বিরোধী সেমিনার" class="w-100 h-100 object-fit-cover activity-card-img" style="transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);">
-                            </div>
-                            <div class="card-body p-4 d-flex flex-column justify-content-between" style="min-height: 200px;">
-                                <div>
-                                    <h5 class="fw-bold mb-2">
-                                        <a href="{{ route('blog.category', 'activities') }}" class="text-decoration-none activity-title" style="color: #0f172a; transition: color 0.3s ease; font-family: 'Baloo Da 2', sans-serif;">
-                                            উগ্রবাদ ও মাদক বিরোধী সচেতনতা
-                                        </a>
-                                    </h5>
-                                    <p class="text-muted lh-relaxed mb-4" style="font-size: 0.95rem; text-align: justify; font-family: 'Hind Siliguri', sans-serif;">
-                                        যুবসমাজকে উগ্র মতাদর্শ, সহিংসতা ও মাদকের হাত থেকে রক্ষা করতে নিয়মিত শিক্ষা প্রতিষ্ঠানে বিশেষ আলোচনা সভা ও সেমিনার অনুষ্ঠিত হয়।
-                                    </p>
-                                </div>
-                                <div class="pt-3" style="border-top: 1px solid #f1f5f9;">
-                                    <a href="{{ route('blog.category', 'activities') }}" class="activity-link d-inline-flex align-items-center gap-2 fw-bold text-decoration-none">
-                                        <span>বিস্তারিত দেখুন</span>
-                                        <i class="fas fa-arrow-right"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Activity 3 -->
-                    <div class="col-lg-4 col-md-6">
-                        <div class="card activity-card border-0 shadow-sm overflow-hidden" 
-                             style="border-radius: 20px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); background: #ffffff;">
-                            <div class="position-relative overflow-hidden" style="height: 220px;">
-                                <span class="badge position-absolute rounded-pill px-3 py-2" 
-                                      style="top: 15px; left: 15px; z-index: 10; font-size: 0.75rem; font-weight: 700; background: linear-gradient(135deg, #10b981 0%, #059669 100%); box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3); border: none; color: white;">
-                                    দুর্যোগ ত্রাণ
-                                </span>
-                                <img src="https://images.unsplash.com/photo-1469571486040-afbef0cd3742?q=80&w=600" alt="ত্রাণ বিতরণ" class="w-100 h-100 object-fit-cover activity-card-img" style="transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);">
-                            </div>
-                            <div class="card-body p-4 d-flex flex-column justify-content-between" style="min-height: 200px;">
-                                <div>
-                                    <h5 class="fw-bold mb-2">
-                                        <a href="{{ route('blog.category', 'activities') }}" class="text-decoration-none activity-title" style="color: #0f172a; transition: color 0.3s ease; font-family: 'Baloo Da 2', sans-serif;">
-                                            দুর্যোগে ত্রাণ ও জরুরি সহায়তা
-                                        </a>
-                                    </h5>
-                                    <p class="text-muted lh-relaxed mb-4" style="font-size: 0.95rem; text-align: justify; font-family: 'Hind Siliguri', sans-serif;">
-                                        বন্যা, অতিবৃষ্টি ও যেকোনো প্রাকৃতিক দুর্যোগের শিকার অসহায় মানুষের মাঝে খাদ্য সামগ্রী ও নিত্যপ্রয়োজনীয় জিনিসপত্র পৌঁছে দেওয়া হয়।
-                                    </p>
-                                </div>
-                                <div class="pt-3" style="border-top: 1px solid #f1f5f9;">
-                                    <a href="{{ route('blog.category', 'activities') }}" class="activity-link d-inline-flex align-items-center gap-2 fw-bold text-decoration-none">
-                                        <span>বিস্তারিত দেখুন</span>
-                                        <i class="fas fa-arrow-right"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                @endforelse
-            </div>
-
-            @if(count($activities) > 0)
-                <div class="text-center mt-5">
-                    <a href="{{ route('blog.category', 'activities') }}" class="btn btn-outline-success px-4 py-2.5 rounded-pill fw-bold transition-all" style="border: 2px solid #10b981; color: #059669; font-size: 0.95rem;">
-                        সব কার্যক্রম দেখুন <i class="fas fa-arrow-right ms-1"></i>
-                    </a>
-                </div>
-            @endif
-        </div>
-    </section>
-                    @break
-
-                
-                @case('testimonials_section')
-
                     @break
 
                 @default
@@ -635,174 +643,7 @@
         </div>
     </section>
 
-    <!-- Testimonials / Citizen Voices Section -->
-    <section class="testimonials-section py-6 position-relative overflow-hidden" style="background: linear-gradient(135deg, #022c22 0%, #064e3b 100%) !important; border-top: 4px solid #10B981;">
-        <!-- Subtle background glowing lights -->
-        <div class="position-absolute rounded-circle" style="width: 250px; height: 250px; background: rgba(52, 211, 153, 0.1); top: -50px; right: -50px; filter: blur(60px); pointer-events: none;"></div>
-        <div class="position-absolute rounded-circle" style="width: 250px; height: 250px; background: rgba(16, 185, 129, 0.08); bottom: -50px; left: -50px; filter: blur(60px); pointer-events: none;"></div>
-
-        <div class="container position-relative" style="z-index: 2;">
-            <div class="text-center mb-5">
-                <span class="fw-bold text-uppercase tracking-wider fs-6 px-3 py-1 rounded-pill" style="background: rgba(16, 185, 129, 0.15); color: #34d399; font-size: 0.85rem; border: 1px solid rgba(52, 211, 153, 0.25);">নাগরিক মতামত ও সুধী বাণী</span>
-                <h2 class="section-title text-white mt-3 fw-bold">শুভাকাঙ্ক্ষীদের বক্তব্য</h2>
-                <div class="mx-auto mt-2" style="width: 60px; height: 3px; border-radius: 2px; background-color: #10b981;"></div>
-            </div>
-
-            <!-- Testimonials Grid / Slider Container -->
-            <div id="smartTestimonialCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="8000">
-                <div class="carousel-inner">
-                    @php
-                        // Chunk testimonials to show 3 cards per slide on desktop, 1 on mobile
-                        $testimonialChunks = $testimonials->chunk(3);
-                    @endphp
-                    @forelse($testimonialChunks as $chunkIndex => $chunk)
-                        <div class="carousel-item {{ $chunkIndex == 0 ? 'active' : '' }}">
-                            <div class="row g-4 justify-content-center">
-                                @foreach($chunk as $testimonial)
-                                    <div class="col-lg-4 col-md-6">
-                                        <div class="testimonial-card">
-
-                                            <!-- Quote icon watermark -->
-                                            <i class="fas fa-quote-right position-absolute" style="font-size: 4.5rem; color: rgba(16, 185, 129, 0.04); bottom: 15px; right: 20px; pointer-events: none;"></i>
-
-                                            <div>
-                                                <!-- Rating Stars -->
-                                                <div class="mb-3 text-warning fs-6">
-                                                    @for($i = 1; $i <= 5; $i++)
-                                                        @if($i <= $testimonial->rating)
-                                                            <i class="fas fa-star" style="color: #fbbf24;"></i>
-                                                        @else
-                                                            <i class="far fa-star" style="color: #cbd5e1;"></i>
-                                                        @endif
-                                                    @endfor
-                                                </div>
-
-                                                <!-- Content -->
-                                                <p style="font-family: 'Hind Siliguri', sans-serif;">
-                                                    @if(mb_strlen($testimonial->content) > 130)
-                                                        {{ mb_substr($testimonial->content, 0, 125) }}...
-                                                        <a href="javascript:void(0);" class="read-more-btn" data-name="{{ $testimonial->name }}" data-designation="{{ $testimonial->designation }}" data-content="{{ $testimonial->content }}" data-avatar="{{ $testimonial->avatar_url }}">বিস্তারিত পড়ুন</a>
-                                                    @else
-                                                        {{ $testimonial->content }}
-                                                    @endif
-                                                </p>
-                                            </div>
-
-                                            <!-- User Meta -->
-                                            <div class="d-flex align-items-center mt-auto pt-3" style="border-top: 1px solid #f1f5f9;">
-                                                <img src="{{ $testimonial->avatar_url }}" alt="{{ $testimonial->name }}" class="rounded-circle me-3" style="width: 48px; height: 48px; object-fit: cover; border: 2px solid rgba(16, 185, 129, 0.4);">
-                                                <div class="text-start">
-                                                    <h6 class="mb-0 fs-6">{{ $testimonial->name }}</h6>
-                                                    <span class="small text-emerald">{{ $testimonial->designation ?? 'শুভাকাঙ্ক্ষী' }}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endforeach
-                            </div>
-                        </div>
-                    @empty
-                        <!-- Default smart placeholder slide -->
-                        <div class="carousel-item active">
-                            <div class="row g-4 justify-content-center">
-                                <!-- Dummy Card 1 -->
-                                <div class="col-lg-4 col-md-6">
-                                    <div class="testimonial-card">
-                                        <div>
-                                            <div class="mb-3 text-warning"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-                                            <p>উগ্রবাদ, সাম্প্রদায়িকতা ও জঙ্গিবাদের বিরুদ্ধে হেযবুত তওহীদের দেশব্যাপী বুদ্ধিবৃত্তিক প্রচারণা অত্যন্ত প্রশংসনীয়। সমাজে শান্তি রক্ষায় তাদের এই কর্মসূচি গুরুত্বপূর্ণ ভূমিকা রাখছে।</p>
-                                        </div>
-                                        <div class="d-flex align-items-center mt-3 pt-3" style="border-top: 1px solid #f1f5f9;">
-                                            <div class="rounded-circle me-3 d-flex align-items-center justify-content-center text-white fw-bold bg-success" style="width: 48px; height: 48px;">শ</div>
-                                            <div class="text-start">
-                                                <h6 class="mb-0">ড. এ. কে. এম. শাহনেওয়াজ</h6>
-                                                <span class="small text-emerald">অধ্যাপক, জাহাঙ্গীরনগর বিশ্ববিদ্যালয়</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- Dummy Card 2 -->
-                                <div class="col-lg-4 col-md-6">
-                                    <div class="testimonial-card">
-                                        <div>
-                                            <div class="mb-3 text-warning"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-                                            <p>ধর্মান্ধতা ও কুসংস্কারের বিরুদ্ধে ইসলামের সঠিক অহিংস বাণী মানুষের কাছে তুলে ধরার ব্যাপারে হেযবুত তওহীদের ভূমিকা যুগোপযোগী। তাদের সেবামূলক কার্যক্রম সর্বস্তরের মানুষের প্রশংসা পাওয়ার যোগ্য।</p>
-                                        </div>
-                                        <div class="d-flex align-items-center mt-3 pt-3" style="border-top: 1px solid #f1f5f9;">
-                                            <div class="rounded-circle me-3 d-flex align-items-center justify-content-center text-white fw-bold bg-success" style="width: 48px; height: 48px;">ই</div>
-                                            <div class="text-start">
-                                                <h6 class="mb-0">হাসানুল হক ইনু</h6>
-                                                <span class="small text-emerald">সাবেক তথ্য ও সম্প্রচার মন্ত্রী</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- Dummy Card 3 -->
-                                <div class="col-lg-4 col-md-6">
-                                    <div class="testimonial-card">
-                                        <div>
-                                            <div class="mb-3 text-warning"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-                                            <p>একটি শান্তিময় ও ধর্মীয় সম্প্রীতিপূর্ণ সমাজ বিনির্মাণে তাদের অরাজনৈতিক আন্দোলন ও আদর্শিক লড়াই সমাজে ইতিবাচক পরিবর্তন আনতে সক্ষম হয়েছে। তাদের সকল মানবিক কাজের সফলতা কামনা করি।</p>
-                                        </div>
-                                        <div class="d-flex align-items-center mt-3 pt-3" style="border-top: 1px solid #f1f5f9;">
-                                            <div class="rounded-circle me-3 d-flex align-items-center justify-content-center text-white fw-bold bg-success" style="width: 48px; height: 48px;">ম</div>
-                                            <div class="text-start">
-                                                <h6 class="mb-0">বিচারপতি সিকদার মকবুল হোসেন</h6>
-                                                <span class="small text-emerald">অবসরপ্রাপ্ত বিচারপতি, সুপ্রিম কোর্ট</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    @endforelse
-                </div>
-
-                <!-- Slider Controls if chunks > 1 -->
-                @if($testimonialChunks->count() > 1)
-                    <div class="d-flex justify-content-center gap-3 mt-4">
-                        <button class="carousel-control-btn d-flex align-items-center justify-content-center rounded-circle" type="button" data-bs-target="#smartTestimonialCarousel" data-bs-slide="prev">
-                            <i class="fas fa-chevron-left" style="font-size: 0.9rem;"></i>
-                        </button>
-                        <button class="carousel-control-btn d-flex align-items-center justify-content-center rounded-circle" type="button" data-bs-target="#smartTestimonialCarousel" data-bs-slide="next">
-                            <i class="fas fa-chevron-right" style="font-size: 0.9rem;"></i>
-                        </button>
-                    </div>
-                @endif
-            </div>
-
-            <!-- Sleek feedback action link -->
-            <div class="text-center mt-5">
-                <a href="{{ url('/feedback') }}" class="btn rounded-pill px-5 py-3 fw-bold transition-all" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); border: none; color: white; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3); font-size: 0.95rem;">
-                    <i class="fas fa-comments me-2"></i> সকল সুধী মতামত দেখুন
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Testimonial Detail Modal -->
-    <div class="modal fade" id="testimonialDetailModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0 shadow-lg text-white" style="background: linear-gradient(135deg, #022c22 0%, #064e3b 100%) !important; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1) !important;">
-                <div class="modal-header border-0 pb-0">
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body p-4 pt-0 text-center">
-                    <i class="fas fa-quote-left fa-3x mb-3 opacity-30" style="color: #10b981;"></i>
-                    <p id="modal-testimonial-content" class="fs-5 lh-relaxed mb-4 text-white opacity-95" style="font-family: 'Hind Siliguri', sans-serif; font-style: italic;"></p>
-
-                    <div class="d-flex align-items-center justify-content-center mt-4 pt-3" style="border-top: 1px solid rgba(255, 255, 255, 0.1);">
-                        <img id="modal-testimonial-avatar" src="" alt="Avatar" class="rounded-circle me-3" style="width: 55px; height: 55px; object-fit: cover; border: 2px solid #10b981;">
-                        <div class="text-start">
-                            <h5 id="modal-testimonial-name" class="fw-bold mb-0 text-white"></h5>
-                            <span id="modal-testimonial-designation" class="small text-emerald" style="color: #34d399;"></span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
+    
     <!-- Citizens Feedback / Suggestion Box Section -->
     <section class="feedback-section py-6" style="background-color: #f8fafc;">
         <div class="container">
