@@ -5,13 +5,12 @@
 
 @section('content')
 
-    <!-- Banner Header -->
-    <div class="py-4 text-white position-relative" style="background: linear-gradient(135deg, rgba(0,106,78,0.95), rgba(0,120,88,0.9)), url('https://images.unsplash.com/photo-1541872703-74c5e44368f9?q=80&w=1200') no-repeat center center; background-size: cover; border-bottom: 4px solid #10B981;">
-        <div class="container text-center">
-            <h1 class="fw-bold mb-1 text-white" style="font-family: 'Baloo Da 2', sans-serif; font-size: 2.2rem;"><i class="fas fa-user-tie me-2"></i> নেতৃত্ব পরিচিতি</h1>
-            <p class="lead small mb-0 opacity-90 text-white" style="font-family: 'Baloo Da 2', sans-serif; font-size: 1.05rem;">হেযবুত তওহীদের আদর্শ ও কার্যক্রম এগিয়ে নিয়ে যাওয়া কেন্দ্রীয় ও বিভিন্ন স্তরের নেতৃত্ববৃন্দ</p>
-        </div>
-    </div>
+    @include('theme::partials.hero_banner', [
+        'title' => 'নেতৃত্ব পরিচিতি',
+        'subtitle' => 'হেযবুত তওহীদের আদর্শ ও কার্যক্রম এগিয়ে নিয়ে যাওয়া কেন্দ্রীয় ও বিভিন্ন স্তরের নেতৃত্ববৃন্দ',
+        'badge_text' => 'নেতৃত্ব পরিচিতি ও জীবনী',
+        'badge_icon' => 'fas fa-user-tie'
+    ])
 
     <!-- Spotlight Section: Emam/Founder Spotlight -->
     @if($founders->count() > 0)

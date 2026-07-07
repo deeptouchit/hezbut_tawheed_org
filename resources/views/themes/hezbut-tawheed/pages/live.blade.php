@@ -5,13 +5,12 @@
 
 @section('content')
 
-    <!-- Banner Header -->
-    <div class="py-4 text-white position-relative" style="background: linear-gradient(rgba(0,106,78,0.9), rgba(0,106,78,0.9)), url('https://images.unsplash.com/photo-1598257006458-087169a1f08d?q=80&w=1200') no-repeat center center; background-size: cover; border-bottom: 4px solid #10B981;">
-        <div class="container text-center">
-            <h1 class="fw-bold mb-1 text-white" style="font-family: 'Baloo Da 2', sans-serif; font-size: 2.2rem;"><i class="fas fa-broadcast-tower me-2"></i> সরাসরি সম্প্রচার</h1>
-            <p class="lead small mb-0 opacity-90 text-white" style="font-family: 'Baloo Da 2', sans-serif;">হেযবুত তওহীদের নীতি ও সাম্প্রতিক কার্যক্রমের লাইভ প্রোগ্রামসমূহ সরাসরি সম্প্রচার ও আর্কাইভ দেখুন</p>
-        </div>
-    </div>
+    @include('theme::partials.hero_banner', [
+        'title' => 'সরাসরি সম্প্রচার',
+        'subtitle' => 'হেযবুত তওহীদের নীতি ও সাম্প্রতিক কার্যক্রমের লাইভ প্রোগ্রামসমূহ সরাসরি সম্প্রচার ও আর্কাইভ দেখুন',
+        'badge_text' => 'লাইভ ব্রডকাস্ট ও ভিডিও আর্কাইভ',
+        'badge_icon' => 'fas fa-broadcast-tower'
+    ])
 
     <!-- Main Live Player & Details Section -->
     <section class="py-5 bg-off-white" style="background-color: #f4f6f8;">

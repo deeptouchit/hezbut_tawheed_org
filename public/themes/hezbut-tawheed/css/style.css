@@ -758,7 +758,25 @@ h1, h2, h3, h4, h5, h6 {
     border-color: #006A4E !important;
     box-shadow: 0 4px 10px rgba(0, 106, 78, 0.2);
 }
-
-
-
-
+/* --- Reusable Hero Banner Animations & Layouts --- */
+.grid-pattern-mask {
+    background-image: radial-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 0);
+    background-size: 24px 24px;
+}
+@keyframes float-bubble {
+    0% { transform: scale(1) translate(0, 0); }
+    50% { transform: scale(1.15) translate(40px, 30px); }
+    100% { transform: scale(0.9) translate(-20px, -30px); }
+}
+.bubble-bg {
+    animation-fill-mode: both;
+}
+.bg-emerald {
+    background-color: #10b981 !important;
+}
+.bg-teal {
+    background-color: #0d9488 !important;
+}
+.text-success-light {
+    color: #a7f3d0 !important;
+}

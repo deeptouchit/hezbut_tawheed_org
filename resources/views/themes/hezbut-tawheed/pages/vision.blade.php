@@ -4,13 +4,12 @@
 
 @section('content')
 
-    <!-- Inner Page Header Banner -->
-    <div class="py-5 text-white position-relative" style="background: linear-gradient(rgba(0,106,78,0.85), rgba(0,106,78,0.85)), url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1200') no-repeat center center; background-size: cover; border-bottom: 4px solid #D4AF37;">
-        <div class="container py-4 text-center">
-            <h1 class="display-4 fw-bold mb-2 text-shadow text-white">এক নজরে হেযবুত তওহীদ</h1>
-            <p class="lead mb-0 opacity-90 text-gold fw-bold">আন্দোলনের পরিচিতি, মূলনীতি, লক্ষ্য ও বিস্তারিত কর্মধারা</p>
-        </div>
-    </div>
+    @include('theme::partials.hero_banner', [
+        'title' => 'এক নজরে হেযবুত তওহীদ',
+        'subtitle' => 'আন্দোলনের পরিচিতি, মূলনীতি, লক্ষ্য ও বিস্তারিত কর্মধারা',
+        'badge_text' => 'আন্দোলনের রূপরেখা ও ভিশন',
+        'badge_icon' => 'fas fa-eye'
+    ])
 
     <!-- Vision Content Section -->
     <section class="py-6 bg-off-white">

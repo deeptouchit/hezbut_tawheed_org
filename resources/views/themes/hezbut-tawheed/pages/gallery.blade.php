@@ -4,22 +4,7 @@
 
 @push('styles')
 <style>
-    /* Banner styles */
-    .gallery-banner {
-        background: linear-gradient(135deg, #022c22 0%, #064e3b 100%);
-        padding: 50px 0;
-        position: relative;
-        overflow: hidden;
-    }
-    .gallery-banner::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 6px;
-        background: linear-gradient(to right, #10b981, #f59e0b);
-    }
+
     
     /* Clean grid matching the user's second screenshot */
     .gallery-grid {
@@ -228,13 +213,12 @@
 @endpush
 
 @section('content')
-<!-- Header Banner -->
-<div class="gallery-banner text-center text-white">
-    <div class="container">
-        <h1 class="display-6 fw-bold mb-2" style="font-family: 'Baloo Da 2', sans-serif;">স্থিরচিত্র চিত্রশালা</h1>
-        <p class="lead opacity-75 mb-0" style="font-family: 'Hind Siliguri', sans-serif; font-size: 1.05rem;">আন্দোলনের বিভিন্ন কর্মসূচী, সেমিনার ও সামাজিক কার্যক্রমের গ্যালারি</p>
-    </div>
-</div>
+@include('theme::partials.hero_banner', [
+    'title' => 'স্থিরচিত্র চিত্রশালা',
+    'subtitle' => 'আন্দোলনের বিভিন্ন কর্মসূচী, সেমিনার ও সামাজিক কার্যক্রমের গ্যালারি',
+    'badge_text' => 'চিত্রশালা ও স্থিরচিত্র',
+    'badge_icon' => 'fas fa-images'
+])
 
 <!-- Gallery Grid Section -->
 <div class="py-6 bg-light">

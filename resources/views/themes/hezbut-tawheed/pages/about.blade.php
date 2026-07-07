@@ -5,17 +5,12 @@
 @section('content')
 
     <!-- Inner Page Header Banner -->
-    <div class="inner-page-header py-5 bg-dark-green text-white position-relative">
-        <div class="container py-3">
-            <h1 class="fw-bold mb-2">আমাদের সম্পর্কে</h1>
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb mb-0">
-                    <li class="breadcrumb-item"><a href="{{ route('home') }}" class="text-gold text-decoration-none">মূল পাতা</a></li>
-                    <li class="breadcrumb-item active text-white opacity-75" aria-current="page">আমাদের সম্পর্কে</li>
-                </ol>
-            </nav>
-        </div>
-    </div>
+    @include('theme::partials.hero_banner', [
+        'title' => 'আমাদের সম্পর্কে',
+        'subtitle' => 'ধর্মীয় গোঁড়ামি, কুসংস্কার, জঙ্গিবাদ ও উগ্রবাদের বিরুদ্ধে মানবতার কল্যাণে এক বজ্রকণ্ঠ',
+        'badge_text' => 'পরিচিতি ও ইতিহাস',
+        'badge_icon' => 'fas fa-info-circle'
+    ])
 
     <!-- About Section Content -->
     <section class="about-intro-section py-6 bg-off-white">

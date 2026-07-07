@@ -4,18 +4,12 @@
 
 @section('content')
 
-    <!-- Premium Inner Page Header Banner -->
-    <div class="py-5 text-white position-relative" 
-         style="background: linear-gradient(135deg, #006A4E 0%, #004D38 100%); border-bottom: 4px solid #10B981;">
-        <div class="container text-center py-2" style="font-family: 'Baloo Da 2', sans-serif;">
-            <h1 class="fw-bold mb-2 text-white" style="font-size: 2.2rem;">
-                <i class="fas fa-comments me-2 text-warning"></i> নাগরিক মতামত ও প্রতিক্রিয়া
-            </h1>
-            <p class="lead small mb-0 opacity-90 text-white" style="font-size: 1.05rem;">
-                হেজবুত তওহীদের আদর্শ, সমাজ সংস্কার ও মানবিক কার্যক্রম সম্পর্কে দেশ-বিদেশের নাগরিকদের মূল্যবান মতামত
-            </p>
-        </div>
-    </div>
+    @include('theme::partials.hero_banner', [
+        'title' => 'নাগরিক মতামত ও প্রতিক্রিয়া',
+        'subtitle' => 'হেজবুত তওহীদের আদর্শ, সমাজ সংস্কার ও মানবিক কার্যক্রম সম্পর্কে দেশ-বিদেশের নাগরিকদের মূল্যবান মতামত',
+        'badge_text' => 'মতামত ও ফিডব্যাক',
+        'badge_icon' => 'fas fa-comments'
+    ])
 
     <!-- Feedback Main Section -->
     <div class="py-5" style="background-color: #f8fafc; font-family: 'Baloo Da 2', sans-serif;">
