@@ -83,6 +83,14 @@ class Blog extends Model
       // Accessors
       // =============================================
       /**
+     * Compatibility accessor to map image_url to featured_image_url
+     */
+    public function getImageUrlAttribute()
+    {
+        return $this->featured_image_url;
+    }
+
+    /**
      * ফিচার্ড ইমেজ URL এক্সেসর (ডিফল্ট ইমেজ সহ)
      */
     public function getFeaturedImageUrlAttribute()
