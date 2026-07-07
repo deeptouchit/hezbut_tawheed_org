@@ -1137,19 +1137,26 @@ public function reorder(Request $request)
                         'image_path' => $blogImage->featured_image,
                         'blog_id' => $blogImage->id,
                         'is_custom' => false,
-                        'is_active' => false,
+                        'show_on_homepage' => false,
+                        'show_on_gallery' => false,
                     ]);
                 }
             }
         }
 
-        // 2. Fetch active gallery images
-        $galleryPosts = Gallery::where('is_active', true)
+        // 2. Fetch active homepage gallery images (for Tab 2)
+        $homepagePosts = Gallery::where('show_on_homepage', true)
             ->orderBy('gallery_order', 'asc')
             ->orderBy('updated_at', 'desc')
             ->get();
 
-        // 3. Fetch library images with AJAX-friendly pagination (24 per page)
+        // 3. Fetch active frontend gallery page images (for Tab 3)
+        $galleryPagePosts = Gallery::where('show_on_gallery', true)
+            ->orderBy('gallery_page_order', 'asc')
+            ->orderBy('updated_at', 'desc')
+            ->get();
+
+        // 4. Fetch library images with AJAX-friendly pagination (24 per page)
         $libraryImages = Gallery::orderBy('created_at', 'desc')->paginate(24);
 
         if ($request->ajax() || $request->has('ajax')) {
@@ -1161,7 +1168,7 @@ public function reorder(Request $request)
             ]);
         }
 
-        return view('admin.gallery.index', compact('galleryPosts', 'libraryImages'));
+        return view('admin.gallery.index', compact('homepagePosts', 'galleryPagePosts', 'libraryImages'));
     }
 
     /**
@@ -1188,7 +1195,8 @@ public function reorder(Request $request)
                     'title' => $request->input('title'),
                     'image_path' => $imagePath,
                     'is_custom' => true,
-                    'is_active' => false,
+                    'show_on_homepage' => false,
+                    'show_on_gallery' => false,
                 ]);
 
                 // Clear caches
@@ -1243,9 +1251,9 @@ public function reorder(Request $request)
     }
 
     /**
-     * Toggle is_active status of any library image.
+     * Toggle show_on_homepage status of any library image.
      */
-    public function galleryToggleActive($id)
+    public function galleryToggleHomepage($id)
     {
         try {
             $gallery = Gallery::findOrFail($id);
@@ -1258,12 +1266,21 @@ public function reorder(Request $request)
                 ], 422);
             }
 
+            if (!$gallery->show_on_homepage) {
+                // Check if already 8 images are active on homepage
+                $activeCount = Gallery::where('show_on_homepage', true)->count();
+                if ($activeCount >= 8) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'হোমপেজ গ্যালারিতে সর্বোচ্চ ৮টি ছবি সক্রিয় রাখা সম্ভব! দয়া করে অন্য ছবি নিষ্ক্রিয় করুন।'
+                    ], 422);
+                }
+            }
 
+            $gallery->show_on_homepage = !$gallery->show_on_homepage;
 
-            $gallery->is_active = !$gallery->is_active;
-
-            if ($gallery->is_active) {
-                $nextOrder = Gallery::where('is_active', true)->max('gallery_order') + 1;
+            if ($gallery->show_on_homepage) {
+                $nextOrder = Gallery::where('show_on_homepage', true)->max('gallery_order') + 1;
                 $gallery->gallery_order = $nextOrder;
             }
 
@@ -1273,29 +1290,14 @@ public function reorder(Request $request)
             \Cache::forget('home_gallery_posts');
             \Cache::forget('api_gallery_posts');
 
-            // Log activity
-            try {
-                \App\Models\ActivityLog::create([
-                    'user_id' => auth()->id(),
-                    'action' => 'gallery_active_toggle',
-                    'model' => 'Gallery',
-                    'model_id' => $gallery->id,
-                    'details' => 'চিত্রশালা স্ট্যাটাস পরিবর্তন: ' . ($gallery->is_active ? 'সক্রিয়' : 'নিষ্ক্রিয়'),
-                    'ip_address' => request()->ip(),
-                    'user_agent' => request()->userAgent()
-                ]);
-            } catch (\Exception $e) {
-                Log::warning('Activity log failed: ' . $e->getMessage());
-            }
-
             return response()->json([
                 'success' => true,
-                'is_active' => $gallery->is_active,
-                'message' => $gallery->is_active ? 'গ্যালারিতে যুক্ত করা হয়েছে!' : 'গ্যালারি থেকে বাদ দেওয়া হয়েছে!'
+                'show_on_homepage' => $gallery->show_on_homepage,
+                'message' => $gallery->show_on_homepage ? 'হোমপেজ গ্যালারিতে যুক্ত করা হয়েছে!' : 'হোমপেজ গ্যালারি থেকে বাদ দেওয়া হয়েছে!'
             ]);
 
         } catch (\Exception $e) {
-            Log::error('Gallery toggle active failed: ' . $e->getMessage());
+            Log::error('Gallery toggle homepage failed: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
                 'message' => 'স্ট্যাটাস পরিবর্তন করতে ব্যর্থ হয়েছে!'
@@ -1304,9 +1306,53 @@ public function reorder(Request $request)
     }
 
     /**
-     * Reorder active gallery images.
+     * Toggle show_on_gallery status of any library image.
      */
-    public function reorderGallery(Request $request)
+    public function galleryToggleGalleryPage($id)
+    {
+        try {
+            $gallery = Gallery::findOrFail($id);
+
+            $path = public_path($gallery->image_path);
+            if (!file_exists($path) || filesize($path) == 0) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'সার্ভারে ছবিটির মূল ফাইল পাওয়া যায়নি!'
+                ], 422);
+            }
+
+            $gallery->show_on_gallery = !$gallery->show_on_gallery;
+
+            if ($gallery->show_on_gallery) {
+                $nextOrder = Gallery::where('show_on_gallery', true)->max('gallery_page_order') + 1;
+                $gallery->gallery_page_order = $nextOrder;
+            }
+
+            $gallery->save();
+
+            // Clear caches
+            \Cache::forget('home_gallery_posts');
+            \Cache::forget('api_gallery_posts');
+
+            return response()->json([
+                'success' => true,
+                'show_on_gallery' => $gallery->show_on_gallery,
+                'message' => $gallery->show_on_gallery ? 'গ্যালারি পেজে যুক্ত করা হয়েছে!' : 'গ্যালারি পেজ থেকে বাদ দেওয়া হয়েছে!'
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Gallery toggle gallerypage failed: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'স্ট্যাটাস পরিবর্তন করতে ব্যর্থ হয়েছে!'
+            ], 500);
+        }
+    }
+
+    /**
+     * Reorder active homepage gallery images.
+     */
+    public function reorderHomepage(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'order' => 'required|array',
@@ -1331,14 +1377,50 @@ public function reorder(Request $request)
 
             return response()->json([
                 'success' => true,
-                'message' => 'গ্যালারি সর্ট অর্ডার সফলভাবে আপডেট করা হয়েছে!'
+                'message' => 'হোমপেজ গ্যালারি সর্ট অর্ডার সফলভাবে আপডেট করা হয়েছে!'
             ]);
 
         } catch (\Exception $e) {
-            Log::error('Gallery reorder failed: ' . $e->getMessage());
+            Log::error('Homepage reorder failed: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
-                'message' => 'গ্যালারি সর্ট অর্ডার আপডেট করতে ব্যর্থ হয়েছে!'
+                'message' => 'সর্ট অর্ডার আপডেট করতে ব্যর্থ হয়েছে!'
+            ], 500);
+        }
+    }
+
+    /**
+     * Reorder active gallery page images.
+     */
+    public function reorderGalleryPage(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'order' => 'required|array',
+            'order.*' => 'required|integer|exists:galleries,id',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->first()
+            ], 422);
+        }
+
+        try {
+            foreach ($request->order as $index => $id) {
+                Gallery::where('id', $id)->update(['gallery_page_order' => $index + 1]);
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'গ্যালারি পেজ সর্ট অর্ডার সফলভাবে আপডেট করা হয়েছে!'
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Gallery page reorder failed: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'সর্ট অর্ডার আপডেট করতে ব্যর্থ হয়েছে!'
             ], 500);
         }
     }

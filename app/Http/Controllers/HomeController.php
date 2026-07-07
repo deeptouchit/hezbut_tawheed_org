@@ -82,7 +82,7 @@ class HomeController extends Controller
 
         // ৫.১. চিত্রশালার জন্য ফিচার্ড ইমেজ যুক্ত সর্বশেষ ৮টি পোস্ট (মিডিয়া লাইব্রেরি থেকে ক্যাশ ও ফাইল অস্তিত্ব যাচাই)
         $galleryPosts = \Cache::remember('home_gallery_posts', 3600, function () {
-            return Gallery::where('is_active', true)
+            return Gallery::where('show_on_homepage', true)
                 ->orderBy('gallery_order', 'asc')
                 ->orderBy('updated_at', 'desc')
                 ->take(8)
@@ -390,8 +390,8 @@ class HomeController extends Controller
      */
     public function gallery(Request $request)
     {
-        $galleryPosts = Gallery::where('is_active', true)
-            ->orderBy('gallery_order', 'asc')
+        $galleryPosts = Gallery::where('show_on_gallery', true)
+            ->orderBy('gallery_page_order', 'asc')
             ->orderBy('updated_at', 'desc')
             ->with(['blog', 'blog.category'])
             ->paginate(12);

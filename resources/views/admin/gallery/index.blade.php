@@ -39,7 +39,7 @@
         transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         display: flex;
         flex-direction: column;
-        height: 280px;
+        height: 290px;
         box-shadow: 0 2px 5px rgba(0,0,0,0.05);
     }
     .media-card:hover {
@@ -75,28 +75,6 @@
         border-radius: 20px;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
-    .active-indicator {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        z-index: 2;
-        background: #198754;
-        color: white;
-        width: 28px;
-        height: 28px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.15);
-        font-size: 14px;
-        animation: pulse 2s infinite;
-    }
-    @keyframes pulse {
-        0% { transform: scale(1); }
-        50% { transform: scale(1.1); }
-        100% { transform: scale(1); }
-    }
     .media-info {
         padding: 12px;
         display: flex;
@@ -122,39 +100,59 @@
         margin-top: auto;
     }
 
-    /* Active Table Reorder Styles */
-    .reorder-thumb {
-        width: 80px;
-        height: 55px;
-        object-fit: cover;
-        border-radius: 4px;
-        border: 1px solid #dee2e6;
+    /* Sortable Grid Styles (No text, just images) */
+    .active-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+        gap: 15px;
+        padding: 15px 0;
     }
-    .drag-handle {
+    .active-grid-item {
+        position: relative;
+        border-radius: 8px;
+        overflow: hidden;
+        aspect-ratio: 1;
+        border: 2px solid #dee2e6;
+        background: #f8f9fa;
         cursor: move;
-        color: #6c757d;
-        font-size: 18px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        transition: all 0.3s ease;
     }
-    .drag-handle:hover {
-        color: #198754;
+    .active-grid-item:hover {
+        border-color: #198754;
+        transform: scale(1.03);
+    }
+    .active-grid-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    .active-grid-remove {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        background: rgba(220, 53, 69, 0.85);
+        color: white;
+        border: none;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 11px;
+        transition: all 0.2s ease;
+        z-index: 10;
+    }
+    .active-grid-remove:hover {
+        background: #dc3545;
+        transform: scale(1.1);
     }
     .sortable-placeholder {
         background-color: #f1f8f5;
         border: 2px dashed #198754;
-        height: 70px;
-    }
-    .dropzone-uploader {
-        border: 2px dashed #ced4da;
-        background: #f8f9fa;
         border-radius: 8px;
-        padding: 30px;
-        text-align: center;
-        transition: all 0.3s ease;
-        cursor: pointer;
-    }
-    .dropzone-uploader:hover {
-        border-color: #198754;
-        background: #f1f8f5;
     }
 </style>
 @endpush
@@ -171,9 +169,15 @@
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="active-tab" data-bs-toggle="tab" data-bs-target="#active-pane" type="button" role="tab" aria-controls="active-pane" aria-selected="false">
-                        <i class="fas fa-images me-2"></i> সক্রিয় চিত্রশালা (হোমপেজ)
-                        <span class="badge bg-success ms-2" id="active-counter">{{ count($galleryPosts) }}</span>
+                    <button class="nav-link" id="homepage-tab" data-bs-toggle="tab" data-bs-target="#homepage-pane" type="button" role="tab" aria-controls="homepage-pane" aria-selected="false">
+                        <i class="fas fa-home me-2"></i> সক্রিয় চিত্রশালা (হোমপেজ)
+                        <span class="badge bg-success ms-2" id="homepage-counter">{{ count($homepagePosts) }}</span>
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="gallerypage-tab" data-bs-toggle="tab" data-bs-target="#gallerypage-pane" type="button" role="tab" aria-controls="gallerypage-pane" aria-selected="false">
+                        <i class="fas fa-images me-2"></i> গ্যালারি পেজ
+                        <span class="badge bg-info ms-2 text-white" id="gallerypage-counter">{{ count($galleryPagePosts) }}</span>
                     </button>
                 </li>
             </ul>
@@ -220,6 +224,7 @@
                     <h5 class="fw-bold border-bottom pb-2 mb-3">
                         <i class="fas fa-th text-muted me-2"></i> সমস্ত মিডিয়া ফাইলসমূহ
                     </h5>
+                    
                     <div class="media-grid">
                         @include('admin.gallery.partials.media_cards')
                     </div>
@@ -233,64 +238,55 @@
                     @endif
                 </div>
 
-                <!-- Tab 2: Active Homepage Gallery (Sortable) -->
-                <div class="tab-pane fade" id="active-pane" role="tabpanel" aria-labelledby="active-tab">
+                <!-- Tab 2: Active Homepage Gallery (Sortable Grid, No Title) -->
+                <div class="tab-pane fade" id="homepage-pane" role="tabpanel" aria-labelledby="homepage-tab">
                     <div class="d-flex align-items-center justify-content-between mb-3 border-bottom pb-2">
                         <h5 class="fw-bold mb-0">
-                            <i class="fas fa-sort-amount-down text-success me-2"></i> সক্রিয় হোমপেজ চিত্রশালা অর্ডার
+                            <i class="fas fa-home text-success me-2"></i> সক্রিয় হোমপেজ চিত্রশালা (সর্বোচ্চ ৮টি ছবি)
                         </h5>
-                        <span class="text-muted small"><i class="fas fa-arrows-alt me-1"></i> ওপরে-নিচে ড্র্যাগ করে ক্রমানুসারে সাজান</span>
+                        <span class="text-muted small"><i class="fas fa-arrows-alt me-1"></i> ড্র্যাগ করে ইচ্ছামত ক্রমানুসারে সাজান</span>
                     </div>
 
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle" id="active-gallery-table">
-                            <thead class="table-light">
-                                <tr>
-                                    <th width="80" class="text-center">সাজান</th>
-                                    <th width="120">ছবি</th>
-                                    <th>শিরোনাম</th>
-                                    <th>টাইপ</th>
-                                    <th width="150" class="text-center">অ্যাকশন</th>
-                                </tr>
-                            </thead>
-                            <tbody id="sortable-body">
-                                @forelse($galleryPosts as $item)
-                                    <tr data-id="{{ $item->id }}">
-                                        <td class="text-center">
-                                            <i class="fas fa-grip-vertical drag-handle"></i>
-                                        </td>
-                                        <td>
-                                            <img src="{{ asset($item->image_path) }}" alt="" class="reorder-thumb">
-                                        </td>
-                                        <td>
-                                            <div class="fw-bold text-dark">{{ $item->title ?? 'শিরোনামহীন ছবি' }}</div>
-                                            @if($item->blog)
-                                                <small class="text-muted"><i class="fas fa-link me-1"></i> লিঙ্কড ব্লগ: <span class="text-primary">{{ $item->blog->title }}</span></small>
-                                            @endif
-                                        </td>
-                                        <td>
-                                            @if($item->is_custom)
-                                                <span class="badge bg-purple"><i class="fas fa-cloud me-1"></i> কাস্টম</span>
-                                            @else
-                                                <span class="badge bg-primary"><i class="fas fa-blog me-1"></i> ব্লগ ইমেজ</span>
-                                            @endif
-                                        </td>
-                                        <td class="text-center">
-                                            <button class="btn btn-sm btn-outline-danger toggle-active" data-id="{{ $item->id }}">
-                                                <i class="fas fa-minus-circle me-1"></i> গ্যালারি থেকে বাদ
-                                            </button>
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="5" class="text-center py-5">
-                                            <i class="fas fa-images text-muted" style="font-size: 40px;"></i>
-                                            <p class="text-muted mt-2 mb-0">হোমপেজের গ্যালারিতে দেখানোর জন্য কোনো ছবি নির্বাচন করা হয়নি।</p>
-                                        </td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
+                    <div class="active-grid" id="homepage-sortable">
+                        @forelse($homepagePosts as $item)
+                            <div class="active-grid-item" data-id="{{ $item->id }}">
+                                <img src="{{ asset($item->image_path) }}" alt="">
+                                <button class="active-grid-remove toggle-homepage" data-id="{{ $item->id }}" title="হোমপেজ থেকে বাদ দিন">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        @empty
+                            <div class="col-12 text-center py-5 text-muted w-100">
+                                <i class="fas fa-home fa-2x mb-2 text-muted opacity-50"></i>
+                                <p class="mb-0">হোমপেজ গ্যালারিতে দেখানোর জন্য কোনো ছবি সক্রিয় করা হয়নি।</p>
+                            </div>
+                        @endforelse
+                    </div>
+                </div>
+
+                <!-- Tab 3: Active Gallery Page (Sortable Grid, No Title) -->
+                <div class="tab-pane fade" id="gallerypage-pane" role="tabpanel" aria-labelledby="gallerypage-tab">
+                    <div class="d-flex align-items-center justify-content-between mb-3 border-bottom pb-2">
+                        <h5 class="fw-bold mb-0">
+                            <i class="fas fa-images text-info me-2"></i> গ্যালারি পেজে প্রদর্শিত চিত্রসমূহ (আনলিমিটেড)
+                        </h5>
+                        <span class="text-muted small"><i class="fas fa-arrows-alt me-1"></i> ড্র্যাগ করে গ্যালারি পেজের ক্রমানুসার সাজান</span>
+                    </div>
+
+                    <div class="active-grid" id="gallerypage-sortable">
+                        @forelse($galleryPagePosts as $item)
+                            <div class="active-grid-item" data-id="{{ $item->id }}">
+                                <img src="{{ asset($item->image_path) }}" alt="">
+                                <button class="active-grid-remove toggle-gallerypage" data-id="{{ $item->id }}" title="গ্যালারি পেজ থেকে বাদ দিন">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        @empty
+                            <div class="col-12 text-center py-5 text-muted w-100">
+                                <i class="fas fa-images fa-2x mb-2 text-muted opacity-50"></i>
+                                <p class="mb-0">গ্যালারি পেজে দেখানোর জন্য কোনো ছবি সক্রিয় করা হয়নি।</p>
+                            </div>
+                        @endforelse
                     </div>
                 </div>
                 
@@ -305,17 +301,16 @@
 <script>
 $(document).ready(function() {
     // ============================================
-    // Active List Drag and Drop
+    // Homepage Sortable Grid drag-and-drop reorder
     // ============================================
-    var el = document.getElementById('sortable-body');
-    if (el) {
-        Sortable.create(el, {
-            handle: '.drag-handle',
+    var hpEl = document.getElementById('homepage-sortable');
+    if (hpEl) {
+        Sortable.create(hpEl, {
             animation: 150,
             ghostClass: 'sortable-placeholder',
-            onEnd: function(evt) {
+            onEnd: function() {
                 var order = [];
-                $('#sortable-body tr').each(function() {
+                $('#homepage-sortable .active-grid-item').each(function() {
                     var id = $(this).data('id');
                     if (id) {
                         order.push(id);
@@ -325,7 +320,7 @@ $(document).ready(function() {
                 if (order.length === 0) return;
 
                 $.ajax({
-                    url: "{{ route('admin.gallery.reorder') }}",
+                    url: "{{ route('admin.gallery.reorder-homepage') }}",
                     type: 'POST',
                     data: {
                         _token: '{{ csrf_token() }}',
@@ -339,7 +334,7 @@ $(document).ready(function() {
                         }
                     },
                     error: function() {
-                        toastr.error('সর্ট অর্ডার আপডেট করতে ব্যর্থ হয়েছে');
+                        toastr.error('হোমপেজ সর্ট অর্ডার আপডেট করতে ব্যর্থ হয়েছে');
                     }
                 });
             }
@@ -347,15 +342,57 @@ $(document).ready(function() {
     }
 
     // ============================================
-    // Add/Remove Image from Active Gallery
+    // Gallery Page Sortable Grid drag-and-drop reorder
     // ============================================
-    $(document).on('click', '.toggle-active', function() {
+    var gpEl = document.getElementById('gallerypage-sortable');
+    if (gpEl) {
+        Sortable.create(gpEl, {
+            animation: 150,
+            ghostClass: 'sortable-placeholder',
+            onEnd: function() {
+                var order = [];
+                $('#gallerypage-sortable .active-grid-item').each(function() {
+                    var id = $(this).data('id');
+                    if (id) {
+                        order.push(id);
+                    }
+                });
+
+                if (order.length === 0) return;
+
+                $.ajax({
+                    url: "{{ route('admin.gallery.reorder-gallerypage') }}",
+                    type: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        order: order
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            toastr.success(response.message);
+                        } else {
+                            toastr.error(response.message);
+                        }
+                    },
+                    error: function() {
+                        toastr.error('গ্যালারি পেজ সর্ট অর্ডার আপডেট করতে ব্যর্থ হয়েছে');
+                    }
+                });
+            }
+        });
+    }
+
+    // ============================================
+    // Toggle Homepage visibility Target
+    // ============================================
+    $(document).on('click', '.toggle-homepage', function(e) {
+        e.preventDefault();
         var id = $(this).data('id');
         var btn = $(this);
-        btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i>');
+        btn.prop('disabled', true);
 
         $.ajax({
-            url: '{{ url("admin/gallery") }}/' + id + '/toggle-active',
+            url: '{{ url("admin/gallery") }}/' + id + '/toggle-homepage',
             type: 'POST',
             data: { _token: '{{ csrf_token() }}' },
             success: function(response) {
@@ -371,10 +408,46 @@ $(document).ready(function() {
             },
             error: function(xhr) {
                 btn.prop('disabled', false);
-                var message = 'স্ট্যাটাস আপডেট করতে ব্যর্থ হয়েছে';
+                var message = 'হোমপেজ স্ট্যাটাস আপডেট করতে ব্যর্থ হয়েছে';
                 if (xhr.responseJSON && xhr.responseJSON.message) {
                     message = xhr.responseJSON.message;
                 }
+                toastr.error(message);
+            }
+        });
+    });
+
+    // ============================================
+    // Toggle Gallery page visibility Target
+    // ============================================
+    $(document).on('click', '.toggle-gallerypage', function(e) {
+        e.preventDefault();
+        var id = $(this).data('id');
+        var btn = $(this);
+        btn.prop('disabled', true);
+
+        $.ajax({
+            url: '{{ url("admin/gallery") }}/' + id + '/toggle-gallerypage',
+            type: 'POST',
+            data: { _token: '{{ csrf_token() }}' },
+            success: function(response) {
+                if (response.success) {
+                    toastr.success(response.message);
+                    setTimeout(function() {
+                        window.location.reload();
+                    }, 1000);
+                } else {
+                    toastr.error(response.message);
+                    btn.prop('disabled', false);
+                }
+            },
+            error: function(xhr) {
+                btn.prop('disabled', false);
+                var message = 'গ্যালারি পেজ স্ট্যাটাস আপডেট করতে ব্যর্থ হয়েছে';
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    message = xhr.responseJSON.message;
+                }
+                toastr.error(message);
             }
         });
     });

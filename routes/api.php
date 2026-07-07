@@ -19,8 +19,8 @@ use Illuminate\Support\Facades\Cache;
 
 Route::get('/gallery', function () {
     $posts = Cache::remember('api_gallery_posts', 3600, function () {
-        return Gallery::where('is_active', true)
-            ->orderBy('gallery_order', 'asc')
+        return Gallery::where('show_on_gallery', true)
+            ->orderBy('gallery_page_order', 'asc')
             ->orderBy('updated_at', 'desc')
             ->take(8)
             ->with(['blog', 'blog.category'])

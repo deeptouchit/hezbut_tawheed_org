@@ -14,13 +14,17 @@ class Gallery extends Model
         'image_path',
         'blog_id',
         'gallery_order',
-        'is_active',
+        'gallery_page_order',
+        'show_on_homepage',
+        'show_on_gallery',
         'is_custom',
     ];
 
     protected $casts = [
         'gallery_order' => 'integer',
-        'is_active' => 'boolean',
+        'gallery_page_order' => 'integer',
+        'show_on_homepage' => 'boolean',
+        'show_on_gallery' => 'boolean',
         'is_custom' => 'boolean',
     ];
 
