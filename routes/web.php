@@ -49,6 +49,9 @@ Route::get('/library/read/{slug}', [HomeController::class, 'libraryRead'])->name
 // VIDEOS ROUTES
 Route::get('/videos', [HomeController::class, 'videos'])->name('videos.index');
 
+// PHOTO GALLERY ROUTE
+Route::get('/gallery', [HomeController::class, 'gallery'])->name('gallery.index');
+
 // LIVE BROADCAST ROUTES
 Route::get('/live', [LiveController::class, 'index'])->name('live.index');
 Route::get('/live/archive/{id}', [LiveController::class, 'show'])->name('live.show');

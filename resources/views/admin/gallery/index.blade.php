@@ -384,18 +384,18 @@ $(document).ready(function() {
     // ============================================
     $(document).on('click', '#load-more-btn', function() {
         var btn = $(this);
-        var page = btn.data('page');
+        var page = parseInt(btn.attr('data-page'));
         btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-1"></i> লোড হচ্ছে...');
 
         $.ajax({
-            url: "{{ route('admin.gallery.index') }}?page=" + page,
+            url: "{{ route('admin.gallery.index') }}?page=" + page + "&ajax=1",
             type: "GET",
             success: function(response) {
                 if (response.success && response.html) {
                     $('.media-grid').append(response.html);
                     
                     if (response.hasMore) {
-                        btn.data('page', page + 1);
+                        btn.attr('data-page', page + 1);
                         btn.prop('disabled', false).html('<i class="fas fa-sync-alt me-1"></i> আরো ছবি লোড করুন');
                     } else {
                         $('#load-more-container').fadeOut(400, function() {

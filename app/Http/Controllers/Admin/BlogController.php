@@ -1152,7 +1152,7 @@ public function reorder(Request $request)
         // 3. Fetch library images with AJAX-friendly pagination (24 per page)
         $libraryImages = Gallery::orderBy('created_at', 'desc')->paginate(24);
 
-        if ($request->ajax()) {
+        if ($request->ajax() || $request->has('ajax')) {
             $html = view('admin.gallery.partials.media_cards', compact('libraryImages'))->render();
             return response()->json([
                 'success' => true,

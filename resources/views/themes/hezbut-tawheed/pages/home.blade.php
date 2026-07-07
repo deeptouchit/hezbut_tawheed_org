@@ -789,6 +789,14 @@
                             @endfor
                         </div>
                     </div>
+
+                    <div class="row mt-4">
+                        <div class="col-12 text-center">
+                            <a href="{{ route('gallery.index') }}" class="btn btn-outline-success rounded-pill px-5 py-2 fw-bold" style="border: 2px solid #10b981; transition: all 0.3s ease; font-family: 'Hind Siliguri', sans-serif; color: #022c22;">
+                                সব ছবি দেখুন <i class="fas fa-arrow-right ms-2"></i>
+                            </a>
+                        </div>
+                    </div>
                 @else
                     <div class="col-12 text-center py-5 text-muted">
                         <i class="far fa-images fa-3x mb-3 text-muted opacity-50"></i>

@@ -384,4 +384,18 @@ class HomeController extends Controller
                 ->with('error', 'আবেদনপত্র জমা দিতে সমস্যা হয়েছে! দয়া করে সব তথ্য সঠিকভাবে পূরণ করে পুনরায় চেষ্টা করুন।');
         }
     }
+
+    /**
+     * Show the frontend photo gallery page displaying all active gallery images with pagination.
+     */
+    public function gallery(Request $request)
+    {
+        $galleryPosts = Gallery::where('is_active', true)
+            ->orderBy('gallery_order', 'asc')
+            ->orderBy('updated_at', 'desc')
+            ->with(['blog', 'blog.category'])
+            ->paginate(12);
+
+        return view('theme::pages.gallery', compact('galleryPosts'));
+    }
 }
