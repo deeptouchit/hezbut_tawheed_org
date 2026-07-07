@@ -576,7 +576,11 @@
             <div class="row g-3">
                 @forelse($galleryPosts as $post)
                     <div class="col-lg-3 col-md-6 col-6">
-                        <a href="{{ route('blog.detail', $post->slug) }}" class="d-block text-decoration-none">
+                        <a href="#" class="d-block text-decoration-none gallery-lightbox-trigger"
+                           data-image="{{ $post->featured_image_url }}"
+                           data-title="{{ $post->title }}"
+                           data-category="{{ $post->category->name ?? 'কর্মসূচী' }}"
+                           data-url="{{ route('blog.detail', $post->slug) }}">
                             <div class="gallery-item position-relative overflow-hidden rounded-4 shadow-sm" style="height: 220px; border-radius: 16px;">
                                 <img src="{{ $post->featured_image_url }}" alt="{{ $post->title }}" class="w-100 h-100 object-fit-cover transition" style="transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);">
                                 <div class="gallery-overlay position-absolute bottom-0 start-0 w-100 p-3 text-white d-flex flex-column justify-content-end h-100" style="background: linear-gradient(transparent, rgba(0,0,0,0.85));">
@@ -594,6 +598,31 @@
             </div>
         </div>
     </section>
+
+    <!-- Photo Gallery Lightbox Modal -->
+    <div class="modal fade" id="galleryLightboxModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content border-0 shadow-lg text-white" style="border-radius: 20px; overflow: hidden; background: #0b1512 !important; border: 1px solid rgba(16, 185, 129, 0.25) !important;">
+                <div class="modal-header border-0 pb-0 position-absolute end-0 top-0" style="z-index: 10;">
+                    <button type="button" class="btn-close btn-close-white p-3" data-bs-dismiss="modal" aria-label="Close" style="background-color: rgba(0,0,0,0.55); border-radius: 50%;"></button>
+                </div>
+                <div class="modal-body p-0 position-relative">
+                    <img id="lightbox-image" src="" alt="Gallery Image" class="w-100 object-fit-contain" style="max-height: 70vh; background-color: #000;">
+                    
+                    <div class="p-4" style="background: linear-gradient(transparent, rgba(2, 44, 34, 0.95) 20%, #022c22 100%);">
+                        <span id="lightbox-category" class="badge text-white mb-2 rounded-pill px-3 py-2" style="font-size: 0.75rem; font-weight: 700; background: linear-gradient(135deg, #10b981 0%, #059669 100%);"></span>
+                        <h4 id="lightbox-title" class="fw-bold text-white mb-3" style="font-family: 'Baloo Da 2', sans-serif;"></h4>
+                        <div class="d-flex justify-content-between align-items-center mt-3 pt-3" style="border-top: 1px solid rgba(255,255,255,0.15);">
+                            <span class="small text-muted">হেযবুত তওহীদ চিত্রশালা</span>
+                            <a id="lightbox-article-link" href="" class="btn btn-outline-success btn-sm rounded-pill px-4 py-2 text-white hover-bg-gold" style="border: 2px solid #10b981; transition: all 0.3s ease;">
+                                বিস্তারিত খবর পড়ুন <i class="fas fa-arrow-right ms-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Social & Humanitarian Activities Section -->
     <section class="activities-section py-6">
@@ -877,6 +906,22 @@
 <script>
 $(document).ready(function() {
     var testimonialModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('testimonialDetailModal'));
+    var lightboxModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('galleryLightboxModal'));
+
+    $(document).on('click', '.gallery-lightbox-trigger', function(e) {
+        e.preventDefault();
+        var imageSrc = $(this).data('image');
+        var title = $(this).data('title');
+        var category = $(this).data('category');
+        var articleUrl = $(this).data('url');
+
+        $('#lightbox-image').attr('src', imageSrc);
+        $('#lightbox-category').text(category);
+        $('#lightbox-title').text(title);
+        $('#lightbox-article-link').attr('href', articleUrl);
+
+        lightboxModal.show();
+    });
 
     $(document).on('click', '.read-more-btn', function() {
         var name = $(this).data('name');
