@@ -38,7 +38,7 @@
     .border-left-success { border-left: 4px solid #2e7d32 !important; }
     .border-left-info { border-left: 4px solid #0288d1 !important; }
     .border-left-warning { border-left: 4px solid #f57c00 !important; }
-    
+
     .stat-icon {
         width: 48px;
         height: 48px;
@@ -167,21 +167,8 @@
 
     <!-- Quick Stats Grid -->
     <div class="row mb-4">
-        <!-- Team Members -->
-        <div class="col-md-3 col-sm-6">
-            <div class="info-box shadow-sm">
-                <span class="info-box-icon text-bg-primary shadow-sm bg-dark-green text-white">
-                    <i class="fas fa-user-tie"></i>
-                </span>
-                <div class="info-box-content">
-                    <span class="info-box-text">Team Members</span>
-                    <span class="info-box-number">{{ $stats['total_team'] }}</span>
-                </div>
-            </div>
-        </div>
-
         <!-- Blog Categories -->
-        <div class="col-md-3 col-sm-6">
+        <div class="col-md-4 col-sm-6">
             <div class="info-box shadow-sm">
                 <span class="info-box-icon text-bg-success shadow-sm">
                     <i class="fas fa-folder-open"></i>
@@ -194,7 +181,7 @@
         </div>
 
         <!-- Active Administrators -->
-        <div class="col-md-3 col-sm-6">
+        <div class="col-md-4 col-sm-6">
             <div class="info-box shadow-sm">
                 <span class="info-box-icon text-bg-info shadow-sm">
                     <i class="fas fa-users-cog"></i>
@@ -207,7 +194,7 @@
         </div>
 
         <!-- Logged-in Visitors -->
-        <div class="col-md-3 col-sm-6">
+        <div class="col-md-4 col-sm-6">
             <div class="info-box shadow-sm">
                 <span class="info-box-icon text-bg-warning shadow-sm">
                     <i class="fas fa-user-check"></i>

@@ -507,6 +507,6 @@ class UpazilaSeeder extends Seeder
             array('id' => '491','district_id' => '64','name' => 'Netrokona Sadar','bn_name' => 'নেত্রকোণা সদর','url' => 'netrokonasadar.netrokona.gov.bd')
         );
 
-        DB::table('upazilas')->insert($upazilas);
+        DB::table('upazilas')->insertOrIgnore($upazilas);
     }
 }

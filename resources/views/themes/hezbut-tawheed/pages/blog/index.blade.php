@@ -1,13 +1,13 @@
 @extends('theme::layouts.app')
 
-@section('title', 'নিবন্ধ ও বিবৃতি - হেজবুত তওহীদ')
+@section('title', 'নিবন্ধ ও ব্লগ - হেজবুত তওহীদ')
 
 @section('content')
 
     @include('theme::partials.hero_banner', [
-        'title' => 'নিবন্ধ ও বিবৃতি',
-        'subtitle' => 'হেযবুত তওহীদের দেশীয় এবং আন্তর্জাতিক সাংগঠনিক কার্যক্রম, নিবন্ধ ও বিবৃতিসমূহ',
-        'badge_text' => 'আন্দোলনের প্রকাশনা ও ব্লগ',
+        'title' => 'নিবন্ধ ও ব্লগ',
+        'subtitle' => 'হেযবুত তওহীদের আদর্শিক দৃষ্টিভঙ্গি, প্রবন্ধ, নিবন্ধ এবং সাম্প্রতিক ব্লগসমূহ',
+        'badge_text' => 'আন্দোলনের প্রবন্ধ ও ব্লগ',
         'badge_icon' => 'fas fa-feather-alt'
     ])
 
@@ -169,7 +169,7 @@
                                 <h5 class="fw-bold text-dark mb-3 widget-title" style="font-family: 'Baloo Da 2', sans-serif; font-size: 1.05rem;">
                                     জনপ্রিয় ট্যাগ
                                 </h5>
-                                <div class="tag-cloud d-flex flex-wrap gap-1.5" style="font-family: 'Baloo Da 2', sans-serif;">
+                                <div class="tag-cloud-grid" style="font-family: 'Baloo Da 2', sans-serif;">
                                     @foreach($allTags as $tag)
                                         <a href="{{ route('blog', ['tag' => $tag]) }}" class="premium-tag-pill transition {{ request('tag') == $tag ? 'active' : '' }}">
                                             #{{ $tag }}
@@ -187,158 +187,6 @@
     </div>
 
     <!-- Custom CSS Styles -->
-    <style>
-        .border-light-grey {
-            border: 1px solid #e2e8f0 !important;
-        }
-        .object-cover {
-            object-fit: cover;
-        }
-        .last-no-border:last-child {
-            border-bottom: 0 !important;
-            margin-bottom: 0 !important;
-            padding-bottom: 0 !important;
-        }
-        
-        /* Brand Colors */
-        .bg-success-brand {
-            background-color: #006A4E !important;
-        }
-        .hover-green-text:hover {
-            color: #006A4E !important;
-        }
-        
-        /* Card transitions */
-        .hover-grow-card {
-            border: 1px solid #e2e8f0 !important;
-            transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
-        }
-        .hover-grow-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0, 106, 78, 0.05) !important;
-            border-color: rgba(16, 185, 129, 0.2) !important;
-        }
-        .zoom-img-hover {
-            transition: transform 0.5s ease;
-        }
-        .hover-grow-card:hover .zoom-img-hover {
-            transform: scale(1.05);
-        }
-        
-        /* Sidebar widget accents */
-        .widget-title {
-            position: relative;
-            padding-bottom: 8px;
-            border-bottom: 2px solid #f1f5f9;
-            color: #0f172a !important;
-        }
-        .widget-title::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            width: 35px;
-            height: 2px;
-            background-color: #006A4E;
-        }
-        
-        /* Focus ring for search input */
-        #search-wrapper:focus-within {
-            border-color: #006A4E !important;
-            box-shadow: 0 0 0 3px rgba(0, 106, 78, 0.08) !important;
-        }
-        
-        /* Premium Category List Rows */
-        .category-premium-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 10px 14px;
-            border-radius: 8px;
-            color: #475569;
-            text-decoration: none !important;
-            font-size: 0.92rem;
-            font-weight: 500;
-            background-color: transparent;
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .category-premium-row .folder-icon {
-            color: #006A4E;
-            opacity: 0.5;
-            transition: transform 0.25s;
-        }
-        .category-premium-row .category-count-badge {
-            background-color: #f1f5f9;
-            color: #64748b;
-            font-size: 10.5px;
-            padding: 4px 10px;
-            border-radius: 50px;
-            border: 1px solid #e2e8f0;
-            transition: all 0.25s;
-        }
-        .category-premium-row:hover {
-            background-color: #f1f5f9;
-            color: #006A4E;
-            transform: translateX(4px);
-        }
-        .category-premium-row:hover .folder-icon {
-            transform: scale(1.15);
-            opacity: 0.9;
-        }
-        .category-premium-row:hover .category-count-badge {
-            background-color: rgba(0, 106, 78, 0.1);
-            color: #006A4E;
-            border-color: transparent;
-        }
-        .category-premium-row.active {
-            background-color: rgba(0, 106, 78, 0.05);
-            color: #006A4E;
-            font-weight: 700;
-            border-left: 4px solid #006A4E;
-            padding-left: 10px;
-        }
-        .category-premium-row.active .folder-icon {
-            opacity: 1;
-        }
-        .category-premium-row.active .category-count-badge {
-            background-color: #006A4E;
-            color: #ffffff;
-            border-color: transparent;
-        }
-        
-        /* Premium Minimal Tag Cloud Pill */
-        .premium-tag-pill {
-            display: inline-flex;
-            align-items: center;
-            background: #f1f5f9;
-            color: #475569;
-            font-size: 11px;
-            font-weight: 600;
-            padding: 4px 12px;
-            border-radius: 4px;
-            text-decoration: none !important;
-            transition: all 0.2s ease;
-        }
-        .premium-tag-pill:hover, .premium-tag-pill.active {
-            background: #006A4E;
-            color: #ffffff;
-        }
-        
-        /* Read more arrow transition */
-        .hover-arrow-move:hover .arrow-icon {
-            transform: translateX(4px);
-        }
-        .arrow-icon {
-            transition: transform 0.2s ease;
-        }
-
-        /* Fix Pagination Large SVGs */
-        .pagination-wrapper svg {
-            width: 16px !important;
-            height: 16px !important;
-            display: inline-block;
-            vertical-align: middle;
-        }
-    </style>
+    
 
 @endsection

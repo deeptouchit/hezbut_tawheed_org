@@ -101,9 +101,6 @@ class ThemeService
 
         foreach ($directories as $directory) {
             $themeFolder = basename($directory);
-            if ($themeFolder === 'default') {
-                continue;
-            }
             $themeInfo   = $this->getThemeInfoFromFolder($themeFolder);
             if ($themeInfo) {
                 $themes[] = $themeInfo;

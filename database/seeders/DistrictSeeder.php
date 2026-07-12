@@ -79,6 +79,6 @@ class DistrictSeeder extends Seeder
             ['id' => 64, 'division_id' => 8, 'name' => 'নেত্রকোণা'],
         ];
 
-        DB::table('districts')->insert($districts);
+        DB::table('districts')->insertOrIgnore($districts);
     }
 }

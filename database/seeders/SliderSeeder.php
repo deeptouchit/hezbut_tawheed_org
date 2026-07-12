@@ -5,18 +5,15 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\Slider;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\DB;
 
 class SliderSeeder extends Seeder
 {
     public function run(): void
     {
-        // Truncate existing sliders
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        Slider::truncate();
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        if (app()->environment('production')) {
+            return;
+        }
 
-        // Target directory for sliders
         $targetDir = public_path('uploads/sliders');
         File::ensureDirectoryExists($targetDir);
 
@@ -74,8 +71,8 @@ class SliderSeeder extends Seeder
                 'sub_title' => 'মানবতার কল্যাণে একটি সুশৃঙ্খল ও অরাজনৈতিক আন্দোলন।',
                 'target_image' => 'slider_group.png',
                 'link' => '/join',
-                'link_text' => 'যোগদান করুন',
-                'button_text' => 'যোগদান করুন',
+                'link_text' => 'যোগدان করুন',
+                'button_text' => 'যোগدان করুন',
                 'button_link' => '/join',
                 'button_color' => '#006A4E',
                 'sort_order' => 5,
@@ -84,27 +81,24 @@ class SliderSeeder extends Seeder
         ];
 
         foreach ($sliderData as $data) {
-            // Create Slider record
-            Slider::create([
-                'title' => $data['title'],
-                'sub_title' => $data['sub_title'],
-                'image' => 'uploads/sliders/' . $data['target_image'],
-                'mobile_image' => 'uploads/sliders/' . $data['target_image'],
-                'link' => $data['link'],
-                'link_text' => $data['link_text'],
-                'button_text' => $data['button_text'],
-                'button_link' => $data['button_link'],
-                'button_color' => $data['button_color'],
-                'sort_order' => $data['sort_order'],
-                'position' => 'homepage',
-                'status' => true,
-                'target' => '_self',
-                'alt_text' => $data['alt_text'],
-            ]);
-
-            $this->command->info("Seeded slider: {$data['title']}");
+            Slider::updateOrCreate(
+                ['title' => $data['title']],
+                [
+                    'sub_title' => $data['sub_title'],
+                    'image' => 'uploads/sliders/' . $data['target_image'],
+                    'mobile_image' => 'uploads/sliders/' . $data['target_image'],
+                    'link' => $data['link'],
+                    'link_text' => $data['link_text'],
+                    'button_text' => $data['button_text'],
+                    'button_link' => $data['button_link'],
+                    'button_color' => $data['button_color'],
+                    'sort_order' => $data['sort_order'],
+                    'position' => 'homepage',
+                    'status' => true,
+                    'target' => '_self',
+                    'alt_text' => $data['alt_text'],
+                ]
+            );
         }
-
-        $this->command->info('Sliders seeded successfully!');
     }
 }

@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>হেজবুত তওহীদ | @yield('title', 'একটি অরাজনৈতিক আন্দোলন')</title>
+    <title>{{ $setting->getSetting('site_name', 'হেযবুত তওহীদ') }} | @yield('title', $setting->getSetting('company_tagline', 'একটি অরাজনৈতিক ধর্মীয় সংস্কারমূলক আন্দোলন'))</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="@yield('meta_description', 'হেজবুত তওহীদ একটি অরাজনৈতিক আন্দোলন যা মানবতার কল্যাণ এবং প্রকৃত সত্য তুলে ধরে।')">
+    <meta name="description" content="@yield('meta_description', $setting->getSetting('meta_description', 'হেযবুত তওহীদ একটি অরাজনৈতিক ধর্মীয় সংস্কারমূলক আন্দোলন যা মানবতার কল্যাণ এবং প্রকৃত সত্য তুলে ধরে।'))">
     @yield('seo_meta')
 
     <!-- Favicon -->
@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 
-    <!-- ============================================= -->
+   <!-- ============================================= -->
     <!-- FONTS -->
     <!-- ============================================= -->
     <!-- Google Font: Source Sans Pro (Fallback) -->
@@ -30,11 +30,35 @@
     <!-- Google Font: Baloo Da 2 (Bengali Alternative) -->
     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-    <!-- @fontsource/source-sans-3 (Modern) -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css" crossorigin="anonymous">
+    <!-- SolaimanLipi Font (modern Style) -->
+    <link href="https://fonts.maateen.me/solaiman-lipi/font.css" rel="stylesheet">
 
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="{{ asset('themes/hezbut-tawheed/css/style.css') }}">
+    <!-- Custom CSS (Minified & Cache Busted for Production) -->
+    <link rel="stylesheet" href="{{ asset('themes/hezbut-tawheed/css/style.min.css') }}?v={{ filemtime(public_path('themes/hezbut-tawheed/css/style.min.css')) }}">
+
+    <!-- Global Font Fix (Configured dynamically from the admin settings) -->
+    <style>
+        :root {
+            --font-bengali: '{{ $setting->getSetting("primary_font", "SolaimanLipi") }}', '{{ $setting->getSetting("secondary_font", "Baloo Da 2") }}', sans-serif !important;
+        }
+
+        @font-face {
+            font-family: 'Li Ador Noirrit';
+            src: url('/Li_Ador_Noirrit_Unicode.ttf') format('truetype');
+            font-weight: bold;
+            font-style: normal;
+        }
+
+        /* Force configured primary/secondary font on all elements globally */
+        *:not(i):not(.fa):not(.fab):not(.far):not(.fas):not([class*="fa-"]) {
+            font-family: var(--font-bengali) !important;
+        }
+
+        /* Protect FontAwesome icons from being overridden */
+        .fa, .fab, .far, .fas, [class*="fa-"], .fa::before, .fab::before, .far::before, .fas::before, i, i::before {
+            font-family: 'Font Awesome 6 Free', 'Font Awesome 6 Brands', sans-serif !important;
+        }
+    </style>
 
     @stack('styles')
 </head>

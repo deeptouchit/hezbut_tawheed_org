@@ -4,12 +4,15 @@ namespace Database\Seeders;
 
 use App\Models\BlogCategory;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Str;
 
 class BlogCategorySeeder extends Seeder
 {
     public function run(): void
     {
+        if (app()->environment('production')) {
+            return;
+        }
+
         $categories = [
             [
                 'name' => 'জাতীয় সংবাদ',

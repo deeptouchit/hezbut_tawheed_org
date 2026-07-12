@@ -17,8 +17,8 @@
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.min.js" crossorigin="anonymous"></script>
 
-{{-- CKEditor 5 CDN --}}
-<script src="https://cdn.ckeditor.com/ckeditor5/38.0.1/classic/ckeditor.js"></script>
+{{-- TinyMCE 4.9.11 CDN --}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/4.9.11/tinymce.min.js" referrerpolicy="origin"></script>
 
 <!-- AdminLTE JS -->
 <script src="{{ asset('backend/js/adminlte.js') }}"></script>

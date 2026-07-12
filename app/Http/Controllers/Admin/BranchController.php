@@ -51,7 +51,9 @@ class BranchController extends Controller
         $stats = [
             'total' => Branch::count(),
             'central' => Branch::where('type', 'central')->count(),
+            'division' => Branch::where('type', 'division')->count(),
             'district' => Branch::where('type', 'district')->count(),
+            'upazila' => Branch::where('type', 'upazila')->count(),
             'international' => Branch::where('type', 'international')->count()
         ];
 

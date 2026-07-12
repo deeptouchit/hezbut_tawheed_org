@@ -1182,6 +1182,13 @@ public function reorder(Request $request)
         ]);
 
         if ($validator->fails()) {
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $validator->errors()->first(),
+                    'errors' => $validator->errors()
+                ], 422);
+            }
             return redirect()->back()
                 ->withErrors($validator)
                 ->withInput();
@@ -1191,7 +1198,7 @@ public function reorder(Request $request)
             if ($request->hasFile('image')) {
                 $imagePath = $this->uploadImage($request->file('image'));
 
-                Gallery::create([
+                $galleryItem = Gallery::create([
                     'title' => $request->input('title'),
                     'image_path' => $imagePath,
                     'is_custom' => true,
@@ -1203,13 +1210,32 @@ public function reorder(Request $request)
                 \Cache::forget('home_gallery_posts');
                 \Cache::forget('api_gallery_posts');
 
+                if ($request->ajax() || $request->wantsJson()) {
+                    return response()->json([
+                        'success' => true,
+                        'message' => 'মিডিয়া লাইব্রেরিতে ছবি সফলভাবে আপলোড করা হয়েছে!',
+                        'item' => $galleryItem
+                    ]);
+                }
                 return redirect()->back()->with('success', 'মিডিয়া লাইব্রেরিতে ছবি সফলভাবে আপলোড করা হয়েছে!');
             }
 
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'কোনো ছবি পাওয়া যায়নি!'
+                ], 400);
+            }
             return redirect()->back()->with('error', 'কোনো ছবি পাওয়া যায়নি!');
 
         } catch (\Exception $e) {
             Log::error('Gallery custom upload failed: ' . $e->getMessage());
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'ছবি আপলোড করতে ব্যর্থ হয়েছে!'
+                ], 500);
+            }
             return redirect()->back()->with('error', 'ছবি আপলোড করতে ব্যর্থ হয়েছে!');
         }
     }
@@ -1433,5 +1459,178 @@ public function reorder(Request $request)
         $slug = preg_replace('/[^\p{L}\p{N}]+/u', '-', $title);
         $slug = trim($slug, '-');
         return mb_strtolower($slug);
+    }
+
+    /**
+     * Upload CKEditor content images.
+     */
+    public function uploadContentImage(\Illuminate\Http\Request $request)
+    {
+        if ($request->hasFile('upload')) {
+            $file = $request->file('upload');
+            $extension = $file->getClientOriginalExtension();
+            $fileName = 'blog_content_' . time() . '_' . \Illuminate\Support\Str::random(10) . '.' . $extension;
+            $file->move(public_path('uploads/blog/content'), $fileName);
+            $url = asset('uploads/blog/content/' . $fileName);
+            
+            return response()->json([
+                'url' => $url
+            ]);
+        }
+        
+        return response()->json([
+            'error' => 'কোনো ফাইল আপলোড করা হয়নি।'
+        ], 400);
+    }
+
+    /**
+     * Generate SEO metadata and translated English slug using AI or local fallback.
+     */
+    public function generateSeo(\Illuminate\Http\Request $request)
+    {
+        $title = trim($request->input('title'));
+        $shortDescription = trim($request->input('short_description'));
+        $content = strip_tags($request->input('content'));
+
+        if (empty($title)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'মেটা ডেটা তৈরি করতে শিরোনাম আবশ্যক।'
+            ], 422);
+        }
+
+        // Try to get Gemini API key from environment
+        $apiKey = env('GEMINI_API_KEY');
+
+        if ($apiKey) {
+            try {
+                $client = new \GuzzleHttp\Client([
+                    'timeout' => 12.0,
+                ]);
+                $promptText = "You are an SEO expert. Generate SEO metadata in Bengali and a translated English slug for a blog post with the following details:\n"
+                            . "Title: {$title}\n"
+                            . "Description: {$shortDescription}\n"
+                            . "Content: " . mb_substr($content, 0, 1000) . "\n\n"
+                            . "Respond ONLY with a valid JSON object containing the keys:\n"
+                            . "1. \"meta_title\" (Bengali, SEO friendly, maximum 60 characters)\n"
+                            . "2. \"meta_description\" (Bengali, SEO friendly, summarizing the post, maximum 160 characters)\n"
+                            . "3. \"meta_keywords\" (Bengali, comma-separated list of 5-8 relevant keywords)\n"
+                            . "4. \"slug\" (English translated slug of the title, lowercase, hyphenated, no special characters, maximum 60 characters)\n\n"
+                            . "Do not include markdown code block formatting or any other text, just raw JSON.";
+
+                $response = $client->post('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' . $apiKey, [
+                    'json' => [
+                        'contents' => [
+                            [
+                                'parts' => [
+                                    [
+                                        'text' => $promptText
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ],
+                    'headers' => [
+                        'Content-Type' => 'application/json'
+                    ]
+                ]);
+
+                $result = json_decode($response->getBody()->getContents(), true);
+                $text = $result['candidates'][0]['content']['parts'][0]['text'] ?? '';
+                
+                // Bulletproof JSON extractor
+                $firstBracket = strpos($text, '{');
+                $lastBracket = strrpos($text, '}');
+                if ($firstBracket !== false && $lastBracket !== false) {
+                    $jsonString = substr($text, $firstBracket, $lastBracket - $firstBracket + 1);
+                    $data = json_decode($jsonString, true);
+                    
+                    if ($data && isset($data['meta_title']) && isset($data['meta_description'])) {
+                        return response()->json([
+                            'success' => true,
+                            'meta_title' => trim($data['meta_title']),
+                            'meta_description' => trim($data['meta_description']),
+                            'meta_keywords' => trim($data['meta_keywords'] ?? ''),
+                            'slug' => trim($data['slug'] ?? '')
+                        ]);
+                    }
+                }
+            } catch (\Exception $e) {
+                \Log::error('Gemini API SEO Generator Error: ' . $e->getMessage());
+            }
+        }
+
+        // Fallback: Advanced Bengali text analyzer (fully functional local processor)
+        // 1. Meta Title
+        $metaTitle = mb_substr($title, 0, 60);
+
+        // 2. Meta Description
+        $metaDescSource = $shortDescription ?: $content;
+        $metaDescSource = preg_replace('/\s+/', ' ', $metaDescSource);
+        $metaDescription = mb_substr(trim($metaDescSource), 0, 155);
+
+        // 3. Meta Keywords
+        $stopWords = [
+            'এবং', 'কিন্তু', 'অথবা', 'অথচ', 'কিংবা', 'হলে', 'করে', 'হয়ে', 'থেকে', 'একটি', 'এই', 'সেই', 
+            'তার', 'তাদের', 'আমি', 'তুমি', 'আমরা', 'আপনার', 'নিজের', 'জন্য', 'সাথে', 'মধ্যে', 'দ্বারা', 
+            'দিয়ে', 'করতে', 'হলো', 'হবে', 'ছিল', 'আছে', 'করেছেন', 'হচ্ছে', 'তবে', 'তাই', 'নিয়ে', 
+            'থেকেও', 'কোন', 'কোনো', 'যেমন', 'কারণে', 'মাধ্যমে', 'হয়', 'করেছে', 'বলেন', 'হচ্ছে'
+        ];
+
+        // Combine title and description to extract rich terms
+        $combinedText = $title . ' ' . $shortDescription;
+        $rawWords = preg_split('/[\s,।?\-()]+/u', $combinedText);
+        $keywords = [];
+
+        foreach ($rawWords as $word) {
+            $word = trim($word);
+            // Keep words with length > 3 characters and filter out common Bengali stop words
+            if (mb_strlen($word) > 3 && !in_array($word, $stopWords)) {
+                // Remove numbers
+                if (!preg_match('/^[0-9\x{09e6}-\x{09ef}]+$/u', $word)) {
+                    $keywords[] = $word;
+                }
+            }
+        }
+
+        // Limit unique keywords to 8
+        $keywords = array_slice(array_unique($keywords), 0, 8);
+        $metaKeywords = implode(', ', $keywords);
+
+        // 4. Local Transliterator for English slug fallback
+        $map = [
+            'হ' => 'h', 'ে' => 'e', 'য' => 'z', 'ব' => 'b', 'ু' => 'u', 'ত' => 't', 'ত্' => 't',
+            'ও' => 'o', 'ী' => 'i', 'দ' => 'd', 'ম' => 'm', 'া' => 'a', 'ন' => 'n', 'ধ' => 'dh',
+            'র' => 'r', '্' => '', 'শ' => 'sh', 'স' => 's', 'ই' => 'i', 'ি' => 'i', 'ল' => 'l',
+            'প' => 'p', 'ো' => 'o', 'ট' => 't', 'ক' => 'k', 'ভ' => 'bh', 'গ' => 'g', 'অ' => 'o',
+            'ফ' => 'f', 'উ' => 'u', 'চ' => 'ch', 'জ' => 'j', 'ঙ' => 'ng', 'থ' => 'th', 'ড' => 'd',
+            'ণ' => 'n', 'খ' => 'kh', 'ঘ' => 'gh', 'ছ' => 'ch', 'ঝ' => 'jh', 'ঠ' => 'th', 'ঢ' => 'dh',
+            'ড়' => 'r', 'ঢ়' => 'rh', 'য়' => 'y', 'ৎ' => 't', 'ৈ' => 'oi', 'ৌ' => 'ou', 'ৃ' => 'ri'
+        ];
+
+        $shortTitle = \Illuminate\Support\Str::words($title, 8, '');
+        $result = '';
+        if (preg_match('/[\x{0980}-\x{09FF}]/u', $shortTitle)) {
+            $len = mb_strlen($shortTitle);
+            for ($i = 0; $i < $len; $i++) {
+                $char = mb_substr($shortTitle, $i, 1);
+                $result .= $map[$char] ?? $char;
+            }
+        } else {
+            $result = $shortTitle;
+        }
+
+        $localSlug = preg_replace('/[^\p{L}\p{N}]+/u', '-', $result);
+        $localSlug = trim($localSlug, '-');
+        $localSlug = mb_strtolower($localSlug);
+
+        return response()->json([
+            'success' => true,
+            'meta_title' => $metaTitle,
+            'meta_description' => $metaDescription,
+            'meta_keywords' => $metaKeywords,
+            'slug' => $localSlug,
+            'note' => 'Generated using local processor.'
+        ]);
     }
 }

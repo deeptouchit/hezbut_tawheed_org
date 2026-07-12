@@ -10,6 +10,7 @@ class Book extends Model
     use HasFactory;
 
     protected $fillable = [
+        'category_id',
         'title',
         'writer',
         'slug',
@@ -20,15 +21,34 @@ class Book extends Model
         'price',
         'old_price',
         'is_popular',
+        'is_bestseller',
         'popular_order',
         'is_active',
     ];
 
     protected $casts = [
+        'category_id' => 'integer',
         'is_active' => 'boolean',
         'is_popular' => 'boolean',
+        'is_bestseller' => 'boolean',
         'popular_order' => 'integer',
     ];
+
+    /**
+     * Get the category that owns the book.
+     */
+    public function category()
+    {
+        return $this->belongsTo(BookCategory::class, 'category_id');
+    }
+
+    /**
+     * Get the reviews for the book.
+     */
+    public function reviews()
+    {
+        return $this->hasMany(BookReview::class)->where('is_active', true);
+    }
 
     /**
      * Get the book cover image URL or a default placeholder.

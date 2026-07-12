@@ -8,12 +8,12 @@
 
 @section('content')
 
-    <!-- Banner Header -->
-    <div class="py-5 text-white position-relative" style="background: linear-gradient(rgba(0,106,78,0.85), rgba(0,106,78,0.85)), url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1200') no-repeat center center; background-size: cover; border-bottom: 4px solid #10B981;">
-        <div class="container py-4 text-center">
-            <h1 class="display-5 fw-bold mb-0 text-shadow text-white">{{ $activity->title }}</h1>
-        </div>
-    </div>
+    @include('theme::partials.hero_banner', [
+        'title' => $activity->title,
+        'subtitle' => $activity->description ?? '',
+        'badge_text' => 'আমাদের কার্যক্রম',
+        'badge_icon' => 'fas fa-tasks'
+    ])
 
     <!-- Detail View Section -->
     <section class="py-6 bg-off-white">
@@ -74,41 +74,7 @@
     </section>
 
     <!-- Custom CSS for CKEditor content within dynamic activities -->
-    <style>
-        .activity-body h1, .activity-body h2, .activity-body h3, .activity-body h4, .activity-body h5, .activity-body h6 {
-            color: #006A4E;
-            font-weight: 700;
-            margin-top: 1.8rem;
-            margin-bottom: 1rem;
-        }
-        .activity-body p {
-            margin-bottom: 1.25rem;
-            color: #475569;
-            text-align: justify;
-        }
-        .activity-body ul, .activity-body ol {
-            margin-bottom: 1.5rem;
-            padding-left: 1.5rem;
-            color: #475569;
-        }
-        .activity-body li {
-            margin-bottom: 0.5rem;
-        }
-        .activity-body blockquote {
-            border-left: 4px solid #10B981;
-            background-color: #f8fafc;
-            padding: 1rem 1.5rem;
-            margin: 1.5rem 0;
-            font-style: italic;
-            border-radius: 0 8px 8px 0;
-        }
-        .hover-bg-light:hover {
-            background-color: #f8fafc;
-        }
-        .gap-3.5 {
-            gap: 0.85rem !important;
-        }
-    </style>
+    
 
 @endsection
 

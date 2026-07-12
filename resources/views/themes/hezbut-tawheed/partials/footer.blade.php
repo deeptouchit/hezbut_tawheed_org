@@ -30,8 +30,8 @@
                         </div>
                     @endif
                 </div>
-                <p class="text-gray-light lh-lg" style="font-size: 0.92rem;  text-align: center; margin-bottom: 1.5rem;">
-                    {{ $setting->getSetting('company_description', 'হেযবুত তওহীদ একটি অরাজনৈতিক ধর্মীয় সংস্কারমূলক আন্দোলন। ধর্মান্ধতা, ধর্মব্যবসা, জঙ্গিবাদ ও সাম্প্রদায়িকতার বিরুদ্ধে আদর্শিক প্রচারণাই আমাদের মূল আহ্বান।') }}
+                <p class="lh-lg" style="font-size: 0.92rem; text-align: justify; color: #cbd5e1 !important; margin-bottom: 1.5rem; font-family: 'Hind Siliguri', sans-serif;">
+                    {{ strip_tags($setting->getSetting('company_description', 'হেযবুত তওহীদ একটি অরাজনৈতিক ধর্মীয় সংস্কারমূলক আন্দোলন। ধর্মান্ধতা, ধর্মব্যবসা, জঙ্গিবাদ ও সাম্প্রদায়িকতার বিরুদ্ধে  আদর্শিক প্রচারণাই আমাদের মূল আহ্বান।')) }}
                 </p>
                 <div class="social-icons mb-4 mb-lg-0">
                     @if($setting->getSetting('facebook_url'))
@@ -147,111 +147,3 @@
         </div>
     </div>
 </footer>
-
-<style>
-    .footer-links li {
-        margin-bottom: 0.65rem;
-    }
-    .footer-links li a {
-        color: #cbd5e1;
-        text-decoration: none;
-        transition: all 0.3s ease;
-        display: inline-block;
-        font-size: 0.93rem;
-    }
-    .footer-links li a:hover {
-        color: #34d399 !important;
-        transform: translateX(4px);
-    }
-    .footer-links li a i {
-        margin-right: 8px;
-        font-size: 0.75rem;
-    }
-    .hover-success:hover {
-        color: #34d399 !important;
-    }
-    /* Social Button Styles */
-    .footer-social-btn {
-        display: inline-flex;
-        justify-content: center;
-        align-items: center;
-        width: 36px;
-        height: 36px;
-        border-radius: 50%;
-        background-color: rgba(255, 255, 255, 0.05);
-        color: #cbd5e1;
-        margin-right: 10px;
-        font-size: 1rem;
-        transition: all 0.3s ease;
-        text-decoration: none;
-    }
-    .footer-social-btn:hover {
-        color: #ffffff;
-        transform: translateY(-3px);
-    }
-    .footer-social-btn.facebook:hover {
-        background-color: #3b5998;
-    }
-    .footer-social-btn.youtube:hover {
-        background-color: #ff0000;
-    }
-    .footer-social-btn.twitter:hover {
-        background-color: #1da1f2;
-    }
-    .footer-social-btn.instagram:hover {
-        background-color: #e1306c;
-    }
-    .footer-social-btn.linkedin:hover {
-        background-color: #0077b5;
-    }
-
-    /* Contact Info Icons Margins */
-    .footer-contact-info li i {
-        margin-right: 12px;
-        width: 20px;
-        text-align: center;
-        flex-shrink: 0;
-    }
-
-    /* Newsletter focus style */
-    .newsletter-form input::placeholder {
-        color: #94a3b8;
-    }
-    .newsletter-form input:focus {
-        background: rgba(255,255,255,0.15) !important;
-        box-shadow: none;
-        color: #fff !important;
-        outline: none;
-    }
-    .footer-contact-info li span, .footer-contact-info li a {
-        font-size: 0.92rem;
-    }
-    .max-w-sm {
-        max-width: 320px;
-    }
-
-    /* Responsive Text Alignment Helpers for Bootstrap 5 */
-    @media (min-width: 992px) {
-        .translate-middle-x-none {
-            transform: none !important;
-        }
-        .start-lg-0 {
-            left: 0 !important;
-        }
-        .text-justify {
-            text-align: justify !important;
-        }
-        .text-align-last-left {
-            text-align-last: left !important;
-        }
-    }
-    @media (max-width: 991.98px) {
-        .footer-logo-wrapper {
-            flex-direction: column;
-        }
-        .footer-logo-wrapper img {
-            margin-right: 0 !important;
-            margin-bottom: 0.5rem;
-        }
-    }
-</style>

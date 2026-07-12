@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Slider;
 use App\Models\Blog;
-use App\Models\TeamMember;
+use App\Models\Leader;
 use App\Models\Testimonial;
 use App\Models\Activity;
 use App\Models\Gallery;
@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
 class HomeController extends Controller
 {
     /**
-     * রাজনৈতিক পোর্টাল হোম পেজ দেখান
+     * political portal homepage display
      */
     public function index()
     {
@@ -44,8 +44,9 @@ class HomeController extends Controller
             ->take(3)
             ->get();
 
-        // ৩. কেন্দ্রীয় নেতৃবৃন্দ (টিম মেম্বার - সক্রিয় ও সর্ট অর্ডার)
-        $teamMembers = TeamMember::where('is_active', true)
+        // ৩. কেন্দ্রীয় নেতৃবৃন্দ (লিডার টেবিল থেকে)
+        $teamMembers = Leader::where('is_active', true)
+            ->whereIn('category', ['central', 'executive'])
             ->orderBy('sort_order', 'asc')
             ->orderBy('name', 'asc')
             ->take(4)
@@ -95,6 +96,11 @@ class HomeController extends Controller
                 });
         });
 
+        // নতুন সেকশনের জন্য ডাইনামিক ডেটা কোয়েরি
+        $liveBroadcast = \App\Models\LiveBroadcast::where('is_active', true)->where('is_live', true)->first();
+        $songs = \App\Models\Song::where('is_active', true)->orderBy('sort_order', 'asc')->take(6)->get();
+        $branches = \App\Models\Branch::where('is_active', true)->orderBy('sort_order', 'asc')->get();
+
         // ভিউতে ডেটা পাঠানো
         return view('theme::pages.home', compact(
             'sliders',
@@ -108,7 +114,10 @@ class HomeController extends Controller
             'homepageContent',
             'homepageCss',
             'activities',
-            'galleryPosts'
+            'galleryPosts',
+            'liveBroadcast',
+            'songs',
+            'branches'
         ));
     }
 

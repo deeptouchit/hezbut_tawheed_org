@@ -6,38 +6,30 @@ use App\Http\Controllers\Admin\BackupController;
 use App\Http\Controllers\Admin\BlogCategoryController;
 use App\Http\Controllers\Admin\BlogCommentController;
 use App\Http\Controllers\Admin\BlogController;
+use App\Http\Controllers\Admin\BookController;
+use App\Http\Controllers\Admin\BranchController;
 use App\Http\Controllers\Admin\CacheToolsController;
-use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ContactMessageController;
 use App\Http\Controllers\Admin\EmailTemplateController;
-use App\Http\Controllers\Admin\LandingPageController;
+use App\Http\Controllers\Admin\LeaderController;
+use App\Http\Controllers\Admin\LiveBroadcastController;
 use App\Http\Controllers\Admin\MailManagementController;
 use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\NewsletterController;
 use App\Http\Controllers\Admin\NotificationController;
-use App\Http\Controllers\Admin\PaymentGatewayManagementController;
-use App\Http\Controllers\Admin\PaymentMethodController;
+use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\PermissionController;
-use App\Http\Controllers\Admin\ProductQuestionController;
-use App\Http\Controllers\Admin\ProductReviewController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\SliderController;
-use App\Http\Controllers\Admin\ServiceFeatureController;
-use App\Http\Controllers\Admin\PromoBannersController;
+use App\Http\Controllers\Admin\SuggestionController;
 use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\Admin\TestimonialController;
 use App\Http\Controllers\Admin\ThemeController;
-use App\Http\Controllers\Admin\PageController;
-
-use App\Http\Controllers\Admin\BookController;
-use App\Http\Controllers\Admin\VideoController;
-use App\Http\Controllers\Admin\LiveBroadcastController;
-use App\Http\Controllers\Admin\LeaderController;
-use App\Http\Controllers\Admin\BranchController;
 use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\Admin\SuggestionController;
+use App\Http\Controllers\Admin\VideoController;
+use App\Http\Controllers\Admin\SongController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use Illuminate\Support\Facades\Route;
 
@@ -61,16 +53,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     // Auth
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
-
     // Dashboard
     Route::get('dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
     Route::get('dashboard/stats', [AdminDashboardController::class, 'getStats'])->name('dashboard.stats');
     Route::get('dashboard/chart-data', [AdminDashboardController::class, 'getChartData'])->name('dashboard.chart-data');
-
-    // E-commerce routes (Categories, Landing Pages, Tags, Reviews, Questions) removed
-
-
-
 
     // Newsletter
     Route::get('newsletter-subscribers', [NewsletterController::class, 'subscribers'])->name('newsletter.subscribers.index');
@@ -107,7 +93,6 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::get('/settings/export', [SettingController::class, 'export'])->name('settings.export');
     Route::post('/settings/import', [SettingController::class, 'import'])->name('settings.import');
 
-    // Payment routes (Methods, Gateways) removed
 
     // Email Templates
     Route::resource('email-templates', EmailTemplateController::class);
@@ -125,7 +110,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::post('email/test-connection', [MailManagementController::class, 'testConnection'])->name('email.test.connection');
     Route::get('email/config', [MailManagementController::class, 'getConfig'])->name('email.config');
     Route::post('email/quick-ping', [MailManagementController::class, 'quickPing'])->name('email.quick.ping');
-    // SMS routes commented out because SmsServiceProvider was removed
+
 
     // Cache Tools
     Route::get('cache-tools', [CacheToolsController::class, 'index'])->name('cache-tools.index');
@@ -202,10 +187,6 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::get('notifications/settings', [NotificationController::class, 'getSettings'])->name('notifications.settings.get');
     Route::post('notifications/settings', [NotificationController::class, 'updateSettings'])->name('notifications.settings.update');
 
-
-
-
-
     // =============================================
     // THEME MANAGEMENT ROUTES
     // =============================================
@@ -241,13 +222,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::post('sliders/{id}/toggle-status', [SliderController::class, 'toggleStatus'])->name('sliders.toggle-status');
     Route::post('sliders/update-order', [SliderController::class, 'updateOrder'])->name('sliders.update-order');
 
-    // =============================================
-    // HOMEPAGE BUILDER ROUTES
-    // =============================================
-    Route::get('homepage-builder', [\App\Http\Controllers\Admin\HomepageController::class, 'index'])->name('homepage-builder.index');
-    Route::post('homepage-builder/update', [\App\Http\Controllers\Admin\HomepageController::class, 'update'])->name('homepage-builder.update');
 
-    // Service Features & Promo Banners routes removed
 
 
     // =============================================
@@ -261,93 +236,106 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::post('testimonials/bulk-delete', [TestimonialController::class, 'bulkDelete'])->name('testimonials.bulk-delete');
 
 
-
-// =============================================
-// BLOG CATEGORIES ROUTES
-// =============================================
-Route::get('blog/categories', [BlogCategoryController::class, 'index'])->name('blog.categories.index');
-Route::get('blog/categories/create', [BlogCategoryController::class, 'create'])->name('blog.categories.create');
-Route::post('blog/categories', [BlogCategoryController::class, 'store'])->name('blog.categories.store');
-Route::get('blog/categories/{id}/edit', [BlogCategoryController::class, 'edit'])->name('blog.categories.edit');
-Route::put('blog/categories/{id}', [BlogCategoryController::class, 'update'])->name('blog.categories.update');
-Route::delete('blog/categories/{id}', [BlogCategoryController::class, 'destroy'])->name('blog.categories.destroy');
-Route::post('blog/categories/{id}/toggle-status', [BlogCategoryController::class, 'toggleStatus'])->name('blog.categories.toggle-status');
-Route::post('blog/categories/reorder', [BlogCategoryController::class, 'reorder'])->name('blog.categories.reorder');
-Route::get('blog/categories/export', [BlogCategoryController::class, 'export'])->name('blog.categories.export');
-Route::post('blog/categories/bulk-delete', [BlogCategoryController::class, 'bulkDelete'])->name('blog.categories.bulk-delete');
-Route::get('blog/categories/get-all', [BlogCategoryController::class, 'getAll'])->name('blog.categories.get-all');
-Route::get('blog/categories/statistics', [BlogCategoryController::class, 'getStatistics'])->name('blog.categories.statistics');
-Route::get('blog/categories/{id}/show', [BlogCategoryController::class, 'show'])->name('blog.categories.show');
-Route::get('blog/categories/{slug}', [BlogCategoryController::class, 'showBySlug'])->name('blog.categories.show-by-slug');
-
+    // =============================================
+    // BLOG CATEGORIES ROUTES
+    // =============================================
+    Route::get('blog/categories', [BlogCategoryController::class, 'index'])->name('blog.categories.index');
+    Route::get('blog/categories/create', [BlogCategoryController::class, 'create'])->name('blog.categories.create');
+    Route::post('blog/categories', [BlogCategoryController::class, 'store'])->name('blog.categories.store');
+    Route::get('blog/categories/{id}/edit', [BlogCategoryController::class, 'edit'])->name('blog.categories.edit');
+    Route::put('blog/categories/{id}', [BlogCategoryController::class, 'update'])->name('blog.categories.update');
+    Route::delete('blog/categories/{id}', [BlogCategoryController::class, 'destroy'])->name('blog.categories.destroy');
+    Route::post('blog/categories/{id}/toggle-status', [BlogCategoryController::class, 'toggleStatus'])->name('blog.categories.toggle-status');
+    Route::post('blog/categories/reorder', [BlogCategoryController::class, 'reorder'])->name('blog.categories.reorder');
+    Route::get('blog/categories/export', [BlogCategoryController::class, 'export'])->name('blog.categories.export');
+    Route::post('blog/categories/bulk-delete', [BlogCategoryController::class, 'bulkDelete'])->name('blog.categories.bulk-delete');
+    Route::get('blog/categories/get-all', [BlogCategoryController::class, 'getAll'])->name('blog.categories.get-all');
+    Route::get('blog/categories/statistics', [BlogCategoryController::class, 'getStatistics'])->name('blog.categories.statistics');
+    Route::get('blog/categories/{id}/show', [BlogCategoryController::class, 'show'])->name('blog.categories.show');
+    Route::get('blog/categories/{slug}', [BlogCategoryController::class, 'showBySlug'])->name('blog.categories.show-by-slug');
 
 
-// =============================================
-// BLOG POSTS ROUTES
-// =============================================
+    // =============================================
+    // BLOG POSTS ROUTES
+    // =============================================
+    Route::get('blog/posts', [BlogController::class, 'index'])->name('blog.posts.index');
+    Route::get('blog/posts/create', [BlogController::class, 'create'])->name('blog.posts.create');
+    Route::post('blog/posts', [BlogController::class, 'store'])->name('blog.posts.store');
+    Route::post('blog/posts/generate-seo', [BlogController::class, 'generateSeo'])->name('blog.posts.generate-seo');
+    Route::get('blog/posts/{id}', [BlogController::class, 'show'])->name('blog.posts.show');
+    Route::get('blog/posts/{id}/edit', [BlogController::class, 'edit'])->name('blog.posts.edit');
+    Route::put('blog/posts/{id}', [BlogController::class, 'update'])->name('blog.posts.update');
+    Route::delete('blog/posts/{id}', [BlogController::class, 'destroy'])->name('blog.posts.destroy');
+    Route::post('blog/posts/{id}/toggle-status', [BlogController::class, 'toggleStatus'])->name('blog.posts.toggle-status');
+    Route::post('blog/posts/bulk-delete', [BlogController::class, 'bulkDelete'])->name('blog.posts.bulk-delete');
+    Route::get('blog/posts/export', [BlogController::class, 'export'])->name('blog.posts.export');
+    Route::post('blog/posts/{id}/duplicate', [BlogController::class, 'duplicate'])->name('blog.posts.duplicate');
+    Route::post('blog/posts/{id}/increment-views', [BlogController::class, 'incrementViews'])->name('blog.posts.increment-views');
+    Route::get('blog/posts/{id}/related', [BlogController::class, 'getRelatedPosts'])->name('blog.posts.related');
+    Route::post('blog/posts/bulk-status', [BlogController::class, 'bulkStatusUpdate'])->name('blog.posts.bulk-status');
+    Route::post('blog/posts/bulk-category', [BlogController::class, 'bulkCategoryUpdate'])->name('blog.posts.bulk-category');
+    Route::post('blog/posts/bulk-gallery', [BlogController::class, 'bulkGalleryUpdate'])->name('blog.posts.bulk-gallery');
+    Route::post('blog/posts/{id}/toggle-gallery', [BlogController::class, 'toggleGallery'])->name('blog.posts.toggle-gallery');
+    Route::post('blog/posts/reorder-gallery', [BlogController::class, 'reorderGallery'])->name('blog.posts.reorder-gallery');
+    Route::get('gallery', [BlogController::class, 'galleryIndex'])->name('gallery.index');
+    Route::post('gallery/upload', [BlogController::class, 'galleryAddCustom'])->name('gallery.upload');
+    Route::post('gallery/{id}/toggle-homepage', [BlogController::class, 'galleryToggleHomepage'])->name('gallery.toggle-homepage');
+    Route::post('gallery/{id}/toggle-gallerypage', [BlogController::class, 'galleryToggleGalleryPage'])->name('gallery.toggle-gallerypage');
+    Route::delete('gallery/{id}', [BlogController::class, 'galleryDeleteCustom'])->name('gallery.destroy');
+    Route::post('gallery/reorder-homepage', [BlogController::class, 'reorderHomepage'])->name('gallery.reorder-homepage');
+    Route::post('gallery/reorder-gallerypage', [BlogController::class, 'reorderGalleryPage'])->name('gallery.reorder-gallerypage');
+    Route::get('blog/posts/by-category/{categoryId}', [BlogController::class, 'getPostsByCategory'])->name('blog.posts.by-category');
+    Route::get('blog/posts/by-tag/{tag}', [BlogController::class, 'getPostsByTag'])->name('blog.posts.by-tag');
+    Route::get('blog/posts/search', [BlogController::class, 'searchPosts'])->name('blog.posts.search');
+    Route::get('blog/posts/recent', [BlogController::class, 'getRecentPosts'])->name('blog.posts.recent');
+    Route::get('blog/posts/popular', [BlogController::class, 'getPopularPosts'])->name('blog.posts.popular');
+    Route::get('blog/posts/statistics', [BlogController::class, 'getStatistics'])->name('blog.posts.statistics');
+    Route::post('blog/posts/reorder', [BlogController::class, 'reorder'])->name('blog.posts.reorder');
+    Route::post('blog/posts/upload-image', [BlogController::class, 'uploadContentImage'])->name('blog.posts.upload-image');
 
-Route::get('blog/posts', [BlogController::class, 'index'])->name('blog.posts.index');
-Route::get('blog/posts/create', [BlogController::class, 'create'])->name('blog.posts.create');
-Route::post('blog/posts', [BlogController::class, 'store'])->name('blog.posts.store');
-Route::get('blog/posts/{id}', [BlogController::class, 'show'])->name('blog.posts.show');
-Route::get('blog/posts/{id}/edit', [BlogController::class, 'edit'])->name('blog.posts.edit');
-Route::put('blog/posts/{id}', [BlogController::class, 'update'])->name('blog.posts.update');
-Route::delete('blog/posts/{id}', [BlogController::class, 'destroy'])->name('blog.posts.destroy');
-Route::post('blog/posts/{id}/toggle-status', [BlogController::class, 'toggleStatus'])->name('blog.posts.toggle-status');
-Route::post('blog/posts/bulk-delete', [BlogController::class, 'bulkDelete'])->name('blog.posts.bulk-delete');
-Route::get('blog/posts/export', [BlogController::class, 'export'])->name('blog.posts.export');
-Route::post('blog/posts/{id}/duplicate', [BlogController::class, 'duplicate'])->name('blog.posts.duplicate');
-Route::post('blog/posts/{id}/increment-views', [BlogController::class, 'incrementViews'])->name('blog.posts.increment-views');
-Route::get('blog/posts/{id}/related', [BlogController::class, 'getRelatedPosts'])->name('blog.posts.related');
-Route::post('blog/posts/bulk-status', [BlogController::class, 'bulkStatusUpdate'])->name('blog.posts.bulk-status');
-Route::post('blog/posts/bulk-category', [BlogController::class, 'bulkCategoryUpdate'])->name('blog.posts.bulk-category');
-Route::post('blog/posts/bulk-gallery', [BlogController::class, 'bulkGalleryUpdate'])->name('blog.posts.bulk-gallery');
-Route::post('blog/posts/{id}/toggle-gallery', [BlogController::class, 'toggleGallery'])->name('blog.posts.toggle-gallery');
-Route::post('blog/posts/reorder-gallery', [BlogController::class, 'reorderGallery'])->name('blog.posts.reorder-gallery');
-Route::get('gallery', [BlogController::class, 'galleryIndex'])->name('gallery.index');
-Route::post('gallery/upload', [BlogController::class, 'galleryAddCustom'])->name('gallery.upload');
-Route::post('gallery/{id}/toggle-homepage', [BlogController::class, 'galleryToggleHomepage'])->name('gallery.toggle-homepage');
-Route::post('gallery/{id}/toggle-gallerypage', [BlogController::class, 'galleryToggleGalleryPage'])->name('gallery.toggle-gallerypage');
-Route::delete('gallery/{id}', [BlogController::class, 'galleryDeleteCustom'])->name('gallery.destroy');
-Route::post('gallery/reorder-homepage', [BlogController::class, 'reorderHomepage'])->name('gallery.reorder-homepage');
-Route::post('gallery/reorder-gallerypage', [BlogController::class, 'reorderGalleryPage'])->name('gallery.reorder-gallerypage');
-Route::get('blog/posts/by-category/{categoryId}', [BlogController::class, 'getPostsByCategory'])->name('blog.posts.by-category');
-Route::get('blog/posts/by-tag/{tag}', [BlogController::class, 'getPostsByTag'])->name('blog.posts.by-tag');
-Route::get('blog/posts/search', [BlogController::class, 'searchPosts'])->name('blog.posts.search');
-Route::get('blog/posts/recent', [BlogController::class, 'getRecentPosts'])->name('blog.posts.recent');
-Route::get('blog/posts/popular', [BlogController::class, 'getPopularPosts'])->name('blog.posts.popular');
-Route::get('blog/posts/statistics', [BlogController::class, 'getStatistics'])->name('blog.posts.statistics');
-Route::post('blog/posts/reorder', [BlogController::class, 'reorder'])->name('blog.posts.reorder');
+    // =============================================
+    // BLOG TAGS ROUTES
+    // =============================================
+    Route::get('blog/tags', [TagController::class, 'index'])->name('blog.tags.index');
+    Route::get('blog/tags/create', [TagController::class, 'create'])->name('blog.tags.create');
+    Route::post('blog/tags', [TagController::class, 'store'])->name('blog.tags.store');
+    Route::get('blog/tags/{id}/edit', [TagController::class, 'edit'])->name('blog.tags.edit');
+    Route::put('blog/tags/{id}', [TagController::class, 'update'])->name('blog.tags.update');
+    Route::delete('blog/tags/{id}', [TagController::class, 'destroy'])->name('blog.tags.destroy');
+    Route::post('blog/tags/{id}/toggle-status', [TagController::class, 'toggleStatus'])->name('blog.tags.toggle-status');
+    Route::post('blog/tags/reorder', [TagController::class, 'reorder'])->name('blog.tags.reorder');
+    Route::post('blog/tags/bulk-delete', [TagController::class, 'bulkDelete'])->name('blog.tags.bulk-delete');
+    Route::get('blog/tags/export', [TagController::class, 'export'])->name('blog.tags.export');
 
-// =============================================
-// BLOG COMMENTS ROUTES
-// =============================================
+    // =============================================
+    // BLOG COMMENTS ROUTES
+    // =============================================
 
-Route::get('blog/comments', [BlogCommentController::class, 'index'])->name('blog.comments.index');
-Route::get('blog/comments/{id}', [BlogCommentController::class, 'show'])->name('blog.comments.show');
-Route::post('blog/comments/{id}/approve', [BlogCommentController::class, 'approve'])->name('blog.comments.approve');
-Route::post('blog/comments/{id}/disapprove', [BlogCommentController::class, 'disapprove'])->name('blog.comments.disapprove');
-Route::delete('blog/comments/{id}', [BlogCommentController::class, 'destroy'])->name('blog.comments.destroy');
-Route::post('blog/comments/bulk-delete', [BlogCommentController::class, 'bulkDelete'])->name('blog.comments.bulk-delete');
-Route::post('blog/comments/bulk-approve', [BlogCommentController::class, 'bulkApprove'])->name('blog.comments.bulk-approve');
-Route::get('blog/comments/export', [BlogCommentController::class, 'export'])->name('blog.comments.export');
-Route::get('blog/comments/by-blog/{blogId}', [BlogCommentController::class, 'getCommentsByBlog'])->name('blog.comments.by-blog');
-Route::post('blog/comments/{id}/reply', [BlogCommentController::class, 'reply'])->name('blog.comments.reply');
-Route::delete('blog/comments/pending', [BlogCommentController::class, 'deleteAllPending'])->name('blog.comments.delete-pending');
+    Route::get('blog/comments', [BlogCommentController::class, 'index'])->name('blog.comments.index');
+    Route::get('blog/comments/{id}', [BlogCommentController::class, 'show'])->name('blog.comments.show');
+    Route::post('blog/comments/{id}/approve', [BlogCommentController::class, 'approve'])->name('blog.comments.approve');
+    Route::post('blog/comments/{id}/disapprove', [BlogCommentController::class, 'disapprove'])->name('blog.comments.disapprove');
+    Route::delete('blog/comments/{id}', [BlogCommentController::class, 'destroy'])->name('blog.comments.destroy');
+    Route::post('blog/comments/bulk-delete', [BlogCommentController::class, 'bulkDelete'])->name('blog.comments.bulk-delete');
+    Route::post('blog/comments/bulk-approve', [BlogCommentController::class, 'bulkApprove'])->name('blog.comments.bulk-approve');
+    Route::get('blog/comments/export', [BlogCommentController::class, 'export'])->name('blog.comments.export');
+    Route::get('blog/comments/by-blog/{blogId}', [BlogCommentController::class, 'getCommentsByBlog'])->name('blog.comments.by-blog');
+    Route::post('blog/comments/{id}/reply', [BlogCommentController::class, 'reply'])->name('blog.comments.reply');
+    Route::delete('blog/comments/pending', [BlogCommentController::class, 'deleteAllPending'])->name('blog.comments.delete-pending');
 
 
-// =============================================
-// CONTACT MESSAGES ROUTES
-// =============================================
+    // =============================================
+    // CONTACT MESSAGES ROUTES
+    // =============================================
 
-Route::get('contacts/fetch-unread', [ContactMessageController::class, 'fetchUnread'])->name('contacts.fetch-unread');
-Route::get('contacts', [ContactMessageController::class, 'index'])->name('contacts.index');
-Route::get('contacts/{id}', [ContactMessageController::class, 'show'])->name('contacts.show');
-Route::post('contacts/{id}/reply', [ContactMessageController::class, 'reply'])->name('contacts.reply');
-Route::delete('contacts/{id}', [ContactMessageController::class, 'destroy'])->name('contacts.destroy');
-Route::post('contacts/bulk-delete', [ContactMessageController::class, 'bulkDelete'])->name('contacts.bulk-delete');
-Route::post('contacts/mark-as-read', [ContactMessageController::class, 'markAsRead'])->name('contacts.mark-as-read');
-Route::post('contacts/mark-as-unread', [ContactMessageController::class, 'markAsUnread'])->name('contacts.mark-as-unread');
+    Route::get('contacts/fetch-unread', [ContactMessageController::class, 'fetchUnread'])->name('contacts.fetch-unread');
+    Route::get('contacts', [ContactMessageController::class, 'index'])->name('contacts.index');
+    Route::get('contacts/{id}', [ContactMessageController::class, 'show'])->name('contacts.show');
+    Route::post('contacts/{id}/reply', [ContactMessageController::class, 'reply'])->name('contacts.reply');
+    Route::delete('contacts/{id}', [ContactMessageController::class, 'destroy'])->name('contacts.destroy');
+    Route::post('contacts/bulk-delete', [ContactMessageController::class, 'bulkDelete'])->name('contacts.bulk-delete');
+    Route::post('contacts/mark-as-read', [ContactMessageController::class, 'markAsRead'])->name('contacts.mark-as-read');
+    Route::post('contacts/mark-as-unread', [ContactMessageController::class, 'markAsUnread'])->name('contacts.mark-as-unread');
     Route::get('contacts/export', [ContactMessageController::class, 'export'])->name('contacts.export');
     Route::get('contacts/statistics', [ContactMessageController::class, 'getStatistics'])->name('contacts.statistics');
 
@@ -372,18 +360,19 @@ Route::post('contacts/mark-as-unread', [ContactMessageController::class, 'markAs
     Route::post('pages/{id}/toggle-status', [PageController::class, 'toggleStatus'])->name('pages.toggle-status');
 
 
-
     // =============================================
     // BOOK MANAGEMENT ROUTES
     // =============================================
     Route::get('books', [BookController::class, 'index'])->name('books.index');
     Route::get('books/create', [BookController::class, 'create'])->name('books.create');
     Route::post('books', [BookController::class, 'store'])->name('books.store');
+    Route::get('books/{id}', [BookController::class, 'show'])->name('books.show');
     Route::get('books/{id}/edit', [BookController::class, 'edit'])->name('books.edit');
     Route::put('books/{id}', [BookController::class, 'update'])->name('books.update');
     Route::delete('books/{id}', [BookController::class, 'destroy'])->name('books.destroy');
     Route::post('books/{id}/toggle-status', [BookController::class, 'toggleStatus'])->name('books.toggle-status');
     Route::post('books/{id}/toggle-popular', [BookController::class, 'togglePopular'])->name('books.toggle-popular');
+    Route::post('books/{id}/toggle-bestseller', [BookController::class, 'toggleBestseller'])->name('books.toggle-bestseller');
     Route::post('books/{id}/update-order', [BookController::class, 'updateOrder'])->name('books.update-order');
 
     // =============================================
@@ -395,6 +384,18 @@ Route::post('contacts/mark-as-unread', [ContactMessageController::class, 'markAs
     Route::get('videos/{id}/edit', [VideoController::class, 'edit'])->name('videos.edit');
     Route::put('videos/{id}', [VideoController::class, 'update'])->name('videos.update');
     Route::delete('videos/{id}', [VideoController::class, 'destroy'])->name('videos.destroy');
+
+    // =============================================
+    // SONG MANAGEMENT ROUTES
+    // =============================================
+    Route::get('songs', [SongController::class, 'index'])->name('songs.index');
+    Route::get('songs/create', [SongController::class, 'create'])->name('songs.create');
+    Route::post('songs', [SongController::class, 'store'])->name('songs.store');
+    Route::get('songs/{id}/edit', [SongController::class, 'edit'])->name('songs.edit');
+    Route::put('songs/{id}', [SongController::class, 'update'])->name('songs.update');
+    Route::delete('songs/{id}', [SongController::class, 'destroy'])->name('songs.destroy');
+    Route::post('songs/{id}/toggle-status', [SongController::class, 'toggleStatus'])->name('songs.toggle-status');
+
     // =============================================
     // LIVE BROADCAST MANAGEMENT ROUTES
     // =============================================

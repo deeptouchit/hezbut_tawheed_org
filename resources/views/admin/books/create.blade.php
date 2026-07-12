@@ -63,6 +63,22 @@
                                     @enderror
                                 </div>
 
+                                <!-- Category -->
+                                <div class="mb-3">
+                                    <label for="category_id" class="form-label required-field fw-bold">বইয়ের ক্যাটাগরি</label>
+                                    <select name="category_id" id="category_id" class="form-select @error('category_id') is-invalid @enderror" required>
+                                        <option value="">ক্যাটাগরি নির্বাচন করুন</option>
+                                        @foreach($categories as $category)
+                                            <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
+                                                {{ $category->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('category_id')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
                                 <!-- Slug -->
                                 <div class="mb-3">
                                     <label for="slug" class="form-label required-field fw-bold">স্ল্যাগ (URL Slug)</label>
@@ -152,6 +168,11 @@
                             <div class="form-check form-switch mb-2">
                                 <input class="form-check-input" type="checkbox" name="is_popular" id="popularSwitch" value="1">
                                 <label class="form-check-label fw-bold" for="popularSwitch">পাঠক চাহিদার শীর্ষে বই</label>
+                            </div>
+
+                            <div class="form-check form-switch mb-3">
+                                <input class="form-check-input" type="checkbox" name="is_bestseller" id="bestsellerSwitch" value="1">
+                                <label class="form-check-label fw-bold" for="bestsellerSwitch">বেস্ট সেলার (Best Selling)</label>
                             </div>
 
                             <div class="mb-3">

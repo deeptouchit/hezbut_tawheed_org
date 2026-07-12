@@ -1,17 +1,27 @@
 {
     "_comment": "হেজবুত তওহীদ ফাইনাল মেনু কনফিগারেশন ফাইল",
     "version": "1.0.1",
-    "last_updated": "2026-07-05T17:15:29.738979Z",
+    "last_updated": "2026-07-12T09:04:49.920411Z",
     "topbar_left": [
         {
-            "id": "menu_1783078362688_7038",
+            "id": "topbar_l_phone",
             "position": "1",
             "type": "url",
-            "icon": "fas fa-link",
+            "icon": "fas fa-phone-alt",
             "is_featured": "false",
             "parent_id": null,
-            "text": "বাম দিকেঃ",
-            "url": "#"
+            "text": "০১৭১১ ০০৫০২৫, ০১৬৭০ ১৭৪৬৪৩",
+            "url": "tel:01711005025"
+        },
+        {
+            "id": "topbar_l_email",
+            "position": "2",
+            "type": "url",
+            "icon": "fas fa-envelope",
+            "is_featured": "false",
+            "parent_id": null,
+            "text": "info@hezbuttawheed.org",
+            "url": "mailto:info@hezbuttawheed.org"
         }
     ],
     "topbar_right": [
@@ -19,33 +29,75 @@
             "id": "topbar_r_1",
             "position": 1,
             "type": "url",
-            "icon": "fab fa-facebook",
-            "name": "ফেসবুক",
-            "url": "https://facebook.com"
+            "icon": "fab fa-facebook-f",
+            "name": "Facebook",
+            "url": "https:\/\/www.facebook.com\/emamht"
         },
         {
             "id": "topbar_r_2",
             "position": 2,
             "type": "url",
             "icon": "fab fa-youtube",
-            "name": "ইউটিউব",
-            "url": "https://youtube.com"
+            "name": "YouTube",
+            "url": "https:\/\/www.youtube.com\/channel\/UCSCJ8zB-CPD0H5P3R67HzCw"
+        },
+        {
+            "id": "topbar_r_3",
+            "position": 3,
+            "type": "url",
+            "icon": "fab fa-x-twitter",
+            "name": "Twitter \/ X",
+            "url": "https:\/\/x.com\/hezbuttawheed"
+        },
+        {
+            "id": "topbar_r_4",
+            "position": 4,
+            "type": "url",
+            "icon": "fab fa-instagram",
+            "name": "Instagram",
+            "url": "https:\/\/instagram.com\/hezbuttawheed"
+        },
+        {
+            "id": "topbar_r_5",
+            "position": 5,
+            "type": "url",
+            "icon": "fab fa-linkedin-in",
+            "name": "LinkedIn",
+            "url": "https:\/\/linkedin.com\/company\/hezbuttawheed"
+        },
+        {
+            "id": "topbar_r_6",
+            "position": 6,
+            "type": "url",
+            "icon": "fab fa-whatsapp",
+            "name": "WhatsApp",
+            "url": "https:\/\/wa.me\/8801711005025"
         }
     ],
     "desktop_nav": [
         {
             "id": "menu_desktop_1",
-            "position": 1,
+            "position": "1",
             "type": "url",
             "icon": "fas fa-home",
             "is_featured": "false",
             "parent_id": null,
             "name": "হোম",
-            "url": "/"
+            "url": "\/"
+        },
+        {
+            "id": "menu_desktop_about_us",
+            "position": "2",
+            "type": "url",
+            "icon": "fas fa-info",
+            "is_featured": "false",
+            "parent_id": null,
+            "name": "আমাদের সম্পর্কে",
+            "url": "\/about-us"
         },
         {
             "id": "menu_desktop_about_parent",
-            "position": 2,
+            "position": "3",
             "type": "url",
             "icon": "fas fa-info-circle",
             "is_featured": "false",
@@ -54,78 +106,68 @@
             "url": "#"
         },
         {
-            "id": "menu_desktop_about_us",
-            "position": 1,
-            "type": "url",
-            "icon": "fas fa-info",
-            "is_featured": "false",
-            "parent_id": "menu_desktop_about_parent",
-            "name": "আমাদের সম্পর্কে",
-            "url": "/about-us"
-        },
-        {
             "id": "menu_desktop_emamuzzaman",
-            "position": 2,
+            "position": "4",
             "type": "url",
             "icon": "fas fa-user-tie",
             "is_featured": "false",
             "parent_id": "menu_desktop_about_parent",
             "name": "প্রতিষ্ঠাতা এমামুয্যামান",
-            "url": "/emamuzzaman"
+            "url": "\/emamuzzaman"
         },
         {
             "id": "menu_desktop_emam_ht",
-            "position": 3,
+            "position": "5",
             "type": "url",
             "icon": "fas fa-user-shield",
             "is_featured": "false",
             "parent_id": "menu_desktop_about_parent",
             "name": "বর্তমান এমাম",
-            "url": "/emam-ht"
+            "url": "\/emam-ht"
         },
         {
             "id": "menu_desktop_monogram",
-            "position": 4,
+            "position": "6",
             "type": "url",
             "icon": "fas fa-shield-alt",
             "is_featured": "false",
             "parent_id": "menu_desktop_about_parent",
             "name": "প্রতীক ও মনোগ্রাম",
-            "url": "/monogram"
+            "url": "\/monogram"
         },
         {
             "id": "menu_desktop_structure",
-            "position": 5,
+            "position": "7",
             "type": "url",
             "icon": "fas fa-network-wired",
             "is_featured": "false",
             "parent_id": "menu_desktop_about_parent",
             "name": "সাংগঠনিক কাঠামো",
-            "url": "/structure"
+            "url": "\/structure"
         },
         {
             "id": "menu_desktop_leadership",
-            "position": 6,
+            "position": "8",
             "type": "url",
             "icon": "fas fa-user-shield",
             "is_featured": "false",
             "parent_id": "menu_desktop_about_parent",
             "name": "কেন্দ্রীয় নেতৃত্ব",
-            "url": "/leadership"
+            "url": "\/leadership"
         },
         {
             "id": "menu_desktop_branches",
-            "position": 7,
+            "position": "9",
             "type": "url",
             "icon": "fas fa-map-marked-alt",
             "is_featured": "false",
             "parent_id": "menu_desktop_about_parent",
             "name": "জেলা শাখাসমূহ",
-            "url": "/branches"
+            "url": "\/branches"
         },
         {
             "id": "menu_desktop_philosophy_parent",
-            "position": 3,
+            "position": "10",
             "type": "url",
             "icon": "fas fa-compass",
             "is_featured": "false",
@@ -135,57 +177,57 @@
         },
         {
             "id": "menu_desktop_vision",
-            "position": 1,
+            "position": "11",
             "type": "url",
             "icon": "fas fa-eye",
             "is_featured": "false",
             "parent_id": "menu_desktop_philosophy_parent",
             "name": "দৃষ্টিভঙ্গি",
-            "url": "/vision"
+            "url": "\/vision"
         },
         {
             "id": "menu_desktop_principles",
-            "position": 2,
+            "position": "12",
             "type": "url",
             "icon": "fas fa-gavel",
             "is_featured": "false",
             "parent_id": "menu_desktop_philosophy_parent",
             "name": "মূলনীতি",
-            "url": "/principles"
+            "url": "\/principles"
         },
         {
             "id": "menu_desktop_declaration",
-            "position": 3,
+            "position": "13",
             "type": "url",
             "icon": "fas fa-scroll",
             "is_featured": "false",
             "parent_id": "menu_desktop_philosophy_parent",
             "name": "ঘোষণাপত্র",
-            "url": "/declaration"
+            "url": "\/declaration"
         },
         {
             "id": "menu_desktop_faq",
-            "position": 4,
+            "position": "14",
             "type": "url",
             "icon": "fas fa-question-circle",
             "is_featured": "false",
             "parent_id": "menu_desktop_philosophy_parent",
             "name": "প্রশ্নোত্তর (FAQ)",
-            "url": "/faq"
+            "url": "\/faq"
         },
         {
             "id": "menu_desktop_approval",
-            "position": 5,
+            "position": "15",
             "type": "url",
             "icon": "fas fa-file-signature",
             "is_featured": "false",
             "parent_id": "menu_desktop_philosophy_parent",
             "name": "কার্যক্রমের অনুমোদন",
-            "url": "/articles/category/approval-and-legality"
+            "url": "\/articles\/category\/approval-and-legality"
         },
         {
             "id": "menu_desktop_activities_parent",
-            "position": 4,
+            "position": "16",
             "type": "url",
             "icon": "fas fa-tasks",
             "is_featured": "false",
@@ -195,47 +237,47 @@
         },
         {
             "id": "menu_desktop_programs",
-            "position": 1,
+            "position": "17",
             "type": "url",
             "icon": "fas fa-calendar-alt",
             "is_featured": "false",
             "parent_id": "menu_desktop_activities_parent",
             "name": "কর্মসূচি",
-            "url": "/programs"
+            "url": "\/programs"
         },
         {
             "id": "menu_desktop_activities",
-            "position": 2,
+            "position": "18",
             "type": "url",
             "icon": "fas fa-running",
             "is_featured": "false",
             "parent_id": "menu_desktop_activities_parent",
             "name": "চলমান কার্যক্রম",
-            "url": "/activities"
+            "url": "\/activities"
         },
         {
             "id": "menu_desktop_social",
-            "position": 3,
+            "position": "19",
             "type": "url",
             "icon": "fas fa-hand-holding-heart",
             "is_featured": "false",
             "parent_id": "menu_desktop_activities_parent",
             "name": "সামাজিক উদ্যোগ",
-            "url": "/social"
+            "url": "\/social"
         },
         {
             "id": "menu_desktop_training",
-            "position": 4,
+            "position": "20",
             "type": "url",
             "icon": "fas fa-user-graduate",
             "is_featured": "false",
             "parent_id": "menu_desktop_activities_parent",
             "name": "প্রশিক্ষণ ও ক্রীড়া",
-            "url": "/training"
+            "url": "\/training"
         },
         {
             "id": "menu_desktop_publications_parent",
-            "position": 5,
+            "position": "21",
             "type": "url",
             "icon": "fas fa-book",
             "is_featured": "false",
@@ -245,157 +287,157 @@
         },
         {
             "id": "menu_desktop_publications_cms",
-            "position": 1,
+            "position": "22",
             "type": "url",
             "icon": "fas fa-bookmark",
             "is_featured": "false",
             "parent_id": "menu_desktop_publications_parent",
             "name": "বই ও প্রকাশনা",
-            "url": "/publications"
+            "url": "\/publications"
         },
         {
             "id": "menu_desktop_library",
-            "position": 2,
+            "position": "23",
             "type": "url",
             "icon": "fas fa-archive",
             "is_featured": "false",
             "parent_id": "menu_desktop_publications_parent",
             "name": "ডিজিটাল লাইব্রেরি",
-            "url": "/library"
+            "url": "\/library"
         },
         {
             "id": "menu_desktop_articles",
-            "position": 3,
+            "position": "24",
             "type": "url",
             "icon": "fas fa-newspaper",
             "is_featured": "false",
             "parent_id": "menu_desktop_publications_parent",
             "name": "প্রবন্ধ ও কলাম",
-            "url": "/articles/category/articles-and-editorials"
+            "url": "\/articles\/category\/articles-and-editorials"
         },
         {
             "id": "menu_desktop_research",
-            "position": 4,
+            "position": "25",
             "type": "url",
             "icon": "fas fa-search",
             "is_featured": "false",
             "parent_id": "menu_desktop_publications_parent",
             "name": "গবেষণা ও উন্নয়ন",
-            "url": "/research"
+            "url": "\/research"
         },
         {
             "id": "menu_desktop_propaganda",
-            "position": 5,
+            "position": "26",
             "type": "url",
             "icon": "fas fa-shield-alt",
             "is_featured": "false",
             "parent_id": "menu_desktop_publications_parent",
             "name": "অপপ্রচারের জবাব",
-            "url": "/articles/category/rebuttal-and-legal"
+            "url": "\/articles\/category\/rebuttal-and-legal"
         },
         {
             "id": "menu_desktop_oppression",
-            "position": 6,
+            "position": "27",
             "type": "url",
             "icon": "fas fa-history",
             "is_featured": "false",
             "parent_id": "menu_desktop_publications_parent",
             "name": "নির্যাতনের ইতিহাস",
-            "url": "/articles/category/history-of-persecution"
+            "url": "\/articles\/category\/history-of-persecution"
         },
         {
             "id": "menu_desktop_sonaimuri",
-            "position": 7,
+            "position": "28",
             "type": "url",
             "icon": "fas fa-skull-crossbones",
             "is_featured": "false",
             "parent_id": "menu_desktop_publications_parent",
             "name": "সোনাইমুড়ী ট্র্যাজেডি",
-            "url": "/sonaimuri-tragedy"
+            "url": "\/sonaimuri-tragedy"
         },
         {
             "id": "menu_desktop_media_parent",
-            "position": 6,
+            "position": "29",
             "type": "url",
             "icon": "fas fa-bullhorn",
             "is_featured": "false",
             "parent_id": null,
-            "name": "মিডিয়া ও সংবাদ",
+            "name": "মিডিয়া ও ব্লগ",
             "url": "#"
         },
         {
             "id": "menu_desktop_blog",
-            "position": 1,
+            "position": "30",
             "type": "route",
             "icon": "fas fa-newspaper",
             "is_featured": "false",
             "parent_id": "menu_desktop_media_parent",
-            "name": "সংবাদ",
+            "name": "নিবন্ধ ও ব্লগ",
             "url": "blog"
         },
         {
             "id": "menu_desktop_announcements",
-            "position": 2,
-            "type": "url",
+            "position": "31",
+            "type": "route",
             "icon": "fas fa-bullhorn",
             "is_featured": "false",
             "parent_id": "menu_desktop_media_parent",
-            "name": "ঘোষণা",
-            "url": "/announcements"
+            "name": "প্রেস রিলিজ",
+            "url": "press-releases.index"
         },
         {
             "id": "menu_desktop_events",
-            "position": 3,
-            "type": "url",
+            "position": "32",
+            "type": "route",
             "icon": "fas fa-calendar-check",
             "is_featured": "false",
             "parent_id": "menu_desktop_media_parent",
-            "name": "ইভেন্টসমূহ",
-            "url": "/events"
+            "name": "অনুষ্ঠান ও কর্মসূচি",
+            "url": "events.index"
         },
         {
             "id": "menu_desktop_videos",
-            "position": 4,
-            "type": "url",
+            "position": "33",
+            "type": "route",
             "icon": "fas fa-play-circle",
             "is_featured": "false",
             "parent_id": "menu_desktop_media_parent",
-            "name": "ভিডিও",
-            "url": "/videos"
-        },
-        {
-            "id": "menu_desktop_audios",
-            "position": 5,
-            "type": "url",
-            "icon": "fas fa-volume-up",
-            "is_featured": "false",
-            "parent_id": "menu_desktop_media_parent",
-            "name": "অডিও",
-            "url": "/audios"
+            "name": "ভিডিও গ্যালারি",
+            "url": "videos.index"
         },
         {
             "id": "menu_desktop_gallery",
-            "position": 6,
-            "type": "url",
+            "position": "34",
+            "type": "route",
             "icon": "fas fa-images",
             "is_featured": "false",
             "parent_id": "menu_desktop_media_parent",
-            "name": "গ্যালারি",
-            "url": "/gallery"
+            "name": "ফটো গ্যালারি",
+            "url": "gallery.index"
         },
         {
             "id": "menu_desktop_live",
-            "position": 7,
-            "type": "url",
+            "position": "35",
+            "type": "route",
             "icon": "fas fa-broadcast-tower",
             "is_featured": "false",
             "parent_id": "menu_desktop_media_parent",
-            "name": "লাইভ",
-            "url": "/live"
+            "name": "লাইভ ব্রডকাস্ট",
+            "url": "live.index"
+        },
+        {
+            "id": "menu_desktop_songs",
+            "position": "36",
+            "type": "route",
+            "icon": "fas fa-music",
+            "is_featured": "false",
+            "parent_id": "menu_desktop_media_parent",
+            "name": "সাংস্কৃতিক কর্নার",
+            "url": "songs.index"
         },
         {
             "id": "menu_desktop_contact_parent",
-            "position": 7,
+            "position": "37",
             "type": "url",
             "icon": "fas fa-envelope",
             "is_featured": "false",
@@ -405,33 +447,33 @@
         },
         {
             "id": "menu_desktop_contact",
-            "position": 1,
+            "position": "38",
             "type": "url",
             "icon": "fas fa-map-marker-alt",
             "is_featured": "false",
             "parent_id": "menu_desktop_contact_parent",
             "name": "যোগাযোগ ও ঠিকানা",
-            "url": "/contact"
+            "url": "\/contact"
         },
         {
             "id": "menu_desktop_feedback",
-            "position": 2,
+            "position": "39",
             "type": "url",
             "icon": "fas fa-comment-alt",
             "is_featured": "false",
             "parent_id": "menu_desktop_contact_parent",
             "name": "মতামত ও পরামর্শ",
-            "url": "/feedback"
+            "url": "\/feedback"
         },
         {
             "id": "menu_desktop_join",
-            "position": 8,
+            "position": "40",
             "type": "url",
             "icon": "fas fa-user-plus",
             "is_featured": "true",
             "parent_id": null,
             "name": "যোগদান করুন",
-            "url": "/join"
+            "url": "\/join"
         }
     ],
     "mobile_nav": [
@@ -443,7 +485,7 @@
             "is_featured": false,
             "parent_id": null,
             "name": "হোম",
-            "url": "/"
+            "url": "\/"
         },
         {
             "id": "menu_mobile_about_parent",
@@ -463,7 +505,7 @@
             "is_featured": false,
             "parent_id": "menu_mobile_about_parent",
             "name": "আমাদের সম্পর্কে",
-            "url": "/about-us"
+            "url": "\/about-us"
         },
         {
             "id": "menu_mobile_emamuzzaman",
@@ -473,7 +515,7 @@
             "is_featured": false,
             "parent_id": "menu_mobile_about_parent",
             "name": "প্রতিষ্ঠাতা এমামুয্যামান",
-            "url": "/emamuzzaman"
+            "url": "\/emamuzzaman"
         },
         {
             "id": "menu_mobile_emam_ht",
@@ -483,7 +525,7 @@
             "is_featured": false,
             "parent_id": "menu_mobile_about_parent",
             "name": "বর্তমান এমাম",
-            "url": "/emam-ht"
+            "url": "\/emam-ht"
         },
         {
             "id": "menu_mobile_monogram",
@@ -493,7 +535,7 @@
             "is_featured": false,
             "parent_id": "menu_mobile_about_parent",
             "name": "প্রতীক ও মনোগ্রাম",
-            "url": "/monogram"
+            "url": "\/monogram"
         },
         {
             "id": "menu_mobile_structure",
@@ -503,7 +545,7 @@
             "is_featured": false,
             "parent_id": "menu_mobile_about_parent",
             "name": "সাংগঠনিক কাঠামো",
-            "url": "/structure"
+            "url": "\/structure"
         },
         {
             "id": "menu_mobile_leadership",
@@ -513,7 +555,7 @@
             "is_featured": false,
             "parent_id": "menu_mobile_about_parent",
             "name": "কেন্দ্রীয় নেতৃত্ব",
-            "url": "/leadership"
+            "url": "\/leadership"
         },
         {
             "id": "menu_mobile_branches",
@@ -523,7 +565,7 @@
             "is_featured": false,
             "parent_id": "menu_mobile_about_parent",
             "name": "জেলা শাখাসমূহ",
-            "url": "/branches"
+            "url": "\/branches"
         },
         {
             "id": "menu_mobile_philosophy_parent",
@@ -543,7 +585,7 @@
             "is_featured": false,
             "parent_id": "menu_mobile_philosophy_parent",
             "name": "দৃষ্টিভঙ্গি",
-            "url": "/vision"
+            "url": "\/vision"
         },
         {
             "id": "menu_mobile_principles",
@@ -553,7 +595,7 @@
             "is_featured": false,
             "parent_id": "menu_mobile_philosophy_parent",
             "name": "মূলনীতি",
-            "url": "/principles"
+            "url": "\/principles"
         },
         {
             "id": "menu_mobile_declaration",
@@ -563,7 +605,7 @@
             "is_featured": false,
             "parent_id": "menu_mobile_philosophy_parent",
             "name": "ঘোষণাপত্র",
-            "url": "/declaration"
+            "url": "\/declaration"
         },
         {
             "id": "menu_mobile_faq",
@@ -573,7 +615,7 @@
             "is_featured": false,
             "parent_id": "menu_mobile_philosophy_parent",
             "name": "প্রশ্নোত্তর (FAQ)",
-            "url": "/faq"
+            "url": "\/faq"
         },
         {
             "id": "menu_mobile_approval",
@@ -583,7 +625,7 @@
             "is_featured": false,
             "parent_id": "menu_mobile_philosophy_parent",
             "name": "কার্যক্রমের অনুমোদন",
-            "url": "/articles/category/approval-and-legality"
+            "url": "\/articles\/category\/approval-and-legality"
         },
         {
             "id": "menu_mobile_activities_parent",
@@ -603,7 +645,7 @@
             "is_featured": false,
             "parent_id": "menu_mobile_activities_parent",
             "name": "কর্মসূচি",
-            "url": "/programs"
+            "url": "\/programs"
         },
         {
             "id": "menu_mobile_activities",
@@ -613,7 +655,7 @@
             "is_featured": false,
             "parent_id": "menu_mobile_activities_parent",
             "name": "চলমান কার্যক্রম",
-            "url": "/activities"
+            "url": "\/activities"
         },
         {
             "id": "menu_mobile_social",
@@ -623,7 +665,7 @@
             "is_featured": false,
             "parent_id": "menu_mobile_activities_parent",
             "name": "সামাজিক উদ্যোগ",
-            "url": "/social"
+            "url": "\/social"
         },
         {
             "id": "menu_mobile_training",
@@ -633,7 +675,7 @@
             "is_featured": false,
             "parent_id": "menu_mobile_activities_parent",
             "name": "প্রশিক্ষণ ও ক্রীড়া",
-            "url": "/training"
+            "url": "\/training"
         },
         {
             "id": "menu_mobile_publications_parent",
@@ -653,7 +695,7 @@
             "is_featured": false,
             "parent_id": "menu_mobile_publications_parent",
             "name": "বই ও প্রকাশনা",
-            "url": "/publications"
+            "url": "\/publications"
         },
         {
             "id": "menu_mobile_library",
@@ -663,7 +705,7 @@
             "is_featured": false,
             "parent_id": "menu_mobile_publications_parent",
             "name": "ডিজিটাল লাইব্রেরি",
-            "url": "/library"
+            "url": "\/library"
         },
         {
             "id": "menu_mobile_articles",
@@ -673,7 +715,7 @@
             "is_featured": false,
             "parent_id": "menu_mobile_publications_parent",
             "name": "প্রবন্ধ ও কলাম",
-            "url": "/articles/category/articles-and-editorials"
+            "url": "\/articles\/category\/articles-and-editorials"
         },
         {
             "id": "menu_mobile_research",
@@ -683,7 +725,7 @@
             "is_featured": false,
             "parent_id": "menu_mobile_publications_parent",
             "name": "গবেষণা ও উন্নয়ন",
-            "url": "/research"
+            "url": "\/research"
         },
         {
             "id": "menu_mobile_propaganda",
@@ -693,7 +735,7 @@
             "is_featured": false,
             "parent_id": "menu_mobile_publications_parent",
             "name": "অপপ্রচারের জবাব",
-            "url": "/articles/category/rebuttal-and-legal"
+            "url": "\/articles\/category\/rebuttal-and-legal"
         },
         {
             "id": "menu_mobile_oppression",
@@ -703,7 +745,7 @@
             "is_featured": false,
             "parent_id": "menu_mobile_publications_parent",
             "name": "নির্যাতনের ইতিহাস",
-            "url": "/articles/category/history-of-persecution"
+            "url": "\/articles\/category\/history-of-persecution"
         },
         {
             "id": "menu_mobile_sonaimuri",
@@ -713,7 +755,7 @@
             "is_featured": false,
             "parent_id": "menu_mobile_publications_parent",
             "name": "সোনাইমুড়ী ট্র্যাজেডি",
-            "url": "/sonaimuri-tragedy"
+            "url": "\/sonaimuri-tragedy"
         },
         {
             "id": "menu_mobile_media_parent",
@@ -722,78 +764,8 @@
             "icon": "fas fa-bullhorn",
             "is_featured": false,
             "parent_id": null,
-            "name": "মিডিয়া ও সংবাদ",
+            "name": "মিডিয়া ও ব্লগ",
             "url": "#"
-        },
-        {
-            "id": "menu_mobile_blog",
-            "position": 1,
-            "type": "route",
-            "icon": "fas fa-newspaper",
-            "is_featured": false,
-            "parent_id": "menu_mobile_media_parent",
-            "name": "সংবাদ",
-            "url": "blog"
-        },
-        {
-            "id": "menu_mobile_announcements",
-            "position": 2,
-            "type": "url",
-            "icon": "fas fa-bullhorn",
-            "is_featured": false,
-            "parent_id": "menu_mobile_media_parent",
-            "name": "ঘোষণা",
-            "url": "/announcements"
-        },
-        {
-            "id": "menu_mobile_events",
-            "position": 3,
-            "type": "url",
-            "icon": "fas fa-calendar-check",
-            "is_featured": false,
-            "parent_id": "menu_mobile_media_parent",
-            "name": "ইভেন্টসমূহ",
-            "url": "/events"
-        },
-        {
-            "id": "menu_mobile_videos",
-            "position": 4,
-            "type": "url",
-            "icon": "fas fa-play-circle",
-            "is_featured": false,
-            "parent_id": "menu_mobile_media_parent",
-            "name": "ভিডিও",
-            "url": "/videos"
-        },
-        {
-            "id": "menu_mobile_audios",
-            "position": 5,
-            "type": "url",
-            "icon": "fas fa-volume-up",
-            "is_featured": false,
-            "parent_id": "menu_mobile_media_parent",
-            "name": "অডিও",
-            "url": "/audios"
-        },
-        {
-            "id": "menu_mobile_gallery",
-            "position": 6,
-            "type": "url",
-            "icon": "fas fa-images",
-            "is_featured": false,
-            "parent_id": "menu_mobile_media_parent",
-            "name": "গ্যালারি",
-            "url": "/gallery"
-        },
-        {
-            "id": "menu_mobile_live",
-            "position": 7,
-            "type": "url",
-            "icon": "fas fa-broadcast-tower",
-            "is_featured": false,
-            "parent_id": "menu_mobile_media_parent",
-            "name": "লাইভ",
-            "url": "/live"
         },
         {
             "id": "menu_mobile_contact_parent",
@@ -813,7 +785,7 @@
             "is_featured": false,
             "parent_id": "menu_mobile_contact_parent",
             "name": "যোগাযোগ ও ঠিকানা",
-            "url": "/contact"
+            "url": "\/contact"
         },
         {
             "id": "menu_mobile_feedback",
@@ -823,7 +795,7 @@
             "is_featured": false,
             "parent_id": "menu_mobile_contact_parent",
             "name": "মতামত ও পরামর্শ",
-            "url": "/feedback"
+            "url": "\/feedback"
         },
         {
             "id": "menu_mobile_join",
@@ -833,14 +805,84 @@
             "is_featured": true,
             "parent_id": null,
             "name": "যোগদান করুন",
-            "url": "/join"
+            "url": "\/join"
+        },
+        {
+            "id": "menu_mobile_blog",
+            "position": 1,
+            "type": "route",
+            "icon": "fas fa-newspaper",
+            "is_featured": false,
+            "parent_id": "menu_mobile_media_parent",
+            "name": "নিবন্ধ ও ব্লগ",
+            "url": "blog"
+        },
+        {
+            "id": "menu_mobile_announcements",
+            "position": 2,
+            "type": "route",
+            "icon": "fas fa-bullhorn",
+            "is_featured": false,
+            "parent_id": "menu_mobile_media_parent",
+            "name": "প্রেস রিলিজ",
+            "url": "press-releases.index"
+        },
+        {
+            "id": "menu_mobile_events",
+            "position": 3,
+            "type": "route",
+            "icon": "fas fa-calendar-check",
+            "is_featured": false,
+            "parent_id": "menu_mobile_media_parent",
+            "name": "অনুষ্ঠান ও কর্মসূচি",
+            "url": "events.index"
+        },
+        {
+            "id": "menu_mobile_videos",
+            "position": 4,
+            "type": "route",
+            "icon": "fas fa-play-circle",
+            "is_featured": false,
+            "parent_id": "menu_mobile_media_parent",
+            "name": "ভিডিও গ্যালারি",
+            "url": "videos.index"
+        },
+        {
+            "id": "menu_mobile_gallery",
+            "position": 5,
+            "type": "route",
+            "icon": "fas fa-images",
+            "is_featured": false,
+            "parent_id": "menu_mobile_media_parent",
+            "name": "ফটো গ্যালারি",
+            "url": "gallery.index"
+        },
+        {
+            "id": "menu_mobile_live",
+            "position": 6,
+            "type": "route",
+            "icon": "fas fa-broadcast-tower",
+            "is_featured": false,
+            "parent_id": "menu_mobile_media_parent",
+            "name": "লাইভ ব্রডকাস্ট",
+            "url": "live.index"
+        },
+        {
+            "id": "menu_mobile_songs",
+            "position": 7,
+            "type": "route",
+            "icon": "fas fa-music",
+            "is_featured": false,
+            "parent_id": "menu_mobile_media_parent",
+            "name": "সাংস্কৃতিক কর্নার",
+            "url": "songs.index"
         }
     ],
     "footer_quick_links": [
         {
             "id": "footer_quick_1",
             "name": "হোম",
-            "url": "/",
+            "url": "\/",
             "icon": "fas fa-chevron-right",
             "type": "url",
             "position": 1
@@ -848,7 +890,7 @@
         {
             "id": "footer_quick_2",
             "name": "দর্শন",
-            "url": "/philosophy",
+            "url": "\/philosophy",
             "icon": "fas fa-chevron-right",
             "type": "url",
             "position": 2
@@ -856,7 +898,7 @@
         {
             "id": "footer_quick_3",
             "name": "জ্ঞানভান্ডার",
-            "url": "/knowledge",
+            "url": "\/knowledge",
             "icon": "fas fa-chevron-right",
             "type": "url",
             "position": 3

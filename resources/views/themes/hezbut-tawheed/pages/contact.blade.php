@@ -243,49 +243,7 @@
     </div>
 
     <!-- Custom CSS Styles -->
-    <style>
-        .border-light-grey {
-            border: 1px solid #e2e8f0 !important;
-        }
-        .text-success-brand {
-            color: #006A4E !important;
-        }
-        .icon-box-brand {
-            background-color: rgba(0, 106, 78, 0.06) !important;
-            color: #006A4E !important;
-            transition: all 0.3s ease;
-        }
-        .icon-box-brand:hover {
-            background-color: #006A4E !important;
-            color: #ffffff !important;
-            transform: scale(1.08);
-        }
-        .btn-brand-success {
-            background: linear-gradient(135deg, #006A4E 0%, #00563F 100%);
-            color: #ffffff;
-            border: none;
-            border-radius: 8px !important;
-            transition: all 0.25s ease;
-        }
-        .btn-brand-success:hover {
-            background: linear-gradient(135deg, #00805E 0%, #006A4E 100%);
-            color: #ffffff;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0, 106, 78, 0.2) !important;
-        }
-        .form-control:focus {
-            border-color: rgba(0, 106, 78, 0.5) !important;
-            box-shadow: 0 0 0 0.25rem rgba(0, 106, 78, 0.15) !important;
-        }
-        .hover-grow-card {
-            transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
-        }
-        .hover-grow-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0, 106, 78, 0.05) !important;
-            border-color: rgba(16, 185, 129, 0.2) !important;
-        }
-    </style>
+    
 
 @endsection
 

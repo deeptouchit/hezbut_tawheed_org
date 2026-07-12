@@ -40,11 +40,16 @@
     .active-theme-container {
         background: #ffffff;
         border-radius: 16px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+        box-shadow: 0 12px 35px rgba(16, 185, 129, 0.06), 0 4px 12px rgba(0, 0, 0, 0.02);
         border: 2px solid #10b981; /* Glowing emerald green border */
         overflow: hidden;
         margin-bottom: 40px;
         position: relative;
+        transition: all 0.3s ease;
+    }
+
+    .active-theme-container:hover {
+        box-shadow: 0 16px 40px rgba(16, 185, 129, 0.1), 0 6px 18px rgba(0, 0, 0, 0.03);
     }
 
     .active-theme-badge-ribbon {
@@ -231,22 +236,188 @@
 
     .theme-card-desc {
         font-size: 13px;
-        color: #475569;
-        line-height: 1.5;
+        color: #64748b;
+        line-height: 1.6;
         margin-bottom: 15px;
         flex-grow: 1;
     }
 
     /* Custom buttons and actions */
-    .theme-btn {
+    .btn-upload-theme {
+        background: #ffffff;
+        color: #0f172a;
+        border: 1px solid #e2e8f0;
+        font-weight: 700;
+        font-size: 14px;
+        border-radius: 10px;
+        padding: 10px 20px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        transition: all 0.2s ease;
+        cursor: pointer;
+    }
+    .btn-upload-theme:hover {
+        background: #f8fafc;
+        border-color: #cbd5e1;
+        transform: translateY(-1px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+    }
+    .btn-upload-theme i {
+        color: #10b981;
+    }
+
+    .theme-card-footer {
+        padding: 16px 20px;
+        background: #f8fafc;
+        border-top: 1px solid #f1f5f9;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 8px;
+    }
+
+    /* Custom Premium Buttons */
+    .btn-custom {
         font-weight: 600;
-        font-size: 12px;
-        padding: 6px 14px;
+        font-size: 13px;
+        padding: 8px 18px;
         border-radius: 8px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 1px solid transparent;
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+    .btn-custom:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .btn-custom:active {
+        transform: translateY(0);
+    }
+
+    /* Primary/Success Button */
+    .btn-custom-success {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: #ffffff !important;
+        box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);
+    }
+
+    .btn-custom-success:hover {
+        background: linear-gradient(135deg, #059669 0%, #047857 100%);
+        box-shadow: 0 6px 15px rgba(16, 185, 129, 0.3);
+    }
+
+    /* Info/Indigo Button */
+    .btn-custom-indigo {
+        background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+        color: #ffffff !important;
+        box-shadow: 0 4px 10px rgba(99, 102, 241, 0.2);
+    }
+
+    .btn-custom-indigo:hover {
+        background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
+        box-shadow: 0 6px 15px rgba(99, 102, 241, 0.3);
+    }
+
+    /* Warning/Amber Button */
+    .btn-custom-warning {
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        color: #ffffff !important;
+        box-shadow: 0 4px 10px rgba(245, 158, 11, 0.2);
+    }
+
+    .btn-custom-warning:hover {
+        background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+        box-shadow: 0 6px 15px rgba(245, 158, 11, 0.3);
+    }
+
+    /* Danger/Red Button (Outline with hover solid) */
+    .btn-custom-outline-danger {
+        background: transparent;
+        color: #ef4444 !important;
+        border-color: #fca5a5;
+    }
+
+    .btn-custom-outline-danger:hover {
+        background: #ef4444;
+        color: #ffffff !important;
+        border-color: #ef4444;
+        box-shadow: 0 6px 15px rgba(239, 68, 68, 0.3);
+    }
+
+    /* Info Outline Button */
+    .btn-custom-outline-indigo {
+        background: transparent;
+        color: #6366f1 !important;
+        border-color: #c7d2fe;
+    }
+
+    .btn-custom-outline-indigo:hover {
+        background: #6366f1;
+        color: #ffffff !important;
+        border-color: #6366f1;
+        box-shadow: 0 6px 15px rgba(99, 102, 241, 0.3);
+    }
+
+    /* Outline Secondary Button */
+    .btn-custom-outline-secondary {
+        background: transparent;
+        color: #64748b !important;
+        border-color: #cbd5e1;
+    }
+
+    .btn-custom-outline-secondary:hover {
+        background: #f1f5f9;
+        color: #334155 !important;
+        border-color: #94a3b8;
+    }
+
+    /* Small modifier for custom buttons in footer */
+    .btn-custom-sm {
+        padding: 6px 14px;
+        font-size: 12px;
+        border-radius: 6px;
+    }
+
+    /* Glassmorphism Buttons for Card Overlay */
+    .btn-overlay-custom {
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-weight: 700;
+        font-size: 13px;
+        border: none;
         display: inline-flex;
         align-items: center;
         gap: 6px;
         transition: all 0.2s ease;
+        text-decoration: none;
+    }
+    .btn-overlay-preview {
+        background: rgba(255, 255, 255, 0.2);
+        color: #ffffff !important;
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    .btn-overlay-preview:hover {
+        background: rgba(255, 255, 255, 0.4);
+        transform: translateY(-1px);
+    }
+    .btn-overlay-activate {
+        background: #10b981;
+        color: #ffffff !important;
+        box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
+    }
+    .btn-overlay-activate:hover {
+        background: #059669;
+        transform: translateY(-1px);
+        box-shadow: 0 6px 15px rgba(16, 185, 129, 0.4);
     }
 
     /* Upload Theme Dropzone Style */
@@ -300,8 +471,8 @@
             <span class="theme-mgmt-subtitle">বগুড়া বাজারের ভিজ্যুয়াল চেহারা এবং থিম নিয়ন্ত্রণ করুন</span>
         </div>
         <div>
-            <button type="button" class="btn btn-light fw-bold" data-bs-toggle="modal" data-bs-target="#uploadThemeModal" style="border-radius: 10px; padding: 8px 18px;">
-                <i class="fas fa-upload text-success me-1"></i> নতুন থিম আপলোড করুন
+            <button type="button" class="btn-upload-theme" data-bs-toggle="modal" data-bs-target="#uploadThemeModal">
+                <i class="fas fa-upload me-1"></i> নতুন থিম আপলোড করুন
             </button>
         </div>
     </div>
@@ -350,12 +521,12 @@
                             {{ $activeThemeItem['description'] ?: 'এই থিমটির জন্য কোনো বিবরণ দেওয়া নেই।' }}
                         </p>
                         <div class="d-flex gap-2 flex-wrap">
-                            <a href="{{ url('/') }}" target="_blank" class="btn btn-success theme-btn">
+                            <a href="{{ url('/') }}" target="_blank" class="btn-custom btn-custom-success">
                                 <i class="fas fa-external-link-alt"></i> ওয়েবসাইট ভিজিট করুন
                             </a>
 
                             @if(isset($activeThemeItem['id']) && $activeThemeItem['id'] && count($themes) > 1)
-                                <button class="btn btn-outline-warning theme-btn deactivate-theme" data-id="{{ $activeThemeItem['id'] }}">
+                                <button class="btn-custom btn-custom-warning deactivate-theme" data-id="{{ $activeThemeItem['id'] }}">
                                     <i class="fas fa-ban"></i> নিষ্ক্রিয় করুন
                                 </button>
                             @endif
@@ -389,11 +560,11 @@
                             @endif
                             <div class="theme-card-overlay">
                                 @if(isset($theme['id']) && $theme['id'])
-                                    <a href="{{ route('admin.themes.preview', $theme['id']) }}" class="btn btn-sm btn-info fw-bold px-3">
-                                        <i class="fas fa-eye me-1"></i> প্রিভিউ
+                                    <a href="{{ route('admin.themes.preview', $theme['id']) }}" class="btn-overlay-custom btn-overlay-preview">
+                                        <i class="fas fa-eye"></i> প্রিভিউ
                                     </a>
-                                    <button class="btn btn-sm btn-success fw-bold px-3 activate-theme" data-id="{{ $theme['id'] }}">
-                                        <i class="fas fa-check me-1"></i> সক্রিয় করুন
+                                    <button class="btn-overlay-custom btn-overlay-activate activate-theme" data-id="{{ $theme['id'] }}">
+                                        <i class="fas fa-check"></i> সক্রিয় করুন
                                     </button>
                                 @endif
                             </div>
@@ -411,19 +582,19 @@
                         </div>
                         <div class="theme-card-footer">
                             @if(isset($theme['id']) && $theme['id'])
-                                <a href="{{ route('admin.themes.preview', $theme['id']) }}" class="btn btn-xs btn-outline-info">
+                                <a href="{{ route('admin.themes.preview', $theme['id']) }}" class="btn-custom btn-custom-sm btn-custom-outline-indigo">
                                     <i class="fas fa-eye"></i> প্রিভিউ
                                 </a>
-                                <button class="btn btn-xs btn-success activate-theme" data-id="{{ $theme['id'] }}">
+                                <button class="btn-custom btn-custom-sm btn-custom-success activate-theme" data-id="{{ $theme['id'] }}">
                                     <i class="fas fa-check-circle"></i> একটিভেট
                                 </button>
                                 @if(!($theme['is_core'] ?? false))
-                                    <button class="btn btn-xs btn-outline-danger delete-theme" data-id="{{ $theme['id'] }}" data-name="{{ $theme['name'] }}">
+                                    <button class="btn-custom btn-custom-sm btn-custom-outline-danger delete-theme" data-id="{{ $theme['id'] }}" data-name="{{ $theme['name'] }}">
                                         <i class="fas fa-trash"></i> ডিলিট
                                     </button>
                                 @endif
                             @else
-                                <span class="badge bg-secondary p-2"><i class="fas fa-exclamation-triangle"></i> থিম ডাটাবেসে নিবন্ধিত নয়</span>
+                                <span class="badge bg-secondary-subtle text-secondary px-3 py-2" style="border-radius: 8px; font-weight: 600; font-size: 11px;"><i class="fas fa-exclamation-triangle me-1"></i> থিম ডাটাবেসে নিবন্ধিত নয়</span>
                             @endif
                         </div>
                     </div>
@@ -464,8 +635,8 @@
                 </form>
             </div>
             <div class="modal-footer border-0">
-                <button type="button" class="btn btn-light fw-bold" data-bs-dismiss="modal" style="border-radius: 8px;">বাতিল</button>
-                <button type="button" class="btn btn-success fw-bold px-4" id="uploadThemeBtn" style="border-radius: 8px;">
+                <button type="button" class="btn-custom btn-custom-outline-secondary" data-bs-dismiss="modal">বাতিল</button>
+                <button type="button" class="btn-custom btn-custom-success px-4" id="uploadThemeBtn">
                     <i class="fas fa-arrow-circle-up me-1"></i> আপলোড শুরু করুন
                 </button>
             </div>

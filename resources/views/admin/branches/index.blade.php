@@ -1,68 +1,183 @@
+{{-- resources/views/admin/branches/index.blade.php --}}
+
 @extends('admin.layouts.master')
 
 @section('page-title', 'কার্যালয় ও শাখা ব্যবস্থাপনা')
 
+@push('styles')
+<style>
+    .metric-card {
+        border-radius: 6px;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .metric-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+    }
+    .metric-card .card-body {
+        padding: 8px 12px !important;
+    }
+    .border-left-primary { border-left: 3px solid #006A4E !important; }
+    .border-left-success { border-left: 3px solid #2e7d32 !important; }
+    .border-left-info { border-left: 3px solid #0288d1 !important; }
+    .border-left-warning { border-left: 4px solid #f57c00 !important; }
+    .border-left-danger { border-left: 4px solid #d32f2f !important; }
+    .border-left-secondary { border-left: 4px solid #757575 !important; }
+
+    .stat-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+    }
+</style>
+@endpush
+
 @section('filter_input')
-<div class="row px-3">
-    <div class="col-md-6 mb-3">
-        <div class="input-group">
-            <span class="input-group-text"><i class="fas fa-search"></i></span>
-            <input type="text" id="search-input" class="form-control" placeholder="কার্যালয়ের নাম, ঠিকানা বা কর্মকর্তার নাম..." autocomplete="off">
+<!-- Filter Section -->
+<div class="card border shadow-none mb-2 bg-light-subtle">
+    <div class="card-body p-2">
+        <div class="row g-2">
+            <div class="col-md-4 col-sm-6">
+                <input type="text" id="search-input" class="form-control" placeholder="কার্যালয়ের নাম, ঠিকানা বা কর্মকর্তার নাম..." autocomplete="off" value="{{ request('search') }}">
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <select id="type-filter" class="form-select">
+                    <option value="">সব কার্যালয়</option>
+                    <option value="central" {{ request('type') == 'central' ? 'selected' : '' }}>কেন্দ্রীয় কার্যালয়</option>
+                    <option value="division" {{ request('type') == 'division' ? 'selected' : '' }}>বিভাগীয় কার্যালয়</option>
+                    <option value="district" {{ request('type') == 'district' ? 'selected' : '' }}>জেলা কার্যালয়</option>
+                    <option value="upazila" {{ request('type') == 'upazila' ? 'selected' : '' }}>উপজেলা কার্যালয়</option>
+                    <option value="international" {{ request('type') == 'international' ? 'selected' : '' }}>আন্তর্জাতিক শাখা</option>
+                </select>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <select id="per-page-filter" class="form-select">
+                    <option value="10" {{ request('per_page') == 10 ? 'selected' : '' }}>১০টি</option>
+                    <option value="15" {{ request('per_page') == 15 ? 'selected' : (request('per_page') == '' ? 'selected' : '') }}>১৫টি</option>
+                    <option value="30" {{ request('per_page') == 30 ? 'selected' : '' }}>৩০টি</option>
+                    <option value="50" {{ request('per_page') == 50 ? 'selected' : '' }}>৫০টি</option>
+                    <option value="-1" {{ request('per_page') == -1 ? 'selected' : '' }}>সব</option>
+                </select>
+            </div>
+            <div class="col-md-2 col-sm-6">
+                <button id="reset-filter" class="btn btn-secondary w-100" title="রিসেট ফিল্টার" style="height: 38px;">
+                    <i class="fas fa-undo-alt"></i> রিসেট
+                </button>
+            </div>
         </div>
-    </div>
-    <div class="col-md-2 mb-3">
-        <select id="type-filter" class="form-select">
-            <option value="">সব কার্যালয়</option>
-            <option value="central">কেন্দ্রীয় কার্যালয়</option>
-            <option value="division">বিভাগীয় কার্যালয়</option>
-            <option value="district">জেলা কার্যালয়</option>
-            <option value="upazila">উপজেলা কার্যালয়</option>
-            <option value="international">আন্তর্জাতিক শাখা</option>
-        </select>
-    </div>
-    <div class="col-md-2 mb-3">
-        <select id="per-page-filter" class="form-select">
-            <option value="10">১০</option>
-            <option value="15" selected>১৫</option>
-            <option value="30">৩০</option>
-            <option value="50">৫০</option>
-            <option value="-1">সব</option>
-        </select>
-    </div>
-    <div class="col-md-2 mb-3">
-        <button id="reset-filter" class="btn btn-secondary w-100">
-            <i class="fas fa-undo-alt"></i> রিসেট
-        </button>
     </div>
 </div>
 @endsection
 
 @section('content')
 <div class="container-fluid">
-    <!-- Stats Row -->
-    <div class="row mb-4">
-        <div class="col-md-3">
-            <div class="card bg-light border-0 shadow-sm p-3 rounded-3 text-center animate-fade-in">
-                <h6 class="text-muted fw-bold">মোট কার্যালয় ও শাখা</h6>
-                <h3 class="fw-bold text-dark mb-0">{{ $stats['total'] }}</h3>
+    <!-- Statistics Cards -->
+    <div class="row g-2 mb-3">
+        <!-- Total Branches -->
+        <div class="col-md-2 col-sm-6 col-12">
+            <div class="card metric-card border-left-info h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="text-muted small d-block mb-0" style="font-size: 11px;">মোট কার্যালয়</span>
+                            <h5 class="mb-0 fw-bold">{{ number_format($stats['total'] ?? 0) }}</h5>
+                        </div>
+                        <div class="stat-icon bg-info bg-opacity-10 text-info">
+                            <i class="fas fa-map-marked-alt"></i>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="card bg-danger text-white border-0 shadow-sm p-3 rounded-3 text-center animate-fade-in">
-                <h6 class="fw-bold">কেন্দ্রীয় কার্যালয়</h6>
-                <h3 class="fw-bold mb-0">{{ $stats['central'] }}</h3>
+
+        <!-- Central Branches -->
+        <div class="col-md-2 col-sm-6 col-12">
+            <div class="card metric-card border-left-danger h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="text-muted small d-block mb-0" style="font-size: 11px;">কেন্দ্রীয় কার্যালয়</span>
+                            <h5 class="mb-0 fw-bold">{{ number_format($stats['central'] ?? 0) }}</h5>
+                        </div>
+                        <div class="stat-icon bg-danger bg-opacity-10 text-danger">
+                            <i class="fas fa-hotel"></i>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="card bg-success text-white border-0 shadow-sm p-3 rounded-3 text-center animate-fade-in">
-                <h6 class="fw-bold">জেলা কার্যালয়</h6>
-                <h3 class="fw-bold mb-0">{{ $stats['district'] }}</h3>
+
+        <!-- Division Branches -->
+        <div class="col-md-2 col-sm-6 col-12">
+            <div class="card metric-card border-left-primary h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="text-muted small d-block mb-0" style="font-size: 11px;">বিভাগীয় কার্যালয়</span>
+                            <h5 class="mb-0 fw-bold">{{ number_format($stats['division'] ?? 0) }}</h5>
+                        </div>
+                        <div class="stat-icon bg-primary bg-opacity-10 text-primary">
+                            <i class="fas fa-city"></i>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="card bg-purple text-white border-0 shadow-sm p-3 rounded-3 text-center animate-fade-in" style="background-color: #6f42c1 !important;">
-                <h6 class="fw-bold">আন্তর্জাতিক শাখা</h6>
-                <h3 class="fw-bold mb-0">{{ $stats['international'] }}</h3>
+
+        <!-- District Branches -->
+        <div class="col-md-2 col-sm-6 col-12">
+            <div class="card metric-card border-left-success h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="text-muted small d-block mb-0" style="font-size: 11px;">জেলা কার্যালয়</span>
+                            <h5 class="mb-0 fw-bold">{{ number_format($stats['district'] ?? 0) }}</h5>
+                        </div>
+                        <div class="stat-icon bg-success bg-opacity-10 text-success">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Upazila Branches -->
+        <div class="col-md-2 col-sm-6 col-12">
+            <div class="card metric-card border-left-warning h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="text-muted small d-block mb-0" style="font-size: 11px;">উপজেলা কার্যালয়</span>
+                            <h5 class="mb-0 fw-bold">{{ number_format($stats['upazila'] ?? 0) }}</h5>
+                        </div>
+                        <div class="stat-icon bg-warning bg-opacity-10 text-warning">
+                            <i class="fas fa-home"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- International Branches -->
+        <div class="col-md-2 col-sm-6 col-12">
+            <div class="card metric-card border-left-secondary h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="text-muted small d-block mb-0" style="font-size: 11px;">আন্তর্জাতিক শাখা</span>
+                            <h5 class="mb-0 fw-bold">{{ number_format($stats['international'] ?? 0) }}</h5>
+                        </div>
+                        <div class="stat-icon bg-secondary bg-opacity-10 text-secondary">
+                            <i class="fas fa-globe-asia"></i>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -75,31 +190,35 @@
                 <span class="badge bg-primary ms-2" id="total-count">{{ $branches->total() }}</span>
             </h3>
             <div class="card-tools">
-                <a href="{{ route('admin.branches.create') }}" class="btn btn-primary btn-sm rounded-pill px-3">
+                <a href="{{ route('admin.branches.create') }}" class="btn btn-primary btn-sm">
                     <i class="fas fa-plus"></i> নতুন কার্যালয় যোগ করুন
                 </a>
             </div>
         </div>
-        
-        <div class="card-body p-0 position-relative">
-            <div id="loading-spinner" class="position-absolute w-100 h-100 d-flex align-items-center justify-content-center bg-white opacity-75 d-none" style="z-index: 100;">
+
+        <div class="card-body p-1">
+            <!-- Loading Spinner -->
+            <div id="loading-spinner" class="text-center py-4" style="display: none;">
                 <div class="spinner-border text-primary" role="status">
-                    <span class="visually-hidden">লোড হচ্ছে...</span>
+                    <span class="visually-hidden">Loading...</span>
                 </div>
+                <p class="mt-2 text-muted">ডাটা লোড হচ্ছে...</p>
             </div>
 
+            <!-- Table Container -->
             <div id="table-container">
                 @include('admin.branches.partials.table', ['branches' => $branches])
             </div>
         </div>
     </div>
+</div>
 
-<!-- Delete Modal -->
+<!-- Delete Confirmation Modal -->
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header bg-danger text-white">
-                <h5 class="modal-title" id="deleteModalLabel">কার্যালয় ডিলিট কনফার্মেশন</h5>
+                <h5 class="modal-title" id="deleteModalLabel"><i class="fas fa-exclamation-triangle"></i> নিশ্চিত করুন</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -118,15 +237,20 @@
 @push('scripts')
 <script>
 $(document).ready(function() {
-    
+    var searchTimer;
+    var isAjaxLoading = false;
+
     // Load branches with AJAX
     function loadBranches(page = 1) {
+        if (isAjaxLoading) return;
+
         var search = $('#search-input').val();
         var type = $('#type-filter').val();
         var perPage = $('#per-page-filter').val();
 
-        $('#loading-spinner').removeClass('d-none');
-        $('#table-container').addClass('opacity-50');
+        isAjaxLoading = true;
+        $('#loading-spinner').show();
+        $('#table-container').hide();
 
         $.ajax({
             url: "{{ route('admin.branches.index') }}",
@@ -136,33 +260,101 @@ $(document).ready(function() {
                 search: search,
                 type: type,
                 per_page: perPage,
-                ajax: 1
+                ajax: 1,
+                _: Date.now()
             },
             success: function(response) {
+                $('#loading-spinner').hide();
+                $('#table-container').show();
                 if (response.success) {
                     $('#table-container').html(response.html);
                     $('#total-count').text(response.total);
+                    attachEventHandlers();
                 } else {
                     toastr.error('ডাটা লোড করতে ব্যর্থ হয়েছে!');
                 }
             },
             error: function() {
+                $('#loading-spinner').hide();
+                $('#table-container').show();
                 toastr.error('সার্ভারে সমস্যা হয়েছে!');
             },
             complete: function() {
-                $('#loading-spinner').addClass('d-none');
-                $('#table-container').removeClass('opacity-50');
+                isAjaxLoading = false;
             }
         });
     }
 
+    // Attach AJAX event listeners after re-rendering table
+    function attachEventHandlers() {
+        // Toggle active status button
+        $('.toggle-status').off('click').on('click', function() {
+            var id = $(this).data('id');
+            var btn = $(this);
+
+            $.ajax({
+                url: '{{ url("admin/branches") }}/' + id + '/toggle-status',
+                type: 'POST',
+                data: { _token: '{{ csrf_token() }}' },
+                success: function(response) {
+                    if (response.success) {
+                        toastr.success(response.message);
+                        loadBranches();
+                    } else {
+                        toastr.error(response.message);
+                    }
+                },
+                error: function() {
+                    toastr.error('স্ট্যাটাস পরিবর্তন করতে ব্যর্থ হয়েছে');
+                }
+            });
+        });
+
+        // Single delete
+        $('.delete-branch').off('click').on('click', function() {
+            var id = $(this).data('id');
+            var name = $(this).data('name');
+
+            $('#delete-item-name').text(name);
+            $('#deleteModal').modal('show');
+
+            $('#confirm-delete').off('click').on('click', function() {
+                $.ajax({
+                    url: '{{ url("admin/branches") }}/' + id,
+                    type: 'DELETE',
+                    data: { _token: '{{ csrf_token() }}' },
+                    success: function(response) {
+                        $('#deleteModal').modal('hide');
+                        if (response.success) {
+                            toastr.success(response.message);
+                            loadBranches(1);
+                        } else {
+                            toastr.error(response.message);
+                        }
+                    },
+                    error: function(xhr) {
+                        $('#deleteModal').modal('hide');
+                        var msg = xhr.responseJSON ? xhr.responseJSON.message : 'কার্যালয় মুছতে ব্যর্থ হয়েছে!';
+                        toastr.error(msg);
+                    }
+                });
+            });
+        });
+
+        // Pagination links
+        $(document).off('click', '.pagination a').on('click', '.pagination a', function(e) {
+            e.preventDefault();
+            var page = $(this).attr('href').match(/page=(\d+)/) ? $(this).attr('href').match(/page=(\d+)/)[1] : 1;
+            loadBranches(page);
+        });
+    }
+
     // Keyup search
-    var searchTimer;
     $('#search-input').on('keyup', function() {
         clearTimeout(searchTimer);
         searchTimer = setTimeout(function() {
             loadBranches(1);
-        }, 350);
+        }, 500);
     });
 
     // Dropdown filters
@@ -178,75 +370,8 @@ $(document).ready(function() {
         loadBranches(1);
     });
 
-    // Pagination AJAX click handler
-    $(document).on('click', '.pagination a', function(e) {
-        e.preventDefault();
-        var href = $(this).attr('href');
-        if (!href) return;
-        var match = href.match(/page=(\d+)/);
-        var page = match ? match[1] : 1;
-        loadBranches(page);
-    });
-
-    // AJAX Toggle Status Switch
-    $(document).on('change', '.toggle-status', function() {
-        var checkbox = $(this);
-        var id = checkbox.data('id');
-        checkbox.prop('disabled', true);
-
-        $.ajax({
-            url: "{{ url('admin/branches') }}/" + id + "/toggle-status",
-            type: 'POST',
-            data: {
-                _token: "{{ csrf_token() }}"
-            },
-            success: function(response) {
-                checkbox.prop('disabled', false);
-                if (response.success) {
-                    toastr.success(response.message);
-                } else {
-                    checkbox.prop('checked', !checkbox.is(':checked'));
-                    toastr.error(response.message);
-                }
-            },
-            error: function() {
-                checkbox.prop('disabled', false);
-                checkbox.prop('checked', !checkbox.is(':checked'));
-                toastr.error('স্ট্যাটাস পরিবর্তন করতে সমস্যা হয়েছে!');
-            }
-        });
-    });
-
-    // Single delete
-    $(document).on('click', '.delete-branch', function() {
-        var id = $(this).data('id');
-        var name = $(this).data('name');
-
-        $('#delete-item-name').text(name);
-        $('#deleteModal').modal('show');
-
-        $('#confirm-delete').off('click').on('click', function() {
-            $.ajax({
-                url: '{{ url("admin/branches") }}/' + id,
-                type: 'DELETE',
-                data: { _token: '{{ csrf_token() }}' },
-                success: function(response) {
-                    $('#deleteModal').modal('hide');
-                    if (response.success) {
-                        toastr.success(response.message);
-                        loadBranches(1); // Reload list
-                    } else {
-                        toastr.error(response.message);
-                    }
-                },
-                error: function(xhr) {
-                    $('#deleteModal').modal('hide');
-                    var msg = xhr.responseJSON ? xhr.responseJSON.message : 'কার্যালয় মুছতে ব্যর্থ হয়েছে!';
-                    toastr.error(msg);
-                }
-            });
-        });
-    });
+    // Run handlers initially
+    attachEventHandlers();
 });
 </script>
 @endpush

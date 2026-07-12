@@ -161,21 +161,7 @@
     </section>
 
     <!-- Custom CSS Styles -->
-    <style>
-        .text-dark-green {
-            color: #006A4E !important;
-        }
-        .gap-2.5 {
-            gap: 0.65rem !important;
-        }
-        .hover-border-success {
-            transition: border-color 0.2s, box-shadow 0.2s;
-        }
-        .hover-border-success:hover {
-            border-color: #10b981 !important;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
-        }
-    </style>
+    
 
 @endsection
 

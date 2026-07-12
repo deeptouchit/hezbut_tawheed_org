@@ -1,83 +1,87 @@
-{{-- resources/views/admin/books/partials/table.blade.php --}}
 
 <div class="table-responsive">
-    <table class="table table-bordered table-hover table-striped">
-        <thead class="table-light">
-            <tr>
-                <th width="60">#</th>
-                <th width="100">প্রচ্ছদ</th>
-                <th>বইয়ের শিরোনাম ও লেখক</th>
-                <th>মূল্য (৳)</th>
-                <th>পিডিএফ লিংক</th>
+    <table class="table table-bordered table-striped table-hover table-sm text-nowrap" style="width: 100%;">
+        <thead>
+            <tr class="text-center">
+                <th>#</th>
+                <th>প্রচ্ছদ</th>
+                <th class="text-start">বইয়ের শিরোনাম</th>
+                <th>ক্যাটাগরি</th>
+                <th>পিডিএফ</th>
                 <th>স্ট্যাটাস</th>
                 <th>শীর্ষে</th>
+                <th>বেস্ট সেলার</th>
                 <th>অর্ডার</th>
-                <th>তৈরির তারিখ</th>
-                <th width="150">অ্যাকশন</th>
+                <th>অ্যাকশন</th>
             </tr>
         </thead>
         <tbody>
             @forelse($books as $index => $book)
-            <tr class="align-middle">
-                <td>{{ $books->firstItem() + $index }}</td>
-                <td>
-                    <img src="{{ $book->image_url }}" 
-                         alt="{{ $book->title }}" 
-                         class="img-thumbnail"
-                         style="width: 60px; height: 80px; object-fit: contain; border-radius: 4px;"
-                         loading="lazy">
+            <tr class="align-middle text-center">
+                <td>{{ $books instanceof \Illuminate\Contracts\Pagination\LengthAwarePaginator ? $books->firstItem() + $index : $index + 1 }}</td>
+                <td class="p-1">
+                    <div class="d-flex align-items-center justify-content-center" style="height: 45px;">
+                        <img src="{{ $book->image_url }}" 
+                             alt="{{ $book->title }}" 
+                             class="img-thumbnail"
+                             style="width: 35px; height: 45px; object-fit: cover; border-radius: 2px;"
+                             loading="lazy"
+                             onerror="this.src='https://ui-avatars.com/api/?name='+urlencode('{{ $book->title }}')+'&background=2F54EB&color=fff'">
+                    </div>
+                </td>
+                <td class="text-start fw-bold">
+                    <span>{{ Str::limit($book->title, 60) }}</span>
                 </td>
                 <td>
-                    <strong>{{ $book->title }}</strong>
-                    @if($book->writer)
-                        <div class="small text-muted"><i class="fas fa-pen-nib small"></i> {{ $book->writer }}</div>
-                    @endif
-                    <a href="/books/{{ $book->slug }}" target="_blank" class="small text-muted text-decoration-none">
-                        <i class="fas fa-external-link-alt small"></i> /books/{{ $book->slug }}
-                    </a>
-                </td>
-                <td>
-                    @if($book->price !== null && $book->price !== '')
-                        <div>৳{{ $book->price }}</div>
-                        @if($book->old_price)
-                            <del class="text-muted small">৳{{ $book->old_price }}</del>
-                        @endif
+                    @if($book->category)
+                        <span class="badge bg-info text-white" style="font-size: 11px;">{{ $book->category->name }}</span>
                     @else
-                        <span class="text-muted small">N/A</span>
+                        <span class="badge bg-secondary text-white" style="font-size: 11px;">-</span>
                     @endif
                 </td>
                 <td>
                     @if($book->pdf_url)
-                        <a href="{{ $book->pdf_url }}" target="_blank" class="badge bg-danger text-decoration-none">
-                            <i class="fas fa-file-pdf"></i> PDF Link
+                        <a href="{{ url($book->pdf_url) }}" target="_blank" class="badge bg-danger text-decoration-none" title="পিডিএফ ফাইল ডাউনলোড করুন">
+                            <i class="fas fa-file-pdf"></i> ডাউনলোড
                         </a>
                     @else
-                        <span class="text-muted small">N/A</span>
+                        <span class="badge bg-secondary">নেই</span>
                     @endif
                 </td>
                 <td>
-                    <button class="btn btn-sm toggle-status {{ $book->is_active ? 'btn-success' : 'btn-danger' }}" data-id="{{ $book->id }}" title="স্ট্যাটাস পরিবর্তন করুন">
+                    @php
+                        $statusBadge = $book->is_active ? 'success' : 'warning';
+                    @endphp
+                    <button type="button" class="btn btn-sm btn-{{ $statusBadge }} toggle-status status-badge w-100" data-id="{{ $book->id }}">
+                        <i class="fas {{ $book->is_active ? 'fa-check-circle' : 'fa-times-circle' }}"></i>
                         {{ $book->is_active ? 'সক্রিয়' : 'নিষ্ক্রিয়' }}
                     </button>
                 </td>
                 <td>
                     <div class="form-check form-switch d-inline-block">
-                        <input class="form-check-input toggle-popular" type="checkbox" data-id="{{ $book->id }}" {{ $book->is_popular ? 'checked' : '' }} title="জনপ্রিয় স্ট্যাটাস পরিবর্তন করুন">
+                        <input class="form-check-input toggle-popular" type="checkbox" data-id="{{ $book->id }}" {{ $book->is_popular ? 'checked' : '' }}>
                     </div>
                 </td>
                 <td>
-                    <input type="number" class="form-control form-control-sm update-order" data-id="{{ $book->id }}" value="{{ $book->popular_order }}" style="width: 75px; text-align: center;" min="0" title="অর্ডারিং নম্বর পরিবর্তন করুন">
+                    <div class="form-check form-switch d-inline-block">
+                        <input class="form-check-input toggle-bestseller" type="checkbox" data-id="{{ $book->id }}" {{ $book->is_bestseller ? 'checked' : '' }}>
+                    </div>
                 </td>
-                <td>{{ $book->created_at->format('d M, Y (h:i A)') }}</td>
+                <td>
+                    <input type="number" class="form-control form-control-sm update-order text-center mx-auto" data-id="{{ $book->id }}" value="{{ $book->popular_order }}" style="width: 60px;" min="0">
+                </td>
                 <td>
                     <div class="btn-group btn-group-sm">
-                        <a href="{{ route('admin.books.edit', $book->id) }}" class="btn btn-primary" title="এডিট করুন">
+                        <a href="{{ route('admin.books.show', $book->id) }}" class="btn btn-success text-white" title="দেখুন">
+                            <i class="fas fa-eye"></i>
+                        </a>
+                        <a href="{{ route('admin.books.edit', $book->id) }}" class="btn btn-primary" title="এডিট">
                             <i class="fas fa-edit"></i>
                         </a>
-                        <button class="btn btn-danger delete-book" 
+                        <button type="button" class="btn btn-danger delete-book" 
                                 data-id="{{ $book->id }}" 
                                 data-name="{{ $book->title }}"
-                                title="ডিলিট করুন">
+                                title="ডিলিট">
                             <i class="fas fa-trash"></i>
                         </button>
                     </div>
@@ -85,9 +89,9 @@
             </tr>
             @empty
             <tr>
-                <td colspan="10" class="text-center py-5 text-muted">
-                    <i class="fas fa-book fa-3x mb-3 text-secondary"></i>
-                    <p class="mb-0">কোনো বই পাওয়া যায়নি।</p>
+                <td colspan="10" class="text-center py-5">
+                    <i class="fas fa-book fa-3x text-muted mb-3"></i>
+                    <p class="text-muted mb-0">কোনো বই পাওয়া যায়নি</p>
                 </td>
             </tr>
             @endforelse
@@ -95,16 +99,8 @@
     </table>
 </div>
 
-<!-- Pagination Link rendering -->
 @if($books instanceof \Illuminate\Contracts\Pagination\LengthAwarePaginator && $books->hasPages())
-    <div class="card-footer clearfix bg-white border-0">
-        <div class="d-flex justify-content-between align-items-center flex-wrap">
-            <div class="text-muted small mb-2 mb-md-0">
-                মোট {{ $books->total() }} টি বইয়ের মধ্যে {{ $books->firstItem() }}-{{ $books->lastItem() }} টি দেখানো হচ্ছে
-            </div>
-            <div>
-                {{ $books->appends(request()->all())->links('pagination::bootstrap-5') }}
-            </div>
-        </div>
+    <div class="card-footer clearfix bg-white border-0 d-flex justify-content-center">
+        {{ $books->links('pagination::bootstrap-5') }}
     </div>
 @endif

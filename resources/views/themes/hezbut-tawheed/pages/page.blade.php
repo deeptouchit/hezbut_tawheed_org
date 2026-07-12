@@ -8,73 +8,51 @@
 
 @section('content')
 
-    @if(in_array($page->slug, ['emamuzzaman', 'emam-ht', 'attack-on-us', 'sonaimuri-tragedy', 'monogram', 'about-us']))
-        <!-- Full-width Elementor Page -->
-        <div class="elementor-page-wrapper bg-white">
-            {!! $page->content !!}
-        </div>
-    @else
-        @include('theme::partials.hero_banner', [
-            'title' => $page->title,
-            'subtitle' => $page->meta_description ?? '',
-            'badge_text' => 'অফিশিয়াল পাতা',
-            'badge_icon' => 'fas fa-file-alt'
-        ])
+    @include('theme::partials.hero_banner', [
+        'title' => $page->title,
+        'subtitle' => $page->meta_description ?? '',
+        'badge_text' => 'অফিশিয়াল পাতা',
+        'badge_icon' => 'fas fa-file-alt'
+    ])
 
-        <!-- Page Content Area -->
-        <section class="py-6 bg-off-white">
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-lg-10">
-                        <div class="card border-0 shadow-sm p-4 p-md-5 rounded-4 bg-white" style="border-top: 5px solid #006A4E !important;">
-                            <article class="page-body text-start text-dark lh-lg" style="font-family: 'Baloo Da 2', sans-serif;">
-                                {!! $page->content !!}
-                            </article>
-                        </div>
+    <!-- Page Content Area -->
+    <section class="py-5 bg-off-white">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-12 col-xl-11">
+                    <div class="page-content-wrapper p-2 p-md-4">
+                        <article class="page-body text-start text-dark lh-lg">
+                            {!! $page->content !!}
+
+                            @if($page->slug === 'about-us' && isset($teamMembers) && count($teamMembers) > 0)
+                                <!-- Dynamic Executive Committee -->
+                                <div class="mt-5 pt-5 border-top">
+                                    <h3 class="mb-5 text-center fw-bold" style="color: #0f172a; font-size: 2rem;">কেন্দ্রীয় কার্যনির্বাহী কমিটি</h3>
+                                    <div class="row g-4 justify-content-center">
+                                        @foreach($teamMembers as $member)
+                                            <div class="col-lg-4 col-md-6 col-sm-10">
+                                                <div class="card text-center border shadow-sm rounded-4 overflow-hidden bg-white h-100" style="transition: all 0.3s ease;">
+                                                    <div style="aspect-ratio: 1; overflow: hidden; background: #f8fafc;">
+                                                        <img src="{{ asset($member->image_url ?? 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=400') }}" alt="{{ $member->name }}" class="img-fluid" style="width: 100%; height: 100%; object-fit: cover;">
+                                                    </div>
+                                                    <div class="card-body p-4 bg-white">
+                                                        <h5 class="fw-bold text-dark mb-2" style="font-size: 1.25rem; color: #0f172a !important;">{{ $member->name }}</h5>
+                                                        <p class="text-muted small mb-0 fw-semibold">{{ $member->designation }}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @endif
+                        </article>
                     </div>
                 </div>
             </div>
-        </section>
-    @endif
+        </div>
+    </section>
 
-    <!-- Style for rendering raw HTML cleanly from CKEditor -->
-    <style>
-        .page-body h1, .page-body h2, .page-body h3, .page-body h4, .page-body h5, .page-body h6 {
-            color: #006A4E;
-            font-weight: 700;
-            margin-top: 1.8rem;
-            margin-bottom: 1rem;
-        }
-        .page-body p {
-            margin-bottom: 1.25rem;
-            color: #475569;
-            text-align: justify;
-        }
-        .page-body ul, .page-body ol {
-            margin-bottom: 1.5rem;
-            padding-left: 1.5rem;
-            color: #475569;
-        }
-        .page-body li {
-            margin-bottom: 0.5rem;
-        }
-        .page-body blockquote {
-            border-left: 4px solid #10B981;
-            background-color: #f8fafc;
-            padding: 1rem 1.5rem;
-            margin: 1.5rem 0;
-            font-style: italic;
-            border-radius: 0 8px 8px 0;
-        }
-        .page-body img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 8px;
-            margin: 1.5rem 0;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-        }
-    </style>
+    <!-- Style for rendering raw HTML cleanly from Visual Editor -->
+    
 
 @endsection
-
-

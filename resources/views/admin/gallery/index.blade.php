@@ -194,7 +194,7 @@
                             <div class="card border shadow-none bg-light">
                                 <div class="card-body">
                                     <h6 class="fw-bold mb-3"><i class="fas fa-cloud-upload-alt text-success me-2"></i> নতুন ছবি আপলোড (ব্লগ পোস্টের বাইরে সরাসরি গ্যালারির জন্য)</h6>
-                                    <form action="{{ route('admin.gallery.upload') }}" method="POST" enctype="multipart/form-data">
+                                    <form id="upload-gallery-form" action="{{ route('admin.gallery.upload') }}" method="POST" enctype="multipart/form-data">
                                         @csrf
                                         <div class="row align-items-end">
                                             <div class="col-md-5 mb-2">
@@ -256,7 +256,7 @@
                                 </button>
                             </div>
                         @empty
-                            <div class="col-12 text-center py-5 text-muted w-100">
+                            <div class="col-12 text-center py-5 text-muted w-100 empty-placeholder">
                                 <i class="fas fa-home fa-2x mb-2 text-muted opacity-50"></i>
                                 <p class="mb-0">হোমপেজ গ্যালারিতে দেখানোর জন্য কোনো ছবি সক্রিয় করা হয়নি।</p>
                             </div>
@@ -282,7 +282,7 @@
                                 </button>
                             </div>
                         @empty
-                            <div class="col-12 text-center py-5 text-muted w-100">
+                            <div class="col-12 text-center py-5 text-muted w-100 empty-placeholder">
                                 <i class="fas fa-images fa-2x mb-2 text-muted opacity-50"></i>
                                 <p class="mb-0">গ্যালারি পেজে দেখানোর জন্য কোনো ছবি সক্রিয় করা হয়নি।</p>
                             </div>
@@ -382,6 +382,75 @@ $(document).ready(function() {
         });
     }
 
+    // Helper function to update counters and empty states in Tab 2 and Tab 3
+    function updateCounters() {
+        var hpCount = $('#homepage-sortable .active-grid-item').length;
+        $('#homepage-counter').text(hpCount);
+        
+        if (hpCount === 0) {
+            if ($('#homepage-sortable .empty-placeholder').length === 0) {
+                $('#homepage-sortable').html(`
+                    <div class="col-12 text-center py-5 text-muted w-100 empty-placeholder">
+                        <i class="fas fa-home fa-2x mb-2 text-muted opacity-50"></i>
+                        <p class="mb-0">হোমপেজ গ্যালারিতে দেখানোর জন্য কোনো ছবি সক্রিয় করা হয়নি।</p>
+                    </div>
+                `);
+            }
+        } else {
+            $('#homepage-sortable .empty-placeholder').remove();
+        }
+
+        var gpCount = $('#gallerypage-sortable .active-grid-item').length;
+        $('#gallerypage-counter').text(gpCount);
+        
+        if (gpCount === 0) {
+            if ($('#gallerypage-sortable .empty-placeholder').length === 0) {
+                $('#gallerypage-sortable').html(`
+                    <div class="col-12 text-center py-5 text-muted w-100 empty-placeholder">
+                        <i class="fas fa-images fa-2x mb-2 text-muted opacity-50"></i>
+                        <p class="mb-0">গ্যালারি পেজে দেখানোর জন্য কোনো ছবি সক্রিয় করা হয়নি।</p>
+                    </div>
+                `);
+            }
+        } else {
+            $('#gallerypage-sortable .empty-placeholder').remove();
+        }
+    }
+
+    // Helper to refresh page 1 of media grid asynchronously
+    function refreshMediaGrid(page = 1) {
+        $.ajax({
+            url: "{{ route('admin.gallery.index') }}?page=" + page + "&ajax=1",
+            type: "GET",
+            success: function(response) {
+                if (response.success && response.html) {
+                    if (page === 1) {
+                        $('.media-grid').html(response.html);
+                        // Reset Load More button
+                        if (response.hasMore) {
+                            if ($('#load-more-container').length === 0) {
+                                $('.media-grid').after(`
+                                    <div class="text-center my-4" id="load-more-container">
+                                        <button id="load-more-btn" class="btn btn-outline-success px-4" data-page="2">
+                                            <i class="fas fa-sync-alt me-1"></i> আরো ছবি লোড করুন
+                                        </button>
+                                    </div>
+                                `);
+                            } else {
+                                $('#load-more-btn').attr('data-page', 2).prop('disabled', false).html('<i class="fas fa-sync-alt me-1"></i> আরো ছবি লোড করুন');
+                                $('#load-more-container').show();
+                            }
+                        } else {
+                            $('#load-more-container').remove();
+                        }
+                    } else {
+                        $('.media-grid').append(response.html);
+                    }
+                }
+            }
+        });
+    }
+
     // ============================================
     // Toggle Homepage visibility Target
     // ============================================
@@ -389,6 +458,13 @@ $(document).ready(function() {
         e.preventDefault();
         var id = $(this).data('id');
         var btn = $(this);
+        var card = $('#card-' + id);
+        
+        var mainLibraryBtn = $('#card-' + id + ' .toggle-homepage');
+        var homepageGridRemoveBtn = $('#homepage-sortable [data-id="' + id + '"] .toggle-homepage');
+        
+        mainLibraryBtn.prop('disabled', true);
+        homepageGridRemoveBtn.prop('disabled', true);
         btn.prop('disabled', true);
 
         $.ajax({
@@ -396,18 +472,59 @@ $(document).ready(function() {
             type: 'POST',
             data: { _token: '{{ csrf_token() }}' },
             success: function(response) {
+                mainLibraryBtn.prop('disabled', false);
+                homepageGridRemoveBtn.prop('disabled', false);
+                btn.prop('disabled', false);
+
                 if (response.success) {
                     toastr.success(response.message);
-                    setTimeout(function() {
-                        window.location.reload();
-                    }, 1000);
+                    
+                    if (card.length > 0) {
+                        var container = card.find('.media-indicators-container');
+                        if (response.show_on_homepage) {
+                            mainLibraryBtn.addClass('btn-success').removeClass('btn-outline-success');
+                            if (container.find('.badge-hp-indicator').length === 0) {
+                                container.append('<span class="badge bg-success badge-hp-indicator" title="হোমপেজে সক্রিয়" style="border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; padding: 0;"><i class="fas fa-home" style="font-size: 10px;"></i></span>');
+                            }
+                        } else {
+                            mainLibraryBtn.addClass('btn-outline-success').removeClass('btn-success');
+                            container.find('.badge-hp-indicator').remove();
+                        }
+                    }
+
+                    if (response.show_on_homepage) {
+                        var imgUrl = $('#card-' + id + ' .media-img').attr('src');
+                        if (!imgUrl) {
+                            imgUrl = homepageGridRemoveBtn.siblings('img').attr('src') || '';
+                        }
+                        
+                        var newItem = `
+                        <div class="active-grid-item" data-id="${id}">
+                            <img src="${imgUrl}" alt="">
+                            <button class="active-grid-remove toggle-homepage" data-id="${id}" title="হোমপেজ থেকে বাদ দিন">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>`;
+                        
+                        $('#homepage-sortable .empty-placeholder').remove();
+                        $('#homepage-sortable').append(newItem);
+                    } else {
+                        $('#homepage-sortable [data-id="' + id + '"]').fadeOut(300, function() {
+                            $(this).remove();
+                            updateCounters();
+                        });
+                    }
+                    
+                    updateCounters();
                 } else {
                     toastr.error(response.message);
-                    btn.prop('disabled', false);
                 }
             },
             error: function(xhr) {
+                mainLibraryBtn.prop('disabled', false);
+                homepageGridRemoveBtn.prop('disabled', false);
                 btn.prop('disabled', false);
+                
                 var message = 'হোমপেজ স্ট্যাটাস আপডেট করতে ব্যর্থ হয়েছে';
                 if (xhr.responseJSON && xhr.responseJSON.message) {
                     message = xhr.responseJSON.message;
@@ -424,6 +541,13 @@ $(document).ready(function() {
         e.preventDefault();
         var id = $(this).data('id');
         var btn = $(this);
+        var card = $('#card-' + id);
+        
+        var mainLibraryBtn = $('#card-' + id + ' .toggle-gallerypage');
+        var galleryPageGridRemoveBtn = $('#gallerypage-sortable [data-id="' + id + '"] .toggle-gallerypage');
+        
+        mainLibraryBtn.prop('disabled', true);
+        galleryPageGridRemoveBtn.prop('disabled', true);
         btn.prop('disabled', true);
 
         $.ajax({
@@ -431,18 +555,59 @@ $(document).ready(function() {
             type: 'POST',
             data: { _token: '{{ csrf_token() }}' },
             success: function(response) {
+                mainLibraryBtn.prop('disabled', false);
+                galleryPageGridRemoveBtn.prop('disabled', false);
+                btn.prop('disabled', false);
+
                 if (response.success) {
                     toastr.success(response.message);
-                    setTimeout(function() {
-                        window.location.reload();
-                    }, 1000);
+                    
+                    if (card.length > 0) {
+                        var container = card.find('.media-indicators-container');
+                        if (response.show_on_gallery) {
+                            mainLibraryBtn.addClass('btn-info text-white').removeClass('btn-outline-info');
+                            if (container.find('.badge-gp-indicator').length === 0) {
+                                container.append('<span class="badge bg-info badge-gp-indicator" title="গ্যালারি পেজে সক্রিয়" style="border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; padding: 0; color: white;"><i class="fas fa-images" style="font-size: 10px;"></i></span>');
+                            }
+                        } else {
+                            mainLibraryBtn.addClass('btn-outline-info').removeClass('btn-info text-white');
+                            container.find('.badge-gp-indicator').remove();
+                        }
+                    }
+
+                    if (response.show_on_gallery) {
+                        var imgUrl = $('#card-' + id + ' .media-img').attr('src');
+                        if (!imgUrl) {
+                            imgUrl = galleryPageGridRemoveBtn.siblings('img').attr('src') || '';
+                        }
+                        
+                        var newItem = `
+                        <div class="active-grid-item" data-id="${id}">
+                            <img src="${imgUrl}" alt="">
+                            <button class="active-grid-remove toggle-gallerypage" data-id="${id}" title="গ্যালারি পেজ থেকে বাদ দিন">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>`;
+                        
+                        $('#gallerypage-sortable .empty-placeholder').remove();
+                        $('#gallerypage-sortable').append(newItem);
+                    } else {
+                        $('#gallerypage-sortable [data-id="' + id + '"]').fadeOut(300, function() {
+                            $(this).remove();
+                            updateCounters();
+                        });
+                    }
+                    
+                    updateCounters();
                 } else {
                     toastr.error(response.message);
-                    btn.prop('disabled', false);
                 }
             },
             error: function(xhr) {
+                mainLibraryBtn.prop('disabled', false);
+                galleryPageGridRemoveBtn.prop('disabled', false);
                 btn.prop('disabled', false);
+                
                 var message = 'গ্যালারি পেজ স্ট্যাটাস আপডেট করতে ব্যর্থ হয়েছে';
                 if (xhr.responseJSON && xhr.responseJSON.message) {
                     message = xhr.responseJSON.message;
@@ -490,30 +655,87 @@ $(document).ready(function() {
     $(document).on('click', '.delete-custom', function() {
         var id = $(this).data('id');
         var card = $('#card-' + id);
+        var btn = $(this);
 
         if (confirm('আপনি কি এই ছবিটি গ্যালারি মিডিয়া লাইব্রেরি ও স্টোরেজ থেকে চিরতরে ডিলিট করতে চান?')) {
+            btn.prop('disabled', true);
             $.ajax({
                 url: '{{ url("admin/gallery") }}/' + id,
                 type: 'DELETE',
                 data: { _token: '{{ csrf_token() }}' },
                 success: function(response) {
+                    btn.prop('disabled', false);
                     if (response.success) {
                         toastr.success(response.message);
                         card.fadeOut(400, function() {
                             $(this).remove();
                         });
-                        setTimeout(function() {
-                            window.location.reload();
-                        }, 1000);
+                        
+                        $('#homepage-sortable [data-id="' + id + '"]').fadeOut(400, function() {
+                            $(this).remove();
+                            updateCounters();
+                        });
+                        
+                        $('#gallerypage-sortable [data-id="' + id + '"]').fadeOut(400, function() {
+                            $(this).remove();
+                            updateCounters();
+                        });
                     } else {
                         toastr.error(response.message);
                     }
                 },
-                error: function() {
-                    toastr.error('ছবি ডিলিট করতে ব্যর্থ হয়েছে');
+                error: function(xhr) {
+                    btn.prop('disabled', false);
+                    var message = 'ছবি ডিলিট করতে ব্যর্থ হয়েছে';
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                        message = xhr.responseJSON.message;
+                    }
+                    toastr.error(message);
                 }
             });
         }
+    });
+
+    // ============================================
+    // AJAX Custom Image Upload
+    // ============================================
+    $('#upload-gallery-form').on('submit', function(e) {
+        e.preventDefault();
+        var form = $(this);
+        var formData = new FormData(this);
+        var submitBtn = form.find('button[type="submit"]');
+        var originalHtml = submitBtn.html();
+
+        submitBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-1"></i> আপলোড হচ্ছে...');
+
+        $.ajax({
+            url: form.attr('action'),
+            type: 'POST',
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function(response) {
+                submitBtn.prop('disabled', false).html(originalHtml);
+                if (response.success) {
+                    toastr.success(response.message);
+                    form.trigger('reset');
+                    // Reload the media grid page 1 to show the newly added image
+                    refreshMediaGrid(1);
+                } else {
+                    toastr.error(response.message || 'ছবি আপলোড করতে ব্যর্থ হয়েছে');
+                }
+            },
+            error: function(xhr) {
+                submitBtn.prop('disabled', false).html(originalHtml);
+                var message = 'ছবি আপলোড করতে ব্যর্থ হয়েছে';
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    message = xhr.responseJSON.message;
+                } else if (xhr.responseJSON && xhr.responseJSON.errors) {
+                    message = Object.values(xhr.responseJSON.errors)[0][0];
+                }
+                toastr.error(message);
+            }
+        });
     });
 });
 </script>

@@ -43,23 +43,18 @@
 
 @section('content')
 
-    <!-- Classic Banner Header with Correct Brand Colors -->
-    <div class="py-5 text-white position-relative" 
-         style="background: linear-gradient(135deg, #006A4E 0%, #004D38 100%); border-bottom: 4px solid #10B981;">
-        <div class="container text-center py-2">
-            <span class="badge bg-white bg-opacity-20 text-white mb-2 px-3 py-2 rounded fw-bold" style="font-size: 10px; font-family: 'Baloo Da 2', sans-serif;">
-                {{ $blog->category->name ?? 'নিবন্ধ' }}
-            </span>
-            <h1 class="fw-bold mb-2 text-white display-6" style="font-family: 'Baloo Da 2', sans-serif; line-height: 1.35; max-width: 850px; margin: 0 auto;">
-                {{ $blog->title }}
-            </h1>
-            <div class="d-flex align-items-center justify-content-center gap-3 text-white opacity-75 small mt-3" style="font-family: 'Baloo Da 2', sans-serif; font-size: 0.9rem;">
-                <span><i class="far fa-calendar-alt me-1" style="color: #10B981;"></i> {{ $blog->published_at ? $blog->published_at->format('d M, Y') : $blog->created_at->format('d M, Y') }}</span>
-                <span><i class="far fa-user me-1" style="color: #10B981;"></i> {{ $blog->author->name ?? 'অ্যাডমিন' }}</span>
-                <span><i class="far fa-eye me-1" style="color: #10B981;"></i> {{ $blog->views }} ভিউ</span>
+    @include('theme::partials.hero_banner', [
+        'title' => $blog->title,
+        'badge_text' => $blog->category->name ?? 'নিবন্ধ',
+        'badge_icon' => 'far fa-newspaper',
+        'extra_html' => '
+            <div class="d-flex align-items-center justify-content-center gap-3 text-white opacity-75 small mt-3" style="font-family: \'Baloo Da 2\', sans-serif; font-size: 0.9rem;">
+                <span><i class="far fa-calendar-alt me-1" style="color: #10B981;"></i> ' . ($blog->published_at ? $blog->published_at->format('d M, Y') : $blog->created_at->format('d M, Y')) . '</span>
+                <span><i class="far fa-user me-1" style="color: #10B981;"></i> ' . ($blog->author->name ?? 'অ্যাডমিন') . '</span>
+                <span><i class="far fa-eye me-1" style="color: #10B981;"></i> ' . $blog->views . ' ভিউ</span>
             </div>
-        </div>
-    </div>
+        '
+    ])
 
     <!-- Blog Details Main Area -->
     <div class="py-5" style="background-color: #f8fafc; min-height: 70vh;">
@@ -324,153 +319,6 @@
     </div>
 
     <!-- Custom CSS Styles -->
-    <style>
-        .border-light-grey {
-            border: 1px solid #e2e8f0 !important;
-        }
-        .object-cover {
-            object-fit: cover;
-        }
-        .last-no-border:last-child {
-            border-bottom: 0 !important;
-            margin-bottom: 0 !important;
-            padding-bottom: 0 !important;
-        }
-        
-        .hover-green-text:hover {
-            color: #006A4E !important;
-        }
-        
-        /* Card transitions */
-        .hover-grow-card {
-            border: 1px solid #e2e8f0 !important;
-            transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
-        }
-        .hover-grow-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0, 106, 78, 0.05) !important;
-            border-color: rgba(16, 185, 129, 0.2) !important;
-        }
-        .zoom-img-hover {
-            transition: transform 0.5s ease;
-        }
-        .hover-grow-card:hover .zoom-img-hover {
-            transform: scale(1.05);
-        }
-        
-        /* Sidebar widget accents */
-        .widget-title {
-            position: relative;
-            padding-bottom: 8px;
-            border-bottom: 2px solid #f1f5f9;
-            color: #0f172a !important;
-        }
-        .widget-title::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            width: 35px;
-            height: 2px;
-            background-color: #006A4E;
-        }
-        
-        /* Premium Category List Rows */
-        .category-premium-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 10px 14px;
-            border-radius: 8px;
-            color: #475569;
-            text-decoration: none !important;
-            font-size: 0.92rem;
-            font-weight: 500;
-            background-color: transparent;
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .category-premium-row .folder-icon {
-            color: #006A4E;
-            opacity: 0.5;
-            transition: transform 0.25s;
-        }
-        .category-premium-row .category-count-badge {
-            background-color: #f1f5f9;
-            color: #64748b;
-            font-size: 10.5px;
-            padding: 4px 10px;
-            border-radius: 50px;
-            border: 1px solid #e2e8f0;
-            transition: all 0.25s;
-        }
-        .category-premium-row:hover {
-            background-color: #f1f5f9;
-            color: #006A4E;
-            transform: translateX(4px);
-        }
-        .category-premium-row:hover .folder-icon {
-            transform: scale(1.15);
-            opacity: 0.9;
-        }
-        .category-premium-row:hover .category-count-badge {
-            background-color: rgba(0, 106, 78, 0.1);
-            color: #006A4E;
-            border-color: transparent;
-        }
-        .category-premium-row.active {
-            background-color: rgba(0, 106, 78, 0.05);
-            color: #006A4E;
-            font-weight: 700;
-            border-left: 4px solid #006A4E;
-            padding-left: 10px;
-        }
-        .category-premium-row.active .folder-icon {
-            opacity: 1;
-        }
-        .category-premium-row.active .category-count-badge {
-            background-color: #006A4E;
-            color: #ffffff;
-            border-color: transparent;
-        }
-        
-        /* Premium Minimal Tag Cloud Pill */
-        .premium-tag-pill {
-            display: inline-flex;
-            align-items: center;
-            background: #f1f5f9;
-            color: #475569;
-            font-size: 11px;
-            font-weight: 600;
-            padding: 4px 12px;
-            border-radius: 4px;
-            text-decoration: none !important;
-            transition: all 0.2s ease;
-        }
-        .premium-tag-pill:hover {
-            background: #006A4E;
-            color: #ffffff;
-        }
-
-        /* Fix Pagination Large SVGs */
-        .pagination-wrapper svg {
-            width: 16px !important;
-            height: 16px !important;
-            display: inline-block;
-            vertical-align: middle;
-        }
-
-        /* Next/Prev Navigation Icons */
-        .nav-arrow-icon {
-            font-size: 11px !important;
-            vertical-align: middle;
-            transition: transform 0.2s ease;
-        }
-        .prev-post-link:hover .nav-arrow-icon {
-            transform: translateX(-3px);
-        }
-        .next-post-link:hover .nav-arrow-icon {
-            transform: translateX(3px);
-        }
-    </style>
+    
 
 @endsection

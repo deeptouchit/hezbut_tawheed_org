@@ -24,6 +24,6 @@ class DivisionSeeder extends Seeder
             array('id' => '8','name' => 'ময়মনসিংহ')
         );
 
-        DB::table('divisions')->insert($divisions);
+        DB::table('divisions')->insertOrIgnore($divisions);
     }
 }

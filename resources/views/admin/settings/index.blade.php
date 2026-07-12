@@ -138,7 +138,7 @@
                                                                  $imagePath = 'uploads/settings/' . $imagePath;
                                                              }
                                                          @endphp
-                                                         @if(!empty($imagePath) && file_exists(public_path($imagePath)))
+                                                         @if(!empty($imagePath))
                                                              <div class="mb-2">
                                                                  <img src="{{ asset($imagePath) }}"
                                                                       alt="{{ $item->label }}"
@@ -163,7 +163,7 @@
                                                                  $filePath = 'uploads/settings/' . $filePath;
                                                              }
                                                          @endphp
-                                                         @if(!empty($filePath) && file_exists(public_path($filePath)))
+                                                         @if(!empty($filePath))
                                                              <div class="mb-2">
                                                                  <a href="{{ asset($filePath) }}" target="_blank" class="btn btn-sm btn-info">
                                                                      <i class="fas fa-download"></i> বর্তমান ফাইল ডাউনলোড

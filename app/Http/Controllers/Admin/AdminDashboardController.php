@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Blog;
 use App\Models\BlogCategory;
 use App\Models\BlogComment;
-use App\Models\TeamMember;
 use App\Models\ContactMessage;
 use App\Models\NewsletterSubscriber;
 use App\Models\User;
@@ -28,7 +27,6 @@ class AdminDashboardController extends Controller
             'total_comments'    => BlogComment::count(),
             'total_subscribers' => NewsletterSubscriber::count(),
             'total_messages'    => ContactMessage::count(),
-            'total_team'        => TeamMember::count(),
             'total_users'       => User::count(),
             'pending_comments'  => BlogComment::where('is_approved', false)->count(),
             'approved_comments' => BlogComment::where('is_approved', true)->count(),

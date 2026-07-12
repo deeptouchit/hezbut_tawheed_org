@@ -17,7 +17,7 @@ class BlogCategoryController extends Controller
      */
     public function index(Request $request)
     {
-        $query = BlogCategory::query();
+        $query = BlogCategory::withCount('blogs');
 
         // Search filter
         if ($request->filled('search')) {
@@ -49,24 +49,25 @@ class BlogCategoryController extends Controller
         }
 
         $perPage = $request->get('per_page', 20);
+        $perPageValue = ($perPage == '-1') ? max(1, $query->count()) : (int)$perPage;
 
         // AJAX Request
         if ($request->ajax()) {
-            $categories = ($perPage == '-1') ? $query->get() : $query->paginate((int)$perPage);
+            $categories = $query->paginate($perPageValue);
             $html = view('admin.blog.categories.partials.table', compact('categories'))->render();
             return response()->json([
                 'success' => true,
                 'html' => $html,
-                'total' => $categories->total() ?? $categories->count(),
+                'total' => $categories->total(),
                 'pagination' => [
-                    'total' => $categories->total() ?? $categories->count(),
-                    'current_page' => $categories->currentPage() ?? 1,
-                    'last_page' => $categories->lastPage() ?? 1,
+                    'total' => $categories->total(),
+                    'current_page' => $categories->currentPage(),
+                    'last_page' => $categories->lastPage(),
                 ]
             ]);
         }
 
-        $categories = $query->paginate($perPage);
+        $categories = $query->paginate($perPageValue);
 
         // Statistics
         $stats = [

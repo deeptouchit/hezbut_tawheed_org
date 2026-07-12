@@ -123,6 +123,19 @@
 
     <!-- List Area -->
     <div class="card shadow-sm border border-light">
+        <div class="card-header bg-white py-3 border-bottom border-light">
+            <div class="row align-items-center justify-content-between">
+                <div class="col-md-6 col-lg-5">
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0 text-muted"><i class="fas fa-search"></i></span>
+                        <input type="text" id="leader-search-input" class="form-control bg-light border-start-0" placeholder="নেতৃত্বের নাম বা পদবি দিয়ে খুঁজুন...">
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4 text-md-end mt-2 mt-md-0">
+                    <span class="badge bg-secondary py-2 px-3 fs-7" id="showing-count-badge">মোট সদস্য: {{ count($leaders) }} জন</span>
+                </div>
+            </div>
+        </div>
         <div class="card-body bg-light">
             <div id="leadersList" class="leaders-list-container">
                 @forelse($leaders as $leader)
@@ -347,6 +360,41 @@ $(document).ready(function() {
                 toastr.error(msg);
             }
         });
+    });
+
+    // Search filter listener (real-time client side search)
+    $('#leader-search-input').on('keyup', function() {
+        let query = $(this).val().toLowerCase().trim();
+        let visibleCount = 0;
+        let totalCount = $('#leadersList .leader-item-card').length;
+        
+        if (query === '') {
+            $('#leadersList .leader-item-card').show();
+            $('#showing-count-badge').text('মোট সদস্য: ' + totalCount + ' জন');
+            // Enable sortable when search is empty
+            if ($.fn.sortable) {
+                $('#leadersList').sortable('enable');
+            }
+        } else {
+            // Disable sortable when search is active to prevent sorting glitches
+            if ($.fn.sortable) {
+                $('#leadersList').sortable('disable');
+            }
+            
+            $('#leadersList .leader-item-card').each(function() {
+                let card = $(this);
+                let name = card.find('.fw-bold.text-dark').text().toLowerCase();
+                let designation = card.find('.text-muted.small').text().toLowerCase();
+                
+                if (name.includes(query) || designation.includes(query)) {
+                    card.show();
+                    visibleCount++;
+                } else {
+                    card.hide();
+                }
+            });
+            $('#showing-count-badge').text('ফলাফল: ' + visibleCount + ' জন');
+        }
     });
 
     // Initialize layout structure

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Book;
+use App\Models\BookCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -35,6 +36,11 @@ class BookController extends Controller
             $query->where('is_active', $request->status == 'active');
         }
 
+        // Category filter
+        if ($request->filled('category_id')) {
+            $query->where('category_id', $request->category_id);
+        }
+
         // Sorting
         $sortField = $request->get('sort', 'created_at');
         $sortDirection = $request->get('direction', 'desc');
@@ -50,18 +56,6 @@ class BookController extends Controller
 
         $perPage = $request->get('per_page', 20);
 
-        if ($request->ajax()) {
-            $books = ($perPage == '-1') ? $query->get() : $query->paginate((int)$perPage);
-            $html = view('admin.books.partials.table', compact('books'))->render();
-            return response()->json([
-                'success' => true,
-                'html' => $html,
-                'total' => $books->total() ?? $books->count()
-            ]);
-        }
-
-        $books = $query->paginate($perPage);
-
         // Statistics
         $stats = [
             'total' => Book::count(),
@@ -69,7 +63,27 @@ class BookController extends Controller
             'inactive' => Book::where('is_active', false)->count()
         ];
 
-        return view('admin.books.index', compact('books', 'stats'));
+        if ($request->ajax()) {
+            if ($request->has('stats_only')) {
+                return response()->json([
+                    'success' => true,
+                    'stats' => $stats
+                ]);
+            }
+            $books = ($perPage == '-1') ? $query->get() : $query->paginate((int)$perPage);
+            $html = view('admin.books.partials.table', compact('books'))->render();
+            return response()->json([
+                'success' => true,
+                'html' => $html,
+                'total' => $books instanceof \Illuminate\Contracts\Pagination\LengthAwarePaginator ? $books->total() : $books->count(),
+                'stats' => $stats
+            ]);
+        }
+
+        $books = $query->paginate($perPage);
+        $categories = BookCategory::where('is_active', true)->get();
+
+        return view('admin.books.index', compact('books', 'stats', 'categories'));
     }
 
     /**
@@ -77,7 +91,8 @@ class BookController extends Controller
      */
     public function create()
     {
-        return view('admin.books.create');
+        $categories = BookCategory::where('is_active', true)->get();
+        return view('admin.books.create', compact('categories'));
     }
 
     /**
@@ -91,6 +106,7 @@ class BookController extends Controller
         }
 
         $validator = Validator::make($request->all(), [
+            'category_id' => 'nullable|exists:book_categories,id',
             'title' => 'required|string|max:200',
             'writer' => 'nullable|string|max:200',
             'slug' => 'required|string|max:200|unique:books,slug',
@@ -103,6 +119,7 @@ class BookController extends Controller
             'old_price' => 'nullable|string|max:50',
             'is_active' => 'boolean',
             'is_popular' => 'boolean',
+            'is_bestseller' => 'boolean',
             'popular_order' => 'integer|min:0',
         ]);
 
@@ -115,9 +132,10 @@ class BookController extends Controller
         try {
             DB::beginTransaction();
 
-            $data = $request->only(['title', 'writer', 'slug', 'description', 'content', 'pdf_url', 'price', 'old_price', 'popular_order']);
+            $data = $request->only(['category_id', 'title', 'writer', 'slug', 'description', 'content', 'pdf_url', 'price', 'old_price', 'popular_order']);
             $data['is_active'] = $request->boolean('is_active', true);
             $data['is_popular'] = $request->boolean('is_popular', false);
+            $data['is_bestseller'] = $request->boolean('is_bestseller', false);
 
             // Handle image upload
             if ($request->hasFile('image')) {
@@ -152,12 +170,22 @@ class BookController extends Controller
     }
 
     /**
+     * Display the specified book.
+     */
+    public function show($id)
+    {
+        $book = Book::with('category')->findOrFail($id);
+        return view('admin.books.show', compact('book'));
+    }
+
+    /**
      * Show form for editing the specified book.
      */
     public function edit($id)
     {
         $book = Book::findOrFail($id);
-        return view('admin.books.edit', compact('book'));
+        $categories = BookCategory::where('is_active', true)->get();
+        return view('admin.books.edit', compact('book', 'categories'));
     }
 
     /**
@@ -173,6 +201,7 @@ class BookController extends Controller
         }
 
         $validator = Validator::make($request->all(), [
+            'category_id' => 'nullable|exists:book_categories,id',
             'title' => 'required|string|max:200',
             'writer' => 'nullable|string|max:200',
             'slug' => 'required|string|max:200|unique:books,slug,' . $id,
@@ -185,6 +214,7 @@ class BookController extends Controller
             'old_price' => 'nullable|string|max:50',
             'is_active' => 'boolean',
             'is_popular' => 'boolean',
+            'is_bestseller' => 'boolean',
             'popular_order' => 'integer|min:0',
         ]);
 
@@ -200,9 +230,10 @@ class BookController extends Controller
         try {
             DB::beginTransaction();
 
-            $data = $request->only(['title', 'writer', 'slug', 'description', 'content', 'pdf_url', 'price', 'old_price', 'popular_order']);
+            $data = $request->only(['category_id', 'title', 'writer', 'slug', 'description', 'content', 'pdf_url', 'price', 'old_price', 'popular_order']);
             $data['is_active'] = $request->boolean('is_active', true);
             $data['is_popular'] = $request->boolean('is_popular', false);
+            $data['is_bestseller'] = $request->boolean('is_bestseller', false);
 
             // Handle image upload
             if ($request->hasFile('image')) {
@@ -324,6 +355,31 @@ class BookController extends Controller
             ]);
         } catch (\Exception $e) {
             Log::error('Book popular status toggle failed: ' . $e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'স্ট্যাটাস পরিবর্তন করতে ব্যর্থ হয়েছে!'
+            ], 500);
+        }
+    }
+
+    /**
+     * Toggle bestseller status of a book.
+     */
+    public function toggleBestseller($id)
+    {
+        try {
+            $book = Book::findOrFail($id);
+            $book->is_bestseller = !$book->is_bestseller;
+            $book->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'বইয়ের বেস্ট সেলার স্ট্যাটাস পরিবর্তন করা হয়েছে!',
+                'is_bestseller' => $book->is_bestseller
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Book bestseller status toggle failed: ' . $e->getMessage());
 
             return response()->json([
                 'success' => false,

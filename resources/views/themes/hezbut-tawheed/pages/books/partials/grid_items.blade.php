@@ -1,8 +1,8 @@
 {{-- resources/views/themes/hezbut-tawheed/pages/books/partials/grid_items.blade.php --}}
 
 @foreach($books as $book)
-    <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-        <div class="ht-book-item">
+    <div class="col-6 col-sm-6 col-md-4 col-lg-3 mb-4">
+        <div class="ht-book-item shadow-sm">
             <!-- Badge -->
             @php
                 $discountText = '';
@@ -11,11 +11,16 @@
                 if ($cleanOldPrice && $cleanPrice && intval($cleanOldPrice) > intval($cleanPrice)) {
                     $discount = round(((intval($cleanOldPrice) - intval($cleanPrice)) / intval($cleanOldPrice)) * 100);
                     $discountText = $discount . '% অফ';
-                } else {
-                    $discountText = 'সেরা পাঠক প্রিয়';
                 }
             @endphp
-            <div class="ht-book-badge">{{ $discountText }}</div>
+
+            @if($discountText)
+                <div class="ht-book-badge-discount"><i class="fas fa-tag me-1"></i>{{ $discountText }}</div>
+            @elseif($book->is_bestseller)
+                <div class="ht-book-badge-bestseller"><i class="fas fa-fire me-1"></i>Best Selling</div>
+            @elseif($book->is_popular)
+                <div class="ht-book-badge-popular"><i class="fas fa-star me-1"></i>সেরা পাঠক প্রিয়</div>
+            @endif
             
             <!-- Image -->
             <div class="ht-book-img">
@@ -25,14 +30,14 @@
             </div>
             
             <!-- Info -->
-            <div class="ht-book-info">
-                <div class="ht-book-name">
-                    <a href="{{ route('books.show', $book->slug) }}" title="{{ $book->title }}">
+            <div class="ht-book-info text-center" style="align-items: center !important; text-align: center !important;">
+                <div class="ht-book-name text-center" style="text-align: center !important;">
+                    <a href="{{ route('books.show', $book->slug) }}" title="{{ $book->title }}" class="text-center" style="text-align: center !important; display: block;">
                         {{ $book->title }}
                     </a>
                 </div>
-                <div class="ht-book-writer">{{ $book->writer ?? 'হেযবুত তওহীদ' }}</div>
-                <div class="ht-book-pricing">
+                <div class="ht-book-writer text-center" style="text-align: center !important; width: 100%;">{{ $book->writer ?? 'হেযবুত তওহীদ' }}</div>
+                <div class="ht-book-pricing text-center" style="text-align: center !important; width: 100%;">
                     @if($book->price !== null && $book->price !== '')
                         মূল্য ৳{{ $book->price }}{{ str_contains($book->price, 'ক') || str_contains($book->price, 'খ') || str_contains($book->price, 'গ') || $book->price == '০' || $book->price == '0' ? '' : '/-' }}
                     @else
@@ -41,8 +46,10 @@
                 </div>
             </div>
             
-            <!-- Button -->
-            <a href="{{ route('books.show', $book->slug) }}" class="ht-add-cart-btn">বিস্তারিত দেখুন</a>
+            <!-- Button Wrapper -->
+            <div class="ht-btn-wrapper">
+                <a href="{{ route('books.show', $book->slug) }}" class="ht-details-btn">বিস্তারিত দেখুন</a>
+            </div>
         </div>
     </div>
 @endforeach

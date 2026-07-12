@@ -52,19 +52,23 @@ class BlogController extends Controller
                 return Blog::published()->recent()->take(5)->get();
             });
 
-            // সব ট্যাগ
             $allTags = Cache::remember('blog_all_tags', 3600, function () {
-                return Blog::published()
-                    ->pluck('tags')
-                    ->flatten()
-                    ->filter()
-                    ->map(function ($tag) {
-                        return trim($tag);
-                    })
-                    ->unique()
-                    ->values()
-                    ->take(30)
-                    ->toArray();
+                $rawTags = Blog::published()->whereNotNull('tags')->pluck('tags')->toArray();
+                $tagsArray = [];
+                foreach ($rawTags as $tagVal) {
+                    if (is_array($tagVal)) {
+                        $tagsArray = array_merge($tagsArray, $tagVal);
+                    } else if (is_string($tagVal)) {
+                        $splits = explode(',', $tagVal);
+                        foreach ($splits as $split) {
+                            $trimmed = trim($split);
+                            if ($trimmed !== '') {
+                                $tagsArray[] = $trimmed;
+                            }
+                        }
+                    }
+                }
+                return array_values(array_unique($tagsArray));
             });
 
             return view('theme::pages.blog.index', compact(
@@ -87,13 +91,36 @@ class BlogController extends Controller
     public function show($slug)
     {
         try {
+            // Check if there is an old-to-new slug redirect mapping
+            $decodedSlug = urldecode($slug);
+            $redirects = \Illuminate\Support\Facades\Cache::rememberForever('blog_slug_redirects', function () {
+                $path = storage_path('app/blog_slug_redirects.json');
+                if (file_exists($path)) {
+                    return json_decode(file_get_contents($path), true) ?: [];
+                }
+                return [];
+            });
+
+            // If slug matches an old one, redirect (301) to new slug
+            if (isset($redirects[$slug])) {
+                return redirect()->route('blog.detail', $redirects[$slug], 301);
+            }
+            if (isset($redirects[$decodedSlug])) {
+                return redirect()->route('blog.detail', $redirects[$decodedSlug], 301);
+            }
+            $lowerSlug = strtolower($slug);
+            if (isset($redirects[$lowerSlug])) {
+                return redirect()->route('blog.detail', $redirects[$lowerSlug], 301);
+            }
+            $lowerDecoded = strtolower($decodedSlug);
+            if (isset($redirects[$lowerDecoded])) {
+                return redirect()->route('blog.detail', $redirects[$lowerDecoded], 301);
+            }
+
+            // Otherwise, look up the post using the clean slug
             $blog = Blog::published()
                 ->with(['author', 'category', 'comments.user', 'comments.replies'])
-                ->where(function ($q) use ($slug) {
-                    $q->where('slug', $slug)
-                      ->orWhere('slug', urlencode($slug))
-                      ->orWhere('slug', strtolower(urlencode($slug)));
-                })
+                ->where('slug', $slug)
                 ->firstOrFail();
 
             // ভিউ ইনক্রিমেন্ট (সেশন ভিত্তিক ভিউ কাউন্ট প্রটেকশন)
@@ -237,7 +264,28 @@ class BlogController extends Controller
             $query = $request->get('q');
 
             if (empty($query)) {
+                if ($request->ajax()) {
+                    return response()->json([]);
+                }
                 return redirect()->route('blog');
+            }
+
+            if ($request->ajax()) {
+                $blogs = Blog::published()
+                    ->search($query)
+                    ->orderBy('published_at', 'desc')
+                    ->take(5)
+                    ->get();
+                
+                $results = [];
+                foreach ($blogs as $blog) {
+                    $results[] = [
+                        'title' => $blog->title,
+                        'url' => route('blog.detail', $blog->slug),
+                        'image' => $blog->featured_image_url
+                    ];
+                }
+                return response()->json($results);
             }
 
             $blogs = Blog::published()
@@ -430,12 +478,12 @@ public function archive(Request $request)
     /**
      * ঘোষণা ও বিবৃতি লিস্টিং পেজ
      */
-    public function announcements()
+    public function pressReleases()
     {
         try {
             $blogs = Blog::published()
                 ->whereHas('category', function ($query) {
-                    $query->where('slug', 'movement-news');
+                    $query->where('slug', 'press-release');
                 })
                 ->with(['author', 'category'])
                 ->orderBy('published_at', 'desc')
@@ -454,20 +502,25 @@ public function archive(Request $request)
             });
 
             $allTags = Cache::remember('blog_all_tags', 3600, function () {
-                return Blog::published()
-                    ->pluck('tags')
-                    ->flatten()
-                    ->filter()
-                    ->map(function ($tag) {
-                        return trim($tag);
-                    })
-                    ->unique()
-                    ->values()
-                    ->take(30)
-                    ->toArray();
+                $rawTags = Blog::published()->whereNotNull('tags')->pluck('tags')->toArray();
+                $tagsArray = [];
+                foreach ($rawTags as $tagVal) {
+                    if (is_array($tagVal)) {
+                        $tagsArray = array_merge($tagsArray, $tagVal);
+                    } else if (is_string($tagVal)) {
+                        $splits = explode(',', $tagVal);
+                        foreach ($splits as $split) {
+                            $trimmed = trim($split);
+                            if ($trimmed !== '') {
+                                $tagsArray[] = $trimmed;
+                            }
+                        }
+                    }
+                }
+                return array_values(array_unique($tagsArray));
             });
 
-            return view('theme::pages.announcements', compact(
+            return view('theme::pages.press-releases', compact(
                 'blogs',
                 'categories',
                 'popularPosts',
@@ -476,8 +529,8 @@ public function archive(Request $request)
             ));
 
         } catch (\Exception $e) {
-            Log::error('Announcements index error: ' . $e->getMessage());
-            return back()->with('error', 'ঘোষণাসমূহ লোড করতে সমস্যা হয়েছে!');
+            Log::error('Press releases index error: ' . $e->getMessage());
+            return back()->with('error', 'প্রেস রিলিজসমূহ লোড করতে সমস্যা হয়েছে!');
         }
     }
 
@@ -508,17 +561,22 @@ public function archive(Request $request)
             });
 
             $allTags = Cache::remember('blog_all_tags', 3600, function () {
-                return Blog::published()
-                    ->pluck('tags')
-                    ->flatten()
-                    ->filter()
-                    ->map(function ($tag) {
-                        return trim($tag);
-                    })
-                    ->unique()
-                    ->values()
-                    ->take(30)
-                    ->toArray();
+                $rawTags = Blog::published()->whereNotNull('tags')->pluck('tags')->toArray();
+                $tagsArray = [];
+                foreach ($rawTags as $tagVal) {
+                    if (is_array($tagVal)) {
+                        $tagsArray = array_merge($tagsArray, $tagVal);
+                    } else if (is_string($tagVal)) {
+                        $splits = explode(',', $tagVal);
+                        foreach ($splits as $split) {
+                            $trimmed = trim($split);
+                            if ($trimmed !== '') {
+                                $tagsArray[] = $trimmed;
+                            }
+                        }
+                    }
+                }
+                return array_values(array_unique($tagsArray));
             });
 
             return view('theme::pages.events', compact(

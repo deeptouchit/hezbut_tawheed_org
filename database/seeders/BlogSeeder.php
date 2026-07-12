@@ -6,16 +6,16 @@ use App\Models\Blog;
 use App\Models\BlogCategory;
 use App\Models\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Str;
 
 class BlogSeeder extends Seeder
 {
     public function run(): void
     {
-        // ক্যাটাগরি আইডি সংগ্রহ
-        $categories = BlogCategory::pluck('id', 'slug')->toArray();
+        if (app()->environment('production')) {
+            return;
+        }
 
-        // অথর আইডি (প্রথম ইউজার)
+        $categories = BlogCategory::pluck('id', 'slug')->toArray();
         $authorId = User::first()?->id ?? 1;
 
         $blogs = [
@@ -40,7 +40,7 @@ class BlogSeeder extends Seeder
                 'tags' => ['ইসলাম', 'শান্তি', 'উগ্রবাদ বিরোধী', 'মানবতা'],
                 'meta_title' => 'ইসলামে উগ্রবাদের স্থান নেই - হেজবুত তওহীদ',
                 'meta_description' => 'ইসলাম শান্তি ও মানবতার ধর্ম। চরমপন্থা ও উগ্রবাদের বিরুদ্ধে ইসলামের প্রকৃত শান্তির বাণী প্রচার।',
-                'meta_keywords' => 'ইসলাম, চরমপন্থা, উগ্রবাদ, হেজবুত তওহীদ, মানবতা',
+                'meta_keywords' => 'ইসলাম, চরমপন্থা, উগ্রবাদ, হেজবুত তওহীদ, humanism',
                 'views' => 1520,
                 'status' => true,
                 'published_at' => now()->subDays(3),

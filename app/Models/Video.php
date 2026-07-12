@@ -12,6 +12,8 @@ class Video extends Model
     protected $fillable = [
         'title',
         'youtube_id',
+        'playlist_id',
+        'playlist_title',
         'description',
         'is_active',
         'sort_order',

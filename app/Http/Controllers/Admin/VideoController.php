@@ -44,11 +44,11 @@ class VideoController extends Controller
             return response()->json([
                 'success' => true,
                 'html' => $html,
-                'total' => $videos->total() ?? $videos->count()
+                'total' => ($videos instanceof \Illuminate\Contracts\Pagination\LengthAwarePaginator) ? $videos->total() : $videos->count()
             ]);
         }
 
-        $videos = $query->paginate($perPage);
+        $videos = ($perPage == '-1') ? $query->get() : $query->paginate((int)$perPage);
 
         // Statistics
         $stats = [

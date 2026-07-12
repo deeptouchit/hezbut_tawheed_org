@@ -2,40 +2,131 @@
 
 @section('page-title', 'পেজ ম্যানেজমেন্ট')
 
+@push('styles')
+<style>
+    .metric-card {
+        border-radius: 6px;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .metric-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+    }
+    .metric-card .card-body {
+        padding: 8px 12px !important;
+    }
+    .border-left-primary { border-left: 3px solid #006A4E !important; }
+    .border-left-success { border-left: 3px solid #2e7d32 !important; }
+    .border-left-info { border-left: 3px solid #0288d1 !important; }
+    .border-left-warning { border-left: 4px solid #f57c00 !important; }
+    .border-left-danger { border-left: 4px solid #d32f2f !important; }
+    .border-left-secondary { border-left: 4px solid #757575 !important; }
+
+    .stat-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+    }
+</style>
+@endpush
+
 @section('filter_input')
-<div class="row px-3">
-    <div class="col-md-6 mb-3">
-        <div class="input-group">
-            <span class="input-group-text"><i class="fas fa-search"></i></span>
-            <input type="text" id="search-input" class="form-control" placeholder="শিরোনাম, স্ল্যাগ বা কনটেন্ট..." autocomplete="off">
+<!-- Filter Section -->
+<div class="card border shadow-none mb-2 bg-light-subtle">
+    <div class="card-body p-2">
+        <div class="row g-2">
+            <div class="col-md-6 col-sm-12">
+                <input type="text" id="search-input" class="form-control" placeholder="শিরোনাম, স্ল্যাগ বা কনটেন্ট খুঁজুন..." autocomplete="off" value="{{ request('search') }}">
+            </div>
+            <div class="col-md-2 col-sm-4">
+                <select id="status-filter" class="form-select">
+                    <option value="">সব স্ট্যাটাস</option>
+                    <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>লাইভ (Live)</option>
+                    <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>খসড়া (Draft)</option>
+                </select>
+            </div>
+            <div class="col-md-2 col-sm-4">
+                <select id="per-page-filter" class="form-select">
+                    <option value="10" {{ request('per_page') == 10 ? 'selected' : '' }}>১০টি</option>
+                    <option value="20" {{ request('per_page') == 20 ? 'selected' : (request('per_page') == '' ? 'selected' : '') }}>২০টি</option>
+                    <option value="50" {{ request('per_page') == 50 ? 'selected' : '' }}>৫০টি</option>
+                    <option value="100" {{ request('per_page') == 100 ? 'selected' : '' }}>১০০টি</option>
+                    <option value="-1" {{ request('per_page') == -1 ? 'selected' : '' }}>সব</option>
+                </select>
+            </div>
+            <div class="col-md-2 col-sm-4">
+                <button id="reset-filter" class="btn btn-secondary w-100" title="রিসেট ফিল্টার" style="height: 38px;">
+                    <i class="fas fa-undo-alt"></i> রিসেট
+                </button>
+            </div>
         </div>
-    </div>
-    <div class="col-md-2 mb-3">
-        <select id="status-filter" class="form-select">
-            <option value="">সব স্ট্যাটাস</option>
-            <option value="active">সক্রিয়</option>
-            <option value="inactive">নিষ্ক্রিয়</option>
-        </select>
-    </div>
-    <div class="col-md-2 mb-3">
-        <select id="per-page-filter" class="form-select">
-            <option value="10">১০</option>
-            <option value="20" selected>২০</option>
-            <option value="50">৫০</option>
-            <option value="100">১০০</option>
-            <option value="-1">সব</option>
-        </select>
-    </div>
-    <div class="col-md-2 mb-3">
-        <button id="reset-filter" class="btn btn-secondary w-100">
-            <i class="fas fa-undo-alt"></i> রিসেট
-        </button>
     </div>
 </div>
 @endsection
 
 @section('content')
 <div class="container-fluid">
+    <!-- Statistics Cards -->
+    <div class="row g-2 mb-3">
+        <!-- Total Pages -->
+        <div class="col-md-4 col-4">
+            <div class="card metric-card border-left-info h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="text-muted small d-block mb-0" style="font-size: 11px;">মোট পেজ</span>
+                            <h5 class="mb-0 fw-bold" id="stats-total">{{ number_format($stats['total'] ?? 0) }}</h5>
+                        </div>
+                        <div class="stat-icon bg-info bg-opacity-10 text-info">
+                            <i class="fas fa-file-invoice"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Live Pages -->
+        <div class="col-md-4 col-4">
+            <div class="card metric-card border-left-success h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="text-muted small d-block mb-0" style="font-size: 11px;">লাইভ (Live)</span>
+                            <h5 class="mb-0 fw-bold" id="stats-active">{{ number_format($stats['active'] ?? 0) }}</h5>
+                        </div>
+                        <div class="stat-icon bg-success bg-opacity-10 text-success">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Draft Pages -->
+        <div class="col-md-4 col-4">
+            <div class="card metric-card border-left-secondary h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="text-muted small d-block mb-0" style="font-size: 11px;">খসড়া (Draft)</span>
+                            <h5 class="mb-0 fw-bold" id="stats-inactive">{{ number_format($stats['inactive'] ?? 0) }}</h5>
+                        </div>
+                        <div class="stat-icon bg-secondary bg-opacity-10 text-secondary">
+                            <i class="fas fa-edit"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Table Card -->
     <div class="card">
         <div class="card-header">
             <h3 class="card-title">
@@ -47,11 +138,14 @@
                     <a href="{{ route('admin.pages.create') }}" class="btn btn-primary btn-sm">
                         <i class="fas fa-plus"></i> নতুন পেজ তৈরি
                     </a>
+                    <button id="refresh-btn" class="btn btn-info btn-sm" title="রিফ্রেশ">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
                 </div>
             </div>
         </div>
 
-        <div class="card-body p-0">
+        <div class="card-body p-1">
             <!-- Loading Spinner -->
             <div id="loading-spinner" class="text-center py-4" style="display: none;">
                 <div class="spinner-border text-primary" role="status">
@@ -60,37 +154,7 @@
                 <p class="mt-2 text-muted">ডাটা লোড হচ্ছে...</p>
             </div>
 
-            <!-- Stats -->
-            <div class="row g-3 p-3 bg-light border-bottom">
-                <div class="col-md-4 col-sm-6">
-                    <div class="d-flex align-items-center bg-white p-3 rounded shadow-sm border-start border-3 border-info">
-                        <div class="fs-2 text-info me-3"><i class="fas fa-file-invoice"></i></div>
-                        <div>
-                            <span class="text-muted small">মোট পেজ</span>
-                            <h4 class="mb-0 fw-bold">{{ $stats['total'] }}</h4>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 col-sm-6">
-                    <div class="d-flex align-items-center bg-white p-3 rounded shadow-sm border-start border-3 border-success">
-                        <div class="fs-2 text-success me-3"><i class="fas fa-check-circle"></i></div>
-                        <div>
-                            <span class="text-muted small">সক্রিয়</span>
-                            <h4 class="mb-0 fw-bold">{{ $stats['active'] }}</h4>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 col-sm-6">
-                    <div class="d-flex align-items-center bg-white p-3 rounded shadow-sm border-start border-3 border-danger">
-                        <div class="fs-2 text-danger me-3"><i class="fas fa-times-circle"></i></div>
-                        <div>
-                            <span class="text-muted small">নিষ্ক্রিয়</span>
-                            <h4 class="mb-0 fw-bold">{{ $stats['inactive'] }}</h4>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
+            <!-- Table Container -->
             <div id="table-container">
                 @include('admin.pages.partials.table')
             </div>
@@ -148,6 +212,13 @@ $(document).ready(function() {
                 if (response.success) {
                     $('#table-container').html(response.html);
                     $('#total-count').text(response.total);
+                    
+                    if (response.stats) {
+                        $('#stats-total').text(response.stats.total);
+                        $('#stats-active').text(response.stats.active);
+                        $('#stats-inactive').text(response.stats.inactive);
+                    }
+                    
                     attachEventHandlers();
                 } else {
                     toastr.error('ডাটা লোড করতে ব্যর্থ হয়েছে');
@@ -242,6 +313,16 @@ $(document).ready(function() {
         $('#status-filter').val('');
         $('#per-page-filter').val('20');
         loadPages();
+    });
+
+    // Refresh Button
+    $('#refresh-btn').on('click', function() {
+        var btn = $(this);
+        btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i>');
+        loadPages();
+        setTimeout(function() {
+            btn.prop('disabled', false).html('<i class="fas fa-sync-alt"></i>');
+        }, 1000);
     });
 
     // Initial event attach

@@ -9,14 +9,14 @@
             @endif
 
             <!-- Selection Indicators -->
-            <div style="position: absolute; top: 10px; right: 10px; z-index: 2; display: flex; gap: 5px;">
+            <div class="media-indicators-container" style="position: absolute; top: 10px; right: 10px; z-index: 2; display: flex; gap: 5px;">
                 @if($item->show_on_homepage)
-                    <span class="badge bg-success" title="হোমপেজে সক্রিয়" style="border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; padding: 0;">
+                    <span class="badge bg-success badge-hp-indicator" title="হোমপেজে সক্রিয়" style="border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; padding: 0;">
                         <i class="fas fa-home" style="font-size: 10px;"></i>
                     </span>
                 @endif
                 @if($item->show_on_gallery)
-                    <span class="badge bg-info" title="গ্যালারি পেজে সক্রিয়" style="border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; padding: 0; color: white;">
+                    <span class="badge bg-info badge-gp-indicator" title="গ্যালারি পেজে সক্রিয়" style="border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; padding: 0; color: white;">
                         <i class="fas fa-images" style="font-size: 10px;"></i>
                     </span>
                 @endif

@@ -53,7 +53,8 @@ class LeaderController extends Controller
             'total' => Leader::count(),
             'central' => Leader::where('category', 'central')->count(),
             'advisory' => Leader::where('category', 'advisory')->count(),
-            'executive' => Leader::where('category', 'executive')->count()
+            'executive' => Leader::where('category', 'executive')->count(),
+            'regional' => Leader::where('category', 'regional')->count()
         ];
 
         return view('admin.leaders.index', compact('leaders', 'stats'));

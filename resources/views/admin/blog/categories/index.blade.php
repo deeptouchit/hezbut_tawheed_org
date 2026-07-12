@@ -1,121 +1,77 @@
-{{-- resources/views/admin/blog/categories/index.blade.php --}}
-
 @extends('admin.layouts.master')
 
 @section('page-title', 'ব্লগ ক্যাটাগরি ম্যানেজমেন্ট')
 
 @push('styles')
 <style>
-    .category-image {
-        width: 50px;
-        height: 50px;
-        object-fit: cover;
-        border-radius: 8px;
-        border: 2px solid #e9ecef;
-        transition: all 0.3s ease;
+    .metric-card {
+        border-radius: 6px;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
-    .category-image:hover {
-        transform: scale(1.1);
-        border-color: #0d6efd;
+    .metric-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
     }
-    .status-badge {
-        cursor: pointer;
-        transition: all 0.3s ease;
+    .metric-card .card-body {
+        padding: 8px 12px !important;
     }
-    .status-badge:hover {
-        opacity: 0.8;
-        transform: scale(0.95);
-    }
-    .drag-handle {
-        cursor: move;
-        color: #6c757d;
-        transition: all 0.3s ease;
-    }
-    .drag-handle:hover {
-        color: #0d6efd;
-    }
-    .sortable-placeholder {
-        background-color: #e9ecef;
-        border: 2px dashed #0d6efd;
-        height: 60px;
-        border-radius: 8px;
-    }
-    .table-row-hover {
-        transition: background-color 0.3s ease;
-    }
-    .table-row-hover:hover {
-        background-color: #f8f9fa;
-    }
-    .filter-card {
-        background: #f8f9fa;
-        border-radius: 8px;
-        padding: 15px;
-        margin-bottom: 20px;
-        border: 1px solid #e9ecef;
-    }
-    .blog-count-badge {
-        background: #0d6efd;
-        color: white;
-        padding: 2px 10px;
-        border-radius: 20px;
-        font-size: 11px;
-        margin-left: 5px;
-    }
-    .action-btn-group {
+    .border-left-primary { border-left: 3px solid #006A4E !important; }
+    .border-left-success { border-left: 3px solid #2e7d32 !important; }
+    .border-left-info { border-left: 3px solid #0288d1 !important; }
+    .border-left-warning { border-left: 4px solid #f57c00 !important; }
+    .border-left-danger { border-left: 4px solid #d32f2f !important; }
+    .border-left-secondary { border-left: 4px solid #757575 !important; }
+
+    .stat-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 6px;
         display: flex;
-        gap: 4px;
-        flex-wrap: wrap;
-    }
-    .info-box {
-        cursor: default;
-        transition: all 0.3s ease;
-    }
-    .info-box:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
     }
 </style>
 @endpush
 
 @section('filter_input')
-<div class="filter-card">
-    <div class="row align-items-end">
-        <div class="col-md-3 mb-3">
-            <div class="input-group">
-                <span class="input-group-text"><i class="fas fa-search"></i></span>
-                <input type="text" id="search-input" class="form-control" placeholder="ক্যাটাগরি নাম, বিবরণ..." autocomplete="off" value="{{ request('search') }}">
+<!-- Filter Section -->
+<div class="card border shadow-none mb-2 bg-light-subtle">
+    <div class="card-body p-2">
+        <div class="row g-2">
+            <div class="col-md-3 col-sm-6">
+                <input type="text" id="search-input" class="form-control" placeholder="ক্যাটাগরি খুঁজুন..." autocomplete="off" value="{{ request('search') }}">
             </div>
-        </div>
-        <div class="col-md-2 mb-3">
-            <select id="status-filter" class="form-select">
-                <option value="">সব স্ট্যাটাস</option>
-                <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>সক্রিয়</option>
-                <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>নিষ্ক্রিয়</option>
-            </select>
-        </div>
-        <div class="col-md-2 mb-3">
-            <select id="per-page-filter" class="form-select">
-                <option value="10" {{ request('per_page') == 10 ? 'selected' : '' }}>১০</option>
-                <option value="20" {{ request('per_page') == 20 ? 'selected' : '' }}>২০</option>
-                <option value="50" {{ request('per_page') == 50 ? 'selected' : '' }}>৫০</option>
-                <option value="100" {{ request('per_page') == 100 ? 'selected' : '' }}>১০০</option>
-                <option value="-1" {{ request('per_page') == -1 ? 'selected' : '' }}>সব</option>
-            </select>
-        </div>
-        <div class="col-md-3 mb-3">
-            <div class="input-group">
-                <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
-                <input type="date" id="date-from-filter" class="form-control" placeholder="তারিখ থেকে" value="{{ request('date_from') }}">
+            <div class="col-md-3 col-sm-6">
+                <select id="status-filter" class="form-select">
+                    <option value="">সব স্ট্যাটাস</option>
+                    <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>সক্রিয়</option>
+                    <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>নিষ্ক্রিয়</option>
+                </select>
             </div>
-        </div>
-        <div class="col-md-2 mb-3">
-            <div class="d-flex gap-2">
-                <button id="reset-filter" class="btn btn-secondary w-50">
-                    <i class="fas fa-undo-alt"></i> রিসেট
-                </button>
-                <button id="bulk-delete-btn" class="btn btn-danger w-50" style="display: none;">
-                    <i class="fas fa-trash"></i> (<span id="selected-count">0</span>)
-                </button>
+            <div class="col-md-2 col-sm-6">
+                <select id="per-page-filter" class="form-select">
+                    <option value="10" {{ request('per_page') == 10 ? 'selected' : '' }}>১০টি</option>
+                    <option value="20" {{ request('per_page') == 20 ? 'selected' : (request('per_page') == '' ? 'selected' : '') }}>২০টি</option>
+                    <option value="50" {{ request('per_page') == 50 ? 'selected' : '' }}>৫০টি</option>
+                    <option value="100" {{ request('per_page') == 100 ? 'selected' : '' }}>১০০টি</option>
+                    <option value="-1" {{ request('per_page') == -1 ? 'selected' : '' }}>সব</option>
+                </select>
+            </div>
+            <div class="col-md-2 col-sm-6">
+                <input type="date" id="date-from-filter" class="form-control" value="{{ request('date_from') }}">
+            </div>
+            <div class="col-md-2 col-sm-6">
+                <div class="d-flex gap-2 w-100">
+                    <button id="reset-filter" class="btn btn-secondary w-100" title="রিসেট ফিল্টার" style="height: 38px;">
+                        <i class="fas fa-undo-alt me-1"></i> রিসেট
+                    </button>
+                    <button id="bulk-delete-btn" class="btn btn-danger w-100" style="display: none; height: 38px;">
+                        <i class="fas fa-trash me-1"></i> (<span id="selected-count">0</span>)
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -124,6 +80,78 @@
 
 @section('content')
 <div class="container-fluid">
+    <!-- Statistics Cards -->
+    <div class="row g-2 mb-3">
+        <!-- Total Categories -->
+        <div class="col-md-3 col-6">
+            <div class="card metric-card border-left-info h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="text-muted small d-block mb-0" style="font-size: 11px;">মোট ক্যাটাগরি</span>
+                            <h5 class="mb-0 fw-bold">{{ number_format($stats['total'] ?? 0) }}</h5>
+                        </div>
+                        <div class="stat-icon bg-info bg-opacity-10 text-info">
+                            <i class="fas fa-tags"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Active Categories -->
+        <div class="col-md-3 col-6">
+            <div class="card metric-card border-left-success h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="text-muted small d-block mb-0" style="font-size: 11px;">সক্রিয়</span>
+                            <h5 class="mb-0 fw-bold">{{ number_format($stats['active'] ?? 0) }}</h5>
+                        </div>
+                        <div class="stat-icon bg-success bg-opacity-10 text-success">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Inactive Categories -->
+        <div class="col-md-3 col-6">
+            <div class="card metric-card border-left-danger h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="text-muted small d-block mb-0" style="font-size: 11px;">নিষ্ক্রিয়</span>
+                            <h5 class="mb-0 fw-bold">{{ number_format($stats['inactive'] ?? 0) }}</h5>
+                        </div>
+                        <div class="stat-icon bg-danger bg-opacity-10 text-danger">
+                            <i class="fas fa-times-circle"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Blogs in Categories -->
+        <div class="col-md-3 col-6">
+            <div class="card metric-card border-left-warning h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="text-muted small d-block mb-0" style="font-size: 11px;">মোট ব্লগ</span>
+                            <h5 class="mb-0 fw-bold">{{ number_format($stats['total_blogs'] ?? 0) }}</h5>
+                        </div>
+                        <div class="stat-icon bg-warning bg-opacity-10 text-warning">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Table Card -->
     <div class="card">
         <div class="card-header">
             <h3 class="card-title">
@@ -152,69 +180,6 @@
                     <span class="visually-hidden">Loading...</span>
                 </div>
                 <p class="mt-2 text-muted">ডাটা লোড হচ্ছে...</p>
-            </div>
-
-            <!-- Success/Error Messages -->
-            @if(session('success'))
-                <div class="alert alert-success alert-dismissible fade show m-3" role="alert">
-                    <i class="fas fa-check-circle me-2"></i> {{ session('success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            @endif
-
-            @if(session('error'))
-                <div class="alert alert-danger alert-dismissible fade show m-3" role="alert">
-                    <i class="fas fa-exclamation-circle me-2"></i> {{ session('error') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            @endif
-
-            <!-- Statistics Cards -->
-            <div class="row m-3">
-                <div class="col-md-3 col-6">
-                    <div class="info-box">
-                        <span class="info-box-icon bg-info elevation-1">
-                            <i class="fas fa-tags"></i>
-                        </span>
-                        <div class="info-box-content">
-                            <span class="info-box-text">মোট ক্যাটাগরি</span>
-                            <span class="info-box-number">{{ number_format($stats['total'] ?? 0) }}</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3 col-6">
-                    <div class="info-box">
-                        <span class="info-box-icon bg-success elevation-1">
-                            <i class="fas fa-check-circle"></i>
-                        </span>
-                        <div class="info-box-content">
-                            <span class="info-box-text">সক্রিয়</span>
-                            <span class="info-box-number">{{ number_format($stats['active'] ?? 0) }}</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3 col-6">
-                    <div class="info-box">
-                        <span class="info-box-icon bg-danger elevation-1">
-                            <i class="fas fa-times-circle"></i>
-                        </span>
-                        <div class="info-box-content">
-                            <span class="info-box-text">নিষ্ক্রিয়</span>
-                            <span class="info-box-number">{{ number_format($stats['inactive'] ?? 0) }}</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3 col-6">
-                    <div class="info-box">
-                        <span class="info-box-icon bg-warning elevation-1">
-                            <i class="fas fa-file-alt"></i>
-                        </span>
-                        <div class="info-box-content">
-                            <span class="info-box-text">মোট ব্লগ</span>
-                            <span class="info-box-number">{{ number_format($stats['total_blogs'] ?? 0) }}</span>
-                        </div>
-                    </div>
-                </div>
             </div>
 
             <!-- Table Container -->

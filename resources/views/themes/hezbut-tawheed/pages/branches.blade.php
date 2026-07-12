@@ -3,54 +3,57 @@
 @section('title', 'কার্যালয় ও শাখা সমূহ - হেযবুত তওহীদ')
 @section('meta_description', 'হেযবুত তওহীদ আন্দোলনের কেন্দ্রীয় কার্যালয়, বিভাগীয়, জেলা, উপজেলা এবং আন্তর্জাতিক শাখাসমূহের ঠিকানা ও যোগাযোগের নম্বর')
 
+@push('styles')
+
+@endpush
+
 @section('content')
 
     @include('theme::partials.hero_banner', [
         'title' => 'কার্যালয় ও শাখা পরিচিতি',
-        'subtitle' => 'সারাদেশে এবং প্রবাসে আমাদের সকল বিভাগীয়, জেলা ও উপজেলা কার্যালয়ের অফিশিয়াল ঠিকানা এবং দায়িত্বে থাকা কর্মকর্তাদের সাথে যোগাযোগের মাধ্যম।',
+        'subtitle' => 'সারাদেশে এবং প্রবাসে আমাদের সকল বিভাগীয়, জেলা ও উপজেলা কার্যালয়ের অফিশিয়াল ঠিকানা এবং দায়িত্বেরত কর্মকর্তাদের সাথে যোগাযোগের মাধ্যম।',
         'badge_text' => 'আমাদের সাংগঠনিক নেটওয়ার্ক',
         'badge_icon' => 'fas fa-network-wired'
     ])
 
     <!-- Main Content Area -->
-    <section class="py-5" style="background-color: #f8fafc; min-height: 70vh;">
+    <section class="py-5 grid-pattern-mask" style="background-color: #f8fafc; min-height: 70vh; position: relative;">
         <div class="container">
             
             <!-- Smart Interactive Filter & Search Bar (Premium Float Card) -->
-            <div class="card border-0 shadow-lg rounded-4 p-3 mb-4 bg-white bg-opacity-95 backdrop-blur-md" 
-                 style="margin-top: -50px; z-index: 20; position: relative; border: 1px solid rgba(255,255,255,0.8) !important; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.03) !important;">
+            <div class="card border-0 shadow-lg rounded-4 p-4 mb-5 bg-white bg-opacity-95 backdrop-blur-md" 
+                 style="margin-top: -15px; z-index: 20; position: relative; border: 1px solid rgba(255,255,255,0.8) !important; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.04) !important;">
                 
-                <div class="row g-2 align-items-center">
-                    <!-- Filter Pill Toggles -->
-                    <div class="col-lg-9">
-                        <div class="d-flex flex-wrap gap-1.5" id="filter-controls">
-                            <button class="btn btn-filter active rounded-pill px-3 py-2 fw-bold" data-filter="all">
-                                <i class="fas fa-border-all me-2"></i> সকল কার্যালয়
-                            </button>
-                            <button class="btn btn-filter rounded-pill px-3 py-2 fw-bold" data-filter="central">
-                                <i class="fas fa-hotel me-2"></i> কেন্দ্রীয় কার্যালয়
-                            </button>
-                            <button class="btn btn-filter rounded-pill px-3 py-2 fw-bold" data-filter="division">
-                                <i class="fas fa-sitemap me-2"></i> বিভাগীয়
-                            </button>
-                            <button class="btn btn-filter rounded-pill px-3 py-2 fw-bold" data-filter="district">
-                                <i class="fas fa-map-marked-alt me-2"></i> জেলা কার্যালয়
-                            </button>
-                            <button class="btn btn-filter rounded-pill px-3 py-2 fw-bold" data-filter="upazila">
-                                <i class="fas fa-street-view me-2"></i> উপজেলা কার্যালয়
-                            </button>
-                            <button class="btn btn-filter rounded-pill px-3 py-2 fw-bold" data-filter="international">
-                                <i class="fas fa-globe-americas me-2"></i> আন্তর্জাতিক
-                            </button>
-                        </div>
+                <!-- Search Input Row (Centered & Modern) -->
+                <div class="d-flex justify-content-center mb-4">
+                    <div class="input-group rounded-pill border shadow-sm bg-white overflow-hidden p-1 search-container-premium" style="max-width: 550px; width: 100%;">
+                        <span class="input-group-text bg-white border-0 ps-3 pe-2"><i class="fas fa-search text-success" style="font-size: 16px;"></i></span>
+                        <input type="text" id="branch-search" class="form-control border-0 py-2 ps-1 pe-3" 
+                               placeholder="কার্যালয়, জেলা বা কর্মকর্তা খুঁজুন..." autocomplete="off" style="font-size: 0.95rem; box-shadow: none; font-family: 'Baloo Da 2', sans-serif;">
                     </div>
-                    <!-- Live Search field with animated borders -->
-                    <div class="col-lg-3">
-                        <div class="input-group rounded-pill border border-light shadow-sm bg-white overflow-hidden p-0.5" id="search-wrapper">
-                            <span class="input-group-text bg-white border-0 ps-3 pe-1"><i class="fas fa-search text-muted"></i></span>
-                            <input type="text" id="branch-search" class="form-control border-0 py-2 ps-1 pe-3" 
-                                   placeholder="কার্যালয়, জেলা বা কর্মকর্তা খুঁজুন..." autocomplete="off" style="font-size: 0.92rem; box-shadow: none; font-family: 'Baloo Da 2', sans-serif;">
-                        </div>
+                </div>
+
+                <!-- Tabs Row (Centered & Horizontally Scrollable on Mobile) -->
+                <div class="tabs-scroll-wrapper">
+                    <div class="d-flex justify-content-start justify-content-md-center gap-2" id="filter-controls">
+                        <button class="btn btn-filter active rounded-pill px-4 py-2 fw-bold" data-filter="all">
+                            <i class="fas fa-border-all me-2"></i> সকল কার্যালয়
+                        </button>
+                        <button class="btn btn-filter rounded-pill px-4 py-2 fw-bold" data-filter="central">
+                            <i class="fas fa-hotel me-2"></i> কেন্দ্রীয় কার্যালয়
+                        </button>
+                        <button class="btn btn-filter rounded-pill px-4 py-2 fw-bold" data-filter="division">
+                            <i class="fas fa-sitemap me-2"></i> বিভাগীয়
+                        </button>
+                        <button class="btn btn-filter rounded-pill px-4 py-2 fw-bold" data-filter="district">
+                            <i class="fas fa-map-marked-alt me-2"></i> জেলা কার্যালয়
+                        </button>
+                        <button class="btn btn-filter rounded-pill px-4 py-2 fw-bold" data-filter="upazila">
+                            <i class="fas fa-street-view me-2"></i> উপজেলা কার্যালয়
+                        </button>
+                        <button class="btn btn-filter rounded-pill px-4 py-2 fw-bold" data-filter="international">
+                            <i class="fas fa-globe-americas me-2"></i> আন্তর্জাতিক
+                        </button>
                     </div>
                 </div>
             </div>
@@ -192,167 +195,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Custom Premium CSS Styles -->
-    <style>
-        .fw-extrabold {
-            font-weight: 800 !important;
-        }
-        .text-shadow-sm {
-            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-        .max-w-2xl {
-            max-width: 650px;
-        }
-        .text-success-light {
-            color: #10B981 !important;
-        }
-        .border-light-grey {
-            border: 1px solid #f1f5f9 !important;
-        }
-        .gap-2.5 {
-            gap: 0.65rem !important;
-        }
-        .p-3.5 {
-            padding: 1.15rem !important;
-        }
-        .pt-4 {
-            padding-top: 0.9rem !important;
-        }
-        .mt-4 {
-            margin-top: 0.9rem !important;
-        }
-        .object-cover {
-            object-fit: cover;
-        }
-        
-        /* Grid background pattern */
-        .grid-pattern-mask {
-            background-image: radial-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 0);
-            background-size: 24px 24px;
-        }
-        
-        /* Bubble Background Animation */
-        @keyframes float-bubble {
-            0% { transform: scale(1) translate(0, 0); }
-            50% { transform: scale(1.15) translate(40px, 30px); }
-            100% { transform: scale(0.9) translate(-20px, -30px); }
-        }
-        
-        /* Premium Card Layout */
-        .branch-glass-card {
-            border: 1px solid #e2e8f0 !important;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.02), 0 1px 3px rgba(0, 0, 0, 0.01) !important;
-            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-            background: #ffffff;
-        }
-        .branch-glass-card:hover {
-            transform: translateY(-8px);
-            border-color: rgba(16, 185, 129, 0.25) !important;
-            box-shadow: 0 25px 45px rgba(16, 185, 129, 0.07) !important;
-        }
-        .zoom-element {
-            transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
-        }
-        .branch-glass-card:hover .zoom-element {
-            transform: scale(1.08);
-        }
-        .image-gradient-shade {
-            background: linear-gradient(180deg, rgba(0,0,0,0) 60%, rgba(0,0,0,0.15) 100%);
-            pointer-events: none;
-        }
-        .bg-hover-light:hover {
-            background-color: #f8fafc !important;
-        }
-        
-        /* Copy address styling */
-        .copy-address-btn {
-            opacity: 0;
-            transition: opacity 0.2s ease, color 0.2s;
-        }
-        .address-box:hover .copy-address-btn {
-            opacity: 1;
-        }
-        .copy-address-btn:hover {
-            color: #10B981 !important;
-        }
-        
-        /* Gradients */
-        .bg-danger-gradient {
-            background: linear-gradient(135deg, #ef4444, #b91c1c) !important;
-        }
-        .bg-purple-gradient {
-            background: linear-gradient(135deg, #8b5cf6, #5b21b6) !important;
-        }
-        .bg-success-gradient {
-            background: linear-gradient(135deg, #10b981, #047857) !important;
-        }
-        
-        /* Filter Pills styling */
-        .btn-filter {
-            border: 1px solid #f1f5f9;
-            color: #475569;
-            background-color: #ffffff;
-            transition: all 0.25s ease;
-            font-size: 0.88rem;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
-            font-family: 'Baloo Da 2', sans-serif;
-        }
-        .btn-filter:hover {
-            border-color: #10B981;
-            color: #10B981;
-            transform: translateY(-1px);
-        }
-        .btn-filter.active {
-            background: linear-gradient(135deg, #006A4E, #047857) !important;
-            color: #ffffff !important;
-            border-color: transparent !important;
-            box-shadow: 0 6px 14px rgba(0, 106, 78, 0.25) !important;
-        }
-        
-        /* Custom mini contact link buttons */
-        .small-text-link {
-            font-size: 11px;
-            font-weight: 600;
-            color: #64748b;
-            text-decoration: none !important;
-            transition: color 0.2s;
-            font-family: 'Baloo Da 2', sans-serif;
-        }
-        .small-text-link:hover {
-            color: #10B981;
-        }
-        
-        .hover-glow-btn {
-            transition: all 0.2s;
-            border-color: #cbd5e1;
-            color: #64748b;
-        }
-        .hover-glow-btn:hover {
-            border-color: #10B981;
-            color: #ffffff;
-            background: #10B981;
-            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);
-        }
-        
-        /* pulsing border for officer avatar */
-        .avatar-wrapper {
-            transition: border-color 0.3s;
-        }
-        .branch-glass-card:hover .avatar-wrapper {
-            border-color: rgba(16, 185, 129, 0.2) !important;
-        }
-        
-        /* Filter transitions */
-        .branch-card-item {
-            transition: opacity 0.3s ease, transform 0.3s ease;
-        }
-        .branch-card-item.filtered-out {
-            opacity: 0;
-            transform: scale(0.96) translateY(5px);
-            pointer-events: none;
-        }
-    </style>
 
 @endsection
 

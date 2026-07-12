@@ -1,261 +1,313 @@
 @extends('theme::layouts.app')
 
-@section('title', 'আমাদের ভিশন ও লক্ষ্য - হেযবুত তওহীদ')
+@section('title', 'আমাদের দৃষ্টিভঙ্গি ও রূপকল্প - হেযবুত তওহীদ')
+
+@push('styles')
+
+@endpush
 
 @section('content')
 
     @include('theme::partials.hero_banner', [
-        'title' => 'এক নজরে হেযবুত তওহীদ',
-        'subtitle' => 'আন্দোলনের পরিচিতি, মূলনীতি, লক্ষ্য ও বিস্তারিত কর্মধারা',
-        'badge_text' => 'আন্দোলনের রূপরেখা ও ভিশন',
+        'title' => 'আমাদের দৃষ্টিভঙ্গি',
+        'subtitle' => 'একটি শান্তিময়, বৈষম্যহীন ও ধর্মান্ধতামুক্ত সমাজ বিনির্মাণের রূপকল্প।',
+        'badge_text' => 'ভিশন ও মিশন',
         'badge_icon' => 'fas fa-eye'
     ])
 
-    <!-- Vision Content Section -->
-    <section class="py-6 bg-off-white">
+    <!-- Main Vision Section -->
+    <section class="vision-section">
         <div class="container">
-            <div class="row g-4">
-                
-                <!-- Left Sidebar: Sticky Scroll Navigation -->
-                <div class="col-lg-3 d-none d-lg-block">
-                    <div class="position-sticky card border-0 shadow-sm rounded-4 p-3 bg-white" style="top: 100px; z-index: 10;">
-                        <h6 class="fw-bold text-dark-green border-bottom pb-2 mb-3">সূচিপত্র</h6>
-                        <div class="nav flex-column nav-pills gap-1">
-                            <a href="#about" class="nav-link text-start py-2 px-3 small fw-bold text-muted hover-gold">১. আন্দোলনের পরিচিতি</a>
-                            <a href="#establishment" class="nav-link text-start py-2 px-3 small fw-bold text-muted hover-gold">২. প্রতিষ্ঠা ও প্রতিষ্ঠাতা</a>
-                            <a href="#leadership" class="nav-link text-start py-2 px-3 small fw-bold text-muted hover-gold">৩. নেতৃত্ব ও বর্তমান এমাম</a>
-                            <a href="#principles" class="nav-link text-start py-2 px-3 small fw-bold text-muted hover-gold">৪. আন্দোলনের মূলনীতি</a>
-                            <a href="#program" class="nav-link text-start py-2 px-3 small fw-bold text-muted hover-gold">৫. ৫ দফা কর্মসূচি</a>
-                            <a href="#work-process" class="nav-link text-start py-2 px-3 small fw-bold text-muted hover-gold">৬. কর্মপ্রক্রিয়া</a>
-                            <a href="#training" class="nav-link text-start py-2 px-3 small fw-bold text-muted hover-gold">৭. প্রশিক্ষণ ও খেলাধুলা</a>
-                            <a href="#women" class="nav-link text-start py-2 px-3 small fw-bold text-muted hover-gold">৮. নারীদের অংশগ্রহণ</a>
-                            <a href="#culture" class="nav-link text-start py-2 px-3 small fw-bold text-muted hover-gold">৯. সুস্থ সংস্কৃতি</a>
-                            <a href="#uniqueness" class="nav-link text-start py-2 px-3 small fw-bold text-muted hover-gold">১০. অনন্যতা ও মাইলফলক</a>
-                            <a href="#finance" class="nav-link text-start py-2 px-3 small fw-bold text-muted hover-gold">১১. অর্থের উৎস</a>
-                        </div>
-                    </div>
+            <div class="text-center mb-5">
+                <div class="section-badge">
+                    <i class="fas fa-compass"></i>
+                    আমাদের পথচলা
                 </div>
+                <h1 class="vision-title">
+                    <span class="highlight">দৃষ্টিভঙ্গি</span> ও রূপকল্প
+                </h1>
+                <p class="vision-subtitle mx-auto" style="max-width: 680px;">
+                    হেযবুত তওহীদ সমাজে শান্তি, সম্প্রীতি ও ন্যায়বিচার প্রতিষ্ঠার লক্ষ্যে কিছু সুনির্দিষ্ট আদর্শ ও দৃষ্টিভঙ্গি ধারণ করে।
+                </p>
+            </div>
 
-                <!-- Right Column: Detail Content -->
-                <div class="col-lg-9 text-start">
-                    
-                    <!-- 1. Introduction -->
-                    <div id="about" class="card border-0 shadow-sm p-4 p-md-5 rounded-4 mb-4 bg-white scroll-margin" style="border-left: 5px solid #006A4E !important;">
-                        <h3 class="fw-bold text-dark-green mb-3"><i class="fas fa-info-circle text-gold me-2"></i> হেযবুত তওহীদের পরিচিতি</h3>
-                        <p class="text-muted lh-lg mb-0" style="text-align: justify;">
-                            হেযবুত তওহীদ সম্পূর্ণ অরাজনৈতিক ধর্মীয় সংস্কারমূলক আন্দোলন যার মূল কাজই হলো মানবজাতিকে ন্যায়ের পক্ষে ঐক্যবদ্ধ করা এবং মানবজাতির অশান্তির মূল কারণ দাজ্জালের অনুসরণ না করে সমগ্র পৃথিবীতে সৃষ্টিকর্তার সার্বভৌমত্ব প্রতিষ্ঠা করা। পুরো মানবজাতিকে আল্লাহর তওহীদের ভিত্তিতে অর্থাৎ সত্য ও ন্যায়ের পক্ষে, সকল অন্যায়ের বিরুদ্ধে ঐক্যবদ্ধ করাই হেযবুত তওহীদের মূল লক্ষ্য। মানবজীবনে সঠিক পথ, হেদায়াহ (Right Direction) ও সত্য জীবনব্যবস্থা প্রতিষ্ঠিত হলে সমস্ত মানবজাতি অন্যায় ও অবিচার থেকে মুক্তি পাবে। পৃথিবীতে প্রতিষ্ঠিত হবে অনাবিল শান্তি। সেই শান্তিময় পৃথিবী প্রতিষ্ঠার লক্ষ্যকে সামনে নিয়ে সংগ্রাম করে যাচ্ছে হেযবুত তওহীদের সদস্য-সদস্যারা।
-                        </p>
-                    </div>
+            <div class="row justify-content-center">
+                <div class="col-lg-12">
+                    <div class="vision-dashboard">
 
-                    <!-- 2. Establishment -->
-                    <div id="establishment" class="card border-0 shadow-sm p-4 p-md-5 rounded-4 mb-4 bg-white scroll-margin" style="border-left: 5px solid #D4AF37 !important;">
-                        <h3 class="fw-bold text-dark-green mb-3"><i class="fas fa-calendar-alt text-gold me-2"></i> প্রতিষ্ঠা ও প্রতিষ্ঠাতা পরিচিতি</h3>
-                        <p class="text-muted lh-lg mb-3" style="text-align: justify;">
-                            হেযবুত তওহীদ ১৬ ফেব্রুয়ারি, ১৯৯৫ ঈসায়ী; টাঙ্গাইল জেলার করটিয়ায় প্রতিষ্ঠা করা হয়।
-                        </p>
-                        <div class="p-3 rounded-3 bg-light-green mb-0" style="background-color: #f4fbf7; border-left: 4px solid #006A4E;">
-                            <h5 class="fw-bold text-dark-green mb-2">প্রতিষ্ঠাতা এমামুয্যামান জনাব মোহাম্মদ বায়াজীদ খান পন্নী</h5>
-                            <p class="text-muted lh-lg mb-0 small" style="text-align: justify;">
-                                তিনি ১৯২৫ সনের ১১ মার্চ পবিত্র শবে বরাতে টাঙ্গাইলের করটিয়ার বিখ্যাত পন্নী পরিবারে জন্মগ্রহণ করেন। তিনি সারা জীবন ধর্মের প্রকৃত ও বৈজ্ঞানিক সংস্কারের ডাক দিয়ে গিয়েছেন। ১৬ জানুয়ারি ২০১২ ঈসায়ী তারিখে তিনি প্রত্যক্ষ দুনিয়া থেকে পর্দা (ইন্তেকাল) করেন।
-                            </p>
+                        <!-- Sidebar -->
+                        <div class="vision-sidebar" role="tablist">
+                            <button class="vision-tab-btn active" onclick="switchTab(event, 'tab-structure')" role="tab" aria-selected="true">
+                                <span class="tab-icon"><i class="fas fa-sitemap"></i></span>
+                                <span class="tab-label">সাংগঠনিক কাঠামো</span>
+                                <span class="tab-badge">০১</span>
+                            </button>
+                            <button class="vision-tab-btn" onclick="switchTab(event, 'tab-goals')" role="tab" aria-selected="false">
+                                <span class="tab-icon"><i class="fas fa-bullseye"></i></span>
+                                <span class="tab-label">লক্ষ্য ও উদ্দেশ্য</span>
+                                <span class="tab-badge">০২</span>
+                            </button>
+                            <button class="vision-tab-btn" onclick="switchTab(event, 'tab-women')" role="tab" aria-selected="false">
+                                <span class="tab-icon"><i class="fas fa-venus-mars"></i></span>
+                                <span class="tab-label">নারী অধিকার</span>
+                                <span class="tab-badge">০৩</span>
+                            </button>
+                            <button class="vision-tab-btn" onclick="switchTab(event, 'tab-extremism')" role="tab" aria-selected="false">
+                                <span class="tab-icon"><i class="fas fa-shield-alt"></i></span>
+                                <span class="tab-label">জঙ্গিবাদ বিরোধী</span>
+                                <span class="tab-badge">০৪</span>
+                            </button>
+                            <button class="vision-tab-btn" onclick="switchTab(event, 'tab-harmony')" role="tab" aria-selected="false">
+                                <span class="tab-icon"><i class="fas fa-handshake"></i></span>
+                                <span class="tab-label">সাম্প্রদায়িক সম্প্রীতি</span>
+                                <span class="tab-badge">০৫</span>
+                            </button>
+                            <button class="vision-tab-btn" onclick="switchTab(event, 'tab-law')" role="tab" aria-selected="false">
+                                <span class="tab-icon"><i class="fas fa-gavel"></i></span>
+                                <span class="tab-label">আইন ও সংবিধান</span>
+                                <span class="tab-badge">০৬</span>
+                            </button>
+                            <button class="vision-tab-btn" onclick="switchTab(event, 'tab-finance')" role="tab" aria-selected="false">
+                                <span class="tab-icon"><i class="fas fa-coins"></i></span>
+                                <span class="tab-label">অর্থায়ন ও তহবিল</span>
+                                <span class="tab-badge">০৭</span>
+                            </button>
+                            <button class="vision-tab-btn" onclick="switchTab(event, 'tab-revival')" role="tab" aria-selected="false">
+                                <span class="tab-icon"><i class="fas fa-quran"></i></span>
+                                <span class="tab-label">কোর’আন ও সুন্নাহ</span>
+                                <span class="tab-badge">০৮</span>
+                            </button>
+                        </div>
+
+                        <!-- Content -->
+                        <div class="vision-content-pane">
+
+                            <!-- Panel 1 -->
+                            <div id="tab-structure" class="vision-panel active" role="tabpanel">
+                                <div class="panel-header">
+                                    <span class="panel-subtitle-tag">দৃষ্টিভঙ্গি ০১</span>
+                                    <span style="font-size:0.7rem; color:#64748b; font-weight:700; letter-spacing:0.04em;">সাংগঠনিক কাঠামো</span>
+                                </div>
+                                <div class="panel-core-statement">
+                                    <i class="fas fa-quote-right quote-icon"></i>
+                                    হেযবুত তওহীদ কোনো রাজনৈতিক দল নয়, বরং এটি একটি অরাজনৈতিক সমাজ সংস্কারমূলক আন্দোলন।
+                                </div>
+                                <div class="qa-block">
+                                    <h4 class="qa-question">
+                                        <span class="q-icon"><i class="fas fa-chevron-right"></i></span>
+                                        কীভাবে আপনাদের সংগঠন পরিচালিত হয়?
+                                    </h4>
+                                    <p class="qa-answer">
+                                        সংগঠনটি একটি কেন্দ্রিক ও সুশৃঙ্খল নেতৃত্বের অধীনে পরিচালিত হয়। হেযবুত তওহীদের প্রধানকে 'এমাম' হিসেবে অভিহিত করা হয়। প্রতিষ্ঠাতা এমাম মোহাম্মদ বায়াজীদ খান পন্নীর মৃত্যুর পর থেকে জনাব হোসাইন মোহাম্মদ সেলিম সংগঠনের এমাম হিসেবে দায়িত্ব পালন করছেন। তাঁর অধীনে বিভিন্ন এলাকা ও কাজের স্তরবিন্যাস অনুযায়ী আমীর এবং সাধারণ কর্মী হিসেবে মোজাহেদ ও মোজাহেদা শৃঙ্খলা বজায় রেখে কাজ করেন।
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Panel 2 -->
+                            <div id="tab-goals" class="vision-panel" role="tabpanel">
+                                <div class="panel-header">
+                                    <span class="panel-subtitle-tag">দৃষ্টিভঙ্গি ০২</span>
+                                    <span style="font-size:0.7rem; color:#64748b; font-weight:700; letter-spacing:0.04em;">লক্ষ্য ও উদ্দেশ্য</span>
+                                </div>
+                                <div class="panel-core-statement">
+                                    <i class="fas fa-quote-right quote-icon"></i>
+                                    সমগ্র মানবজাতিকে এক স্রষ্টার হুকুমের অধীনে ঐক্যবদ্ধ করে অশান্তিময় সমাজকে শান্তিময় সমাজে রূপান্তরিত করা।
+                                </div>
+                                <div class="qa-block">
+                                    <h4 class="qa-question">
+                                        <span class="q-icon"><i class="fas fa-chevron-right"></i></span>
+                                        হেযবুত তওহীদের মূল অভিলক্ষ্য কী?
+                                    </h4>
+                                    <p class="qa-answer">
+                                        বর্তমান বস্তুবাদী দাজ্জালীয় সভ্যতার কারণে বিশ্বজুড়ে যে অন্যায়, অশান্তি ও অবিচার ছড়িয়ে পড়েছে, তার পরিবর্তে স্রষ্টার নিখাদ একত্ববাদ বা তওহীদের ভিত্তিতে একটি শান্তিময় সমাজ গঠন করা। ধর্মকে ব্যক্তিগত বা রাজনৈতিক স্বার্থে ব্যবহার না করে, ধর্মব্যবসা, জঙ্গিবাদ ও সাম্প্রদায়িকতার অবসান ঘটিয়ে মানবজাতিকে সত্য ও ন্যায়ের ওপর ঐক্যবদ্ধ করা আমাদের প্রধান লক্ষ্য।
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Panel 3 -->
+                            <div id="tab-women" class="vision-panel" role="tabpanel">
+                                <div class="panel-header">
+                                    <span class="panel-subtitle-tag">দৃষ্টিভঙ্গি ০৩</span>
+                                    <span style="font-size:0.7rem; color:#64748b; font-weight:700; letter-spacing:0.04em;">নারী অধিকার ও মর্যাদা</span>
+                                </div>
+                                <div class="panel-core-statement">
+                                    <i class="fas fa-quote-right quote-icon"></i>
+                                    ইসলামে নারীদের মুখ ঢেকে পর্দা করার কোনো বিধান নেই। দেশ ও সমাজ গঠনে পুরুষ ও নারীর সমান অংশীদারিত্ব আবশ্যক।
+                                </div>
+                                <div class="qa-block">
+                                    <h4 class="qa-question">
+                                        <span class="q-icon"><i class="fas fa-chevron-right"></i></span>
+                                        ইসলামে কি নারীদের মুখ ঢাকা বাধ্যতামূলক?
+                                    </h4>
+                                    <p class="qa-answer">
+                                        না, ইসলামে নারীদের মুখমণ্ডল ঢেকে রাখার কোনো হুকুম বা নির্দেশনা কোর’আনে নেই। পবিত্র কোর’আনে সাধারণত প্রকাশমান সৌন্দর্য ব্যতিরেকে বক্ষদেশ চাদর বা ওড়না দিয়ে ঢেকে রাখার নির্দেশ রয়েছে (সুরা নূর ৩১)। রসুলাল্লাহর যুগেও নারীরা মুখ খোলা রেখে জাতীয় ও সামাজিক প্রায় সকল কর্মকাণ্ডে অংশ নিতেন।
+                                    </p>
+                                </div>
+                                <div class="qa-block">
+                                    <h4 class="qa-question">
+                                        <span class="q-icon"><i class="fas fa-chevron-right"></i></span>
+                                        হেযবুত তওহীদের নারীরা কি ঘরের বাইরে কাজ করতে পারবে?
+                                    </h4>
+                                    <p class="qa-answer">
+                                        হ্যাঁ, অবশ্যই। রসুলাল্লাহর যুগে নারী আসহাবগণ যেমন যুদ্ধে অংশ নেওয়া থেকে শুরু করে কৃষিকাজ, ব্যবসা-বাণিজ্য ও চিকিৎসাসেবা দিতেন, ঠিক তেমনি হেযবুত তওহীদেও শালীনতা রক্ষা করে নারীরা প্রকাশনা ও বই বিক্রি, দাপ্তরিক কাজ এবং বিভিন্ন গুরুত্বপূর্ণ সাংগঠনিক ও নেতৃত্বমূলক কার্যক্রমে সরাসরি ভূমিকা রাখছেন।
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Panel 4 -->
+                            <div id="tab-extremism" class="vision-panel" role="tabpanel">
+                                <div class="panel-header">
+                                    <span class="panel-subtitle-tag">দৃষ্টিভঙ্গি ০৪</span>
+                                    <span style="font-size:0.7rem; color:#64748b; font-weight:700; letter-spacing:0.04em;">জঙ্গিবাদ ও উগ্রবাদ প্রতিবাদ</span>
+                                </div>
+                                <div class="panel-core-statement">
+                                    <i class="fas fa-quote-right quote-icon"></i>
+                                    ইসলামে সন্ত্রাসী কার্যকলাপ বা কোনো নিরীহ মানুষের ওপর আক্রমণের স্থান নেই। হেযবুত তওহীদ বোমাবাজি ও উগ্রপন্থার ঘোর বিরোধী।
+                                </div>
+                                <div class="qa-block">
+                                    <h4 class="qa-question">
+                                        <span class="q-icon"><i class="fas fa-chevron-right"></i></span>
+                                        হেযবুত তওহীদ কি কোনো সশস্ত্র জেহাদে বিশ্বাস করে?
+                                    </h4>
+                                    <p class="qa-answer">
+                                        না, হেযবুত তওহীদ কোনো ধরণের সহিংসতা, বোমাবাজি বা সশস্ত্র যুদ্ধকে সমর্থন করে না। জেহাদ অর্থ সত্য ও ন্যায় প্রতিষ্ঠার লক্ষ্যে জান-মাল দিয়ে সর্বাত্মক ও শান্তিময় আদর্শিক লড়াই চালানো। মানুষের হৃদয়ের পরিবর্তন বুলেট বা বোমার সাহায্যে করা সম্ভব নয়, তা শুধুমাত্র সত্যের অকাট্য যুক্তি ও সঠিক বার্তার মাধ্যমেই সম্ভব।
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Panel 5 -->
+                            <div id="tab-harmony" class="vision-panel" role="tabpanel">
+                                <div class="panel-header">
+                                    <span class="panel-subtitle-tag">দৃষ্টিভঙ্গি ০৫</span>
+                                    <span style="font-size:0.7rem; color:#64748b; font-weight:700; letter-spacing:0.04em;">সাম্প্রদায়িক সম্প্রীতি</span>
+                                </div>
+                                <div class="panel-core-statement">
+                                    <i class="fas fa-quote-right quote-icon"></i>
+                                    সব ধর্মের মানুষের পূর্ণ নিরাপত্তা ও ধর্মীয় স্বাধীনতার প্রতিষ্ঠা করাই ইসলামের মূল সুর।
+                                </div>
+                                <div class="qa-block">
+                                    <h4 class="qa-question">
+                                        <span class="q-icon"><i class="fas fa-chevron-right"></i></span>
+                                        অমুসলিমদের প্রতি হেযবুত তওহীদের দৃষ্টিভঙ্গি কী?
+                                    </h4>
+                                    <p class="qa-answer">
+                                        হেযবুত তওহীদ মনে করে প্রতিটি ধর্মের মানুষের সমান নাগরিক ও ধর্মীয় অধিকার রয়েছে। ইসলাম অমুসলিমদের ওপর জোর করে ধর্ম চাপিয়ে দেওয়া সমর্থন করে না। তাদের উপাসনালয়ের নিরাপত্তা, জান ও মালের হেফাজত করা প্রত্যেক মুসলিমের অপরিহার্য দায়িত্ব।
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Panel 6 -->
+                            <div id="tab-law" class="vision-panel" role="tabpanel">
+                                <div class="panel-header">
+                                    <span class="panel-subtitle-tag">দৃষ্টিভঙ্গি ০৬</span>
+                                    <span style="font-size:0.7rem; color:#64748b; font-weight:700; letter-spacing:0.04em;">আইন ও দেশের সংবিধান</span>
+                                </div>
+                                <div class="panel-core-statement">
+                                    <i class="fas fa-quote-right quote-icon"></i>
+                                    দেশের স্বাধীনতা, সংবিধান ও sovereignty রক্ষা করা এবং প্রচলিত আইন মেনে চলা প্রত্যেক নাগরিকের পবিত্র দায়িত্ব।
+                                </div>
+                                <div class="qa-block">
+                                    <h4 class="qa-question">
+                                        <span class="q-icon"><i class="fas fa-chevron-right"></i></span>
+                                        হেযবুত তওহীদ কি প্রচলিত সংবিধান ও আইন মান্য করে?
+                                    </h4>
+                                    <p class="qa-answer">
+                                        হ্যাঁ, হেযবুত তওহীদ রাষ্ট্রকে এবং দেশের প্রচলিত সকল আইনকে শতভাগ শ্রদ্ধা ও মান্য করে কাজ করে। আমাদের কোনো কর্মী কখনো কোনো বেআইনি কাজের সাথে যুক্ত হবে না এবং আইনের পরিপন্থী কোনো কর্মকাণ্ড করবে না।
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Panel 7 -->
+                            <div id="tab-finance" class="vision-panel" role="tabpanel">
+                                <div class="panel-header">
+                                    <span class="panel-subtitle-tag">দৃষ্টিভঙ্গি ০৭</span>
+                                    <span style="font-size:0.7rem; color:#64748b; font-weight:700; letter-spacing:0.04em;">অর্থায়ন ও তহবিল</span>
+                                </div>
+                                <div class="panel-core-statement">
+                                    <i class="fas fa-quote-right quote-icon"></i>
+                                    হেযবুত তওহীদ কোনো বিদেশী অনুদান বা কোনো প্রকার অসচ্ছ উৎস থেকে ফান্ড গ্রহণ করে না।
+                                </div>
+                                <div class="qa-block">
+                                    <h4 class="qa-question">
+                                        <span class="q-icon"><i class="fas fa-chevron-right"></i></span>
+                                        আপনাদের প্রচারণা ও কার্যক্রমের অর্থ কোথা থেকে আসে?
+                                    </h4>
+                                    <p class="qa-answer">
+                                        আমাদের সমস্ত প্রকাশনা ও কার্যক্রমের অর্থ যোগান দেওয়া হয় সংগঠনের সদস্যদের স্বতঃস্ফূর্ত মাসিক এয়ানত (হাদিয়া) এবং আমাদের বই, পত্রিকা ও ডিজিটাল লাইব্রেরির প্রকাশনা বিক্রয়ের আয়ের মাধ্যমে। বাইরের কোনো দাতাগোষ্ঠী বা অনুদানকারীর ওপর আমাদের সংগঠন নির্ভরশীল নয়, যা আমাদের মত প্রকাশের স্বাধীনতা ও আদর্শিক পথচলাকে নিরপেক্ষ রাখে।
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Panel 8 -->
+                            <div id="tab-revival" class="vision-panel" role="tabpanel">
+                                <div class="panel-header">
+                                    <span class="panel-subtitle-tag">দৃষ্টিভঙ্গি ০৮</span>
+                                    <span style="font-size:0.7rem; color:#64748b; font-weight:700; letter-spacing:0.04em;">কোর’আন ও সুন্নাহ</span>
+                                </div>
+                                <div class="panel-core-statement">
+                                    <i class="fas fa-quote-right quote-icon"></i>
+                                    ইসলামের আদি ও অকৃত্রিম রূপ যা মানুষকে একতাবদ্ধ ও শান্তিময় করে, তার পুর্নজাগরণই আমাদের প্রধান কাজ।
+                                </div>
+                                <div class="qa-block">
+                                    <h4 class="qa-question">
+                                        <span class="q-icon"><i class="fas fa-chevron-right"></i></span>
+                                        হেযবুত তওহীদ কি কোর’আন ও সুন্নাহ মেনে চলে?
+                                    </h4>
+                                    <p class="qa-answer">
+                                        হ্যাঁ, হেযবুত তওহীদের একমাত্র ভিত্তিই হলো পবিত্র কোর’আন এবং রসুলাল্লাহর বাস্তব সুন্নাহ। আমরা কোনো মাজহাব বা তরিকতের সাথে বৈরিতা করি না, তবে ইসলামের আদি সোনালী যুগের সেই প্রকৃত শিক্ষা—যা মানবজাতিকে শৃঙ্খলমুক্ত করে ঐক্যবদ্ধ করত—তার পুনরুদ্ধার করতে আমরা অঙ্গীকারাবদ্ধ।
+                                    </p>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
-
-                    <!-- 3. Leadership -->
-                    <div id="leadership" class="card border-0 shadow-sm p-4 p-md-5 rounded-4 mb-4 bg-white scroll-margin" style="border-left: 5px solid #006A4E !important;">
-                        <h3 class="fw-bold text-dark-green mb-3"><i class="fas fa-sitemap text-gold me-2"></i> সাংগঠনিক কাঠামো ও নেতৃত্ব</h3>
-                        <p class="text-muted lh-lg mb-3">
-                            হেযবুত তওহীদের সাংগঠনিক কাঠামো সুদৃঢ় শৃঙ্খলা মেনে ৩টি প্রধান স্তরে বিন্যস্ত:
-                        </p>
-                        <div class="row g-3 mb-4">
-                            <div class="col-md-4">
-                                <div class="p-3 text-center border rounded-3 bg-white">
-                                    <h5 class="fw-bold text-dark-green mb-0">এমাম</h5>
-                                    <span class="text-muted small">আন্দোলনের সর্বপ্রধান নির্দেশক</span>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="p-3 text-center border rounded-3 bg-white">
-                                    <h5 class="fw-bold text-dark-green mb-0">আমীর</h5>
-                                    <span class="text-muted small">সাংগঠনিক জেলা ও কেন্দ্র প্রধান</span>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="p-3 text-center border rounded-3 bg-white">
-                                    <h5 class="fw-bold text-dark-green mb-0">সদস্য</h5>
-                                    <span class="text-muted small">موجاہد و مجاہدہ</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="p-3 rounded-3 mb-0" style="background-color: #fffbeb; border-left: 4px solid #D4AF37;">
-                            <h5 class="fw-bold text-dark-green mb-2">বর্তমান এমাম: জনাব হোসাইন মোহাম্মদ সেলিম</h5>
-                            <p class="text-muted lh-lg mb-0 small" style="text-align: justify;">
-                                আমরা দৃঢ়ভাবে বিশ্বাস করি হেযবুত তওহীদ মহান সৃষ্টিকর্তার এক মহাদান, তাঁরই অশেষ রহমতে এই আন্দোলন গত ২৩ বছর ধরে অত্যন্ত সুশৃঙ্খলভাবে পরিচালিত হয়ে আসছে। আন্দোলনের প্রতিষ্ঠাতা এমামুয্যামান জনাব মোহাম্মদ বায়াজীদ খান পন্নীর মহাপ্রয়াণের পর থেকে আন্দোলনের এমাম হিসাবে দায়িত্ব পালন করে আসছেন তাঁরই আদর্শের উত্তরাধিকার জনাব হোসাইন মোহাম্মদ সেলিম। তিনি নোয়াখালী জেলার সোনাইমুড়ি থানার পোরকরা গ্রামে ২৮ নভেম্বর, ১৯৭২ ঈসায়ী সালে জন্মগ্রহণ করেন। তিনি জগন্নাথ বিশ্ববিদ্যালয় থেকে ১৯৯৬-৯৭ শিক্ষাবর্ষে রাষ্ট্রবিজ্ঞানে স্নাতকোত্তর ডিগ্রী অর্জন করেন। পড়ালেখা শেষ করে তিনি ব্যবসা-বাণিজ্যকে জীবিকা নির্বাহের মাধ্যম হিসাবে গ্রহণ করেন।
-                            </p>
-                        </div>
-                    </div>
-
-                    <!-- 4. Principles -->
-                    <div id="principles" class="card border-0 shadow-sm p-4 p-md-5 rounded-4 mb-4 bg-white scroll-margin" style="border-left: 5px solid #D4AF37 !important;">
-                        <h3 class="fw-bold text-dark-green mb-3"><i class="fas fa-balance-scale text-gold me-2"></i> আন্দোলনের মূলনীতিসমূহ</h3>
-                        <p class="text-muted lh-lg mb-3">
-                            হেযবুত তওহীদ কয়েকটি দৃঢ় ও প্রকাশ্য মূলনীতির উপর প্রতিষ্ঠিত ও পরিচালিত:
-                        </p>
-                        <ul class="list-unstyled d-flex flex-column gap-3 text-muted lh-lg mb-0">
-                            <li class="d-flex align-items-start gap-2">
-                                <i class="fas fa-check-circle text-gold mt-1"></i>
-                                <span>হেযবুত তওহীদ চেষ্টা করে আল্লাহর রসুলের প্রতিটি পদক্ষেপকে অনুসরণ করতে।</span>
-                            </li>
-                            <li class="d-flex align-items-start gap-2">
-                                <i class="fas fa-check-circle text-gold mt-1"></i>
-                                <span>হেযবুত তওহীদের কোনো গোপন কার্যক্রম নেই, সবকিছু হবে প্রকাশ্য এবং দিনের আলোর মতো পরিষ্কার।</span>
-                            </li>
-                            <li class="d-flex align-items-start gap-2">
-                                <i class="fas fa-check-circle text-gold mt-1"></i>
-                                <span>হেযবুত তওহীদের কেউ কোনো আইন ভঙ্গ করবে না, অবৈধ অস্ত্রের সংস্পর্শে যাবে না, গেলে তাকে এমাম নিজেই আইন প্রয়োগকারী সংস্থার হাতে তুলে দেবেন।</span>
-                            </li>
-                            <li class="d-flex align-items-start gap-2">
-                                <i class="fas fa-check-circle text-gold mt-1"></i>
-                                <span>যারা হেযবুত তওহীদের সদস্য নয়, তাদের কাছ থেকে কোনরূপ অর্থ গ্রহণ করা হবে না।</span>
-                            </li>
-                            <li class="d-flex align-items-start gap-2">
-                                <i class="fas fa-check-circle text-gold mt-1"></i>
-                                <span>হেযবুত তওহীদের কোনো সদস্য কোনো প্রচলিত রাজনৈতিক কর্মকাণ্ডে সম্পৃক্ত হতে পারবে না।</span>
-                            </li>
-                            <li class="d-flex align-items-start gap-2">
-                                <i class="fas fa-check-circle text-gold mt-1"></i>
-                                <span>কর্মক্ষম কেউ বেকার থাকতে পারবে না, বৈধ উপায়ে রিজিক হাসিলের চেষ্টা করবে।</span>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <!-- 5. 5-Point Program -->
-                    <div id="program" class="card border-0 shadow-sm p-4 p-md-5 rounded-4 mb-4 bg-white scroll-margin" style="border-left: 5px solid #006A4E !important;">
-                        <h3 class="fw-bold text-dark-green mb-3"><i class="fas fa-list-ol text-gold me-2"></i> ৫ দফা কর্মসূচি</h3>
-                        <p class="text-muted lh-lg mb-4" style="text-align: justify;">
-                            মানবজীবনে শান্তি প্রতিষ্ঠার জন্য মহান আল্লাহ যে কর্মসূচি তাঁর শেষ রসুলকে দান করেছিলেন, যে কর্মসূচি স্বয়ং আল্লাহর রসুল এবং তাঁর হাতে গড়া উম্মতে মোহাম্মদী অনুসরণ করেছিলেন, সেই পাঁচ দফা কর্মসূচি অনুসরণ করেই হেযবুত তওহীদ সত্যদীন, দীনুল হক প্রতিষ্ঠার সংগ্রাম চালিয়ে যাচ্ছে:
-                        </p>
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <div class="p-3 bg-off-white rounded-3 border-start border-3 border-green h-100">
-                                    <h6 class="fw-bold text-dark-green mb-2">১. ঐক্যবদ্ধ হও</h6>
-                                    <p class="text-muted small mb-0">সত্য ও ন্যায়ের পক্ষে এবং সমস্ত অন্যায়ের বিরুদ্ধে মানবজাতিকে ঐক্যবদ্ধ করা।</p>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="p-3 bg-off-white rounded-3 border-start border-3 border-gold h-100">
-                                    <h6 class="fw-bold text-dark-green mb-2">২. শোন</h6>
-                                    <p class="text-muted small mb-0">ন্যায়ের পথে পরিচালিত করতে নেতার আদেশ আন্তরিকতার সাথে শোনা।</p>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="p-3 bg-off-white rounded-3 border-start border-3 border-gold h-100">
-                                    <h6 class="fw-bold text-dark-green mb-2">৩. পালন করো</h6>
-                                    <p class="text-muted small mb-0">নেতার আদেশকে নিষ্ঠার সাথে আনুগত্য করা।</p>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="p-3 bg-off-white rounded-3 border-start border-3 border-green h-100">
-                                    <h6 class="fw-bold text-dark-green mb-2">৪. হেযরত করো</h6>
-                                    <p class="text-muted small mb-0">যাবতীয় অন্যায়, অপরাধ ও অসত্যের সাথে সম্পর্ক ছিন্ন করা।</p>
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="p-3 bg-off-white rounded-3 border-start border-3 border-green">
-                                    <h6 class="fw-bold text-dark-green mb-2">৫. সর্বাত্মক চেষ্টা</h6>
-                                    <p class="text-muted small mb-0">দীনুল হক (ন্যায় ও সত্যের বিধান) পৃথিবীতে প্রতিষ্ঠার জন্য জান-মাল উৎসর্গ করে সর্বাত্মক চেষ্টা চালানো।</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 6. Work Process -->
-                    <div id="work-process" class="card border-0 shadow-sm p-4 p-md-5 rounded-4 mb-4 bg-white scroll-margin" style="border-left: 5px solid #D4AF37 !important;">
-                        <h3 class="fw-bold text-dark-green mb-3"><i class="fas fa-running text-gold me-2"></i> কর্মপ্রক্রিয়া</h3>
-                        <p class="text-muted lh-lg mb-0" style="text-align: justify;">
-                            হেযবুত তওহীদ রাষ্ট্রীয় আইনকে পূর্ণরূপে মান্য করে গত ২১ বছর ধরে আন্দোলন পরিচালনা করে আসছে। মানবজাতিকে স্রষ্টার sovereignty-র দিকে আহ্বান করার জন্য হেযবুত তওহীদ এমামুয্যামানের বক্তব্য ও লেখা সম্বলিত হ্যান্ডবিল, বই, পত্রিকা, প্রামাণ্যচিত্র ইত্যাদি সর্বশ্রেণীর মানুষের কাছে পৌঁছানোর জন্য সর্বাত্মক চেষ্টা করে থাকে। এরই অংশ হিসাবে বাসে, ট্রেনে, লঞ্চে, রাস্তাঘাটে এই প্রকাশনা সামগ্রীগুলি বিক্রয়, বই মেলায় স্টল গ্রহণ, মিলনায়তন ও প্রেস ক্লাবগুলিতে প্রকাশ্য সেমিনার, আইনশৃঙ্খলা বাহিনীর উর্ধ্বতন কর্মকর্তা ও সরকারের মন্ত্রীদের সাথে মতবিনিময়ের মাধ্যমে আমাদের সব কার্যক্রম নিয়মিত অবহিত করে থাকি।
-                        </p>
-                    </div>
-
-                    <!-- 7. Training & Sports -->
-                    <div id="training" class="card border-0 shadow-sm p-4 p-md-5 rounded-4 mb-4 bg-white scroll-margin" style="border-left: 5px solid #006A4E !important;">
-                        <h3 class="fw-bold text-dark-green mb-3"><i class="fas fa-dumbbell text-gold me-2"></i> প্রশিক্ষণ ও খেলাধুলা</h3>
-                        <h5 class="fw-bold text-dark mb-2">প্রশিক্ষণ</h5>
-                        <p class="text-muted lh-lg mb-4" style="text-align: justify;">
-                            চরিত্র গঠনের জন্য প্রধান প্রশিক্ষণ হচ্ছে সঠিক পদ্ধতিতে সালাহ বা নামাজ কায়েম করা। হেযবুত তওহীদকে আল্লাহ সালাতের সঠিক উদ্দেশ্য ও প্রক্রিয়া দান করেছেন। সদস্যদের ইস্পাতের মতো ঐক্যবদ্ধ এবং পিঁপড়ার মতো সুশৃঙ্খল চরিত্র গড়ে তোলার জন্য এই আধ্যাত্মিক প্রশিক্ষণ অত্যন্ত গুরুত্বপূর্ণ ভূমিকা রাখে।
-                        </p>
-                        <h5 class="fw-bold text-dark mb-2">খেলাধুলা ও শরীরচর্চা</h5>
-                        <p class="text-muted lh-lg mb-0" style="text-align: justify;">
-                            সদস্যদের শারীরিক সুস্থতা ও গতিশীলতা বৃদ্ধির জন্য খেলাধুলার ব্যবস্থা রয়েছে। এক্ষেত্রে দেশীয় আউটডোর খেলা যেমন কাবাডি, ফুটবল, ব্যাডমিন্টন ইত্যাদিকে প্রাধান্য দেওয়া হয়। জুয়া ও বাজিমুক্ত সুস্থ ধারার খেলাধুলাই আমাদের মূল স্পিরিট।
-                        </p>
-                    </div>
-
-                    <!-- 8. Women's Participation -->
-                    <div id="women" class="card border-0 shadow-sm p-4 p-md-5 rounded-4 mb-4 bg-white scroll-margin" style="border-left: 5px solid #D4AF37 !important;">
-                        <h3 class="fw-bold text-dark-green mb-3"><i class="fas fa-female text-gold me-2"></i> সকল কাজে নারীদের অংশগ্রহণ</h3>
-                        <p class="text-muted lh-lg mb-0" style="text-align: justify;">
-                            রসুলাল্লাহর সময় যেমন পুরুষদের পাশাপাশি নারীরাও সামাজিক কাজে অংশ নিয়েছেন, ঠিক তেমনি হেযবুত তওহীদেও আমীরের দায়িত্ব থেকে শুরু করে অফিসিয়াল কাজ, অ্যাকাউন্টস, মিডিয়া-প্রকাশনা এবং বই-পত্রিকা বিক্রির কাজেও নারীরা শরিয়াহ নির্ধারিত যথাযথ হেজাব অনুসরণ করে সক্রিয়ভাবে অংশগ্রহণ করেন।
-                        </p>
-                    </div>
-
-                    <!-- 9. Culture -->
-                    <div id="culture" class="card border-0 shadow-sm p-4 p-md-5 rounded-4 mb-4 bg-white scroll-margin" style="border-left: 5px solid #006A4E !important;">
-                        <h3 class="fw-bold text-dark-green mb-3"><i class="fas fa-music text-gold me-2"></i> সুস্থ সংস্কৃতি ও বিনোদন</h3>
-                        <p class="text-muted lh-lg mb-0" style="text-align: justify;">
-                            হেযবুত তওহীদ সুস্থ ধারার সংস্কৃতিকে লালন করে। এমামুয্যামানের স্মরণে হেযবুত তওহীদের প্রকাশিত প্রথম গানের অ্যালবাম “দ্য লিডার অব দ্য টাইম’। সেমিনারগুলিতে হেযবুত তওহীদের সদস্যরা সঙ্গীত পরিবেশন করে থাকে। অশ্লীলতাহীন সুস্থ বিনোদন ইসলামে সম্পূর্ণ বৈধ।
-                        </p>
-                    </div>
-
-                    <!-- 10. Uniqueness & Milestones -->
-                    <div id="uniqueness" class="card border-0 shadow-sm p-4 p-md-5 rounded-4 mb-4 bg-white scroll-margin" style="border-left: 5px solid #D4AF37 !important;">
-                        <h3 class="fw-bold text-dark-green mb-3"><i class="fas fa-award text-gold me-2"></i> অনন্যতা ও বৃহত্তম মাইলফলক</h3>
-                        <h5 class="fw-bold text-dark mb-2">আইন মান্য করার অনন্য রেকর্ড</h5>
-                        <p class="text-muted lh-lg mb-4" style="text-align: justify;">
-                            হেযবুত তওহীদ গত ২৭ বছরে দেশের একটিও আইনভঙ্গ করেনি, এর কোনো সদস্য একটিও অপরাধ করেনি। আমাদের বিরুদ্ধে পাঁচ শতাধিক মিথ্যা মামলা দায়ের করা হলেও কোনো সদস্যের আইনভঙ্গের প্রমাণ পাওয়া যায়নি। আইন মান্য করার এরূপ দৃষ্টান্ত বিরল।
-                        </p>
-                        <h5 class="fw-bold text-dark mb-2">বৃহত্তম মাইলফলক</h5>
-                        <p class="text-muted lh-lg mb-0" style="text-align: justify;">
-                            ২ ফেব্রুয়ারি ২০০৮ তারিখে মহান আল্লাহ এক মহান মো’জেজা অর্থাৎ অলৌকিক ঘটনা সংঘটন করেন যার দ্বারা তিনি হেযবুত তওহীদের সত্যতা ও এর এমাম আল্লাহর মনোনীত হক এমাম হওয়ার বিষয়টি সত্যায়ন করেন।
-                        </p>
-                    </div>
-
-                    <!-- 11. Source of Funds -->
-                    <div id="finance" class="card border-0 shadow-sm p-4 p-md-5 rounded-4 mb-0 bg-white scroll-margin" style="border-left: 5px solid #006A4E !important;">
-                        <h3 class="fw-bold text-dark-green mb-3"><i class="fas fa-coins text-gold me-2"></i> অর্থের উৎস</h3>
-                        <p class="text-muted lh-lg mb-0" style="text-align: justify;">
-                            হেযবুত তওহীদের সদস্যরা সম্পূর্ণ নিজেদের উপার্জিত বা অর্জিত ব্যক্তিগত সম্পদ ব্যয় করে এই আদর্শিক আন্দোলন পরিচালনা করেন। আন্দোলনের সদস্য নন এমন কারো কাছ থেকে কোনো অর্থ গ্রহণ করা হয় না।
-                        </p>
-                    </div>
-
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Style additions for scroll margins and active pills -->
-    <style>
-        .scroll-margin {
-            scroll-margin-top: 100px;
-        }
-        .nav-pills .nav-link {
-            transition: all 0.3s ease;
-            font-size: 0.9rem;
-            border-left: 3px solid transparent !important;
-            border-radius: 0 8px 8px 0;
-            text-align: left;
-        }
-        .nav-pills .nav-link:hover {
-            background-color: #f1f5f9;
-            color: #006A4E !important;
-            border-left-color: #D4AF37 !important;
-        }
-        /* Sticky sidebar navigation highlight logic simple css */
-        .nav-pills .nav-link.active {
-            background-color: #006A4E !important;
-            color: #fff !important;
-            border-left-color: #D4AF37 !important;
-        }
-    </style>
-
 @endsection
+
+@push('scripts')
+<script>
+    function switchTab(event, tabId) {
+        if (event) event.preventDefault();
+
+        const buttons = document.querySelectorAll('.vision-tab-btn');
+        buttons.forEach(btn => {
+            const isActive = btn === event?.currentTarget;
+            btn.classList.toggle('active', isActive);
+            btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
+        });
+
+        const panels = document.querySelectorAll('.vision-panel');
+        panels.forEach(panel => {
+            const isTarget = panel.id === tabId;
+            panel.classList.toggle('active', isTarget);
+            panel.style.display = isTarget ? 'block' : 'none';
+        });
+
+        if (window.innerWidth <= 991.98 && event?.currentTarget) {
+            const sidebar = document.querySelector('.vision-sidebar');
+            const target = event.currentTarget;
+            const scrollLeft = target.offsetLeft - (sidebar.clientWidth / 2) + (target.clientWidth / 2);
+            sidebar.scrollTo({ left: scrollLeft, behavior: 'smooth' });
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const activeTab = document.querySelector('.vision-tab-btn.active');
+        if (activeTab) {
+            const onclickAttr = activeTab.getAttribute('onclick');
+            const match = onclickAttr ? onclickAttr.match(/'([^']+)'/) : null;
+            const targetId = match ? match[1] : 'tab-structure';
+            const panels = document.querySelectorAll('.vision-panel');
+            panels.forEach(panel => {
+                const isTarget = panel.id === targetId;
+                panel.classList.toggle('active', isTarget);
+                panel.style.display = isTarget ? 'block' : 'none';
+            });
+        }
+    });
+</script>
+@endpush

@@ -3,257 +3,7 @@
 @section('title', 'মূল পাতা - মানবতার কল্যাণে একটি অরাজনৈতিক আন্দোলন')
 
 @push('styles')
-<style>
-    #heroCarousel .carousel-item {
-        height: 75vh;
-        min-height: 480px;
-        position: relative;
-        overflow: hidden;
-        background-color: #0b1a13;
-    }
-    #heroCarousel .carousel-item-bg {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        z-index: 1;
-        transition: transform 8s ease-out;
-    }
-    #heroCarousel .carousel-item.active .carousel-item-bg {
-        transform: scale(1.08);
-    }
-    #heroCarousel .carousel-item-overlay {
-        position: relative;
-        z-index: 2;
-    }
-    .text-shadow-premium {
-        text-shadow: 0 4px 15px rgba(0, 0, 0, 0.75);
-    }
-    #heroCarousel .slider-title {
-        font-family: 'Baloo Da 2', sans-serif;
-        font-weight: 800;
-        line-height: 1.25;
-        letter-spacing: -0.5px;
-        color: #ffffff !important; /* Force crisp white color on headings */
-    }
-    #heroCarousel .slider-subtitle {
-        font-family: 'Baloo Da 2', sans-serif;
-        font-size: 1.25rem;
-        font-weight: 500;
-        max-width: 720px;
-        opacity: 0.95;
-        color: #f8f9fa !important; /* Force off-white for description text */
-    }
-    #heroCarousel .slider-badge {
-        background-color: rgba(255, 255, 255, 0.12) !important;
-        backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px);
-        border: 1px solid rgba(255, 255, 255, 0.25) !important;
-        color: #ffffff !important;
-        font-family: 'Baloo Da 2', sans-serif;
-        font-weight: 700;
-        letter-spacing: 0.5px;
-        font-size: 0.85rem;
-    }
-    #heroCarousel .btn-slider-premium {
-        font-family: 'Baloo Da 2', sans-serif;
-        font-weight: 700;
-        padding: 12px 40px;
-        border-radius: 30px;
-        transition: all 0.3s ease;
-        letter-spacing: 0.5px;
-        font-size: 1.05rem;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    }
-    #heroCarousel .btn-slider-premium:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3) !important;
-    }
-    #heroCarousel .btn-slider-primary {
-        background-color: #006A4E !important;
-        color: #ffffff !important;
-        border: 2px solid #006A4E !important;
-    }
-    #heroCarousel .btn-slider-primary:hover {
-        background-color: #004D38 !important;
-        color: #ffffff !important;
-        border-color: #004D38 !important;
-    }
-    #heroCarousel .btn-slider-secondary {
-        background-color: transparent !important;
-        color: #ffffff !important;
-        border: 2px solid rgba(255, 255, 255, 0.65) !important;
-    }
-    #heroCarousel .btn-slider-secondary:hover {
-        background-color: #ffffff !important;
-        color: #006A4E !important;
-        border-color: #ffffff !important;
-    }
-    .hover-glow {
-        transition: all 0.4s ease !important;
-    }
-    .hover-glow:hover {
-        transform: translateY(-8px) !important;
-        box-shadow: 0 15px 35px rgba(52, 211, 153, 0.25) !important;
-        border-color: rgba(52, 211, 153, 0.45) !important;
-        background: rgba(255, 255, 255, 0.08) !important;
-    }
 
-    /* Ultra-Premium Photo Gallery Styles */
-    .photo-gallery-section {
-        background-color: #f8fafc;
-        position: relative;
-    }
-    
-    .gallery-card {
-        position: relative;
-        overflow: hidden;
-        border-radius: 12px;
-        background: #ffffff;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
-        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        border: 1px solid rgba(226, 232, 240, 0.8) !important;
-    }
-    
-    .gallery-card.featured-card {
-        height: 380px;
-    }
-    
-    .gallery-card.small-card {
-        height: 180px;
-    }
-    
-    @media (max-width: 991.98px) {
-        .gallery-card.featured-card {
-            height: 420px;
-            margin-bottom: 20px;
-        }
-        .gallery-card.small-card {
-            height: 220px;
-        }
-    }
-    
-    .gallery-card img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    
-    .gallery-card-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(to top, rgba(2, 44, 34, 0.95) 0%, rgba(2, 44, 34, 0.15) 60%, transparent 100%) !important;
-        padding: 20px;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
-        z-index: 2;
-        transition: all 0.4s ease;
-    }
-    
-    .gallery-featured-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(to bottom, rgba(2, 44, 34, 0.85) 0%, rgba(2, 44, 34, 0.15) 45%, rgba(2, 44, 34, 0.95) 100%) !important;
-        z-index: 2;
-        transition: all 0.4s ease;
-    }
-    
-    /* Zoom Icon Indicator */
-    .gallery-zoom-icon {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%) scale(0.7);
-        width: 54px;
-        height: 54px;
-        border-radius: 50%;
-        background: rgba(16, 185, 129, 0.95);
-        color: #ffffff;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.2rem;
-        opacity: 0;
-        z-index: 3;
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
-    }
-
-    .gallery-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 20px 40px rgba(16, 185, 129, 0.18) !important;
-        border-color: rgba(16, 185, 129, 0.35) !important;
-    }
-    
-    .gallery-card:hover img {
-        transform: scale(1.06) rotate(0.5deg);
-    }
-    
-    .gallery-card:hover .gallery-card-overlay {
-        background: linear-gradient(to top, rgba(0, 106, 78, 0.95) 0%, rgba(0, 106, 78, 0.4) 60%, transparent 100%) !important;
-    }
-    
-    .gallery-card.featured-card:hover .gallery-featured-overlay {
-        background: linear-gradient(to bottom, rgba(0, 106, 78, 0.85) 0%, rgba(0, 106, 78, 0.3) 45%, rgba(0, 106, 78, 0.98) 100%) !important;
-    }
-    
-    .gallery-card:hover .gallery-zoom-icon {
-        opacity: 1;
-        transform: translate(-50%, -50%) scale(1);
-    }
-    
-    .gallery-card-info {
-        transition: all 0.4s ease;
-    }
-    
-    .gallery-card-info .cat-badge {
-        align-self: flex-start;
-        font-size: 0.68rem;
-        font-weight: 700;
-        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-        color: white;
-        padding: 4px 12px;
-        border-radius: 50px;
-        margin-bottom: 8px;
-        box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);
-        display: inline-block;
-    }
-    
-    .gallery-card-info .title-text {
-        font-size: 0.95rem;
-        font-weight: 700;
-        color: #ffffff;
-        line-height: 1.4;
-        font-family: 'Baloo Da 2', sans-serif;
-        text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-    }
-
-    /* Glassmorphism Lightbox Modal */
-    #galleryLightboxModal .modal-content {
-        backdrop-filter: blur(15px);
-        background: rgba(11, 21, 18, 0.88) !important;
-        border: 1px solid rgba(255, 255, 255, 0.12) !important;
-    }
-    
-    #galleryLightboxModal .btn-close {
-        transition: transform 0.3s ease;
-    }
-    #galleryLightboxModal .btn-close:hover {
-        transform: rotate(90deg);
-    }
-</style>
 @if(!empty($homepageCss))
 <style>
     {!! $homepageCss !!}
@@ -263,537 +13,590 @@
 
 @section('content')
 
-@php
-    $layout = count($homepageLayout) > 0 ? $homepageLayout : [
-        ['id' => 'hero_slider', 'is_active' => true, 'bg_color' => '', 'bg_image' => '', 'padding_top' => 0, 'padding_bottom' => 0, 'margin_top' => 0, 'margin_bottom' => 0],
-        ['id' => 'news_ticker', 'is_active' => true, 'bg_color' => '', 'bg_image' => '', 'padding_top' => 0, 'padding_bottom' => 0, 'margin_top' => 0, 'margin_bottom' => 0],
-        ['id' => 'about_section', 'is_active' => true, 'bg_color' => '', 'bg_image' => '', 'padding_top' => 0, 'padding_bottom' => 0, 'margin_top' => 0, 'margin_bottom' => 0],
-        ['id' => 'leaders_section', 'is_active' => true, 'bg_color' => '', 'bg_image' => '', 'padding_top' => 0, 'padding_bottom' => 0, 'margin_top' => 0, 'margin_bottom' => 0],
-        ['id' => 'ideology_section', 'is_active' => true, 'bg_color' => '', 'bg_image' => '', 'padding_top' => 0, 'padding_bottom' => 0, 'margin_top' => 0, 'margin_bottom' => 0],
-        ['id' => 'activities_section', 'is_active' => true, 'bg_color' => '', 'bg_image' => '', 'padding_top' => 0, 'padding_bottom' => 0, 'margin_top' => 0, 'margin_bottom' => 0],
-        ['id' => 'publications_section', 'is_active' => true, 'bg_color' => '', 'bg_image' => '', 'padding_top' => 0, 'padding_bottom' => 0, 'margin_top' => 0, 'margin_bottom' => 0],
-        ['id' => 'leadership_section', 'is_active' => true, 'bg_color' => '', 'bg_image' => '', 'padding_top' => 0, 'padding_bottom' => 0, 'margin_top' => 0, 'margin_bottom' => 0],
-        ['id' => 'testimonials_section', 'is_active' => true, 'bg_color' => '', 'bg_image' => '', 'padding_top' => 0, 'padding_bottom' => 0, 'margin_top' => 0, 'margin_bottom' => 0],
-        ['id' => 'videos_section', 'is_active' => true, 'bg_color' => '', 'bg_image' => '', 'padding_top' => 0, 'padding_bottom' => 0, 'margin_top' => 0, 'margin_bottom' => 0],
-    ];
-
-    // Sort layout by order key
-    usort($layout, function($a, $b) {
-        return ($a['order'] ?? 99) <=> ($b['order'] ?? 99);
-    });
-@endphp
-
-@foreach($layout as $section)
-    @if($section['is_active'] ?? true)
-        @php
-            $secStyle = "";
-            if (!empty($section['bg_color'])) {
-                $secStyle .= "background-color: {$section['bg_color']} !important; ";
-            }
-            if (!empty($section['bg_image'])) {
-                $secStyle .= "background-image: url('" . asset($section['bg_image']) . "') !important; background-size: cover; background-position: center; ";
-            }
-            if (isset($section['padding_top'])) {
-                $secStyle .= "padding-top: {$section['padding_top']}px !important; ";
-            }
-            if (isset($section['padding_bottom'])) {
-                $secStyle .= "padding-bottom: {$section['padding_bottom']}px !important; ";
-            }
-            if (isset($section['margin_top'])) {
-                $secStyle .= "margin-top: {$section['margin_top']}px !important; ";
-            }
-            if (isset($section['margin_bottom'])) {
-                $secStyle .= "margin-bottom: {$section['margin_bottom']}px !important; ";
-            }
-        @endphp
-
-        <div class="homepage-section-wrapper" id="section-wrapper-{{ $section['id'] }}" style="{{ $secStyle }}">
-            @switch($section['id'])
-                @case('hero_slider')
-                    <!-- Hero Slider Section -->
-    <div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
-        <div class="carousel-inner">
-            @forelse($sliders as $key => $slider)
-                <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
-                    <div class="carousel-item-bg" style="background-image: linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.65)), url('{{ asset($slider->image_url) }}');"></div>
-                    <div class="container h-100 carousel-item-overlay">
-                        <div class="row h-100 align-items-center">
-                            <div class="col-lg-8 text-white">
-                                <span class="badge slider-badge mb-3 px-3 py-2 rounded-pill animated slideInDown">সর্বশেষ আপডেট</span>
-                                <h1 class="display-3 slider-title mb-4 animated slideInDown text-shadow-premium">{{ $slider->title }}</h1>
-                                <p class="lead slider-subtitle mb-5 animated slideInUp text-shadow-premium">{{ $slider->sub_title }}</p>
-                                @if($slider->hasLink())
-                                    <a href="{{ $slider->button_link }}"
-                                       class="btn btn-slider-premium btn-lg animated slideInUp {{ $slider->button_color == '#D4AF37' ? 'btn-slider-secondary' : 'btn-slider-primary' }}"
-                                       target="{{ $slider->target }}">
-                                        {{ $slider->button_text }}
-                                    </a>
-                                @endif
-                            </div>
-                        </div>
+    <!-- 1. Hero Slider Section -->
+    <div class="homepage-section-wrapper" id="section-wrapper-hero_slider">
+        <div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                @forelse($sliders as $key => $slider)
+                    <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
+                        @if($slider->hasLink())
+                            <a href="{{ $slider->button_link }}" target="{{ $slider->target }}">
+                                <div class="carousel-item-bg" style="background-image: url('{{ asset($slider->image_url) }}');"></div>
+                            </a>
+                        @else
+                            <div class="carousel-item-bg" style="background-image: url('{{ asset($slider->image_url) }}');"></div>
+                        @endif
                     </div>
-                </div>
-            @empty
-                <div class="carousel-item active">
-                    <div class="carousel-item-bg" style="background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1541872703-74c5e44368f9?q=80&width=1920');"></div>
-                    <div class="container h-100 carousel-item-overlay">
-                        <div class="row h-100 align-items-center justify-content-center text-center">
-                            <div class="col-lg-10 text-white">
-                                <h1 class="display-3 slider-title mb-4 text-shadow-premium">মানবতার কল্যাণে হেযবুত তওহীদ</h1>
-                                <p class="lead slider-subtitle mx-auto mb-4 text-shadow-premium">ধর্মান্ধতা, সাম্প্রদায়িকতা ও জঙ্গিবাদের বিরুদ্ধে এক বজ্রকণ্ঠ। আসুন সত্যের পথে ঐক্যবদ্ধ হই।</p>
-                                <a href="{{ route('about') }}" class="btn btn-slider-premium btn-slider-secondary btn-lg px-5 py-3 rounded-pill fw-bold">আমাদের আদর্শ</a>
-                            </div>
-                        </div>
+                @empty
+                    <div class="carousel-item active">
+                        <div class="carousel-item-bg" style="background-image: url('https://images.unsplash.com/photo-1541872703-74c5e44368f9?q=80&width=1920');"></div>
                     </div>
-                </div>
-            @endforelse
+                @endforelse
+            </div>
+            @if($sliders->count() > 1)
+                <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            @endif
         </div>
-        @if($sliders->count() > 1)
-            <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
-            </button>
+    </div>
+
+    <!-- 1.1. Live Broadcast Section -->
+    @if(isset($liveBroadcast) && $liveBroadcast)
+    <div class="homepage-section-wrapper" id="section-wrapper-live_broadcast">
+        <div class="live-broadcast-banner py-3 position-relative" style="background: #0f172a !important; border-bottom: 2px solid #ef4444; z-index: 10;">
+            <div class="container d-flex flex-wrap align-items-center justify-content-between gap-3">
+                <div class="d-flex align-items-center gap-3">
+                    <span class="d-inline-flex align-items-center gap-2 px-3 py-1 rounded text-white fw-bold shadow-sm" style="background-color: #ef4444; font-size: 0.8rem; font-family: 'Hind Siliguri', sans-serif;">
+                        <span class="live-pulse-dot"></span> সরাসরি লাইভ
+                    </span>
+                    <h5 class="text-white mb-0 fw-bold" style="font-family: 'Baloo Da 2', sans-serif; font-size: 1.15rem;">{{ $liveBroadcast->title }}</h5>
+                </div>
+                <div class="d-flex align-items-center gap-3">
+                    @if($liveBroadcast->description)
+                        <span class="small d-none d-lg-inline" style="font-family: 'Hind Siliguri', sans-serif; color: #cbd5e1;">{{ Str::limit($liveBroadcast->description, 80) }}</span>
+                    @endif
+                    <a href="javascript:void(0);" class="btn btn-sm px-3 py-1.5 fw-bold text-white rounded-2 shadow-sm d-flex align-items-center gap-2 live-modal-trigger" data-url="{{ $liveBroadcast->embed_url }}" style="background-color: #ef4444; border: 1px solid #ef4444; font-family: 'Hind Siliguri', sans-serif; font-size: 0.85rem; border-radius: 5px; transition: all 0.3s ease;">
+                        <i class="fas fa-play" style="font-size: 0.75rem;"></i> আলোচনা শুনুন
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
+
+    <!-- 3. Leaders Section (Styled exactly like the screenshot!) -->
+    <section class="leaders-section py-6 bg-white" id="section-wrapper-leaders_section" style="border-top: 1px solid #f1f5f9; border-bottom: 1px solid #f1f5f9; padding-top: 80px; padding-bottom: 80px;">
+        <div class="container">
+            <div class="row g-5 align-items-center">
+                <!-- Left Side: Header & CTA Description -->
+                <div class="col-lg-4 text-start">
+                    <span class="fw-bold text-uppercase tracking-wider" style="color: #64748b; font-size: 0.95rem; font-family: 'Baloo Da 2', sans-serif;">নেতৃত্বের আদর্শ</span>
+                    <h2 class="fw-bold mt-2 mb-3" style="font-family: 'Baloo Da 2', sans-serif; font-size: 2.1rem; color: #0f172a; font-weight: 800; line-height: 1.4;">যাঁর অনুপ্রেরণায় আমরা উজ্জীবিত...</h2>
+                    <p class="text-muted lh-lg mb-4" style="text-align: justify; font-size: 14.5px; font-family: 'Hind Siliguri', sans-serif;">
+                        যিনি আল্লাহ ও তাঁর রাসুল (সা.)-এর আদর্শ অনুসরণ করে হারিয়ে যাওয়া ইসলামের পুনঃপ্রতিষ্ঠার লক্ষ্যে আল্লাহর সাহায্যে হেযবুত তওহীদ প্রতিষ্ঠা করেছেন, তিনি মহামান্য এমামুযযামান, The Leader of the Time, জনাব মোহাম্মদ বায়াজীদ খান পন্নী। এবং হেযবুত তওহীদ এর বর্তমান এমাম মাননীয় এমাম হোসেন মোহাম্মদ সেলিম।
+                    </p>
+                    <div>
+                        <a href="/about-us" class="btn px-4 py-2 fw-bold text-white shadow-sm" style="background-color: #006A4E; border-color: #006A4E; color: white !important; border-radius: 5px; font-size: 14px; font-family: 'Baloo Da 2', sans-serif;">
+                            Learn More
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Right Side: 2 Leaders Cards -->
+                <div class="col-lg-8">
+                    <div class="row g-4 justify-content-center">
+                        <!-- Leader 1 -->
+                        <div class="col-md-6">
+                            <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden bg-white hover-zoom d-flex flex-column" style="box-shadow: 0 10px 30px rgba(0,0,0,0.05) !important;">
+                                <div class="leader-img-wrapper" style="height: 290px; overflow: hidden; position: relative;">
+                                    <img src="{{ asset('uploads/leaders/founder_panni.png') }}" alt="জনাব মোহাম্মদ বায়াজীদ খান পন্নী" class="w-100 h-100 object-fit-cover grayscale-to-color" style="object-position: center 10%;">
+                                </div>
+                                <div class="card-body p-4 text-center d-flex flex-column align-items-center justify-content-between">
+                                    <div>
+                                        <h4 class="fw-bold mb-2" style="font-family: 'Baloo Da 2', sans-serif; color: #0f172a; font-size: 1.25rem; white-space: nowrap;">জনাব মোহাম্মদ বায়াজীদ খান পন্নী</h4>
+                                        <div class="mb-3">
+                                            <span class="px-3 py-1.5 rounded-pill fw-bold" style="font-size: 11px; border: 1.5px solid #cbd5e1; background-color: #f8fafc; color: #475569; font-family: 'Hind Siliguri', sans-serif; display: inline-block;">
+                                                <i class="fas fa-award me-1" style="color: #d97706;"></i> হেযবুত তওহীদের প্রতিষ্ঠাতা মাননীয় এমামুযযামান
+                                            </span>
+                                        </div>
+                                        <p class="text-muted lh-lg mb-0" style="font-size: 0.9rem; text-align: justify; text-align-last: center; font-family: 'Hind Siliguri', sans-serif;">
+                                            অরাজনৈতিক সংগঠন 'হেযবুত তওহীদ'-এর প্রতিষ্ঠাতা এমামুযযামান মোহাম্মদ বায়াজীদ খান পন্নী—যিনি প্রকৃত ইসলামের শিক্ষা প্রচার করেন—তিনি এই পরিবারেরই সন্তান।
+                                        </p>
+                                    </div>
+                                    <div class="mt-4 w-100">
+                                        <a href="{{ $founder ? route('leadership.show', $founder->slug) : route('about') . '#founder' }}" class="btn text-white px-4 py-1.8 w-100 fw-bold shadow-sm" style="background-color: #006A4E; border-color: #006A4E; color: white !important; border-radius: 5px; transition: all 0.3s ease; font-size: 13px; font-family: 'Hind Siliguri', sans-serif;">
+                                            বিস্তারিত জীবনী <i class="fas fa-arrow-right ms-1" style="font-size: 11px;"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Leader 2 -->
+                        <div class="col-md-6">
+                            <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden bg-white hover-zoom d-flex flex-column" style="box-shadow: 0 10px 30px rgba(0,0,0,0.05) !important;">
+                                <div class="leader-img-wrapper" style="height: 290px; overflow: hidden; position: relative;">
+                                    <img src="{{ asset('uploads/leaders/emam_selim.png') }}" alt="জনাব হোসাইন মোহাম্মদ সেলিম" class="w-100 h-100 object-fit-cover grayscale-to-color" style="object-position: center 10%;">
+                                </div>
+                                <div class="card-body p-4 text-center d-flex flex-column align-items-center justify-content-between">
+                                    <div>
+                                        <h4 class="fw-bold mb-2" style="font-family: 'Baloo Da 2', sans-serif; color: #0f172a; font-size: 1.25rem; white-space: nowrap;">জনাব হোসাইন মোহাম্মদ সেলিম</h4>
+                                        <div class="mb-3">
+                                            <span class="px-3 py-1.5 rounded-pill fw-bold" style="font-size: 11px; border: 1.5px solid #cbd5e1; background-color: #f8fafc; color: #475569; font-family: 'Hind Siliguri', sans-serif; display: inline-block;">
+                                                <i class="fas fa-user-shield me-1" style="color: #64748b;"></i> হেযবুত তওহীদের মাননীয় এমাম
+                                            </span>
+                                        </div>
+                                        <p class="text-muted lh-lg mb-0" style="font-size: 0.9rem; text-align: justify; text-align-last: center; font-family: 'Hind Siliguri', sans-serif;">
+                                            হোসেন মোহাম্মদ সেলিম বাংলাদেশের একজন বিশিষ্ট ব্যক্তিত্ব; তিনি অরাজনৈতিক আন্দোলন ‘হেযবুত তওহীদের ইমাম হিসেবে সুপরিচিত। বর্তমান সমাজব্যবস্থায় প্রোথিত অবিচারের বিরুদ্ধে তাঁর আপসহীন অবস্থান তাঁকে ব্যাপক পরিচিতি ও স্বীকৃতি এনে দিয়েছে।
+                                        </p>
+                                    </div>
+                                    <div class="mt-4 w-100">
+                                        <a href="{{ $currentLeader ? route('leadership.show', $currentLeader->slug) : route('about') . '#chairman' }}" class="btn text-white px-4 py-1.8 w-100 fw-bold shadow-sm" style="background-color: #006A4E; border-color: #006A4E; color: white !important; border-radius: 5px; transition: all 0.3s ease; font-size: 13px; font-family: 'Hind Siliguri', sans-serif;">
+                                            বিস্তারিত জীবনী <i class="fas fa-arrow-right ms-1" style="font-size: 11px;"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3.1. About Us Homepage Section -->
+    <section class="about-homepage-section py-6" id="section-wrapper-about_homepage" style="background-color: #f8fafc; padding-top: 80px; padding-bottom: 80px;">
+        <div class="container">
+            <div class="row g-5 align-items-center">
+                <!-- Left Side: Image of "At a Glance" -->
+                <div class="col-lg-6">
+                    <div class="hover-zoom shadow-md rounded-4 overflow-hidden" style="box-shadow: 0 15px 35px rgba(0,0,0,0.06) !important;">
+                        <img src="{{ asset('/uploads/about/at-a-glance.jpg') }}" alt="এক নজরে হেযবুত তওহীদ" class="img-fluid w-100" style="transition: transform 0.5s ease;" />
+                    </div>
+                </div>
+
+                <!-- Right Side: Content -->
+                <div class="col-lg-6 ps-lg-5 text-start">
+                    <span class="fw-bold text-uppercase tracking-wider" style="color: #64748b; font-size: 0.95rem; font-family: 'Baloo Da 2', sans-serif;">আমাদের পরিচিতি</span>
+                    <h2 class="fw-bold mt-2 mb-3" style="font-family: 'Baloo Da 2', sans-serif; font-size: 2.25rem; color: #0f172a; font-weight: 800; line-height: 1.3;">এক নজরে হেযবুত তওহীদ</h2>
+
+                    <p class="lead fw-bold mb-4" style="font-size: 1.15rem; line-height: 1.7; color: #1e293b; font-family: 'Hind Siliguri', sans-serif; text-align: justify;">
+                        হেযবুত তওহীদ সম্পূর্ণ অরাজনৈতিক ধর্মীয় সংস্কারমূলক আন্দোলন যার মূল কাজই হলো মানবজাতিকে ন্যায়ের পক্ষে ঐক্যবদ্ধ করা এবং মানবজাতির অশান্তির মূল কারণ দাজ্জালের অনুসরণ না করে সমগ্র পৃথিবীতে সৃষ্টিকর্তার সার্বভৌমত্ব প্রতিষ্ঠা করা.
+                    </p>
+
+                    <p class="text-muted lh-lg mb-4" style="text-align: justify; font-size: 14.5px; font-family: 'Hind Siliguri', sans-serif;">
+                        পুরো মানবজাতিকে আল্লাহর তওহীদের ভিত্তিতে অর্থাৎ সত্য ও ন্যায়ের পক্ষে, সকল অন্যায়ের বিরুদ্ধে ঐক্যবদ্ধ করাই হেযবুত তওহীদের মূল লক্ষ্য। মানবজীবনে সঠিক পথ, হেদায়াহ (Right Direction) ও সত্য জীবনব্যবস্থা প্রতিষ্ঠিত হলে সমস্ত মানবজাতি অন্যায় ও অবিচার থেকে মুক্তি পাবে। পৃথিবীতে প্রতিষ্ঠিত হবে অনাবিল শান্তি। সেই শান্তিময় পৃথিবী প্রতিষ্ঠার লক্ষ্যকে সামনে নিয়ে সংগ্রাম করে যাচ্ছে হেযবুত তওহীদের সদস্য-সদস্যারা।
+                    </p>
+
+                    <div>
+                        <a href="/about-us" class="btn px-4 py-2 fw-bold text-white shadow-sm" style="background-color: #006A4E; border-color: #006A4E; color: white !important; border-radius: 5px; font-size: 14px; font-family: 'Baloo Da 2', sans-serif; transition: all 0.3s ease;">
+                            আমাদের সম্পর্কে বিস্তারিত জানুন <i class="fas fa-info-circle ms-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3.2. Events & Programs Section (Redesigned for Premium Aesthetics!) -->
+    @php
+        $latestEvent = \App\Models\Blog::published()
+            ->whereHas('category', function ($query) {
+                $query->where('slug', 'events-and-programs')
+                      ->orWhere('slug', 'events')
+                      ->orWhere('slug', 'recent-events');
+            })
+            ->orderBy('published_at', 'desc')
+            ->orderBy('id', 'desc')
+            ->first();
+    @endphp
+
+    @if($latestEvent)
+        <section class="events-homepage-section py-6 bg-white" id="section-wrapper-events_homepage" style="border-top: 1px solid #f1f5f9; border-bottom: 1px solid #f1f5f9; padding-top: 90px; padding-bottom: 90px;">
+            <div class="container">
+                <div class="row g-5 align-items-center">
+
+                    <!-- Left Side: Editorial Content -->
+                    <div class="col-lg-6 text-start">
+                        <!-- Category Badge & View All -->
+                        <div class="d-flex align-items-center justify-content-between mb-4">
+                            <span class="px-3 py-1.5 rounded-3 fw-bold text-uppercase" style="font-size: 12px; background-color: #e6f4f0; color: #006A4E; font-family: 'Baloo Da 2', sans-serif; letter-spacing: 0.5px;">
+                                <i class="fas fa-calendar-alt me-1.5"></i> সাম্প্রতিক অনুষ্ঠান
+                            </span>
+                            <a href="/articles?category=events-and-programs" class="text-decoration-none fw-bold" style="color: #006A4E; font-size: 14.5px; font-family: 'Baloo Da 2', sans-serif; transition: color 0.2s ease;">
+                                সকল অনুষ্ঠান দেখুন <i class="fas fa-arrow-right ms-1"></i>
+                            </a>
+                        </div>
+
+                        <!-- Title -->
+                        <h2 class="fw-bold mb-4 text-dark" style="font-family: 'Baloo Da 2', sans-serif; font-size: 2.25rem; line-height: 1.35; color: #0f172a !important; font-weight: 800;">
+                            {{ $latestEvent->title }}
+                        </h2>
+
+                        <!-- Excerpt -->
+                        <p class="text-secondary mb-5" style="font-family: 'Hind Siliguri', sans-serif; font-size: 15px; line-height: 1.8; color: #475569 !important; text-align: justify;">
+                            {{ Str::limit(strip_tags($latestEvent->content), 320) }}
+                        </p>
+
+                        <!-- CTA -->
+                        <div>
+                            <a href="{{ route('blog.detail', $latestEvent->slug) }}" class="btn px-4 py-2.2 fw-bold text-white shadow-sm" style="background-color: #006A4E; border-color: #006A4E; color: white !important; font-family: 'Hind Siliguri', sans-serif; font-size: 14px; border-radius: 5px; transition: all 0.3s ease;">
+                                বিস্তারিত পড়ুন <i class="fas fa-arrow-right ms-2" style="font-size: 12px;"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Right Side: Editorial Image Card -->
+                    <div class="col-lg-6">
+                        <div class="position-relative d-flex justify-content-center justify-content-lg-end" style="padding-bottom: 20px; padding-left: 20px;">
+                            <!-- Background decorative card -->
+                            <div class="position-absolute" style="background-color: #f1f5f9; top: 20px; left: 0px; right: 20px; bottom: 0px; z-index: 1; border-radius: 16px;"></div>
+
+                            <!-- Image card wrapper -->
+                            <div class="position-relative overflow-hidden rounded-4 shadow-lg w-100" style="z-index: 2; aspect-ratio: 16/10; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;">
+                                <img src="{{ asset($latestEvent->image_url) }}" alt="{{ $latestEvent->title }}" class="w-100 h-100 object-fit-cover hover-scale" style="transition: transform 0.5s ease;" />
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            
+        </section>
+    @endif
+
+    <!-- 3.2.1. News & Press Releases Section -->
+    @if(isset($blogs) && $blogs->count() > 0)
+    <div class="homepage-section-wrapper" id="section-wrapper-news_section">
+        <section class="news-section py-6" style="background-color: #ffffff; padding-top: 80px; padding-bottom: 80px; border-bottom: 1px solid #f1f5f9;">
+            <div class="container">
+                <div class="text-center mb-5">
+                    <span class="fw-bold text-uppercase tracking-wider" style="color: #64748b; font-size: 0.95rem; font-family: 'Baloo Da 2', sans-serif;">সংবাদ ও বিবৃতি</span>
+                    <h2 class="fw-bold mt-2" style="font-family: 'Baloo Da 2', sans-serif; font-size: 2.25rem; color: #0f172a; font-weight: 800; line-height: 1.3;">সর্বশেষ সংবাদ ও প্রেস রিলিজ</h2>
+                    <div class="mx-auto mt-3" style="width: 60px; height: 3px; border-radius: 2px; background-color: #006A4E;"></div>
+                </div>
+
+                <div class="row g-4">
+                    @foreach($blogs as $blog)
+                        <div class="col-lg-4 col-md-6">
+                            <div class="news-card shadow-sm h-100 d-flex flex-column">
+                                <div class="news-card-img-wrapper" style="aspect-ratio: 16/10;">
+                                    <img src="{{ asset($blog->image_url ?? 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?q=80&w=600') }}" alt="{{ $blog->title }}" class="w-100 h-100 object-fit-cover">
+                                    @if($blog->category)
+                                        <span class="position-absolute px-3 py-1 rounded-pill text-white fw-bold shadow-sm" style="background: #006A4E; font-size: 0.75rem; font-family: 'Hind Siliguri', sans-serif; top: 12px; left: 12px;">
+                                            {{ $blog->category->name }}
+                                        </span>
+                                    @endif
+                                </div>
+                                <div class="p-4 d-flex flex-column flex-grow-1">
+                                    <div class="d-flex align-items-center gap-2 text-muted small mb-2" style="font-family: 'Hind Siliguri', sans-serif;">
+                                        <i class="far fa-calendar-alt"></i> {{ $blog->published_at ? $blog->published_at->format('d M, Y') : $blog->created_at->format('d M, Y') }}
+                                    </div>
+                                    <h4 class="fw-bold mb-3" style="font-family: 'Baloo Da 2', sans-serif; font-size: 1.25rem; line-height: 1.4; color: #0f172a;">
+                                        {{ Str::limit($blog->title, 65) }}
+                                    </h4>
+                                    <p class="text-muted small mb-4 flex-grow-1" style="font-family: 'Hind Siliguri', sans-serif; line-height: 1.6;">
+                                        {!! Str::limit(strip_tags($blog->content), 120) !!}
+                                    </p>
+                                    <div class="mt-auto">
+                                        <a href="{{ route('blog.detail', $blog->slug) }}" class="btn w-100 text-white fw-bold py-2 shadow-sm" style="background-color: #006A4E; border-color: #006A4E; border-radius: 5px; font-family: 'Hind Siliguri', sans-serif; font-size: 14px; transition: all 0.3s ease;">
+                                            বিস্তারিত পড়ুন <i class="fas fa-arrow-right ms-2" style="font-size: 11px;"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </section>
+    </div>
+    @endif
+
+    <!-- 3.3. Struggle & Stats Section (Redesigned for World-Class Premium Aesthetics!) -->
+    <section class="struggle-stats-section py-6 position-relative text-white text-center" id="section-wrapper-struggle_stats" style="background: linear-gradient(135deg, #006A4E 0%, #004D38 100%) !important; padding-top: 110px; padding-bottom: 110px; border-top: 1px solid rgba(255,255,255,0.05); border-bottom: 1px solid rgba(255,255,255,0.05);">
+        <!-- Soft glow effects -->
+        <div class="position-absolute rounded-circle" style="width: 400px; height: 400px; background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, rgba(0, 0, 0, 0) 70%); top: 50%; left: 50%; transform: translate(-50%, -50%); filter: blur(50px); pointer-events: none; z-index: 1;"></div>
+
+        <div class="container position-relative" style="z-index: 2;">
+
+            <!-- Glowing Premium Play Button -->
+            <div class="d-flex justify-content-center mb-4">
+                <a href="https://www.youtube.com/watch?v=EMZgDNuyQEc" target="_blank" class="play-glowing-btn d-flex align-items-center justify-content-center text-decoration-none" style="width: 80px; height: 80px; background: rgba(255,255,255,0.08); border: 2px solid rgba(255,255,255,0.2); border-radius: 50%; box-shadow: 0 0 30px rgba(255, 255, 255, 0.1); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); backdrop-filter: blur(8px);">
+                    <div class="d-flex align-items-center justify-content-center" style="width: 52px; height: 52px; background: #ffffff; border-radius: 50%; transition: all 0.3s ease;">
+                        <i class="fas fa-play" style="font-size: 1.25rem; color: #006A4E; margin-left: 4px;"></i>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Title with gradient color text -->
+            <h2 class="fw-bold mb-4 text-white" style="font-family: 'Baloo Da 2', sans-serif; font-size: 2.8rem; font-weight: 800; text-shadow: 0 2px 8px rgba(0,0,0,0.35);">
+                হেযবুত তওহীদের <span style="color: #fbbf24;">সংগ্রামের ৩০ বছর</span>
+            </h2>
+
+            <!-- Paragraph Description -->
+            <div class="row justify-content-center mb-5">
+                <div class="col-lg-8">
+                    <p class="lh-lg mb-0 text-white" style="font-family: 'Hind Siliguri', sans-serif; font-size: 16.5px; line-height: 1.9; text-align: justify; text-align-last: center; text-shadow: 0 1px 3px rgba(0,0,0,0.4);">
+                        হেযবুত তওহীদ একটি অরাজনৈতিক ধর্মীয় সংস্কারমূলক আন্দোলন। বাংলাদেশের প্রায় সবগুলো জেলাতেই আমাদের সাংগঠনিক কার্যক্রম বিস্তৃত। ধর্মব্যবসা, ধর্ম নিয়ে অপরাজনীতি, জঙ্গিবাদ ও সাম্প্রদায়িকতার বিরুদ্ধে আদর্শিক প্রচারণা চালিয়ে আমরা দেশব্যাপী সুপরিচিতি লাভ করতে পেরেছি।
+                    </p>
+                </div>
+            </div>
+
+            <!-- Glassmorphic Stats Row -->
+            <div class="row g-4 justify-content-center">
+                <!-- Stat 1 -->
+                <div class="col-md-3 col-sm-6">
+                    <div class="stat-glass-card p-4 text-center" style="background: rgba(255, 255, 255, 0.08); border: 1.5px solid rgba(255, 255, 255, 0.18); border-radius: 12px; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);">
+                        <h3 class="text-white mb-1" style="font-size: 2.4rem; font-family: 'Baloo Da 2', sans-serif; font-weight: 800;">১,০০০+</h3>
+                        <div style="width: 35px; height: 1.5px; background: rgba(255,255,255,0.25); margin: 10px auto;"></div>
+                        <p class="mb-0 fw-bold text-white" style="font-family: 'Hind Siliguri', sans-serif; font-size: 16px;">জনসভা</p>
+                    </div>
+                </div>
+
+                <!-- Stat 2 -->
+                <div class="col-md-3 col-sm-6">
+                    <div class="stat-glass-card p-4 text-center" style="background: rgba(255, 255, 255, 0.08); border: 1.5px solid rgba(255, 255, 255, 0.18); border-radius: 12px; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);">
+                        <h3 class="text-white mb-1" style="font-size: 2.4rem; font-family: 'Baloo Da 2', sans-serif; font-weight: 800;">১০,০০০+</h3>
+                        <div style="width: 35px; height: 1.5px; background: rgba(255,255,255,0.25); margin: 10px auto;"></div>
+                        <p class="mb-0 fw-bold text-white" style="font-family: 'Hind Siliguri', sans-serif; font-size: 16px;">সেমিনার</p>
+                    </div>
+                </div>
+
+                <!-- Stat 3 -->
+                <div class="col-md-3 col-sm-6">
+                    <div class="stat-glass-card p-4 text-center" style="background: rgba(255, 255, 255, 0.08); border: 1.5px solid rgba(255, 255, 255, 0.18); border-radius: 12px; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);">
+                        <h3 class="text-white mb-1" style="font-size: 2.4rem; font-family: 'Baloo Da 2', sans-serif; font-weight: 800;">১,০০,০০০+</h3>
+                        <div style="width: 35px; height: 1.5px; background: rgba(255,255,255,0.25); margin: 10px auto;"></div>
+                        <p class="mb-0 fw-bold text-white" style="font-family: 'Hind Siliguri', sans-serif; font-size: 16px;">পথসভা</p>
+                    </div>
+                </div>
+
+                <!-- Stat 4 -->
+                <div class="col-md-3 col-sm-6">
+                    <div class="stat-glass-card p-4 text-center" style="background: rgba(255, 255, 255, 0.08); border: 1.5px solid rgba(255, 255, 255, 0.18); border-radius: 12px; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);">
+                        <h3 class="text-white mb-1" style="font-size: 2.4rem; font-family: 'Baloo Da 2', sans-serif; font-weight: 800;">৫০০+</h3>
+                        <div style="width: 35px; height: 1.5px; background: rgba(255,255,255,0.25); margin: 10px auto;"></div>
+                        <p class="mb-0 fw-bold text-white" style="font-family: 'Hind Siliguri', sans-serif; font-size: 16px;">ওয়াজ মাহফিল</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
+    </section>
+
+    <!-- 5. Videos Section -->
+    <div class="homepage-section-wrapper" id="section-wrapper-videos_section">
+        @php
+            $homeVideos = \App\Models\Video::where('is_active', true)
+                ->orderBy('sort_order', 'asc')
+                ->orderBy('created_at', 'desc')
+                ->take(3)
+                ->get();
+        @endphp
+        @if($homeVideos->count() > 0)
+            <!-- Video Gallery Section -->
+            <section class="video-gallery-section py-6 bg-off-white">
+                <div class="container">
+                    <div class="text-center mb-5">
+                        <span class="fw-bold text-uppercase tracking-wider" style="color: #64748b; font-size: 0.95rem; font-family: 'Baloo Da 2', sans-serif;">ভিডিও সম্ভার</span>
+                        <h2 class="fw-bold mt-2" style="font-family: 'Baloo Da 2', sans-serif; font-size: 2.25rem; color: #0f172a; font-weight: 800; line-height: 1.3;">গুরুত্বপূর্ণ সেমিনার ও বক্তব্যসমূহ</h2>
+                        <div class="mx-auto mt-3" style="width: 60px; height: 3px; border-radius: 2px; background-color: #10b981;"></div>
+                    </div>
+                    <div class="row g-4">
+                        @foreach($homeVideos as $video)
+                            <div class="col-lg-4 col-md-6">
+                                <div class="card video-card bg-white h-100 border-0 shadow-sm rounded-3 overflow-hidden" style="box-shadow: 0 4px 15px rgba(0,0,0,0.03) !important;">
+                                    <div class="video-iframe-wrapper">
+                                        <iframe src="{{ $video->embed_url }}" title="{{ $video->title }}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                    </div>
+                                    <div class="card-body p-3">
+                                        <h6 class="fw-bold text-dark mb-0" style="font-family: 'Hind Siliguri', sans-serif; line-height: 1.5; font-size: 14.5px;">{{ $video->title }}</h6>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col-12 text-center">
+                            <a href="{{ route('videos.index') }}" class="btn text-white px-4 py-2 fw-bold shadow-sm" style="background-color: #006A4E; border-color: #006A4E; color: white !important; border-radius: 5px; font-family: 'Hind Siliguri', sans-serif; font-size: 14px;">
+                                সব ভিডিও দেখুন <i class="fas fa-arrow-right ms-2" style="font-size: 11px;"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
         @endif
     </div>
 
-
-                    @break
-
-                @case('news_ticker')
-                    <!-- Breaking News Ticker (Marquee) -->
-    <div class="news-ticker-container d-flex align-items-center">
-        <div class="ticker-title d-flex align-items-center text-nowrap">
-            <i class="fas fa-bullhorn me-2 text-gold"></i> ব্রেকিং নিউজ
-        </div>
-        <div class="ticker-wrap py-2">
-            <div class="ticker-content">
-                @forelse($blogs as $blog)
-                    <span class="ticker-item me-5">
-                        <a href="{{ route('blog.detail', $blog->slug) }}" class="text-decoration-none text-dark hover-gold">
-                            <span class="badge bg-dark-green text-white me-2">সংবাদ</span>
-                            {{ $blog->title }}
+    <!-- 5.0. Shortcut Navigation Section -->
+    <div class="homepage-section-wrapper" id="section-wrapper-shortcuts_section">
+        <section class="shortcuts-section py-5" style="background-color: #f8fafc;">
+            <div class="container">
+                <div class="row g-4">
+                    <!-- Item 1: আমাদের বক্তব্য -->
+                    <div class="col-lg-4 col-md-6">
+                        <a href="{{ route('videos.index') }}" class="shortcut-card-link text-decoration-none">
+                            <div class="shortcut-card position-relative overflow-hidden rounded-4 d-flex flex-column align-items-center justify-content-center text-center text-white" style="height: 220px; background: #1e293b; border-radius: 16px;">
+                                <div class="icon-circle bg-white d-flex align-items-center justify-content-center mb-3" style="width: 58px; height: 58px; border-radius: 50%; transition: all 0.3s ease;">
+                                    <i class="fas fa-bullhorn" style="font-size: 1.4rem; color: #1e293b;"></i>
+                                </div>
+                                <h4 class="fw-bold mb-0" style="font-family: 'Baloo Da 2', sans-serif; font-size: 1.45rem; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">আমাদের বক্তব্য</h4>
+                            </div>
                         </a>
-                    </span>
-                @empty
-                    <span class="text-muted">আন্দোলনের সত্য প্রচার ও মানবতার কল্যাণে এগিয়ে আসুন। হেজবুত তওহীদের সাথেই থাকুন।</span>
-                @endforelse
+                    </div>
+                    <!-- Item 2: আমাদের কার্যক্রম -->
+                    <div class="col-lg-4 col-md-6">
+                        <a href="/blog/category/activities" class="shortcut-card-link text-decoration-none">
+                            <div class="shortcut-card position-relative overflow-hidden rounded-4 d-flex flex-column align-items-center justify-content-center text-center text-white" style="height: 220px; background: #1e293b; border-radius: 16px;">
+                                <div class="icon-circle bg-white d-flex align-items-center justify-content-center mb-3" style="width: 58px; height: 58px; border-radius: 50%; transition: all 0.3s ease;">
+                                    <i class="fas fa-tasks" style="font-size: 1.4rem; color: #1e293b;"></i>
+                                </div>
+                                <h4 class="fw-bold mb-0" style="font-family: 'Baloo Da 2', sans-serif; font-size: 1.45rem; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">আমাদের কার্যক্রম</h4>
+                            </div>
+                        </a>
+                    </div>
+                    <!-- Item 3: আমাদের বইসমূহ -->
+                    <div class="col-lg-4 col-md-6">
+                        <a href="/publications" class="shortcut-card-link text-decoration-none">
+                            <div class="shortcut-card position-relative overflow-hidden rounded-4 d-flex flex-column align-items-center justify-content-center text-center text-white" style="height: 220px; background: #1e293b; border-radius: 16px;">
+                                <div class="icon-circle bg-white d-flex align-items-center justify-content-center mb-3" style="width: 58px; height: 58px; border-radius: 50%; transition: all 0.3s ease;">
+                                    <i class="fas fa-book" style="font-size: 1.4rem; color: #1e293b;"></i>
+                                </div>
+                                <h4 class="fw-bold mb-0" style="font-family: 'Baloo Da 2', sans-serif; font-size: 1.45rem; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">আমাদের বইসমূহ</h4>
+                            </div>
+                        </a>
+                    </div>
+                    <!-- Item 4: অপপ্রচারের জবাব -->
+                    <div class="col-lg-4 col-md-6">
+                        <a href="/blog/category/rebuttal-and-legal" class="shortcut-card-link text-decoration-none">
+                            <div class="shortcut-card position-relative overflow-hidden rounded-4 d-flex flex-column align-items-center justify-content-center text-center text-white" style="height: 220px; background: #1e293b; border-radius: 16px;">
+                                <div class="icon-circle bg-white d-flex align-items-center justify-content-center mb-3" style="width: 58px; height: 58px; border-radius: 50%; transition: all 0.3s ease;">
+                                    <i class="fas fa-comment-slash" style="font-size: 1.4rem; color: #1e293b;"></i>
+                                </div>
+                                <h4 class="fw-bold mb-0" style="font-family: 'Baloo Da 2', sans-serif; font-size: 1.45rem; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">অপপ্রচারের জবাব</h4>
+                            </div>
+                        </a>
+                    </div>
+                    <!-- Item 5: প্রবন্ধ / ব্লগ / কলাম -->
+                    <div class="col-lg-4 col-md-6">
+                        <a href="/blog/category/articles-and-editorials" class="shortcut-card-link text-decoration-none">
+                            <div class="shortcut-card position-relative overflow-hidden rounded-4 d-flex flex-column align-items-center justify-content-center text-center text-white" style="height: 220px; background: #1e293b; border-radius: 16px;">
+                                <div class="icon-circle bg-white d-flex align-items-center justify-content-center mb-3" style="width: 58px; height: 58px; border-radius: 50%; transition: all 0.3s ease;">
+                                    <i class="fas fa-feather-alt" style="font-size: 1.4rem; color: #1e293b;"></i>
+                                </div>
+                                <h4 class="fw-bold mb-0" style="font-family: 'Baloo Da 2', sans-serif; font-size: 1.45rem; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">প্রবন্ধ / ব্লগ / কলাম</h4>
+                            </div>
+                        </a>
+                    </div>
+                    <!-- Item 6: নির্যাতনের ইতিহাস -->
+                    <div class="col-lg-4 col-md-6">
+                        <a href="/blog/category/history-of-persecution" class="shortcut-card-link text-decoration-none">
+                            <div class="shortcut-card position-relative overflow-hidden rounded-4 d-flex flex-column align-items-center justify-content-center text-center text-white" style="height: 220px; background: #1e293b; border-radius: 16px;">
+                                <div class="icon-circle bg-white d-flex align-items-center justify-content-center mb-3" style="width: 58px; height: 58px; border-radius: 50%; transition: all 0.3s ease;">
+                                    <i class="fas fa-history" style="font-size: 1.4rem; color: #1e293b;"></i>
+                                </div>
+                                <h4 class="fw-bold mb-0" style="font-family: 'Baloo Da 2', sans-serif; font-size: 1.45rem; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">নির্যাতনের ইতিহাস</h4>
+                            </div>
+                        </a>
+                    </div>
+                </div>
             </div>
-        </div>
+            
+        </section>
     </div>
 
-
-                    @break
-
-                @case('leaders_section')
-
-    <!-- Double Leader Message Section (Founder & Chairman) -->
-    <section class="leaders-section py-6 bg-off-white">
-        <div class="container">
-            <div class="text-center mb-5">
-                <span class="text-gold fw-bold text-uppercase tracking-wider">নেতৃত্বের আদর্শ</span>
-                <h2 class="section-title text-dark-green">আমাদের পথপ্রদর্শক ও নেতৃত্ব</h2>
-                <div class="title-underline bg-gold mx-auto mt-3" style="width: 80px; height: 3px;"></div>
-            </div>
-
-            <div class="row g-4 justify-content-center">
-                <!-- Founder Card -->
-                <div class="col-lg-6">
-                    <div class="card leader-card-tall founder h-100 bg-white rounded-4 shadow-sm text-center overflow-hidden">
-                        <div class="leader-image-header" style="height: 360px; overflow: hidden; position: relative;">
-                            @php
-                                $founderImg = $homepageContent['leaders_section']['founder_image'] ?? ($founder ? $founder->image : '');
-                                if (empty($founderImg)) {
-                                    $founderImg = 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=600';
-                                }
-                            @endphp
-                            <img src="{{ str_starts_with($founderImg, 'http') ? $founderImg : asset($founderImg) }}" alt="{{ $homepageContent['leaders_section']['founder_name'] ?? ($founder->name ?? 'জনাব মোহাম্মদ বায়েজীদ খান পন্নী') }}" class="w-100 h-100" style="object-fit: cover; object-position: center 20%;">
-                        </div>
-                        <div class="card-body p-4 d-flex flex-column">
-                            <span class="badge bg-light-green text-dark-green mb-2 px-3 py-1 rounded-pill fw-bold" style="font-size: 0.8rem; width: fit-content; margin: 0 auto;">{{ $homepageContent['leaders_section']['founder_badge'] ?? 'প্রতিষ্ঠাতা এমামুযযামান' }}</span>
-                            <h3 class="fw-bold text-dark-green mb-1">{{ $homepageContent['leaders_section']['founder_name'] ?? ($founder->name ?? 'জনাব মোহাম্মদ বায়েজীদ খান পন্নী') }}</h3>
-                            <p class="text-muted mb-3" style="font-size: 0.85rem; font-weight: 500;">{{ $homepageContent['leaders_section']['founder_designation'] ?? ($founder->designation ?? 'সংস্কারক ও পায়োনিয়ার (১৯২৫ - ২০১২)') }}</p>
-                            <hr class="w-25 mx-auto my-3 border-2 border-dark-green" style="border-color: #006A4E !important;">
-                            <p class="text-muted lh-lg mb-4 text-start" style="text-align: justify !important;">
-                                {!! $homepageContent['leaders_section']['founder_bio'] ?? ($founder->bio ?? 'হেযবুত তওহীদের মাননীয় প্রতিষ্ঠাতা এমামুযযামান জনাব মোহাম্মদ বায়েজীদ খান পন্নী ধর্মের প্রকৃত শিক্ষাকে পুনরুজ্জীবিত করতে সারা জীবন ব্যয় করেছেন...') !!}
-                            </p>
-                            <div class="mt-auto">
-                                <a href="{{ $homepageContent['leaders_section']['founder_btn_link'] ?? ($founder ? route('leadership.show', $founder->slug) : route('about') . '#founder') }}" class="btn btn-outline-dark-green rounded-pill px-4 py-2">{{ $homepageContent['leaders_section']['founder_btn_text'] ?? 'প্রতিষ্ঠাতার জীবনী ও বইসমূহ' }}</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Chairman/Leader Card -->
-                <div class="col-lg-6">
-                    <div class="card leader-card-tall h-100 bg-white rounded-4 shadow-sm text-center overflow-hidden">
-                        <div class="leader-image-header" style="height: 360px; overflow: hidden; position: relative;">
-                            @php
-                                $emamImg = $homepageContent['leaders_section']['emam_image'] ?? ($currentLeader ? $currentLeader->image : '');
-                                if (empty($emamImg)) {
-                                    $emamImg = 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=600';
-                                }
-                            @endphp
-                            <img src="{{ str_starts_with($emamImg, 'http') ? $emamImg : asset($emamImg) }}" alt="{{ $homepageContent['leaders_section']['emam_name'] ?? ($currentLeader->name ?? 'জনাব হোসাইন মোহাম্মদ সেলিম') }}" class="w-100 h-100" style="object-fit: cover; object-position: center 20%;">
-                        </div>
-                        <div class="card-body p-4 d-flex flex-column">
-                            <span class="badge bg-dark-green text-white mb-2 px-3 py-1 rounded-pill fw-bold" style="font-size: 0.8rem; width: fit-content; margin: 0 auto;">{{ $homepageContent['leaders_section']['emam_badge'] ?? 'মাননীয় এমাম' }}</span>
-                            <h3 class="fw-bold text-dark-green mb-1">{{ $homepageContent['leaders_section']['emam_name'] ?? ($currentLeader->name ?? 'জনাব হোসাইন মোহাম্মদ সেলিম') }}</h3>
-                            <p class="text-muted mb-3" style="font-size: 0.85rem; font-weight: 500;">{{ $homepageContent['leaders_section']['emam_designation'] ?? ($currentLeader->designation ?? 'হেযবুত তওহীদের মাননীয় এমাম') }}</p>
-                            <hr class="w-25 mx-auto my-3 border-2 border-dark-green" style="border-color: #006A4E !important;">
-                            <p class="text-muted lh-lg mb-4 text-start" style="text-align: justify !important; font-style: italic;">
-                                "{{ $homepageContent['leaders_section']['emam_quote'] ?? ($currentLeader->quote ?? 'আমাদের এই লড়াই কোনো ব্যক্তিগত বা রাজনৈতিক ফায়দা হাসিলের জন্য নয়...') }}"
-                            </p>
-                            <div class="mt-auto">
-                                <a href="{{ $homepageContent['leaders_section']['emam_btn_link'] ?? ($currentLeader ? route('leadership.show', $currentLeader->slug) : route('about') . '#chairman') }}" class="btn btn-outline-dark-green rounded-pill px-4 py-2">{{ $homepageContent['leaders_section']['emam_btn_text'] ?? 'এমামের সাক্ষাৎকার ও বাণী' }}</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-                    @break
-
-                @case('activities_section')
-                    <!-- Testimonials / Citizen Voices Section -->
-                        <section class="testimonials-section py-6 position-relative overflow-hidden" style="background: linear-gradient(135deg, #022c22 0%, #064e3b 100%) !important; border-top: 4px solid #10B981;">
-                            <!-- Subtle background glowing lights -->
-                            <div class="position-absolute rounded-circle" style="width: 250px; height: 250px; background: rgba(52, 211, 153, 0.1); top: -50px; right: -50px; filter: blur(60px); pointer-events: none;"></div>
-                            <div class="position-absolute rounded-circle" style="width: 250px; height: 250px; background: rgba(16, 185, 129, 0.08); bottom: -50px; left: -50px; filter: blur(60px); pointer-events: none;"></div>
-                    
-                            <div class="container position-relative" style="z-index: 2;">
-                                <div class="text-center mb-5">
-                                    <span class="fw-bold text-uppercase tracking-wider fs-6 px-3 py-1 rounded-pill" style="background: rgba(16, 185, 129, 0.15); color: #34d399; font-size: 0.85rem; border: 1px solid rgba(52, 211, 153, 0.25);">নাগরিক মতামত ও সুধী বাণী</span>
-                                    <h2 class="section-title text-white mt-3 fw-bold">শুভাকাঙ্ক্ষীদের বক্তব্য</h2>
-                                    <div class="mx-auto mt-2" style="width: 60px; height: 3px; border-radius: 2px; background-color: #10b981;"></div>
-                                </div>
-                    
-                                <!-- Testimonials Grid / Slider Container -->
-                                <div id="smartTestimonialCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="8000">
-                                    <div class="carousel-inner">
-                                        @php
-                                            // Chunk testimonials to show 3 cards per slide on desktop, 1 on mobile
-                                            $testimonialChunks = $testimonials->chunk(3);
-                                        @endphp
-                                        @forelse($testimonialChunks as $chunkIndex => $chunk)
-                                            <div class="carousel-item {{ $chunkIndex == 0 ? 'active' : '' }}">
-                                                <div class="row g-4 justify-content-center">
-                                                    @foreach($chunk as $testimonial)
-                                                        <div class="col-lg-4 col-md-6">
-                                                            <div class="testimonial-card">
-                    
-                                                                <!-- Quote icon watermark -->
-                                                                <i class="fas fa-quote-right position-absolute" style="font-size: 4.5rem; color: rgba(16, 185, 129, 0.04); bottom: 15px; right: 20px; pointer-events: none;"></i>
-                    
-                                                                <div>
-                                                                    <!-- Rating Stars -->
-                                                                    <div class="mb-3 text-warning fs-6">
-                                                                        @for($i = 1; $i <= 5; $i++)
-                                                                            @if($i <= $testimonial->rating)
-                                                                                <i class="fas fa-star" style="color: #fbbf24;"></i>
-                                                                            @else
-                                                                                <i class="far fa-star" style="color: #cbd5e1;"></i>
-                                                                            @endif
-                                                                        @endfor
-                                                                    </div>
-                    
-                                                                    <!-- Content -->
-                                                                    <p style="font-family: 'Hind Siliguri', sans-serif;">
-                                                                        @if(mb_strlen($testimonial->content) > 130)
-                                                                            {{ mb_substr($testimonial->content, 0, 125) }}...
-                                                                            <a href="javascript:void(0);" class="read-more-btn" data-name="{{ $testimonial->name }}" data-designation="{{ $testimonial->designation }}" data-content="{{ $testimonial->content }}" data-avatar="{{ $testimonial->avatar_url }}">বিস্তারিত পড়ুন</a>
-                                                                        @else
-                                                                            {{ $testimonial->content }}
-                                                                        @endif
-                                                                    </p>
-                                                                </div>
-                    
-                                                                <!-- User Meta -->
-                                                                <div class="d-flex align-items-center mt-auto pt-3" style="border-top: 1px solid #f1f5f9;">
-                                                                    <img src="{{ $testimonial->avatar_url }}" alt="{{ $testimonial->name }}" class="rounded-circle me-3" style="width: 48px; height: 48px; object-fit: cover; border: 2px solid rgba(16, 185, 129, 0.4);">
-                                                                    <div class="text-start">
-                                                                        <h6 class="mb-0 fs-6">{{ $testimonial->name }}</h6>
-                                                                        <span class="small text-emerald">{{ $testimonial->designation ?? 'শুভাকাঙ্ক্ষী' }}</span>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    @endforeach
+    <!-- 5.1. Photo Gallery Section -->
+    <div class="homepage-section-wrapper" id="section-wrapper-gallery_section">
+        @php
+            $galleryItems = $galleryPosts;
+            if (empty($galleryItems) || count($galleryItems) == 0) {
+                $galleryItems = \App\Models\Gallery::orderBy('gallery_order', 'asc')
+                    ->orderBy('updated_at', 'desc')
+                    ->take(8)
+                    ->with(['blog', 'blog.category'])
+                    ->get()
+                    ->filter(function($post) {
+                        if (empty($post->image_path)) return false;
+                        $path = public_path($post->image_path);
+                        return file_exists($path) && filesize($path) > 0;
+                    })
+                    ->values();
+            }
+        @endphp
+        <section class="photo-gallery-section py-6">
+            <div class="container">
+                <div class="row g-0">
+                    @if(count($galleryItems) > 0)
+                        <div class="col-lg-3 col-md-6 order-2 order-lg-1">
+                            <div class="d-flex flex-column gap-0">
+                                @for($i = 1; $i <= 3; $i++)
+                                    @if(isset($galleryItems[$i]))
+                                        @php $post = $galleryItems[$i]; @endphp
+                                        <a href="#" class="d-block text-decoration-none gallery-lightbox-trigger"
+                                           data-image="{{ asset($post->image_path) }}"
+                                           data-title="{{ $post->title ?? ($post->blog ? $post->blog->title : 'চিত্রশালা') }}"
+                                           data-category="{{ ($post->blog && $post->blog->category) ? $post->blog->category->name : 'চিত্রশালা' }}"
+                                           data-url="{{ $post->blog ? route('blog.detail', $post->blog->slug) : '#' }}">
+                                            <div class="gallery-card small-card">
+                                                <div class="gallery-zoom-icon">
+                                                    <i class="fas fa-search-plus"></i>
+                                                </div>
+                                                <img src="{{ asset($post->image_path) }}" alt="{{ $post->title ?? ($post->blog ? $post->blog->title : '') }}" loading="lazy">
+                                                <div class="gallery-card-overlay">
                                                 </div>
                                             </div>
-                                        @empty
-                                            <!-- Default smart placeholder slide -->
-                                            <div class="carousel-item active">
-                                                <div class="row g-4 justify-content-center">
-                                                    <!-- Dummy Card 1 -->
-                                                    <div class="col-lg-4 col-md-6">
-                                                        <div class="testimonial-card">
-                                                            <div>
-                                                                <div class="mb-3 text-warning"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-                                                                <p>উগ্রবাদ, সাম্প্রদায়িকতা ও জঙ্গিবাদের বিরুদ্ধে হেযবুত তওহীদের দেশব্যাপী বুদ্ধিবৃত্তিক প্রচারণা অত্যন্ত প্রশংসনীয়। সমাজে শান্তি রক্ষায় তাদের এই কর্মসূচি গুরুত্বপূর্ণ ভূমিকা রাখছে।</p>
-                                                            </div>
-                                                            <div class="d-flex align-items-center mt-3 pt-3" style="border-top: 1px solid #f1f5f9;">
-                                                                <div class="rounded-circle me-3 d-flex align-items-center justify-content-center text-white fw-bold bg-success" style="width: 48px; height: 48px;">শ</div>
-                                                                <div class="text-start">
-                                                                    <h6 class="mb-0">ড. এ. কে. এম. শাহনেওয়াজ</h6>
-                                                                    <span class="small text-emerald">অধ্যাপক, জাহাঙ্গীরনগর বিশ্ববিদ্যালয়</span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <!-- Dummy Card 2 -->
-                                                    <div class="col-lg-4 col-md-6">
-                                                        <div class="testimonial-card">
-                                                            <div>
-                                                                <div class="mb-3 text-warning"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-                                                                <p>ধর্মান্ধতা ও কুসংস্কারের বিরুদ্ধে ইসলামের সঠিক অহিংস বাণী মানুষের কাছে তুলে ধরার ব্যাপারে হেযবুত তওহীদের ভূমিকা যুগোপযোগী। তাদের সেবামূলক কার্যক্রম সর্বস্তরের মানুষের প্রশংসা পাওয়ার যোগ্য।</p>
-                                                            </div>
-                                                            <div class="d-flex align-items-center mt-3 pt-3" style="border-top: 1px solid #f1f5f9;">
-                                                                <div class="rounded-circle me-3 d-flex align-items-center justify-content-center text-white fw-bold bg-success" style="width: 48px; height: 48px;">ই</div>
-                                                                <div class="text-start">
-                                                                    <h6 class="mb-0">হাসানুল হক ইনু</h6>
-                                                                    <span class="small text-emerald">সাবেক তথ্য ও সম্প্রচার মন্ত্রী</span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <!-- Dummy Card 3 -->
-                                                    <div class="col-lg-4 col-md-6">
-                                                        <div class="testimonial-card">
-                                                            <div>
-                                                                <div class="mb-3 text-warning"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-                                                                <p>একটি শান্তিময় ও ধর্মীয় সম্প্রীতিপূর্ণ সমাজ বিনির্মাণে তাদের অরাজনৈতিক আন্দোলন ও আদর্শিক লড়াই সমাজে ইতিবাচক পরিবর্তন আনতে সক্ষম হয়েছে। তাদের সকল মানবিক কাজের সফলতা কামনা করি।</p>
-                                                            </div>
-                                                            <div class="d-flex align-items-center mt-3 pt-3" style="border-top: 1px solid #f1f5f9;">
-                                                                <div class="rounded-circle me-3 d-flex align-items-center justify-content-center text-white fw-bold bg-success" style="width: 48px; height: 48px;">ম</div>
-                                                                <div class="text-start">
-                                                                    <h6 class="mb-0">বিচারপতি সিকদার মকবুল হোসেন</h6>
-                                                                    <span class="small text-emerald">অবসরপ্রাপ্ত বিচারপতি, সুপ্রিম কোর্ট</span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        @endforelse
-                                    </div>
-                    
-                                    <!-- Slider Controls if chunks > 1 -->
-                                    @if($testimonialChunks->count() > 1)
-                                        <div class="d-flex justify-content-center gap-3 mt-4">
-                                            <button class="carousel-control-btn d-flex align-items-center justify-content-center rounded-circle" type="button" data-bs-target="#smartTestimonialCarousel" data-bs-slide="prev">
-                                                <i class="fas fa-chevron-left" style="font-size: 0.9rem;"></i>
-                                            </button>
-                                            <button class="carousel-control-btn d-flex align-items-center justify-content-center rounded-circle" type="button" data-bs-target="#smartTestimonialCarousel" data-bs-slide="next">
-                                                <i class="fas fa-chevron-right" style="font-size: 0.9rem;"></i>
-                                            </button>
-                                        </div>
+                                        </a>
                                     @endif
-                                </div>
-                    
-                                <!-- Sleek feedback action link -->
-                                <div class="text-center mt-5">
-                                    <a href="{{ url('/feedback') }}" class="btn rounded-pill px-5 py-3 fw-bold transition-all" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); border: none; color: white; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3); font-size: 0.95rem;">
-                                        <i class="fas fa-comments me-2"></i> সকল সুধী মতামত দেখুন
-                                    </a>
-                                </div>
-                            </div>
-                        </section>
-                    
-                        <!-- Testimonial Detail Modal -->
-                        <div class="modal fade" id="testimonialDetailModal" tabindex="-1" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered">
-                                <div class="modal-content border-0 shadow-lg text-white" style="background: linear-gradient(135deg, #022c22 0%, #064e3b 100%) !important; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1) !important;">
-                                    <div class="modal-header border-0 pb-0">
-                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body p-4 pt-0 text-center">
-                                        <i class="fas fa-quote-left fa-3x mb-3 opacity-30" style="color: #10b981;"></i>
-                                        <p id="modal-testimonial-content" class="fs-5 lh-relaxed mb-4 text-white opacity-95" style="font-family: 'Hind Siliguri', sans-serif; font-style: italic;"></p>
-                    
-                                        <div class="d-flex align-items-center justify-content-center mt-4 pt-3" style="border-top: 1px solid rgba(255, 255, 255, 0.1);">
-                                            <img id="modal-testimonial-avatar" src="" alt="Avatar" class="rounded-circle me-3" style="width: 55px; height: 55px; object-fit: cover; border: 2px solid #10b981;">
-                                            <div class="text-start">
-                                                <h5 id="modal-testimonial-name" class="fw-bold mb-0 text-white"></h5>
-                                                <span id="modal-testimonial-designation" class="small text-emerald" style="color: #34d399;"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                @endfor
                             </div>
                         </div>
-                    @break
 
-                @default
-                    @if(str_starts_with($section['id'], 'custom_'))
-                        <div class="custom-html-section">
-                            {!! $homepageContent[$section['id']]['html_content'] ?? '' !!}
+                        <div class="col-lg-6 order-1 order-lg-2">
+                            <div class="d-flex flex-column justify-content-between h-100 pb-0" style="min-height: 540px;">
+                                <div class="text-center py-2 d-flex flex-column justify-content-center align-items-center" style="height: 160px;">
+                                    <span class="fw-bold text-uppercase tracking-wider" style="color: #64748b; font-size: 0.95rem; font-family: 'Baloo Da 2', sans-serif;">চিত্রশালা</span>
+                                    <h2 class="mt-2 fw-bold" style="font-family: 'Baloo Da 2', sans-serif; font-size: 2.25rem; color: #0f172a; font-weight: 800; line-height: 1.3;">ছবি গ্যালারি</h2>
+                                    <p class="text-muted mt-2 mb-0" style="font-family: 'Hind Siliguri', sans-serif;">আন্দোলনের বিভিন্ন কর্মসূচী ও কর্মকাণ্ডের স্থিরচিত্রসমূহ</p>
+                                    <div class="mt-2" style="width: 60px; height: 3px; border-radius: 2px; background-color: #10b981;"></div>
+                                </div>
+                                @if(isset($galleryItems[0]))
+                                    @php $featuredPost = $galleryItems[0]; @endphp
+                                    <a href="#" class="d-block text-decoration-none gallery-lightbox-trigger mt-auto"
+                                       data-image="{{ asset($featuredPost->image_path) }}"
+                                       data-title="{{ $featuredPost->title ?? ($featuredPost->blog ? $featuredPost->blog->title : 'চিত্রশালা') }}"
+                                       data-category="{{ ($featuredPost->blog && $featuredPost->blog->category) ? $featuredPost->blog->category->name : 'চিত্রশালা' }}"
+                                       data-url="{{ $featuredPost->blog ? route('blog.detail', $featuredPost->blog->slug) : '#' }}">
+                                        <div class="gallery-card featured-card">
+                                            <div class="gallery-zoom-icon">
+                                                <i class="fas fa-search-plus fa-2x"></i>
+                                            </div>
+                                            <img src="{{ asset($featuredPost->image_path) }}" alt="{{ $featuredPost->title ?? ($featuredPost->blog ? $featuredPost->blog->title : '') }}" loading="lazy">
+                                            <div class="gallery-card-overlay">
+                                            </div>
+                                        </div>
+                                    </a>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3 col-md-6 order-3">
+                            <div class="d-flex flex-column gap-0">
+                                @for($i = 4; $i <= 6; $i++)
+                                    @if(isset($galleryItems[$i]))
+                                        @php $post = $galleryItems[$i]; @endphp
+                                        <a href="#" class="d-block text-decoration-none gallery-lightbox-trigger"
+                                           data-image="{{ asset($post->image_path) }}"
+                                           data-title="{{ $post->title ?? ($post->blog ? $post->blog->title : 'চিত্রশালা') }}"
+                                           data-category="{{ ($post->blog && $post->blog->category) ? $post->blog->category->name : 'চিত্রশালা' }}"
+                                           data-url="{{ $post->blog ? route('blog.detail', $post->blog->slug) : '#' }}">
+                                            <div class="gallery-card small-card">
+                                                <div class="gallery-zoom-icon">
+                                                    <i class="fas fa-search-plus"></i>
+                                                </div>
+                                                <img src="{{ asset($post->image_path) }}" alt="{{ $post->title ?? ($post->blog ? $post->blog->title : '') }}" loading="lazy">
+                                                <div class="gallery-card-overlay">
+                                                </div>
+                                            </div>
+                                        </a>
+                                    @endif
+                                @endfor
+                            </div>
                         </div>
                     @endif
-                    @break
-
-                @case('videos_section')
-                    <!-- Video Gallery Section -->
-    <section class="video-gallery-section py-6 bg-off-white">
-        <div class="container">
-            <div class="text-center mb-5">
-                <span class="text-gold fw-bold text-uppercase tracking-wider">ভিডিও সম্ভার</span>
-                <h2 class="section-title text-dark-green">গুরুত্বপূর্ণ সেমিনার ও বক্তব্যসমূহ</h2>
-                <div class="title-underline bg-gold mx-auto mt-3" style="width: 80px; height: 3px;"></div>
-            </div>
-
-            <div class="row g-4">
-                <!-- Video 1 -->
-                <div class="col-lg-4 col-md-6">
-                    <div class="card video-card bg-white h-100 border-0">
-                        <div class="video-iframe-wrapper">
-                            <iframe src="https://www.youtube.com/embed/zH0jJ0-05E8" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                        </div>
-                        <div class="card-body p-3">
-                            <h6 class="fw-bold text-dark mb-0"> ধর্মান্ধতা ও জঙ্গিবাদের বিরুদ্ধে হেজবুত তওহীদের মহাসমাবেশ</h6>
-                        </div>
-                    </div>
                 </div>
-
-                <!-- Video 2 -->
-                <div class="col-lg-4 col-md-6">
-                    <div class="card video-card bg-white h-100 border-0">
-                        <div class="video-iframe-wrapper">
-                            <iframe src="https://www.youtube.com/embed/J7iF1tEewjI" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                        </div>
-                        <div class="card-body p-3">
-                            <h6 class="fw-bold text-dark mb-0">প্রকৃত ইসলামের শিক্ষা ও মানব কল্যাণ - বিশেষ সেমিনার</h6>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Video 3 -->
-                <div class="col-lg-4 col-md-6">
-                    <div class="card video-card bg-white h-100 border-0">
-                        <div class="video-iframe-wrapper">
-                            <iframe src="https://www.youtube.com/embed/Yt-jXn2WpM4" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                        </div>
-                        <div class="card-body p-3">
-                            <h6 class="fw-bold text-dark mb-0">চেয়ারম্যান এমদাদুল হক সেলিমের বিশেষ সাক্ষাৎকার ও দিকনির্দেশনা</h6>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Photo Gallery Section -->
-    <section class="photo-gallery-section py-6">
-        <div class="container">
-            <div class="row g-0">
-                @if(count($galleryPosts) > 0)
-                    <!-- Left Column (3 Images stacked vertically) -->
-                    <div class="col-lg-3 col-md-6 order-2 order-lg-1">
-                        <div class="d-flex flex-column gap-0">
-                            @for($i = 1; $i <= 3; $i++)
-                                @if(isset($galleryPosts[$i]))
-                                    @php $post = $galleryPosts[$i]; @endphp
-                                    <a href="#" class="d-block text-decoration-none gallery-lightbox-trigger"
-                                       data-image="{{ asset($post->image_path) }}"
-                                       data-title="{{ $post->title ?? ($post->blog ? $post->blog->title : 'চিত্রশালা') }}"
-                                       data-category="{{ ($post->blog && $post->blog->category) ? $post->blog->category->name : 'চিত্রশালা' }}"
-                                       data-url="{{ $post->blog ? route('blog.detail', $post->blog->slug) : '#' }}">
-                                        <div class="gallery-card small-card">
-                                            <div class="gallery-zoom-icon">
-                                                <i class="fas fa-search-plus"></i>
-                                            </div>
-                                            <img src="{{ asset($post->image_path) }}" alt="{{ $post->title ?? ($post->blog ? $post->blog->title : '') }}" loading="lazy">
-                                            <div class="gallery-card-overlay">
-                                                <div class="gallery-card-info">
-                                                    <span class="cat-badge">{{ ($post->blog && $post->blog->category) ? $post->blog->category->name : 'চিত্রশালা' }}</span>
-                                                    <h6 class="title-text text-truncate mb-0" title="{{ $post->title ?? ($post->blog ? $post->blog->title : '') }}">{{ $post->title ?? ($post->blog ? $post->blog->title : '') }}</h6>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </a>
-                                @endif
-                            @endfor
-                        </div>
-                    </div>
-
-                    <!-- Center Column (Text header at top, Featured Image at bottom) -->
-                    <div class="col-lg-6 order-1 order-lg-2">
-                        <div class="d-flex flex-column justify-content-between h-100 pb-0" style="min-height: 540px;">
-                            <!-- Header Text Area (formerly at the top of the section) -->
-                            <div class="text-center py-2 d-flex flex-column justify-content-center align-items-center" style="height: 160px;">
-                                <span class="fw-bold text-gold text-uppercase tracking-wider fs-6 px-3 py-1 rounded-pill" style="background: rgba(16, 185, 129, 0.08); color: #059669; font-size: 0.85rem; border: 1px solid rgba(16, 185, 129, 0.15);">চিত্রশালা</span>
-                                <h2 class="section-title text-dark-green mt-3 fw-bold display-6" style="font-family: 'Baloo Da 2', sans-serif;">ছবি গ্যালারি</h2>
-                                <p class="text-muted mt-2 mb-0" style="font-family: 'Hind Siliguri', sans-serif;">আন্দোলনের বিভিন্ন কর্মসূচী ও কর্মকাণ্ডের স্থিরচিত্রসমূহ</p>
-                                <div class="mt-2" style="width: 60px; height: 3px; border-radius: 2px; background-color: #10b981;"></div>
-                            </div>
-
-                            <!-- Featured Image Card -->
-                            @if(isset($galleryPosts[0]))
-                                @php $featuredPost = $galleryPosts[0]; @endphp
-                                <a href="#" class="d-block text-decoration-none gallery-lightbox-trigger mt-auto"
-                                   data-image="{{ asset($featuredPost->image_path) }}"
-                                   data-title="{{ $featuredPost->title ?? ($featuredPost->blog ? $featuredPost->blog->title : 'চিত্রশালা') }}"
-                                   data-category="{{ ($featuredPost->blog && $featuredPost->blog->category) ? $featuredPost->blog->category->name : 'চিত্রশালা' }}"
-                                   data-url="{{ $featuredPost->blog ? route('blog.detail', $featuredPost->blog->slug) : '#' }}">
-                                    <div class="gallery-card featured-card">
-                                        <div class="gallery-zoom-icon">
-                                            <i class="fas fa-search-plus fa-2x"></i>
-                                        </div>
-                                        <img src="{{ asset($featuredPost->image_path) }}" alt="{{ $featuredPost->title ?? ($featuredPost->blog ? $featuredPost->blog->title : '') }}" loading="lazy">
-                                        
-                                        <!-- Overlay info details -->
-                                        <div class="gallery-card-overlay">
-                                            <div class="gallery-card-info">
-                                                <span class="cat-badge" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white;">
-                                                    ফিচার্ড: {{ ($featuredPost->blog && $featuredPost->blog->category) ? $featuredPost->blog->category->name : 'চিত্রশালা' }}
-                                                </span>
-                                                <h5 class="title-text text-white fw-bold mt-2 mb-0 text-truncate" style="font-family: 'Baloo Da 2', sans-serif; text-shadow: 0 2px 4px rgba(0,0,0,0.8);" title="{{ $featuredPost->title ?? ($featuredPost->blog ? $featuredPost->blog->title : '') }}">{{ $featuredPost->title ?? ($featuredPost->blog ? $featuredPost->blog->title : '') }}</h5>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-                            @endif
-                        </div>
-                    </div>
-
-                    <!-- Right Column (3 Images stacked vertically) -->
-                    <div class="col-lg-3 col-md-6 order-3">
-                        <div class="d-flex flex-column gap-0">
-                            @for($i = 4; $i <= 6; $i++)
-                                @if(isset($galleryPosts[$i]))
-                                    @php $post = $galleryPosts[$i]; @endphp
-                                    <a href="#" class="d-block text-decoration-none gallery-lightbox-trigger"
-                                       data-image="{{ asset($post->image_path) }}"
-                                       data-title="{{ $post->title ?? ($post->blog ? $post->blog->title : 'চিত্রশালা') }}"
-                                       data-category="{{ ($post->blog && $post->blog->category) ? $post->blog->category->name : 'চিত্রশালা' }}"
-                                       data-url="{{ $post->blog ? route('blog.detail', $post->blog->slug) : '#' }}">
-                                        <div class="gallery-card small-card">
-                                            <div class="gallery-zoom-icon">
-                                                <i class="fas fa-search-plus"></i>
-                                            </div>
-                                            <img src="{{ asset($post->image_path) }}" alt="{{ $post->title ?? ($post->blog ? $post->blog->title : '') }}" loading="lazy">
-                                            <div class="gallery-card-overlay">
-                                                <div class="gallery-card-info">
-                                                    <span class="cat-badge">{{ ($post->blog && $post->blog->category) ? $post->blog->category->name : 'চিত্রশালা' }}</span>
-                                                    <h6 class="title-text text-truncate mb-0" title="{{ $post->title ?? ($post->blog ? $post->blog->title : '') }}">{{ $post->title ?? ($post->blog ? $post->blog->title : '') }}</h6>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </a>
-                                @endif
-                            @endfor
-                        </div>
-                    </div>
-
+                @if(count($galleryItems) > 0)
                     <div class="row mt-4">
                         <div class="col-12 text-center">
-                            <a href="{{ route('gallery.index') }}" class="btn btn-outline-success rounded-pill px-5 py-2 fw-bold" style="border: 2px solid #10b981; transition: all 0.3s ease; font-family: 'Hind Siliguri', sans-serif; color: #022c22;">
-                                সব ছবি দেখুন <i class="fas fa-arrow-right ms-2"></i>
+                            <a href="{{ route('gallery.index') }}" class="btn px-4 py-2 fw-bold text-white shadow-sm" style="background-color: #006A4E; border-color: #006A4E; color: white !important; border-radius: 5px; font-family: 'Hind Siliguri', sans-serif; font-size: 14px; transition: all 0.3s ease;">
+                                সব ছবি দেখুন <i class="fas fa-arrow-right ms-2" style="font-size: 11px;"></i>
                             </a>
                         </div>
                     </div>
@@ -804,27 +607,19 @@
                     </div>
                 @endif
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Photo Gallery Lightbox Modal -->
-    <div class="modal fade" id="galleryLightboxModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content border-0 shadow-lg text-white" style="border-radius: 20px; overflow: hidden; background: #0b1512 !important; border: 1px solid rgba(16, 185, 129, 0.25) !important;">
-                <div class="modal-header border-0 pb-0 position-absolute end-0 top-0" style="z-index: 10;">
-                    <button type="button" class="btn-close btn-close-white p-3" data-bs-dismiss="modal" aria-label="Close" style="background-color: rgba(0,0,0,0.55); border-radius: 50%;"></button>
-                </div>
-                <div class="modal-body p-0 position-relative">
-                    <img id="lightbox-image" src="" alt="Gallery Image" class="w-100 object-fit-contain" style="max-height: 70vh; background-color: #000;">
-                    
-                    <div class="p-4" style="background: linear-gradient(transparent, rgba(2, 44, 34, 0.95) 20%, #022c22 100%);">
-                        <span id="lightbox-category" class="badge text-white mb-2 rounded-pill px-3 py-2" style="font-size: 0.75rem; font-weight: 700; background: linear-gradient(135deg, #10b981 0%, #059669 100%);"></span>
-                        <h4 id="lightbox-title" class="fw-bold text-white mb-3" style="font-family: 'Baloo Da 2', sans-serif;"></h4>
-                        <div class="d-flex justify-content-between align-items-center mt-3 pt-3" style="border-top: 1px solid rgba(255,255,255,0.15);">
-                            <span class="small text-muted">হেযবুত তওহীদ চিত্রশালা</span>
-                            <a id="lightbox-article-link" href="" class="btn btn-outline-success btn-sm rounded-pill px-4 py-2 text-white hover-bg-gold" style="border: 2px solid #10b981; transition: all 0.3s ease;">
-                                বিস্তারিত খবর পড়ুন <i class="fas fa-arrow-right ms-1"></i>
-                            </a>
+        <!-- Photo Gallery Lightbox Modal -->
+        <div class="modal fade" id="galleryLightboxModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content border-0 shadow-lg text-white" style="border-radius: 20px; overflow: hidden; background: #0b1512 !important; border: 1px solid rgba(16, 185, 129, 0.25) !important;">
+                    <div class="modal-header border-0 pb-0 position-absolute end-0 top-0" style="z-index: 10;">
+                        <button type="button" class="btn-close btn-close-white p-3" data-bs-dismiss="modal" aria-label="Close" style="background-color: rgba(0,0,0,0.55); border-radius: 50%;"></button>
+                    </div>
+                    <div class="modal-body p-0 position-relative">
+                        <img id="lightbox-image" src="" alt="Gallery Image" class="w-100 object-fit-contain" style="max-height: 70vh; background-color: #000;">
+                        <div class="p-4" style="background: linear-gradient(transparent, rgba(2, 44, 34, 0.95) 20%, #022c22 100%);">
+                            <h4 id="lightbox-title" class="fw-bold text-white mb-0 text-center" style="font-family: 'Baloo Da 2', sans-serif;"></h4>
                         </div>
                     </div>
                 </div>
@@ -832,289 +627,528 @@
         </div>
     </div>
 
-    <!-- Social & Humanitarian Activities Section -->
-    <section class="activities-section py-6">
-        <div class="container">
-            <div class="text-center mb-5">
-                <span class="text-gold fw-bold text-uppercase tracking-wider">কর্মধারা</span>
-                <h2 class="section-title text-dark-green">সেবামূলক ও সচেতনতা কার্যক্রম</h2>
-                <div class="title-underline bg-gold mx-auto mt-3" style="width: 80px; height: 3px;"></div>
-            </div>
-
-            <div class="row g-4">
-                @forelse($activities as $activity)
-                    <div class="col-lg-4 col-md-6">
-                        <div class="card activity-card h-100 bg-white border-0 shadow-sm rounded-4 overflow-hidden" style="border-top: 4px solid #006A4E !important;">
-                            <div class="activity-img-wrapper" style="height: 200px; overflow: hidden;">
-                                <img src="{{ $activity->image_url }}" alt="{{ $activity->title }}" class="w-100 h-100 object-fit-cover">
-                            </div>
-                            <div class="card-body p-4 d-flex flex-column">
-                                <h5 class="fw-bold text-dark-green mb-2">
-                                    <a href="{{ route('activities.show', $activity->slug) }}" class="text-decoration-none text-dark-green">
-                                        {{ $activity->title }}
-                                    </a>
-                                </h5>
-                                <p class="text-muted lh-lg flex-grow-1" style="font-size: 0.9rem; text-align: justify;">
-                                    {{ Str::limit($activity->description, 150) }}
-                                </p>
-                                <div class="mt-3 pt-3 border-top border-light">
-                                    <a href="{{ route('activities.show', $activity->slug) }}" class="btn btn-gold btn-sm px-3 rounded-pill fw-bold w-100">
-                                        বিস্তারিত পড়ুন <i class="fas fa-arrow-right ms-1" style="font-size: 0.75rem;"></i>
-                                    </a>
+    <!-- 5.2. Activities Section -->
+    <div class="homepage-section-wrapper" id="section-wrapper-activities_section">
+        <!-- Social & Humanitarian Activities Section -->
+        <section class="activities-section py-6">
+            <div class="container">
+                <div class="text-center mb-5">
+                    <span class="fw-bold text-uppercase tracking-wider" style="color: #64748b; font-size: 0.95rem; font-family: 'Baloo Da 2', sans-serif;">কর্মধারা</span>
+                    <h2 class="fw-bold mt-2" style="font-family: 'Baloo Da 2', sans-serif; font-size: 2.25rem; color: #0f172a; font-weight: 800; line-height: 1.3;">সেবামূলক ও সচেতনতা কার্যক্রম</h2>
+                    <div class="mx-auto mt-3" style="width: 60px; height: 3px; border-radius: 2px; background-color: #10b981;"></div>
+                </div>
+                <div class="row g-4">
+                    @forelse($activities as $activity)
+                        <div class="col-lg-4 col-md-6">
+                            <div class="card activity-card h-100 bg-white border-0 shadow-sm rounded-4 overflow-hidden" style="border-top: 4px solid #006A4E !important;">
+                                <div class="activity-img-wrapper" style="height: 200px; overflow: hidden;">
+                                    <img src="{{ $activity->image_url }}" alt="{{ $activity->title }}" class="w-100 h-100 object-fit-cover">
+                                </div>
+                                <div class="card-body p-4 d-flex flex-column">
+                                    <h5 class="fw-bold mb-2" style="font-family: 'Baloo Da 2', sans-serif; font-size: 1.25rem; line-height: 1.4;">
+                                        <a href="{{ route('activities.show', $activity->slug) }}" class="text-decoration-none activity-title">
+                                            {{ $activity->title }}
+                                        </a>
+                                    </h5>
+                                    <p class="text-muted lh-lg flex-grow-1" style="font-size: 0.9rem; text-align: justify;">
+                                        {{ Str::limit($activity->description, 150) }}
+                                    </p>
+                                    <div class="mt-3 pt-3 border-top border-light">
+                                        <a href="{{ route('activities.show', $activity->slug) }}" class="btn px-4 py-2 fw-bold text-white shadow-sm w-100" style="background-color: #006A4E; border-color: #006A4E; color: white !important; border-radius: 5px; font-family: 'Hind Siliguri', sans-serif; font-size: 13px; transition: all 0.3s ease;">
+                                            বিস্তারিত পড়ুন <i class="fas fa-arrow-right ms-1" style="font-size: 0.75rem;"></i>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                    @empty
+                    @endforelse
+                </div>
+                @if(count($activities) > 0)
+                    <div class="text-center mt-5">
+                        <a href="{{ route('activities.index') }}" class="btn px-4 py-2 fw-bold text-white shadow-sm" style="background-color: #006A4E; border-color: #006A4E; color: white !important; border-radius: 5px; font-family: 'Hind Siliguri', sans-serif; font-size: 14px; transition: all 0.3s ease;">
+                            সব কার্যক্রম দেখুন <i class="fas fa-arrow-right ms-2" style="font-size: 11px;"></i>
+                        </a>
                     </div>
-                @empty
-                    <!-- Fallback Static Cards -->
-
-                @endforelse
+                @endif
             </div>
+        </section>
+    </div>
 
-            @if(count($activities) > 0)
+    <!-- 5.2.1. Popular Publications Section -->
+    <div class="homepage-section-wrapper" id="section-wrapper-popular_books">
+        @php
+            $popularBooks = \App\Models\Book::where('is_active', true)
+                ->where(function($q) {
+                    $q->where('is_popular', true)->orWhere('is_bestseller', true);
+                })
+                ->orderBy('popular_order', 'asc')
+                ->orderBy('created_at', 'desc')
+                ->take(4)
+                ->get();
+        @endphp
+        @if($popularBooks->count() > 0)
+            <section class="popular-books-section py-6 bg-white" style="border-top: 1px solid #f1f5f9;">
+                <div class="container">
+                    <div class="text-center mb-5">
+                        <span class="fw-bold text-uppercase tracking-wider" style="color: #64748b; font-size: 0.95rem; font-family: 'Baloo Da 2', sans-serif;">প্রকাশনা</span>
+                        <h2 class="fw-bold mt-2" style="font-family: 'Baloo Da 2', sans-serif; font-size: 2.25rem; color: #0f172a; font-weight: 800; line-height: 1.3;">আমাদের প্রকাশনাসমূহ</h2>
+                        <div class="mx-auto mt-3" style="width: 60px; height: 3px; border-radius: 2px; background-color: #10b981;"></div>
+                        <p class="text-muted mt-3 mb-0" style="font-family: 'Hind Siliguri', sans-serif; font-size: 1.15rem; line-height: 1.6; font-weight: 500; color: #475569;">
+                            হেযবুত তওহীদের একটি নিবন্ধ বা বই<br>পাল্টে দিতে পারে আপনার জীবন!
+                        </p>
+                    </div>
+                    <div class="row g-4">
+                        @foreach($popularBooks as $book)
+                            <div class="col-lg-3 col-md-6">
+                                <div class="card h-100 border-0 shadow-sm rounded-4 p-3 bg-white text-center" style="box-shadow: 0 10px 30px rgba(0,0,0,0.03) !important; border: 1px solid #f1f5f9 !important;">
+                                    <div class="book-cover-wrapper mb-3 position-relative rounded-3 overflow-hidden shadow-sm mx-auto" style="height: 280px; width: 100%; max-width: 190px;">
+                                        <img src="{{ $book->image_url }}" alt="{{ $book->title }}" class="w-100 h-100 object-fit-cover">
+                                        @if($book->is_bestseller)
+                                            <span class="position-absolute top-0 start-0 badge bg-danger text-white m-2 px-2 py-1" style="font-size: 0.7rem; border-radius: 4px;">বেস্টসেলার</span>
+                                        @endif
+                                    </div>
+                                    <h5 class="fw-bold text-dark mb-1 text-truncate" style="font-family: 'Hind Siliguri', sans-serif; font-size: 1.1rem;" title="{{ $book->title }}">{{ $book->title }}</h5>
+                                    <p class="text-muted small mb-2" style="font-family: 'Hind Siliguri', sans-serif;">{{ $book->writer }}</p>
+
+                                    <div class="mt-auto">
+                                        @if($book->price > 0)
+                                            <div class="mb-3">
+                                                <span class="text-success fw-bold" style="font-size: 1.1rem; font-family: 'Hind Siliguri', sans-serif;">৳{{ $book->price }}</span>
+                                                @if($book->old_price > 0)
+                                                    <span class="text-muted text-decoration-line-through ms-2" style="font-size: 0.9rem; font-family: 'Hind Siliguri', sans-serif;">৳{{ $book->old_price }}</span>
+                                                @endif
+                                            </div>
+                                        @else
+                                            <div class="mb-3">
+                                                <span class="badge bg-light text-success border px-3 py-1" style="font-family: 'Hind Siliguri', sans-serif; font-size: 0.8rem; font-weight: normal;">ফ্রি ডাউনলোড</span>
+                                            </div>
+                                        @endif
+                                        <a href="{{ route('books.show', $book->slug) }}" class="btn px-4 py-2 fw-bold text-white shadow-sm w-100" style="background-color: #006A4E; border-color: #006A4E; color: white !important; border-radius: 5px; font-family: 'Hind Siliguri', sans-serif; font-size: 13px; transition: all 0.3s ease;">
+                                            বিস্তারিত পড়ুন <i class="fas fa-arrow-right ms-1" style="font-size: 0.75rem;"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                    <div class="row mt-5">
+                        <div class="col-12 text-center">
+                            <a href="{{ route('books.index') }}" class="btn px-4 py-2 fw-bold text-white shadow-sm" style="background-color: #006A4E; border-color: #006A4E; color: white !important; border-radius: 5px; font-family: 'Hind Siliguri', sans-serif; font-size: 14px; transition: all 0.3s ease;">
+                                সব বই দেখুন <i class="fas fa-arrow-right ms-2" style="font-size: 11px;"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        @endif
+    </div>
+
+    <!-- 5.3. Suggestion Section -->
+    <div class="homepage-section-wrapper" id="section-wrapper-suggestion_section">
+        <!-- Citizens Feedback Section -->
+        <section class="feedback-section py-6" style="background-color: #f8fafc;">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-5 mb-5 mb-lg-0 text-start">
+                        <span class="fw-bold text-uppercase tracking-wider mb-3 d-inline-block" style="color: #64748b; font-size: 0.95rem; font-family: 'Baloo Da 2', sans-serif;">পরামর্শ কর্নার</span>
+                        <h2 class="fw-bold mb-3" style="font-family: 'Baloo Da 2', sans-serif; font-size: 2.25rem; color: #0f172a; font-weight: 800; line-height: 1.3;">আপনার মূল্যবান মতামত ও পরামর্শ দিন</h2>
+                        <p class="text-muted lh-lg mb-4" style="text-align: justify; font-size: 1.05rem;">
+                            আন্দোলনের নীতি, সমাজ সংস্কারমূলক কার্যক্রম বা আমাদের প্রচারণা সম্পর্কে আপনার মূল্যবান উপদেশ ও গঠনমূলক পরামর্শ আমাদের কাছে অত্যন্ত গুরুত্বপূর্ণ। সরাসরি কেন্দ্রীয় দপ্তরে আপনার মতামত জানাতে পাশের ফরমটি পূরণ করুন।
+                        </p>
+                        <div class="d-flex align-items-center gap-3 py-2 text-muted">
+                            <div class="icon-box text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; background-color: #10b981; flex-shrink: 0;">
+                                <i class="fas fa-user-shield"></i>
+                            </div>
+                            <div>
+                                <h6 class="fw-bold text-dark mb-0" style="font-family: 'Baloo Da 2', sans-serif;">সুরক্ষিত ও গোপনীয়</h6>
+                                <span class="small">আপনার প্রেরিত সকল পরামর্শ ও তথ্য আমাদের কাছে সম্পূর্ণ নিরাপদ।</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-7 ps-lg-5">
+                        <div class="card border-0 shadow-sm p-4 p-md-5 bg-white" style="border-radius: 24px; border: 1px solid rgba(226, 232, 240, 0.8) !important;">
+                            <div class="suggestion-alert-container">
+                                @if(session('success'))
+                                    <div class="alert alert-success alert-dismissible fade show mb-4 border-0 shadow-sm" role="alert" style="border-left: 5px solid #10b981; border-radius: 12px; background-color: #f0fdf4; color: #15803d;">
+                                        <div class="d-flex align-items-center">
+                                            <i class="fas fa-check-circle me-3 fs-5"></i>
+                                            <span>{{ session('success') }}</span>
+                                        </div>
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    </div>
+                                @endif
+                                @if(session('error'))
+                                    <div class="alert alert-danger alert-dismissible fade show mb-4 border-0 shadow-sm" role="alert" style="border-left: 5px solid #ef4444; border-radius: 12px; background-color: #fef2f2; color: #b91c1c;">
+                                        <div class="d-flex align-items-center">
+                                            <i class="fas fa-exclamation-circle me-3 fs-5 "></i>
+                                            <span>{{ session('error') }}</span>
+                                        </div>
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    </div>
+                                @endif
+                            </div>
+                            <form action="{{ route('suggestions.store') }}" method="POST" class="suggestion-form" novalidate>
+                                @csrf
+                                <div class="row g-3 text-start">
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold text-dark small mb-1">আপনার নাম <span class="text-danger">*</span></label>
+                                        <input type="text" name="name" class="form-control rounded-3 py-3 custom-input-focus" placeholder="পূর্ণ নাম লিখুন" value="{{ old('name') }}" style="border: 1px solid #cbd5e1; font-size: 0.95rem;">
+                                        <div class="invalid-feedback" id="ajax-error-name"></div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold text-dark small mb-1">ইমেইল / মোবাইল <span class="text-danger">*</span></label>
+                                        <input type="text" name="contact" class="form-control rounded-3 py-3 custom-input-focus" placeholder="যোগাযোগের ঠিকানা লিখুন" value="{{ old('contact') }}" style="border: 1px solid #cbd5e1; font-size: 0.95rem;">
+                                        <div class="invalid-feedback" id="ajax-error-contact"></div>
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label fw-bold text-dark small mb-1">বিষয়</label>
+                                        <input type="text" name="subject" class="form-control rounded-3 py-3 custom-input-focus" placeholder="পরামর্শের বিষয় লিখুন" value="{{ old('subject') }}" style="border: 1px solid #cbd5e1; font-size: 0.95rem;">
+                                        <div class="invalid-feedback" id="ajax-error-subject"></div>
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label fw-bold text-dark small mb-1">পরামর্শ / বার্তা <span class="text-danger">*</span></label>
+                                        <textarea name="message" class="form-control rounded-3 py-3 custom-input-focus" rows="4" placeholder="আপনার বার্তাটি বিস্তারিত লিখুন..." style="border: 1px solid #cbd5e1; font-size: 0.95rem;">{{ old('message') }}</textarea>
+                                        <div class="invalid-feedback" id="ajax-error-message"></div>
+                                    </div>
+                                    <div class="col-12 mt-4">
+                                        <button type="submit" class="btn w-100 fw-bold shadow-sm d-flex align-items-center justify-content-center gap-2" style="background-color: #006A4E; border: 1px solid #006A4E; color: white !important; border-radius: 5px; font-family: 'Hind Siliguri', sans-serif; font-size: 15px; padding: 12px 20px; transition: all 0.3s ease;">
+                                            <span>পরামর্শ পাঠান</span>
+                                            <i class="fas fa-paper-plane" style="font-size: 0.9rem;"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- 4. Testimonials Section -->
+    <div class="homepage-section-wrapper" id="section-wrapper-testimonials_section">
+        <section class="testimonials-section py-6 position-relative overflow-hidden" style="background: #f8fafc !important; background-image: none !important; border-top: 1px solid #f1f5f9; border-bottom: 1px solid #f1f5f9;">
+            <div class="position-absolute rounded-circle" style="width: 250px; height: 250px; background: rgba(16, 185, 129, 0.04); top: -50px; right: -50px; filter: blur(60px); pointer-events: none;"></div>
+            <div class="position-absolute rounded-circle" style="width: 250px; height: 250px; background: rgba(16, 185, 129, 0.03); bottom: -50px; left: -50px; filter: blur(60px); pointer-events: none;"></div>
+
+            <div class="container position-relative" style="z-index: 2;">
+                <div class="text-center mb-5">
+                    <span class="fw-bold text-uppercase tracking-wider" style="color: #64748b; font-size: 0.95rem; font-family: 'Baloo Da 2', sans-serif;">নাগরিক মতামত ও সুধী বাণী</span>
+                    <h2 class="fw-bold mt-2" style="font-family: 'Baloo Da 2', sans-serif; font-size: 2.25rem; color: #0f172a; font-weight: 800; line-height: 1.3;">শুভাকাঙ্ক্ষীদের বক্তব্য</h2>
+                    <div class="mx-auto mt-3" style="width: 60px; height: 3px; border-radius: 2px; background-color: #10b981;"></div>
+                </div>
+
+                <div id="smartTestimonialCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="8000">
+                    <div class="carousel-inner">
+                        @php
+                            $testimonialChunks = $testimonials->chunk(3);
+                        @endphp
+                        @forelse($testimonialChunks as $chunkIndex => $chunk)
+                            <div class="carousel-item {{ $chunkIndex == 0 ? 'active' : '' }}">
+                                <div class="row g-4 justify-content-center">
+                                    @foreach($chunk as $testimonial)
+                                        <div class="col-lg-4 col-md-6">
+                                            <div class="testimonial-card">
+                                                <i class="fas fa-quote-right position-absolute" style="font-size: 4.5rem; color: rgba(16, 185, 129, 0.04); bottom: 15px; right: 20px; pointer-events: none;"></i>
+                                                <div>
+                                                    <div class="mb-3 text-warning fs-6">
+                                                        @for($i = 1; $i <= 5; $i++)
+                                                            @if($i <= $testimonial->rating)
+                                                                <i class="fas fa-star" style="color: #fbbf24;"></i>
+                                                            @else
+                                                                <i class="far fa-star" style="color: #cbd5e1;"></i>
+                                                            @endif
+                                                        @endfor
+                                                    </div>
+                                                    <p style="font-family: 'Hind Siliguri', sans-serif;">
+                                                        @if(mb_strlen($testimonial->content) > 130)
+                                                            {{ mb_substr($testimonial->content, 0, 125) }}...
+                                                            <a href="javascript:void(0);" class="read-more-btn" data-name="{{ $testimonial->name }}" data-designation="{{ $testimonial->designation }}" data-content="{{ $testimonial->content }}" data-avatar="{{ $testimonial->avatar_url }}">বিস্তারিত পড়ুন</a>
+                                                        @else
+                                                            {{ $testimonial->content }}
+                                                        @endif
+                                                    </p>
+                                                </div>
+                                                <div class="d-flex align-items-center mt-auto pt-3" style="border-top: 1px solid #f1f5f9;">
+                                                    <img src="{{ $testimonial->avatar_url }}" alt="{{ $testimonial->name }}" class="rounded-circle me-3" style="width: 48px; height: 48px; object-fit: cover; border: 2px solid rgba(16, 185, 129, 0.4);">
+                                                    <div class="text-start">
+                                                        <h6 class="mb-0 fs-6">{{ $testimonial->name }}</h6>
+                                                        <span class="small text-emerald">{{ $testimonial->designation ?? 'শুভাকাঙ্ক্ষী' }}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @empty
+                            <div class="carousel-item active">
+                                <div class="row g-4 justify-content-center">
+                                    <div class="col-lg-4 col-md-6">
+                                        <div class="testimonial-card">
+                                            <div>
+                                                <div class="mb-3 text-warning"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                                                <p>উগ্রবাদ, সাম্প্রদায়িকতা ও জঙ্গিবাদের বিরুদ্ধে হেযবুত তওহীদের দেশব্যাপী বুদ্ধিবৃত্তিক প্রচারণা অত্যন্ত প্রশংসনীয়। সমাজে শান্তি রক্ষায় তাদের এই কর্মসূচি গুরুত্বপূর্ণ ভূমিকা রাখছে।</p>
+                                            </div>
+                                            <div class="d-flex align-items-center mt-3 pt-3" style="border-top: 1px solid #f1f5f9;">
+                                                <div class="rounded-circle me-3 d-flex align-items-center justify-content-center text-white fw-bold bg-success" style="width: 48px; height: 48px;">শ</div>
+                                                <div class="text-start">
+                                                    <h6 class="mb-0">ড. এ. কে. এম. শাহনেওয়াজ</h6>
+                                                    <span class="small text-emerald">অধ্যাপক, জাহাঙ্গীরনগর বিশ্ববিদ্যালয়</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-md-6">
+                                        <div class="testimonial-card">
+                                            <div>
+                                                <div class="mb-3 text-warning"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                                                <p>ধর্মান্ধতা ও কুসংস্কারের বিরুদ্ধে ইসলামের সঠিক অহিংস বাণী মানুষের কাছে তুলে ধরার ব্যাপারে হেযবুত তওহীদের ভূমিকা যুগোপযোগী। তাদের সেবামূলক কার্যক্রম সর্বস্তরের মানুষের প্রশংসা পাওয়ার যোগ্য।</p>
+                                            </div>
+                                            <div class="d-flex align-items-center mt-3 pt-3" style="border-top: 1px solid #f1f5f9;">
+                                                <div class="rounded-circle me-3 d-flex align-items-center justify-content-center text-white fw-bold bg-success" style="width: 48px; height: 48px;">ই</div>
+                                                <div class="text-start">
+                                                    <h6 class="mb-0">হাসানুল হক ইনু</h6>
+                                                    <span class="small text-emerald">সাবেক তথ্য ও সম্প্রচার মন্ত্রী</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-md-6">
+                                        <div class="testimonial-card">
+                                            <div>
+                                                <div class="mb-3 text-warning"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                                                <p>একটি শান্তিময় ও ধর্মীয় সম্প্রীতিপূর্ণ সমাজ বিনির্মাণে তাদের অরাজনৈতিক আন্দোলন ও আদেশিক লড়াই সমাজে ইতিবাচক পরিবর্তন আনতে সক্ষম হয়েছে। তাদের সকল মানবিক কাজের সফলতা কামনা করি।</p>
+                                            </div>
+                                            <div class="d-flex align-items-center mt-3 pt-3" style="border-top: 1px solid #f1f5f9;">
+                                                <div class="rounded-circle me-3 d-flex align-items-center justify-content-center text-white fw-bold bg-success" style="width: 48px; height: 48px;">ম</div>
+                                                <div class="text-start">
+                                                    <h6 class="mb-0">বিচারপতি সিকদার মকবুল হোসেন</h6>
+                                                    <span class="small text-emerald">অবসরপ্রাপ্ত বিচারপতি, সুপ্রিম কোর্ট</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforelse
+                    </div>
+                    @if($testimonialChunks->count() > 1)
+                        <div class="d-flex justify-content-center gap-3 mt-4">
+                            <button class="carousel-control-btn d-flex align-items-center justify-content-center rounded-circle" type="button" data-bs-target="#smartTestimonialCarousel" data-bs-slide="prev">
+                                <i class="fas fa-chevron-left" style="font-size: 0.9rem;"></i>
+                            </button>
+                            <button class="carousel-control-btn d-flex align-items-center justify-content-center rounded-circle" type="button" data-bs-target="#smartTestimonialCarousel" data-bs-slide="next">
+                                <i class="fas fa-chevron-right" style="font-size: 0.9rem;"></i>
+                            </button>
+                        </div>
+                    @endif
+                </div>
                 <div class="text-center mt-5">
-                    <a href="{{ route('activities.index') }}" class="btn btn-outline-dark-green px-4 py-2 rounded-pill fw-bold">
-                        সব কার্যক্রম দেখুন <i class="fas fa-arrow-right ms-1"></i>
+                    <a href="{{ url('/feedback') }}" class="btn px-4 py-2 fw-bold text-white shadow-sm" style="background-color: #006A4E; border-color: #006A4E; color: white !important; border-radius: 5px; font-family: 'Hind Siliguri', sans-serif; font-size: 14px; transition: all 0.3s ease;">
+                        <i class="fas fa-comments me-2" style="font-size: 13px;"></i> সকল সুধী মতামত দেখুন
                     </a>
                 </div>
-            @endif
-        </div>
-    </section>
+            </div>
+        </section>
 
-    
-    <!-- Citizens Feedback / Suggestion Box Section -->
-    <section class="feedback-section py-6" style="background-color: #f8fafc;">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-5 mb-5 mb-lg-0 text-start">
-                    <span class="badge px-3 py-2 rounded-pill fw-bold text-uppercase tracking-wider mb-3" style="font-size: 0.8rem; background: rgba(16, 185, 129, 0.1); color: #047857;">পরামর্শ কর্নার</span>
-                    <h2 class="fw-bold text-dark-green mb-3" style="font-size: 2.4rem; font-family: 'Baloo Da 2', sans-serif; color: #004d38;">আপনার মূল্যবান মতামত ও পরামর্শ দিন</h2>
-                    <p class="text-muted lh-lg mb-4" style="text-align: justify; font-size: 1.05rem;">
-                        আন্দোলনের নীতি, সমাজ সংস্কারমূলক কার্যক্রম বা আমাদের প্রচারণা সম্পর্কে আপনার মূল্যবান উপদেশ ও গঠনমূলক পরামর্শ আমাদের কাছে অত্যন্ত গুরুত্বপূর্ণ। সরাসরি কেন্দ্রীয় দপ্তরে আপনার মতামত জানাতে পাশের ফরমটি পূরণ করুন।
-                    </p>
-                    <div class="d-flex align-items-center gap-3 py-2 text-muted">
-                        <div class="icon-box text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; background-color: #10b981; flex-shrink: 0;">
-                            <i class="fas fa-user-shield"></i>
-                        </div>
-                        <div>
-                            <h6 class="fw-bold text-dark mb-0" style="font-family: 'Baloo Da 2', sans-serif;">সুরক্ষিত ও গোপনীয়</h6>
-                            <span class="small">আপনার প্রেরিত সকল পরামর্শ ও তথ্য আমাদের কাছে সম্পূর্ণ নিরাপদ।</span>
-                        </div>
+        <!-- Testimonial Detail Modal -->
+        <div class="modal fade" id="testimonialDetailModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border-0 shadow-lg text-white" style="background: linear-gradient(135deg, #022c22 0%, #064e3b 100%) !important; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1) !important;">
+                    <div class="modal-header border-0 pb-0">
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                </div>
-                <div class="col-lg-7 ps-lg-5">
-                    <div class="card border-0 shadow-sm p-4 p-md-5 bg-white" style="border-radius: 24px; border: 1px solid rgba(226, 232, 240, 0.8) !important;">
-
-                        <!-- Success / Error Notifications -->
-                        <div class="suggestion-alert-container">
-                            @if(session('success'))
-                                <div class="alert alert-success alert-dismissible fade show mb-4 border-0 shadow-sm" role="alert" style="border-left: 5px solid #10b981; border-radius: 12px; background-color: #f0fdf4; color: #15803d;">
-                                    <div class="d-flex align-items-center">
-                                        <i class="fas fa-check-circle me-3 fs-5"></i>
-                                        <span>{{ session('success') }}</span>
-                                    </div>
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                </div>
-                            @endif
-                            @if(session('error'))
-                                <div class="alert alert-danger alert-dismissible fade show mb-4 border-0 shadow-sm" role="alert" style="border-left: 5px solid #ef4444; border-radius: 12px; background-color: #fef2f2; color: #b91c1c;">
-                                    <div class="d-flex align-items-center">
-                                        <i class="fas fa-exclamation-circle me-3 fs-5 "></i>
-                                        <span>{{ session('error') }}</span>
-                                    </div>
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                </div>
-                            @endif
-                        </div>
-
-                        <form action="{{ route('suggestions.store') }}" method="POST" class="suggestion-form" novalidate>
-                            @csrf
-                            <div class="row g-3 text-start">
-                                <div class="col-md-6">
-                                    <label class="form-label fw-bold text-dark small mb-1">আপনার নাম <span class="text-danger">*</span></label>
-                                    <input type="text" name="name" class="form-control rounded-3 py-3 custom-input-focus" placeholder="পূর্ণ নাম লিখুন" value="{{ old('name') }}" style="border: 1px solid #cbd5e1; font-size: 0.95rem;">
-                                    <div class="invalid-feedback" id="ajax-error-name"></div>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label fw-bold text-dark small mb-1">ইমেইল / মোবাইল <span class="text-danger">*</span></label>
-                                    <input type="text" name="contact" class="form-control rounded-3 py-3 custom-input-focus" placeholder="যোগাযোগের ঠিকানা লিখুন" value="{{ old('contact') }}" style="border: 1px solid #cbd5e1; font-size: 0.95rem;">
-                                    <div class="invalid-feedback" id="ajax-error-contact"></div>
-                                </div>
-                                <div class="col-12">
-                                    <label class="form-label fw-bold text-dark small mb-1">বিষয়</label>
-                                    <input type="text" name="subject" class="form-control rounded-3 py-3 custom-input-focus" placeholder="পরামর্শের বিষয় লিখুন" value="{{ old('subject') }}" style="border: 1px solid #cbd5e1; font-size: 0.95rem;">
-                                    <div class="invalid-feedback" id="ajax-error-subject"></div>
-                                </div>
-                                <div class="col-12">
-                                    <label class="form-label fw-bold text-dark small mb-1">পরামর্শ / বার্তা <span class="text-danger">*</span></label>
-                                    <textarea name="message" class="form-control rounded-3 py-3 custom-input-focus" rows="4" placeholder="আপনার বার্তাটি বিস্তারিত লিখুন..." style="border: 1px solid #cbd5e1; font-size: 0.95rem;">{{ old('message') }}</textarea>
-                                    <div class="invalid-feedback" id="ajax-error-message"></div>
-                                </div>
-                                <div class="col-12 mt-4">
-                                    <button type="submit" class="btn btn-success w-100 rounded-pill py-3 fw-bold shadow-sm d-flex align-items-center justify-content-center gap-2" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); border: none; font-size: 1.05rem; transition: all 0.3s ease;">
-                                        <span>পরামর্শ পাঠান</span>
-                                        <i class="fas fa-paper-plane" style="font-size: 0.9rem;"></i>
-                                    </button>
-                                </div>
+                    <div class="modal-body p-4 pt-0 text-center">
+                        <i class="fas fa-quote-left fa-3x mb-3 opacity-30" style="color: #10b981;"></i>
+                        <p id="modal-testimonial-content" class="fs-5 lh-relaxed mb-4 text-white opacity-95" style="font-family: 'Hind Siliguri', sans-serif; font-style: italic;"></p>
+                        <div class="d-flex align-items-center justify-content-center mt-4 pt-3" style="border-top: 1px solid rgba(255, 255, 255, 0.1);">
+                            <img id="modal-testimonial-avatar" src="" alt="Avatar" class="rounded-circle me-3" style="width: 55px; height: 55px; object-fit: cover; border: 2px solid #10b981;">
+                            <div class="text-start">
+                                <h5 id="modal-testimonial-name" class="fw-bold mb-0 text-white"></h5>
+                                <span id="modal-testimonial-designation" class="small text-emerald" style="color: #34d399;"></span>
                             </div>
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
 
-    <style>
-        .activity-card:hover {
-            transform: translateY(-8px) !important;
-            box-shadow: 0 20px 25px -5px rgba(16, 185, 129, 0.15), 0 10px 10px -6px rgba(16, 185, 129, 0.08) !important;
-        }
-        .activity-card:hover .activity-card-img {
-            transform: scale(1.08);
-        }
-        .activity-card:hover .activity-title {
-            color: #059669 !important;
-        }
-        .activity-link {
-            color: #10b981 !important;
-            font-size: 0.92rem;
-            transition: all 0.3s ease;
-            font-weight: 700 !important;
-        }
-        .activity-link i {
-            font-size: 0.8rem;
-            transition: transform 0.3s ease;
-        }
-        .activity-card:hover .activity-link {
-            color: #059669 !important;
-        }
-        .activity-card:hover .activity-link i {
-            transform: translateX(5px);
-        }
-
-        #smartTestimonialCarousel .carousel-item {
-            height: auto !important;
-            min-height: initial !important;
-            background: transparent !important;
-        }
-        .testimonial-card {
-            background: #ffffff !important;
-            border: 1px solid #e2e8f0 !important;
-            border-top: 4px solid #10b981 !important;
-            border-radius: 20px !important;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05) !important;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-            min-height: 300px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            padding: 2rem !important;
-            position: relative;
-        }
-        .testimonial-card:hover {
-            transform: translateY(-8px) !important;
-            background: #ffffff !important;
-            border-top-color: #059669 !important;
-            box-shadow: 0 20px 25px -5px rgba(16, 185, 129, 0.25), 0 10px 10px -6px rgba(16, 185, 129, 0.15) !important;
-        }
-        .testimonial-card p {
-            color: #475569 !important;
-            font-size: 0.95rem !important;
-            line-height: 1.7 !important;
-            margin-bottom: 1.5rem !important;
-            text-align: justify;
-        }
-        .testimonial-card h6 {
-            color: #0f172a !important;
-            font-weight: 700 !important;
-            font-family: 'Baloo Da 2', sans-serif !important;
-            margin-bottom: 2px !important;
-        }
-        .testimonial-card .text-emerald {
-            color: #059669 !important;
-            font-weight: 600 !important;
-            font-size: 0.82rem !important;
-        }
-        .read-more-btn {
-            color: #10b981 !important;
-            font-weight: 700 !important;
-            text-decoration: none !important;
-            font-size: 0.85rem !important;
-            margin-left: 4px;
-            transition: all 0.2s ease;
-        }
-        .read-more-btn:hover {
-            color: #059669 !important;
-            text-decoration: underline !important;
-        }
-        .carousel-control-btn {
-            width: 45px;
-            height: 45px;
-            border: 2px solid rgba(255, 255, 255, 0.3) !important;
-            background: rgba(255, 255, 255, 0.1) !important;
-            color: #ffffff !important;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-        .carousel-control-btn:hover {
-            background: #10b981 !important;
-            border-color: #10b981 !important;
-            color: #ffffff !important;
-            box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
-            transform: scale(1.1);
-        }
-        @media (max-width: 991.98px) {
-            #smartTestimonialCarousel .row > div:nth-child(n+2) {
-                display: none;
-            }
-        }
-        .custom-input-focus:focus {
-            border-color: #10b981 !important;
-            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15) !important;
-            outline: none;
-        }
-    </style>
-
-    <!-- Join Us CTA Banner Section -->
-    <section class="cta-section py-6 bg-gradient-cta text-white text-center position-relative overflow-hidden" style="background: linear-gradient(135deg, #005a43 0%, #002c1f 100%) !important;">
-        <!-- Glowing light patterns for visual warmth -->
-        <div class="position-absolute rounded-circle" style="width: 300px; height: 300px; background: rgba(52, 211, 153, 0.15); top: -80px; left: -80px; filter: blur(60px);"></div>
-        <div class="position-absolute rounded-circle" style="width: 350px; height: 350px; background: rgba(16, 185, 129, 0.12); bottom: -100px; right: -100px; filter: blur(70px);"></div>
-
-        <div class="container position-relative" style="z-index: 2;">
-            <div class="row justify-content-center">
-                <div class="col-lg-8">
-                    <!-- High-contrast Premium Card Wrapper -->
-                    <div class="p-4 p-md-5 rounded-4 shadow-lg" style="background: #003d2e; border: 2px solid #10b981; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2), 0 0 20px rgba(16, 185, 129, 0.15) !important;">
-                        <i class="fas fa-hand-holding-heart fa-3x mb-4" style="color: #34d399; filter: drop-shadow(0 0 10px rgba(52, 211, 153, 0.4));"></i>
-                        <h2 class="fw-bold text-white mb-3" style="font-size: 2.2rem; font-family: 'Baloo Da 2', sans-serif; text-shadow: 0 2px 4px rgba(0,0,0,0.2);">আল্লাহর তওহীদ ভিত্তিক সত্যদীন প্রতিষ্ঠার আন্দোলনে যোগ দিন</h2>
-                        <!-- Description text color changed to pure bright off-white (#f8fafc) and opacity set to 100% for crisp readability -->
-                        <p class="lead mb-4 mx-auto" style="font-size: 1.15rem; line-height: 1.8; color: #f8fafc !important; text-shadow: 0 1px 3px rgba(0,0,0,0.3); max-width: 680px; font-weight: 400;">
+        <!-- Live Broadcast Video Lightbox Modal -->
+        <div class="modal fade" id="liveBroadcastModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content border-0 shadow-lg bg-dark text-white" style="border-radius: 16px; overflow: hidden;">
+                    <div class="modal-header border-0 pb-0" style="position: absolute; right: 10px; top: 10px; z-index: 10;">
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body p-0">
+                        <div class="ratio ratio-16x9">
+                            <iframe id="live-player-iframe" src="" allow="autoplay; encrypted-media" allowfullscreen style="border: none;"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 5.4. Join Section -->
+    <div class="homepage-section-wrapper" id="section-wrapper-join_section">
+        <!-- Join Us CTA Banner Section -->
+        <section class="cta-section py-6 text-white text-center position-relative overflow-hidden" style="background: #006A4E !important; background-image: none !important;">
+            <div class="position-absolute rounded-circle" style="width: 300px; height: 300px; background: rgba(52, 211, 153, 0.05); top: -80px; left: -80px; filter: blur(60px);"></div>
+            <div class="position-absolute rounded-circle" style="width: 350px; height: 350px; background: rgba(16, 185, 129, 0.04); bottom: -100px; right: -100px; filter: blur(70px);"></div>
+            <div class="container position-relative" style="z-index: 2;">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8 py-4">
+                        <i class="fas fa-hand-holding-heart fa-3x mb-4" style="color: #fbbf24; filter: drop-shadow(0 0 8px rgba(251, 191, 36, 0.3));"></i>
+                        <h2 class="fw-bold text-white mb-3" style="font-size: 2.2rem; font-family: 'Baloo Da 2', sans-serif;">আল্লাহর তওহীদ ভিত্তিক সত্যদীন প্রতিষ্ঠার আন্দোলনে যোগ দিন</h2>
+                        <p class="lead mb-4 mx-auto" style="font-size: 1.1rem; line-height: 1.8; color: #e2e8f0 !important; max-width: 680px; font-weight: 400; font-family: 'Hind Siliguri', sans-serif;">
                             সমাজ থেকে অন্যায়-অশান্তি দূর করে ন্যায় ও সুবিচার প্রতিষ্ঠার লক্ষ্যে আল্লাহর তওহীদভিত্তিক জীবনব্যবস্থা বিশ্বব্যাপী প্রতিষ্ঠার সংগ্রামে আপনিও শরীক হোন। উগ্রবাদ, সাম্প্রদায়িকতা ও সকল অবিচারের বিরুদ্ধে এবং মানবতার কল্যাণে হেযবুত তওহীদের সহযাত্রী হোন।
                         </p>
                         <div class="d-flex flex-wrap justify-content-center gap-3">
-                            <!-- Vibrant gradient green button for high call-to-action visual weight -->
-                            <a href="/join" class="btn btn-success btn-lg px-5 py-3 rounded-pill fw-bold shadow" style="background: linear-gradient(135deg, #34d399 0%, #059669 100%); border: none; color: #002c1f !important; box-shadow: 0 4px 15px rgba(52, 211, 153, 0.4) !important; transition: all 0.3s ease;">সদস্য ফরম পূরণ করুন</a>
-                            <a href="/contact" class="btn btn-outline-light btn-lg px-5 py-3 rounded-pill fw-bold" style="border: 2px solid #ffffff; color: #ffffff !important; transition: all 0.3s ease;">যোগাযোগ করুন</a>
+                            <a href="/join" class="btn px-4 py-2.5 fw-bold shadow-sm" style="background-color: #fbbf24; border-color: #fbbf24; color: #022c22 !important; border-radius: 5px; font-family: 'Hind Siliguri', sans-serif; font-size: 15px; transition: all 0.3s ease;">সদস্য ফরম পূরণ করুন</a>
+                            <a href="/contact" class="btn px-4 py-2.5 fw-bold text-white shadow-sm" style="background-color: transparent; border: 1.5px solid #ffffff; color: white !important; border-radius: 5px; font-family: 'Hind Siliguri', sans-serif; font-size: 15px; transition: all 0.3s ease;">যোগাযোগ করুন</a>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+    </div>
 
 
-                    @break
-            @endswitch
-        </div>
-    @endif
-@endforeach
+
+
+
+
+    <!-- Styles for interactive controls and feedbacks -->
+    
 
 @push('scripts')
 <script>
 $(document).ready(function() {
-    var testimonialModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('testimonialDetailModal'));
-    var lightboxModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('galleryLightboxModal'));
+    // Live Broadcast Video Lightbox Trigger
+    var liveBroadcastModal = null;
+    $(document).on('click', '.live-modal-trigger', function() {
+        var url = $(this).data('url');
+        $('#live-player-iframe').attr('src', url);
+        liveBroadcastModal = new bootstrap.Modal(document.getElementById('liveBroadcastModal'));
+        liveBroadcastModal.show();
+    });
+    $('#liveBroadcastModal').on('hidden.bs.modal', function() {
+        $('#live-player-iframe').attr('src', '');
+    });
+
+    // Branch Search/Filter Handler
+    $('#branch-search').on('input', function() {
+        var query = $(this).val().toLowerCase().trim();
+        $('.branch-item-card-wrapper').each(function() {
+            var name = $(this).data('name') || '';
+            var address = $(this).data('address') || '';
+            if (name.indexOf(query) !== -1 || address.indexOf(query) !== -1) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
+    });
+
+    // Spotify-style Song Player Handler
+    var audio = document.getElementById('main-audio');
+    var playPauseBtn = $('#play-pause-btn');
+    var playPauseIcon = $('#play-pause-icon');
+    var musicDisc = $('#music-disc');
+    var progressBar = $('#progress-bar');
+    var progressContainer = $('#progress-container');
+    var currentTimeEl = $('#current-time');
+    var durationTimeEl = $('#duration-time');
+    var currentSongTitle = $('#current-song-title');
+    var playlistItems = $('.playlist-item');
+
+    function formatTime(secs) {
+        var m = Math.floor(secs / 60);
+        var s = Math.floor(secs % 60);
+        return m + ':' + (s < 10 ? '0' : '') + s;
+    }
+
+    if (audio) {
+        audio.addEventListener('timeupdate', function() {
+            if (audio.duration) {
+                var pct = (audio.currentTime / audio.duration) * 100;
+                progressBar.css('width', pct + '%');
+                currentTimeEl.text(formatTime(audio.currentTime));
+            }
+        });
+
+        audio.addEventListener('loadedmetadata', function() {
+            durationTimeEl.text(formatTime(audio.duration));
+        });
+
+        audio.addEventListener('ended', function() {
+            playNextSong();
+        });
+
+        playPauseBtn.on('click', function() {
+            if (audio.paused) {
+                audio.play();
+                playPauseIcon.removeClass('fa-play').addClass('fa-pause');
+                musicDisc.css('animation-play-state', 'running');
+            } else {
+                audio.pause();
+                playPauseIcon.removeClass('fa-pause').addClass('fa-play');
+                musicDisc.css('animation-play-state', 'paused');
+            }
+        });
+
+        progressContainer.on('click', function(e) {
+            var width = $(this).width();
+            var clickX = e.offsetX;
+            audio.currentTime = (clickX / width) * audio.duration;
+        });
+
+        function playSongAtIndex(index) {
+            var item = playlistItems.eq(index);
+            if (item.length) {
+                playlistItems.removeClass('active');
+                item.addClass('active');
+                var src = item.data('src');
+                var title = item.data('title');
+
+                audio.src = src;
+                currentSongTitle.text(title);
+                audio.load();
+                audio.play();
+
+                playPauseIcon.removeClass('fa-play').addClass('fa-pause');
+                musicDisc.css('animation-play-state', 'running');
+            }
+        }
+
+        function playNextSong() {
+            var activeIndex = $('.playlist-item.active').data('index');
+            var nextIndex = activeIndex + 1;
+            if (nextIndex >= playlistItems.length) {
+                nextIndex = 0;
+            }
+            playSongAtIndex(nextIndex);
+        }
+
+        function playPrevSong() {
+            var activeIndex = $('.playlist-item.active').data('index');
+            var prevIndex = activeIndex - 1;
+            if (prevIndex < 0) {
+                prevIndex = playlistItems.length - 1;
+            }
+            playSongAtIndex(prevIndex);
+        }
+
+        playlistItems.on('click', function() {
+            var index = $(this).data('index');
+            playSongAtIndex(index);
+        });
+
+        $('#next-song-btn').on('click', playNextSong);
+        $('#prev-song-btn').on('click', playPrevSong);
+    }
 
     $(document).on('click', '.gallery-lightbox-trigger', function(e) {
         e.preventDefault();
@@ -1126,13 +1160,14 @@ $(document).ready(function() {
         $('#lightbox-image').attr('src', imageSrc);
         $('#lightbox-category').text(category);
         $('#lightbox-title').text(title);
-        
+
         if (articleUrl && articleUrl !== '#' && articleUrl !== '') {
             $('#lightbox-article-link').attr('href', articleUrl).show();
         } else {
             $('#lightbox-article-link').hide();
         }
 
+        var lightboxModal = new bootstrap.Modal(document.getElementById('galleryLightboxModal'));
         lightboxModal.show();
     });
 
@@ -1147,6 +1182,7 @@ $(document).ready(function() {
         $('#modal-testimonial-content').text('"' + content + '"');
         $('#modal-testimonial-avatar').attr('src', avatar);
 
+        var testimonialModal = new bootstrap.Modal(document.getElementById('testimonialDetailModal'));
         testimonialModal.show();
     });
 

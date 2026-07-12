@@ -6,157 +6,94 @@
 
 @push('styles')
 <style>
-    .blog-image {
-        width: 80px;
-        height: 60px;
-        object-fit: cover;
+    .metric-card {
         border-radius: 6px;
-        border: 2px solid #e9ecef;
-        transition: all 0.3s ease;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
-    .blog-image:hover {
-        transform: scale(1.1);
-        border-color: #0d6efd;
+    .metric-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
     }
-    .status-badge {
-        cursor: pointer;
-        transition: all 0.3s ease;
+    .metric-card .card-body {
+        padding: 8px 12px !important;
     }
-    .status-badge:hover {
-        opacity: 0.8;
-        transform: scale(0.95);
-    }
-    .drag-handle {
-        cursor: move;
-        color: #6c757d;
-        transition: all 0.3s ease;
-    }
-    .drag-handle:hover {
-        color: #0d6efd;
-    }
-    .sortable-placeholder {
-        background-color: #e9ecef;
-        border: 2px dashed #0d6efd;
-        height: 70px;
-        border-radius: 8px;
-    }
-    .table-row-hover {
-        transition: background-color 0.3s ease;
-    }
-    .table-row-hover:hover {
-        background-color: #f8f9fa;
-    }
-    .filter-card {
-        background: #f8f9fa;
-        border-radius: 8px;
-        padding: 15px;
-        margin-bottom: 20px;
-        border: 1px solid #e9ecef;
-    }
-    .blog-title {
-        font-weight: 600;
-        color: #212529;
-    }
-    .blog-title:hover {
-        color: #0d6efd;
-    }
-    .blog-meta {
-        font-size: 12px;
-        color: #6c757d;
-    }
-    .view-count {
-        display: inline-block;
-        background: #e9ecef;
-        padding: 2px 10px;
-        border-radius: 20px;
-        font-size: 11px;
-        color: #495057;
-    }
-    .tag-badge {
-        display: inline-block;
-        background: #e9ecef;
-        padding: 2px 8px;
-        border-radius: 12px;
-        font-size: 10px;
-        color: #495057;
-        margin: 2px;
-    }
-    .tag-badge:hover {
-        background: #0d6efd;
-        color: white;
-    }
-    .action-btn-group {
+    .border-left-primary { border-left: 3px solid #006A4E !important; }
+    .border-left-success { border-left: 3px solid #2e7d32 !important; }
+    .border-left-info { border-left: 3px solid #0288d1 !important; }
+    .border-left-warning { border-left: 4px solid #f57c00 !important; }
+    .border-left-danger { border-left: 4px solid #d32f2f !important; }
+    .border-left-secondary { border-left: 4px solid #757575 !important; }
+
+    .stat-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 6px;
         display: flex;
-        gap: 4px;
-        flex-wrap: wrap;
-    }
-    .info-box {
-        cursor: default;
-        transition: all 0.3s ease;
-    }
-    .info-box:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
     }
 </style>
 @endpush
 
 @section('filter_input')
-<div class="filter-card">
-    <div class="row align-items-end">
-        <div class="col-md-2 mb-3">
-            <div class="input-group">
-                <span class="input-group-text"><i class="fas fa-search"></i></span>
-                <input type="text" id="search-input" class="form-control" placeholder="শিরোনাম, কন্টেন্ট..." autocomplete="off" value="{{ request('search') }}">
+<!-- Filter Section -->
+<div class="card border shadow-none mb-2 bg-light-subtle">
+    <div class="card-body p-2">
+        <div class="row g-2">
+            <div class="col-md-3 col-sm-6">
+                <input type="text" id="search-input" class="form-control" placeholder="শিরোনাম, কন্টেন্ট খুঁজুন..." autocomplete="off" value="{{ request('search') }}">
             </div>
-        </div>
-        <div class="col-md-2 mb-3">
-            <select id="category-filter" class="form-select">
-                <option value="">সব ক্যাটাগরি</option>
-                @foreach($categories as $category)
-                    <option value="{{ $category->id }}" {{ request('category') == $category->id ? 'selected' : '' }}>
-                        {{ $category->name }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
-        <div class="col-md-2 mb-3">
-            <select id="status-filter" class="form-select">
-                <option value="">সব স্ট্যাটাস</option>
-                <option value="published" {{ request('status') == 'published' ? 'selected' : '' }}>প্রকাশিত</option>
-                <option value="draft" {{ request('status') == 'draft' ? 'selected' : '' }}>খসড়া</option>
-            </select>
-        </div>
-        <div class="col-md-2 mb-3">
-            <select id="author-filter" class="form-select">
-                <option value="">সব লেখক</option>
-                @foreach($authors ?? [] as $author)
-                    <option value="{{ $author->id }}" {{ request('author') == $author->id ? 'selected' : '' }}>
-                        {{ $author->name }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
-        <div class="col-md-2 mb-3">
-            <select id="gallery-filter" class="form-select">
-                <option value="">সব গ্যালারি</option>
-                <option value="gallery" {{ request('gallery') == 'gallery' ? 'selected' : '' }}>গ্যালারি পোস্ট</option>
-                <option value="non_gallery" {{ request('gallery') == 'non_gallery' ? 'selected' : '' }}>গ্যালারি ব্যতীত</option>
-            </select>
-        </div>
-        <div class="col-md-1 mb-3">
-            <select id="per-page-filter" class="form-select">
-                <option value="10" {{ request('per_page') == 10 ? 'selected' : '' }}>১০</option>
-                <option value="20" {{ request('per_page') == 20 ? 'selected' : '' }}>২০</option>
-                <option value="50" {{ request('per_page') == 50 ? 'selected' : '' }}>৫০</option>
-                <option value="100" {{ request('per_page') == 100 ? 'selected' : '' }}>১০০</option>
-                <option value="-1" {{ request('per_page') == -1 ? 'selected' : '' }}>সব</option>
-            </select>
-        </div>
-        <div class="col-md-1 mb-3">
-            <button id="reset-filter" class="btn btn-secondary w-100" title="রিসেট ফিল্টার">
-                <i class="fas fa-undo-alt"></i>
-            </button>
+            <div class="col-md-2 col-sm-6">
+                <select id="category-filter" class="form-select">
+                    <option value="">সব ক্যাটাগরি</option>
+                    @foreach($categories as $category)
+                        <option value="{{ $category->id }}" {{ request('category') == $category->id ? 'selected' : '' }}>
+                            {{ $category->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="col-md-2 col-sm-6">
+                <select id="status-filter" class="form-select">
+                    <option value="">সব স্ট্যাটাস</option>
+                    <option value="published" {{ request('status') == 'published' ? 'selected' : '' }}>প্রকাশিত</option>
+                    <option value="draft" {{ request('status') == 'draft' ? 'selected' : '' }}>খসড়া</option>
+                </select>
+            </div>
+            <div class="col-md-2 col-sm-6">
+                <select id="author-filter" class="form-select">
+                    <option value="">সব লেখক</option>
+                    @foreach($authors ?? [] as $author)
+                        <option value="{{ $author->id }}" {{ request('author') == $author->id ? 'selected' : '' }}>
+                            {{ $author->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="col-md-1 col-sm-6">
+                <select id="gallery-filter" class="form-select">
+                    <option value="">সব</option>
+                    <option value="gallery" {{ request('gallery') == 'gallery' ? 'selected' : '' }}>গ্যালারি</option>
+                    <option value="non_gallery" {{ request('gallery') == 'non_gallery' ? 'selected' : '' }}>সাধারণ</option>
+                </select>
+            </div>
+            <div class="col-md-1 col-sm-6">
+                <select id="per-page-filter" class="form-select">
+                    <option value="10" {{ request('per_page') == 10 ? 'selected' : '' }}>১০টি</option>
+                    <option value="20" {{ request('per_page') == 20 ? 'selected' : (request('per_page') == '' ? 'selected' : '') }}>২০টি</option>
+                    <option value="50" {{ request('per_page') == 50 ? 'selected' : '' }}>৫০টি</option>
+                    <option value="100" {{ request('per_page') == 100 ? 'selected' : '' }}>১০০টি</option>
+                    <option value="-1" {{ request('per_page') == -1 ? 'selected' : '' }}>সব</option>
+                </select>
+            </div>
+            <div class="col-md-1 col-sm-6">
+                <button id="reset-filter" class="btn btn-secondary w-100" title="রিসেট ফিল্টার" style="height: 38px;">
+                    <i class="fas fa-undo-alt"></i>
+                </button>
+            </div>
         </div>
     </div>
 </div>
@@ -164,6 +101,112 @@
 
 @section('content')
 <div class="container-fluid">
+    <!-- Statistics Cards -->
+    <div class="row g-2 mb-3">
+        <!-- Total Posts -->
+        <div class="col-md-2 col-6">
+            <div class="card metric-card border-left-info h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="text-muted small d-block mb-0" style="font-size: 11px;">মোট পোস্ট</span>
+                            <h5 class="mb-0 fw-bold">{{ number_format($stats['total'] ?? 0) }}</h5>
+                        </div>
+                        <div class="stat-icon bg-info bg-opacity-10 text-info">
+                            <i class="fas fa-blog"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Published Posts -->
+        <div class="col-md-2 col-6">
+            <div class="card metric-card border-left-success h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="text-muted small d-block mb-0" style="font-size: 11px;">প্রকাশিত</span>
+                            <h5 class="mb-0 fw-bold">{{ number_format($stats['published'] ?? 0) }}</h5>
+                        </div>
+                        <div class="stat-icon bg-success bg-opacity-10 text-success">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Draft Posts -->
+        <div class="col-md-2 col-6">
+            <div class="card metric-card border-left-warning h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="text-muted small d-block mb-0" style="font-size: 11px;">খসড়া</span>
+                            <h5 class="mb-0 fw-bold">{{ number_format($stats['draft'] ?? 0) }}</h5>
+                        </div>
+                        <div class="stat-icon bg-warning bg-opacity-10 text-warning">
+                            <i class="fas fa-pencil-alt"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Views -->
+        <div class="col-md-2 col-6">
+            <div class="card metric-card border-left-secondary h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="text-muted small d-block mb-0" style="font-size: 11px;">মোট ভিউ</span>
+                            <h5 class="mb-0 fw-bold">{{ number_format($stats['total_views'] ?? 0) }}</h5>
+                        </div>
+                        <div class="stat-icon bg-secondary bg-opacity-10 text-secondary">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Categories -->
+        <div class="col-md-2 col-6">
+            <div class="card metric-card border-left-primary h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="text-muted small d-block mb-0" style="font-size: 11px;">ক্যাটাগরি</span>
+                            <h5 class="mb-0 fw-bold">{{ number_format($stats['categories'] ?? 0) }}</h5>
+                        </div>
+                        <div class="stat-icon bg-primary bg-opacity-10 text-primary">
+                            <i class="fas fa-tags"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Comments -->
+        <div class="col-md-2 col-6">
+            <div class="card metric-card border-left-danger h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="text-muted small d-block mb-0" style="font-size: 11px;">মন্তব্য</span>
+                            <h5 class="mb-0 fw-bold">{{ number_format($stats['comments'] ?? 0) }}</h5>
+                        </div>
+                        <div class="stat-icon bg-danger bg-opacity-10 text-danger">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Table Card -->
     <div class="card">
         <div class="card-header">
             <h3 class="card-title">
@@ -201,91 +244,6 @@
                     <span class="visually-hidden">Loading...</span>
                 </div>
                 <p class="mt-2 text-muted">ডাটা লোড হচ্ছে...</p>
-            </div>
-
-            <!-- Success/Error Messages -->
-            @if(session('success'))
-                <div class="alert alert-success alert-dismissible fade show m-3" role="alert">
-                    <i class="fas fa-check-circle me-2"></i> {{ session('success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            @endif
-
-            @if(session('error'))
-                <div class="alert alert-danger alert-dismissible fade show m-3" role="alert">
-                    <i class="fas fa-exclamation-circle me-2"></i> {{ session('error') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            @endif
-
-            <!-- Statistics Cards -->
-            <div class="row m-3">
-                <div class="col-md-2 col-6">
-                    <div class="info-box">
-                        <span class="info-box-icon bg-info elevation-1">
-                            <i class="fas fa-blog"></i>
-                        </span>
-                        <div class="info-box-content">
-                            <span class="info-box-text">মোট পোস্ট</span>
-                            <span class="info-box-number">{{ number_format($stats['total'] ?? 0) }}</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-2 col-6">
-                    <div class="info-box">
-                        <span class="info-box-icon bg-success elevation-1">
-                            <i class="fas fa-check-circle"></i>
-                        </span>
-                        <div class="info-box-content">
-                            <span class="info-box-text">প্রকাশিত</span>
-                            <span class="info-box-number">{{ number_format($stats['published'] ?? 0) }}</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-2 col-6">
-                    <div class="info-box">
-                        <span class="info-box-icon bg-warning elevation-1">
-                            <i class="fas fa-pencil-alt"></i>
-                        </span>
-                        <div class="info-box-content">
-                            <span class="info-box-text">খসড়া</span>
-                            <span class="info-box-number">{{ number_format($stats['draft'] ?? 0) }}</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-2 col-6">
-                    <div class="info-box">
-                        <span class="info-box-icon bg-secondary elevation-1">
-                            <i class="fas fa-eye"></i>
-                        </span>
-                        <div class="info-box-content">
-                            <span class="info-box-text">মোট ভিউ</span>
-                            <span class="info-box-number">{{ number_format($stats['total_views'] ?? 0) }}</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-2 col-6">
-                    <div class="info-box">
-                        <span class="info-box-icon bg-primary elevation-1">
-                            <i class="fas fa-tags"></i>
-                        </span>
-                        <div class="info-box-content">
-                            <span class="info-box-text">ক্যাটাগরি</span>
-                            <span class="info-box-number">{{ number_format($stats['categories'] ?? 0) }}</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-2 col-6">
-                    <div class="info-box">
-                        <span class="info-box-icon bg-danger elevation-1">
-                            <i class="fas fa-comments"></i>
-                        </span>
-                        <div class="info-box-content">
-                            <span class="info-box-text">মন্তব্য</span>
-                            <span class="info-box-number">{{ number_format($stats['comments'] ?? 0) }}</span>
-                        </div>
-                    </div>
-                </div>
             </div>
 
             <!-- Table Container -->

@@ -35,14 +35,14 @@ class PageController extends Controller
         }
 
         // Sorting
-        $sortField = $request->get('sort', 'created_at');
+        $sortField = $request->get('sort', 'id');
         $sortDirection = $request->get('direction', 'desc');
         $allowedSortFields = ['id', 'title', 'slug', 'is_active', 'created_at'];
 
         if (in_array($sortField, $allowedSortFields)) {
             $query->orderBy($sortField, $sortDirection);
         } else {
-            $query->orderBy('created_at', 'desc');
+            $query->orderBy('id', 'desc');
         }
 
         $perPage = $request->get('per_page', 20);
@@ -53,7 +53,12 @@ class PageController extends Controller
             return response()->json([
                 'success' => true,
                 'html' => $html,
-                'total' => $pages->total() ?? $pages->count()
+                'total' => $pages->total() ?? $pages->count(),
+                'stats' => [
+                    'total' => Page::count(),
+                    'active' => Page::where('is_active', true)->count(),
+                    'inactive' => Page::where('is_active', false)->count()
+                ]
             ]);
         }
 
@@ -111,7 +116,7 @@ class PageController extends Controller
 
             DB::commit();
 
-            return redirect()->route('admin.pages.index')
+            return redirect()->route('admin.pages.edit', $page->id)
                 ->with('success', 'নতুন পেজ সফলভাবে তৈরি করা হয়েছে!');
 
         } catch (\Exception $e) {
@@ -169,7 +174,7 @@ class PageController extends Controller
 
             DB::commit();
 
-            return redirect()->route('admin.pages.index')
+            return redirect()->route('admin.pages.edit', $page->id)
                 ->with('success', 'পেজ সফলভাবে আপডেট করা হয়েছে!');
 
         } catch (\Exception $e) {

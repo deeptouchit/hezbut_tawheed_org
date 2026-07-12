@@ -1,84 +1,81 @@
 {{-- resources/views/admin/blog/categories/partials/table.blade.php --}}
 
 <div class="table-responsive">
-    <table class="table table-bordered table-hover table-striped" id="sortable-table">
-        <thead class="table-light">
-            <tr>
-                <th width="30">
+    <table class="table table-bordered table-striped table-hover table-sm text-nowrap" style="width: 100%;">
+        <thead class="">
+            <tr class="text-center">
+                <th>
                     <input type="checkbox" id="selectAll">
                 </th>
-                <th width="30">
+                <th>
                     <i class="fas fa-grip-vertical drag-handle" title="ড্র্যাগ করে সাজান"></i>
                 </th>
-                <th width="50">#</th>
-                <th width="70">ছবি</th>
+                <th>ID</th>
+                <th>ছবি</th>
                 <th>ক্যাটাগরি নাম</th>
-                <th>বিবরণ</th>
-                <th>ব্লগ</th>
+                <th>স্ল্যাগ (Slug)</th>
+                <th>ব্লগ সংখ্যা</th>
                 <th>স্ট্যাটাস</th>
-                <th width="180">অ্যাকশন</th>
+                <th>তৈরি হয়েছে</th>
+                <th>একশন</th>
             </tr>
         </thead>
-        <tbody id="sortable-body">
-            @forelse($categories as $index => $category)
-            <tr class="table-row-hover" data-id="{{ $category->id }}">
+        <tbody>
+            @forelse($categories as $category)
+            <tr>
                 <td>
                     <input type="checkbox" class="category-checkbox" value="{{ $category->id }}">
                 </td>
                 <td class="text-center">
-                    <i class="fas fa-grip-vertical drag-handle"></i>
+                    <i class="fas fa-grip-vertical drag-handle" style="cursor: move;"></i>
                 </td>
-                <td>{{ $loop->iteration }}</td>
-                <td>
-                    <img src="{{ $category->image_url }}"
-                         alt="{{ $category->name }}"
-                         class="category-image"
-                         loading="lazy"
-                         onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode($category->name) }}&size=50&background=6366f1&color=fff&rounded=true'">
-                </td>
-                <td>
-                    <strong>{{ $category->name }}</strong>
-                    @if($category->slug)
-                        <br><small class="text-muted"><i class="fas fa-link"></i> {{ $category->slug }}</small>
-                    @endif
-                    <div class="mt-1">
-                        <small class="text-muted">
-                            <i class="fas fa-clock"></i> {{ $category->created_at?->diffForHumans() }}
-                        </small>
+                <td>{{ $category->id }}</td>
+                <td class="text-center p-0">
+                    <div class="d-flex align-items-center justify-content-center" style="height: 30px;">
+                        <img src="{{ $category->image_url }}"
+                             class="img-circle img-size-32" alt="{{ $category->name }}" 
+                             style="width: 30px; height: 30px; object-fit: cover; border-radius: 2px;"
+                             onerror="this.src='https://ui-avatars.com/api/?name='+urlencode('{{ $category->name }}')+'&background=2F54EB&color=fff'">
                     </div>
                 </td>
                 <td>
-                    @if($category->description)
-                        <span title="{{ $category->description }}">
-                            {{ Str::limit($category->description, 50) }}
-                        </span>
-                    @else
-                        <span class="text-muted">N/A</span>
-                    @endif
+                    <div class="d-flex align-items-center fw-bold">
+                       {{ $category->name }}
+                    </div>
                 </td>
-                <td>
-                    <span class="badge bg-info">
+                <td>{{ $category->slug }}</td>
+                <td class="text-center p-0">
+                    <span class="badge bg-info" style="width: 80px;">
                         <i class="fas fa-file-alt"></i> {{ $category->blogs_count ?? 0 }}
                     </span>
                 </td>
-                <td>
-                    <button class="btn btn-sm toggle-status status-badge" data-id="{{ $category->id }}">
-                        {!! $category->status ? '<span class="badge bg-success">সক্রিয়</span>' : '<span class="badge bg-danger">নিষ্ক্রিয়</span>' !!}
+                <td class="text-center p-0">
+                    @php
+                        $statusBadge = $category->status ? 'success' : 'danger';
+                    @endphp
+                    <button type="button"
+                            class="btn btn-sm btn-{{ $statusBadge }} toggle-status status-badge"
+                            data-id="{{ $category->id }}">
+                        <i class="fas {{ $category->status ? 'fa-check-circle' : 'fa-times-circle' }}"></i>
+                        {{ $category->status ? 'সক্রিয়' : 'নিষ্ক্রিয়' }}
                     </button>
                 </td>
                 <td>
-                    <div class="btn-group btn-group-sm" role="group">
-                        <a href="{{ route('admin.blog.categories.show', $category->id) }}" class="btn btn-info" title="বিস্তারিত দেখুন">
+                    {{ $category->created_at ? $category->created_at->diffForHumans() : 'N/A' }}
+                </td>
+                <td class="text-center p-0">
+                    <div class="btn-group btn-group-sm">
+                        <a href="{{ route('admin.blog.categories.show', $category->id) }}" class="btn btn-info" title="দেখুন">
                             <i class="fas fa-eye"></i>
                         </a>
-                        <a href="{{ route('admin.blog.categories.edit', $category->id) }}" class="btn btn-primary" title="এডিট করুন">
+                        <a href="{{ route('admin.blog.categories.edit', $category->id) }}" class="btn btn-primary" title="এডিট">
                             <i class="fas fa-edit"></i>
                         </a>
-                        <button class="btn btn-danger delete-category"
+                        <button type="button" class="btn btn-danger delete-category"
                                 data-id="{{ $category->id }}"
                                 data-name="{{ $category->name }}"
                                 data-blog-count="{{ $category->blogs_count ?? 0 }}"
-                                title="ডিলিট করুন">
+                                title="ডিলিট">
                             <i class="fas fa-trash"></i>
                         </button>
                     </div>
@@ -86,15 +83,12 @@
             </tr>
             @empty
             <tr>
-                <td colspan="9" class="text-center py-5">
+                <td colspan="10" class="text-center py-5">
                     <i class="fas fa-tags fa-3x text-muted mb-3"></i>
-                    <p class="text-muted">কোন ক্যাটাগরি পাওয়া যায়নি</p>
-                    <a href="{{ route('admin.blog.categories.create') }}" class="btn btn-primary">
-                        <i class="fas fa-plus"></i> নতুন ক্যাটাগরি যোগ করুন
+                    <p class="text-muted mb-0">কোনো ক্যাটাগরি পাওয়া যায়নি</p>
+                    <a href="{{ route('admin.blog.categories.create') }}" class="btn btn-primary btn-sm mt-3">
+                        <i class="fas fa-plus mr-1"></i> নতুন ক্যাটাগরি যোগ করুন
                     </a>
-                    <button class="btn btn-secondary ms-2" id="reset-filter-empty">
-                        <i class="fas fa-undo-alt"></i> ফিল্টার রিসেট
-                    </button>
                 </td>
             </tr>
             @endforelse
@@ -104,23 +98,9 @@
 
 <!-- Pagination -->
 @if(isset($categories) && method_exists($categories, 'links'))
-    <div class="d-flex justify-content-center mt-3">
-        {{ $categories->appends(request()->query())->links('pagination::bootstrap-5') }}
+    <div class="row mt-3">
+        <div class="col-12 d-flex justify-content-center">
+            {{ $categories->withQueryString()->links('pagination::bootstrap-5') }}
+        </div>
     </div>
 @endif
-
-@push('scripts')
-<script>
-$(document).ready(function() {
-    // Reset filter from empty state
-    $('#reset-filter-empty').on('click', function() {
-        $('#search-input').val('');
-        $('#status-filter').val('');
-        $('#per-page-filter').val('20');
-        $('#date-from-filter').val('');
-        $('#date-to-filter').val('');
-        loadCategories();
-    });
-});
-</script>
-@endpush

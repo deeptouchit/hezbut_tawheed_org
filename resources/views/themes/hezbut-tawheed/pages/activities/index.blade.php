@@ -5,13 +5,12 @@
 
 @section('content')
 
-    <!-- Banner Header -->
-    <div class="py-5 text-white position-relative" style="background: linear-gradient(rgba(0,106,78,0.85), rgba(0,106,78,0.85)), url('https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?q=80&w=1200') no-repeat center center; background-size: cover; border-bottom: 4px solid #10B981;">
-        <div class="container py-4 text-center">
-            <h1 class="display-4 fw-bold mb-0 text-shadow text-white">আমাদের কার্যক্রম</h1>
-            <p class="lead mt-2 mb-0 opacity-90 text-white" style="font-family: 'Baloo Da 2', sans-serif;">মানবতার সেবা ও সমাজ সংস্কারে আমাদের সামাজিক উদ্যোগসমূহ</p>
-        </div>
-    </div>
+    @include('theme::partials.hero_banner', [
+        'title' => 'আমাদের কার্যক্রম',
+        'subtitle' => 'মানবতার সেবা ও সমাজ সংস্কারে আমাদের সামাজিক উদ্যোগসমূহ',
+        'badge_text' => 'কর্মকাণ্ড ও কার্যক্রম',
+        'badge_icon' => 'fas fa-tasks'
+    ])
 
     <!-- Activities Grid Section -->
     <section class="py-6 bg-off-white">
@@ -54,11 +53,7 @@
         </div>
     </section>
 
-    <style>
-        .hover-grow:hover img {
-            transform: scale(1.05);
-        }
-    </style>
+    
 
 @endsection
 

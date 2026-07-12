@@ -64,36 +64,25 @@ return [
                     'active'      => ['admin/blog/comments*'],
                     'activeRoute' => ['admin.blog.comments.*'],
                 ],
-            ],
-        ],
-
-        // People & Team
-        [
-            'order'       => 3,
-            'title'       => 'People Management',
-            'icon'        => 'fas fa-users',
-            'active'      => ['admin/team*'],
-            'activeRoute' => ['admin.team.*'],
-            'roles'       => ['super_admin', 'admin', 'manager'],
-            'items'       => [
                 [
-                    'order'       => 1,
-                    'route'       => 'admin.team.index',
-                    'label'       => 'Team Members',
-                    'icon'        => 'fas fa-user-tie nav-icon ml-2',
-                    'active'      => ['admin/team*'],
-                    'activeRoute' => ['admin.team.*'],
+                    'order'       => 4,
+                    'route'       => 'admin.blog.tags.index',
+                    'label'       => 'Blog Tags',
+                    'icon'        => 'fas fa-hashtag nav-icon ml-2',
+                    'active'      => ['admin/blog/tags*'],
+                    'activeRoute' => ['admin.blog.tags.*'],
                 ],
             ],
         ],
+
 
         // Page Management
         [
             'order'       => 4,
             'title'       => 'Page Management',
             'icon'        => 'fas fa-file-invoice',
-            'active'      => ['admin/pages*', 'admin/activities*', 'admin/books*', 'admin/videos*', 'admin/live-broadcasts*', 'admin/leaders*', 'admin/branches*', 'admin/gallery*'],
-            'activeRoute' => ['admin.pages.*', 'admin.activities.*', 'admin.books.*', 'admin.videos.*', 'admin.live-broadcasts.*', 'admin.leaders.*', 'admin.branches.*', 'admin.gallery.*'],
+            'active'      => ['admin/pages*', 'admin/activities*', 'admin/books*', 'admin/videos*', 'admin/live-broadcasts*', 'admin/songs*', 'admin/leaders*', 'admin/branches*', 'admin/gallery*'],
+            'activeRoute' => ['admin.pages.*', 'admin.activities.*', 'admin.books.*', 'admin.videos.*', 'admin.live-broadcasts.*', 'admin.songs.*', 'admin.leaders.*', 'admin.branches.*', 'admin.gallery.*'],
             'roles'       => ['super_admin', 'admin', 'manager'],
             'items'       => [
                 [
@@ -127,6 +116,14 @@ return [
                     'icon'        => 'fas fa-broadcast-tower nav-icon ml-2',
                     'active'      => ['admin/live-broadcasts*'],
                     'activeRoute' => ['admin.live-broadcasts.*'],
+                ],
+                [
+                    'order'       => 5,
+                    'route'       => 'admin.songs.index',
+                    'label'       => 'Songs & Lyrics',
+                    'icon'        => 'fas fa-music nav-icon ml-2',
+                    'active'      => ['admin/songs*'],
+                    'activeRoute' => ['admin.songs.*'],
                 ],
                 [
                     'order'       => 6,
@@ -220,8 +217,8 @@ return [
             'order'       => 6,
             'title'       => 'Design & Appearance',
             'icon'        => 'fas fa-palette',
-            'active'      => ['admin/themes*', 'admin/menu*', 'admin/sliders*', 'admin/homepage-builder*'],
-            'activeRoute' => ['admin.themes.*', 'admin.menu.*', 'admin.sliders.*', 'admin.homepage-builder.*'],
+            'active'      => ['admin/themes*', 'admin/menu*', 'admin/sliders*'],
+            'activeRoute' => ['admin.themes.*', 'admin.menu.*', 'admin.sliders.*'],
             'roles'       => ['super_admin', 'admin', 'manager'],
             'items'       => [
                 [
@@ -247,14 +244,6 @@ return [
                     'icon'        => 'fas fa-images nav-icon ml-2',
                     'active'      => ['admin/sliders*'],
                     'activeRoute' => ['admin.sliders.*'],
-                ],
-                [
-                    'order'       => 4,
-                    'route'       => 'admin.homepage-builder.index',
-                    'label'       => 'হোমপেজ বিল্ডার (এলিমেন্টর)',
-                    'icon'        => 'fas fa-cubes nav-icon ml-2',
-                    'active'      => ['admin/homepage-builder*'],
-                    'activeRoute' => ['admin.homepage-builder.*'],
                 ],
             ],
         ],
