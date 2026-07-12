@@ -1,0 +1,1636 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\Blog;
+use App\Models\BlogCategory;
+use App\Models\BlogComment;
+use App\Models\Gallery;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
+
+class BlogController extends Controller
+{
+      /**
+     * Display a listing of blogs.
+     */
+    public function index(Request $request)
+    {
+        $query = Blog::with(['author', 'category']);
+
+          // Apply filters
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->search($search);
+        }
+
+        if ($request->filled('category')) {
+            $query->byCategory($request->category);
+        }
+
+        if ($request->filled('status')) {
+            if ($request->status == 'published') {
+                $query->published();
+            } elseif ($request->status == 'draft') {
+                $query->where('status', false);
+            }
+        }
+
+        if ($request->filled('date_from')) {
+            $query->whereDate('published_at', '>=', $request->date_from);
+        }
+
+        if ($request->filled('date_to')) {
+            $query->whereDate('published_at', '<=', $request->date_to);
+        }
+
+        if ($request->filled('author')) {
+            $query->where('author_id', $request->author);
+        }
+
+        if ($request->filled('gallery')) {
+            if ($request->gallery == 'gallery') {
+                $query->where('is_gallery', true);
+            } elseif ($request->gallery == 'non_gallery') {
+                $query->where('is_gallery', false);
+            }
+        }
+
+          // Sorting
+        $sortField         = $request->get('sort', 'published_at');
+        $sortDirection     = $request->get('direction', 'desc');
+        $allowedSortFields = ['id', 'title', 'views', 'status', 'published_at', 'created_at', 'sort_order', 'gallery_order'];
+
+        if (in_array($sortField, $allowedSortFields)) {
+            $query->orderBy($sortField, $sortDirection);
+        } else {
+            $query->orderBy('published_at', 'desc');
+        }
+
+        $perPage = $request->get('per_page', 20);
+        $perPageValue = ($perPage == '-1') ? max(1, $query->count()) : (int)$perPage;
+
+        if ($request->ajax()) {
+            $blogs = $query->paginate($perPageValue);
+            $html  = view('admin.blog.partials.table', compact('blogs'))->render();
+            return response()->json([
+                'success'    => true,
+                'html'       => $html,
+                'total'      => $blogs->total(),
+                'pagination' => [
+                    'total'        => $blogs->total(),
+                    'current_page' => $blogs->currentPage(),
+                    'last_page'    => $blogs->lastPage(),
+                ]
+            ]);
+        }
+
+        $blogs = $query->paginate($perPageValue);
+
+          // Get filter options
+        $categories = BlogCategory::active()->ordered()->get();
+        $authors    = \App\Models\User::where('status', true)->get(['id', 'name']);
+
+          // Statistics
+        $stats = [
+            'total'            => Blog::count(),
+            'published'        => Blog::published()->count(),
+            'draft'            => Blog::where('status', false)->count(),
+            'total_views'      => Blog::sum('views'),
+            'categories'       => BlogCategory::count(),
+            'comments'         => BlogComment::where('is_approved', true)->count(),
+            'pending_comments' => BlogComment::where('is_approved', false)->count(),
+            'this_month'       => Blog::thisMonth()->count(),
+            'this_week'        => Blog::thisWeek()->count(),
+        ];
+
+        return view('admin.blog.index', compact('blogs', 'categories', 'stats', 'authors'));
+    }
+
+      /**
+     * Show form for creating new blog.
+     */
+    public function create()
+    {
+        $categories = BlogCategory::active()->ordered()->get();
+        $tags       = $this->getAllTags();
+        $authors    = \App\Models\User::where('status', true)->get(['id', 'name']);
+
+        return view('admin.blog.create', compact('categories', 'tags', 'authors'));
+    }
+
+      /**
+     * Store a newly created blog.
+     */
+    public function store(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'title'             => 'required|string|max:255',
+            'slug'              => 'nullable|string|max:255|unique:blogs,slug',
+            'short_description' => 'nullable|string|max:500',
+            'content'           => 'required|string',
+            'featured_image'    => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
+            'author_id'         => 'required|exists:users,id',
+            'category_id'       => 'nullable|exists:blog_categories,id',
+            'tags'              => 'nullable|array',
+            'meta_title'        => 'nullable|string|max:200',
+            'meta_description'  => 'nullable|string|max:500',
+            'meta_keywords'     => 'nullable|string|max:500',
+            'status'            => 'boolean',
+            'published_at'      => 'nullable|date',
+            'sort_order'        => 'nullable|integer',
+            'is_gallery'        => 'nullable|boolean',
+            'gallery_order'     => 'nullable|integer',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        if ($request->has('is_gallery') && !$request->hasFile('featured_image')) {
+            return redirect()->back()
+                ->withErrors(['featured_image' => 'গ্যালারিতে যুক্ত করার জন্য ফিচার্ড ইমেজ দেওয়া আবশ্যক!'])
+                ->withInput();
+        }
+
+        try {
+            DB::beginTransaction();
+
+            $data = $request->except('featured_image', 'tags');
+
+              // Handle featured image
+            if ($request->hasFile('featured_image')) {
+                $data['featured_image'] = $this->uploadImage($request->file('featured_image'));
+            }
+
+              // Handle tags
+            if ($request->has('tags')) {
+                $data['tags'] = array_filter($request->tags);
+            }
+
+              // Handle slug
+            if (empty($data['slug'])) {
+                $data['slug'] = $this->generateSlug($data['title']);
+            }
+
+              // Check for duplicate slug
+            if (Blog::where('slug', $data['slug'])->exists()) {
+                $data['slug'] = $data['slug'] . '-' . time();
+            }
+
+              // Handle published_at
+            if (empty($data['published_at'])) {
+                $data['published_at'] = now();
+            }
+
+              // Set default values
+            $data['views']      = 0;
+            $data['sort_order'] = $data['sort_order'] ?? Blog::max('sort_order') + 1;
+            $data['is_gallery'] = $request->has('is_gallery') ? 1 : 0;
+            $data['gallery_order'] = $request->input('gallery_order', 0);
+
+            $blog = Blog::create($data);
+
+            DB::commit();
+
+            // Clear gallery cache
+            \Cache::forget('home_gallery_posts');
+            \Cache::forget('api_gallery_posts');
+
+            return redirect()->route('admin.blog.posts.index')
+                ->with('success', 'ব্লগ পোস্ট সফলভাবে তৈরি করা হয়েছে!');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Blog creation failed: ' . $e->getMessage());
+
+            return redirect()->back()
+                ->with('error', 'ব্লগ পোস্ট তৈরি করতে ব্যর্থ হয়েছে: ' . $e->getMessage())
+                ->withInput();
+        }
+    }
+
+      /**
+     * Display the specified blog.
+     */
+    public function show($id)
+    {
+        $blog = Blog::with(['author', 'category', 'approvedComments.user'])->findOrFail($id);
+
+        if (request()->ajax()) {
+            $html = view('admin.blog.partials.detail', compact('blog'))->render();
+            return response()->json([
+                'success' => true,
+                'html'    => $html
+            ]);
+        }
+
+        return view('admin.blog.show', compact('blog'));
+    }
+
+      /**
+     * Show form for editing blog.
+     */
+    public function edit($id)
+    {
+        $blog       = Blog::findOrFail($id);
+        $categories = BlogCategory::active()->ordered()->get();
+        $tags       = $this->getAllTags();
+        $authors    = \App\Models\User::where('status', true)->get(['id', 'name']);
+
+        return view('admin.blog.edit', compact('blog', 'categories', 'tags', 'authors'));
+    }
+
+      /**
+     * Update the specified blog.
+     */
+    public function update(Request $request, $id)
+    {
+        $blog = Blog::findOrFail($id);
+
+        $validator = Validator::make($request->all(), [
+            'title'             => 'required|string|max:255',
+            'slug'              => 'nullable|string|max:255|unique:blogs,slug,' . $blog->id,
+            'short_description' => 'nullable|string|max:500',
+            'content'           => 'required|string',
+            'featured_image'    => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
+            'author_id'         => 'required|exists:users,id',
+            'category_id'       => 'nullable|exists:blog_categories,id',
+            'tags'              => 'nullable|array',
+            'meta_title'        => 'nullable|string|max:200',
+            'meta_description'  => 'nullable|string|max:500',
+            'meta_keywords'     => 'nullable|string|max:500',
+            'status'            => 'boolean',
+            'published_at'      => 'nullable|date',
+            'sort_order'        => 'nullable|integer',
+            'remove_image'      => 'nullable|boolean',
+            'is_gallery'        => 'nullable|boolean',
+            'gallery_order'     => 'nullable|integer',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        if ($request->has('is_gallery') && !$request->hasFile('featured_image') && !$blog->featured_image && $request->remove_image != 1) {
+            return redirect()->back()
+                ->withErrors(['featured_image' => 'গ্যালারিতে যুক্ত করার জন্য ফিচার্ড ইমেজ থাকা আবশ্যক!'])
+                ->withInput();
+        }
+
+        try {
+            DB::beginTransaction();
+
+            $data = $request->except('featured_image', 'tags', 'remove_image');
+
+              // Handle featured image
+            if ($request->hasFile('featured_image')) {
+                  // Delete old image
+                if ($blog->featured_image) {
+                    $this->deleteImage($blog->featured_image);
+                }
+                $data['featured_image'] = $this->uploadImage($request->file('featured_image'));
+            }
+
+              // Handle image removal
+            if ($request->has('remove_image') && $request->remove_image == 1) {
+                if ($blog->featured_image) {
+                    $this->deleteImage($blog->featured_image);
+                }
+                $data['featured_image'] = null;
+            }
+
+              // Handle tags
+            if ($request->has('tags')) {
+                $data['tags'] = array_filter($request->tags);
+            }
+
+              // Handle slug
+            if (empty($data['slug'])) {
+                $data['slug'] = $this->generateSlug($data['title']);
+            }
+
+              // Check for duplicate slug (excluding current)
+            if (Blog::where('slug', $data['slug'])->where('id', '!=', $blog->id)->exists()) {
+                $data['slug'] = $data['slug'] . '-' . time();
+            }
+
+              // Handle published_at
+            if (empty($data['published_at'])) {
+                $data['published_at'] = $blog->published_at ?? now();
+            }
+
+            $data['is_gallery'] = $request->has('is_gallery') ? 1 : 0;
+            $data['gallery_order'] = $request->input('gallery_order', 0);
+
+            $blog->update($data);
+
+            DB::commit();
+
+            // Clear gallery cache
+            \Cache::forget('home_gallery_posts');
+            \Cache::forget('api_gallery_posts');
+
+            return redirect()->route('admin.blog.posts.index')
+                ->with('success', 'ব্লগ পোস্ট সফলভাবে আপডেট করা হয়েছে!');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Blog update failed: ' . $e->getMessage());
+
+            return redirect()->back()
+                ->with('error', 'ব্লগ পোস্ট আপডেট করতে ব্যর্থ হয়েছে!')
+                ->withInput();
+        }
+    }
+
+      /**
+     * Delete the specified blog.
+     */
+    public function destroy($id)
+    {
+        try {
+            $blog = Blog::findOrFail($id);
+
+              // Check if blog has comments
+            $commentCount = $blog->allComments()->count();
+            if ($commentCount > 0) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'এই পোস্টে ' . $commentCount . ' টি মন্তব্য আছে। প্রথমে মন্তব্য গুলো মুছুন!'
+                ], 400);
+            }
+
+              // Delete featured image
+            if ($blog->featured_image) {
+                $this->deleteImage($blog->featured_image);
+            }
+
+            $blog->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'ব্লগ পোস্ট সফলভাবে মুছে ফেলা হয়েছে!'
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Blog deletion failed: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'ব্লগ পোস্ট মুছে ফেলতে ব্যর্থ হয়েছে!'
+            ], 500);
+        }
+    }
+
+      /**
+     * Toggle blog status.
+     */
+    public function toggleStatus($id)
+    {
+        try {
+            $blog         = Blog::findOrFail($id);
+            $blog->status = !$blog->status;
+
+            if ($blog->status && empty($blog->published_at)) {
+                $blog->published_at = now();
+            }
+
+            $blog->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'স্ট্যাটাস পরিবর্তন করা হয়েছে!',
+                'status'  => $blog->status,
+                'badge'   => $blog->status ? '<span class="badge bg-success">প্রকাশিত</span>' : '<span class="badge bg-warning">খসড়া</span>'
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Status toggle failed: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'স্ট্যাটাস পরিবর্তন করতে ব্যর্থ হয়েছে!'
+            ], 500);
+        }
+    }
+
+      /**
+     * Bulk delete blogs.
+     */
+    public function bulkDelete(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'ids'   => 'required|array',
+            'ids.*' => 'required|integer|exists:blogs,id',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->first()
+            ], 422);
+        }
+
+        try {
+            DB::beginTransaction();
+
+            $blogs = Blog::whereIn('id', $request->ids)->get();
+
+              // Check if any blog has comments
+            $hasComments = false;
+            foreach ($blogs as $blog) {
+                if ($blog->allComments()->count() > 0) {
+                    $hasComments = true;
+                    break;
+                }
+            }
+
+            if ($hasComments) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'কিছু পোস্টে মন্তব্য আছে। প্রথমে মন্তব্য গুলো মুছুন!'
+                ], 400);
+            }
+
+            foreach ($blogs as $blog) {
+                if ($blog->featured_image) {
+                    $this->deleteImage($blog->featured_image);
+                }
+            }
+
+            Blog::whereIn('id', $request->ids)->delete();
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => count($blogs) . ' টি ব্লগ পোস্ট সফলভাবে মুছে ফেলা হয়েছে!'
+            ]);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Bulk delete failed: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'বাল্ক ডিলিট করতে ব্যর্থ হয়েছে!'
+            ], 500);
+        }
+    }
+
+      /**
+     * Bulk status update.
+     */
+    public function bulkStatusUpdate(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'ids'    => 'required|array',
+            'ids.*'  => 'required|integer|exists:blogs,id',
+            'status' => 'required|boolean',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->first()
+            ], 422);
+        }
+
+        try {
+            Blog::whereIn('id', $request->ids)->update([
+                'status'       => $request->status,
+                'published_at' => $request->status ? now() : null
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => count($request->ids) . ' টি ব্লগ পোস্টের স্ট্যাটাস আপডেট করা হয়েছে!'
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Bulk status update failed: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'বাল্ক স্ট্যাটাস আপডেট করতে ব্যর্থ হয়েছে!'
+            ], 500);
+        }
+    }
+
+      /**
+     * Bulk category update.
+     */
+    public function bulkCategoryUpdate(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'ids'         => 'required|array',
+            'ids.*'       => 'required|integer|exists:blogs,id',
+            'category_id' => 'required|exists:blog_categories,id',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->first()
+            ], 422);
+        }
+
+        try {
+            Blog::whereIn('id', $request->ids)->update([
+                'category_id' => $request->category_id
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => count($request->ids) . ' টি ব্লগ পোস্টের ক্যাটাগরি আপডেট করা হয়েছে!'
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Bulk category update failed: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'বাল্ক ক্যাটাগরি আপডেট করতে ব্যর্থ হয়েছে!'
+            ], 500);
+        }
+    }
+
+      /**
+     * Export blogs.
+     */
+    public function export(Request $request)
+    {
+        $query = Blog::with(['author', 'category']);
+
+        if ($request->filled('search')) {
+            $query->search($request->search);
+        }
+
+        if ($request->filled('category')) {
+            $query->byCategory($request->category);
+        }
+
+        if ($request->filled('status')) {
+            if ($request->status == 'published') {
+                $query->published();
+            } elseif ($request->status == 'draft') {
+                $query->where('status', false);
+            }
+        }
+
+        if ($request->filled('date_from')) {
+            $query->whereDate('published_at', '>=', $request->date_from);
+        }
+
+        if ($request->filled('date_to')) {
+            $query->whereDate('published_at', '<=', $request->date_to);
+        }
+
+        $blogs = $query->orderBy('published_at', 'desc')->get();
+
+        $filename = 'blogs_' . date('Y-m-d_H-i-s') . '.csv';
+
+        $headers = [
+            'Content-Type'        => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+        ];
+
+        $callback = function () use ($blogs) {
+            $file = fopen('php://output', 'w');
+
+              // CSV Header
+            fputcsv($file, [
+                'ID',
+                'শিরোনাম',
+                'স্লাগ',
+                'ক্যাটাগরি',
+                'লেখক',
+                'ভিউ',
+                'মন্তব্য',
+                'স্ট্যাটাস',
+                'প্রকাশের তারিখ',
+                'তৈরির তারিখ'
+            ]);
+
+            foreach ($blogs as $blog) {
+                fputcsv($file, [
+                    $blog->id,
+                    $blog->title,
+                    $blog->slug,
+                    $blog->category?->name ?? 'N/A',
+                    $blog->author?->name ?? 'N/A',
+                    $blog->views,
+                    $blog->approvedComments()->count(),
+                    $blog->status ? 'প্রকাশিত': 'খসড়া',
+                    $blog->published_at?->format('Y-m-d'),
+                    $blog->created_at?->format('Y-m-d'),
+                ]);
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
+
+      /**
+     * Duplicate a blog post.
+     */
+    public function duplicate($id)
+    {
+        try {
+            $blog = Blog::findOrFail($id);
+
+            $newBlog               = $blog->replicate();
+            $newBlog->title        = $blog->title . ' (Copy)';
+            $newBlog->slug         = $blog->slug . '-copy-' . time();
+            $newBlog->views        = 0;
+            $newBlog->status       = false;
+            $newBlog->published_at = null;
+            $newBlog->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'ব্লগ পোস্ট ডুপ্লিকেট করা হয়েছে!',
+                'id'      => $newBlog->id
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Blog duplication failed: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'ব্লগ পোস্ট ডুপ্লিকেট করতে ব্যর্থ হয়েছে!'
+            ], 500);
+        }
+    }
+
+      /**
+     * Increment views (AJAX).
+     */
+    public function incrementViews($id)
+    {
+        try {
+            $blog = Blog::findOrFail($id);
+            $blog->increment('views');
+
+            return response()->json([
+                'success' => true,
+                'views'   => $blog->views
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('View increment failed: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'ভিউ আপডেট করতে ব্যর্থ হয়েছে!'
+            ], 500);
+        }
+    }
+
+      /**
+     * Get related posts (AJAX).
+     */
+    public function getRelatedPosts($id)
+    {
+        try {
+            $blog    = Blog::findOrFail($id);
+            $related = $blog->getRelatedPosts(5);
+
+            return response()->json([
+                'success' => true,
+                'data'    => $related->map(function ($post) {
+                    return [
+                        'id'                 => $post->id,
+                        'title'              => $post->title,
+                        'slug'               => $post->slug,
+                        'url'                => $post->url,
+                        'featured_image_url' => $post->featured_image_url,
+                        'published_at'       => $post->published_at?->format('d M, Y'),
+                    ];
+                })
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Get related posts failed: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'রিলেটেড পোস্ট লোড করতে ব্যর্থ হয়েছে!'
+            ], 500);
+        }
+    }
+
+      /**
+     * Get posts by category (AJAX).
+     */
+    public function getPostsByCategory($categoryId)
+    {
+        try {
+            $posts = Blog::published()
+                ->byCategory($categoryId)
+                ->orderBy('published_at', 'desc')
+                ->limit(10)
+                ->get();
+
+            return response()->json([
+                'success' => true,
+                'data'    => $posts
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Get posts by category failed: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'পোস্ট লোড করতে ব্যর্থ হয়েছে!'
+            ], 500);
+        }
+    }
+
+      /**
+     * Get posts by tag (AJAX).
+     */
+    public function getPostsByTag($tag)
+    {
+        try {
+            $posts = Blog::published()
+                ->byTag($tag)
+                ->orderBy('published_at', 'desc')
+                ->limit(10)
+                ->get();
+
+            return response()->json([
+                'success' => true,
+                'data'    => $posts
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Get posts by tag failed: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'পোস্ট লোড করতে ব্যর্থ হয়েছে!'
+            ], 500);
+        }
+    }
+
+      /**
+     * Search posts (AJAX).
+     */
+    public function searchPosts(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'q' => 'required|string|min:2',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->first()
+            ], 422);
+        }
+
+        try {
+            $posts = Blog::published()
+                ->search($request->q)
+                ->orderBy('published_at', 'desc')
+                ->limit(10)
+                ->get();
+
+            return response()->json([
+                'success' => true,
+                'data'    => $posts
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Search posts failed: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'সার্চ করতে ব্যর্থ হয়েছে!'
+            ], 500);
+        }
+    }
+
+      /**
+     * Get recent posts (AJAX).
+     */
+    public function getRecentPosts()
+    {
+        try {
+            $posts = Blog::published()
+                ->recent()
+                ->limit(10)
+                ->get();
+
+            return response()->json([
+                'success' => true,
+                'data'    => $posts
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Get recent posts failed: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'রিসেন্ট পোস্ট লোড করতে ব্যর্থ হয়েছে!'
+            ], 500);
+        }
+    }
+
+      /**
+     * Get popular posts (AJAX).
+     */
+    public function getPopularPosts()
+    {
+        try {
+            $posts = Blog::published()
+                ->popular()
+                ->limit(10)
+                ->get();
+
+            return response()->json([
+                'success' => true,
+                'data'    => $posts
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Get popular posts failed: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'পপুলার পোস্ট লোড করতে ব্যর্থ হয়েছে!'
+            ], 500);
+        }
+    }
+
+      /**
+     * Get blog statistics (AJAX).
+     */
+    public function getStatistics()
+    {
+        try {
+            $stats = [
+                'total'            => Blog::count(),
+                'published'        => Blog::published()->count(),
+                'draft'            => Blog::where('status', false)->count(),
+                'total_views'      => Blog::sum('views'),
+                'categories'       => BlogCategory::count(),
+                'comments'         => BlogComment::where('is_approved', true)->count(),
+                'pending_comments' => BlogComment::where('is_approved', false)->count(),
+                'this_month'       => Blog::thisMonth()->count(),
+                'this_week'        => Blog::thisWeek()->count(),
+            ];
+
+              // Get last 7 days post creation
+            $last7Days = [];
+            for ($i = 6; $i >= 0; $i--) {
+                $date        = now()->subDays($i);
+                $count       = Blog::whereDate('created_at', $date)->count();
+                $last7Days[] = [
+                    'date'  => $date->format('Y-m-d'),
+                    'label' => $date->format('d M'),
+                    'count' => $count
+                ];
+            }
+
+            return response()->json([
+                'success'    => true,
+                'stats'      => $stats,
+                'chart_data' => $last7Days
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Get statistics failed: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'স্ট্যাটিস্টিক্স লোড করতে ব্যর্থ হয়েছে!'
+            ], 500);
+        }
+    }
+
+      /**
+     * Upload image helper.
+     */
+    protected function uploadImage($image): string
+    {
+        $destinationPath = public_path('uploads/blog');
+
+        if (!file_exists($destinationPath)) {
+            mkdir($destinationPath, 0777, true);
+        }
+
+        $fileName = 'blog_' . Str::random(10) . '_' . time() . '.' . $image->getClientOriginalExtension();
+        $image->move($destinationPath, $fileName);
+
+        return 'uploads/blog/' . $fileName;
+    }
+
+      /**
+     * Delete image helper.
+     */
+    protected function deleteImage($path): void
+    {
+        if ($path && file_exists(public_path($path))) {
+            @unlink(public_path($path));
+        }
+    }
+
+      /**
+     * Get all tags from existing blogs.
+     */
+    protected function getAllTags(): array
+    {
+        $tags    = Blog::whereNotNull('tags')->pluck('tags')->toArray();
+        $allTags = [];
+
+        foreach ($tags as $tagArray) {
+            if (is_array($tagArray)) {
+                $allTags = array_merge($allTags, $tagArray);
+            }
+        }
+
+        return array_unique($allTags);
+    }
+
+
+    /**
+ * Reorder blogs (drag and drop).
+ */
+public function reorder(Request $request)
+{
+    $validator = Validator::make($request->all(), [
+        'order' => 'required|array',
+        'order.*' => 'required|integer|exists:blogs,id',
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json([
+            'success' => false,
+            'message' => $validator->errors()->first()
+        ], 422);
+    }
+
+    try {
+        foreach ($request->order as $index => $id) {
+            Blog::where('id', $id)->update(['sort_order' => $index + 1]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'সর্ট অর্ডার সফলভাবে আপডেট করা হয়েছে!'
+        ]);
+
+    } catch (\Exception $e) {
+        Log::error('Reorder failed: ' . $e->getMessage());
+        return response()->json([
+            'success' => false,
+            'message' => 'সর্ট অর্ডার আপডেট করতে ব্যর্থ হয়েছে!'
+        ], 500);
+    }
+}
+
+    /**
+     * Toggle blog gallery status.
+     */
+    public function toggleGallery($id)
+    {
+        try {
+            $blog = Blog::findOrFail($id);
+
+            if (!$blog->is_gallery && !$blog->featured_image) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'ফিচার্ড ইমেজ ছাড়া কোনো পোস্ট গ্যালারিতে যুক্ত করা যাবে না!'
+                ], 422);
+            }
+
+            $blog->is_gallery = !$blog->is_gallery;
+            $blog->save();
+
+            // Clear cache
+            \Cache::forget('home_gallery_posts');
+            \Cache::forget('api_gallery_posts');
+
+            // Log activity
+            try {
+                \App\Models\ActivityLog::create([
+                    'user_id' => auth()->id(),
+                    'action' => 'gallery_toggle',
+                    'model' => 'Blog',
+                    'model_id' => $blog->id,
+                    'details' => 'গ্যালারি স্ট্যাটাস পরিবর্তন: ' . ($blog->is_gallery ? 'যুক্ত' : 'বাদ'),
+                    'ip_address' => request()->ip(),
+                    'user_agent' => request()->userAgent()
+                ]);
+            } catch (\Exception $e) {
+                Log::warning('Activity log failed: ' . $e->getMessage());
+            }
+
+            return response()->json([
+                'success'    => true,
+                'message'    => 'গ্যালারি সেটিং পরিবর্তন করা হয়েছে!',
+                'is_gallery' => $blog->is_gallery,
+                'badge'      => $blog->is_gallery ? '<span class="badge bg-success">গ্যালারিতে যুক্ত</span>' : '<span class="badge bg-secondary">যুক্ত নয়</span>'
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Gallery toggle failed: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'গ্যালারি সেটিং পরিবর্তন করতে ব্যর্থ হয়েছে!'
+            ], 500);
+        }
+    }
+
+    /**
+     * Bulk gallery update.
+     */
+    public function bulkGalleryUpdate(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'ids'        => 'required|array',
+            'ids.*'      => 'required|integer|exists:blogs,id',
+            'is_gallery' => 'required|boolean',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->first()
+            ], 422);
+        }
+
+        try {
+            $is_gallery = $request->is_gallery;
+
+            if ($is_gallery) {
+                // Verify all selected posts have featured images
+                $hasNoImageCount = Blog::whereIn('id', $request->ids)
+                    ->where(function($q) {
+                        $q->whereNull('featured_image')->orWhere('featured_image', '');
+                    })
+                    ->count();
+
+                if ($hasNoImageCount > 0) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'ফিচার্ড ইমেজ ছাড়া কোনো পোস্ট গ্যালারিতে যুক্ত করা যাবে না!'
+                    ], 422);
+                }
+            }
+
+            Blog::whereIn('id', $request->ids)->update([
+                'is_gallery' => $is_gallery
+            ]);
+
+            // Clear cache
+            \Cache::forget('home_gallery_posts');
+            \Cache::forget('api_gallery_posts');
+
+            // Log activity
+            try {
+                \App\Models\ActivityLog::create([
+                    'user_id' => auth()->id(),
+                    'action' => 'gallery_bulk_update',
+                    'model' => 'Blog',
+                    'details' => count($request->ids) . ' টি ব্লগ পোস্ট গ্যালারি সেটিং আপডেট: ' . ($is_gallery ? 'যুক্ত' : 'বাদ'),
+                    'ip_address' => request()->ip(),
+                    'user_agent' => request()->userAgent()
+                ]);
+            } catch (\Exception $e) {
+                Log::warning('Activity log failed: ' . $e->getMessage());
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => count($request->ids) . ' টি ব্লগ পোস্ট গ্যালারি সেটিং আপডেট করা হয়েছে!'
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Bulk gallery update failed: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'বাল্ক গ্যালারি আপডেট করতে ব্যর্থ হয়েছে!'
+            ], 500);
+        }
+    }
+
+    /**
+     * Display a listing of the gallery posts and all media library files.
+     */
+    public function galleryIndex(Request $request)
+    {
+        // 1. Auto-sync: Find published blog posts with featured images not in galleries table and insert them
+        $blogImages = Blog::published()
+            ->whereNotNull('featured_image')
+            ->where('featured_image', '!=', '')
+            ->select('id', 'title', 'featured_image')
+            ->get();
+
+        foreach ($blogImages as $blogImage) {
+            $exists = Gallery::where('image_path', $blogImage->featured_image)->exists();
+            if (!$exists) {
+                $path = public_path($blogImage->featured_image);
+                if (file_exists($path) && filesize($path) > 0) {
+                    Gallery::create([
+                        'title' => $blogImage->title,
+                        'image_path' => $blogImage->featured_image,
+                        'blog_id' => $blogImage->id,
+                        'is_custom' => false,
+                        'show_on_homepage' => false,
+                        'show_on_gallery' => false,
+                    ]);
+                }
+            }
+        }
+
+        // 2. Fetch active homepage gallery images (for Tab 2)
+        $homepagePosts = Gallery::where('show_on_homepage', true)
+            ->orderBy('gallery_order', 'asc')
+            ->orderBy('updated_at', 'desc')
+            ->get();
+
+        // 3. Fetch active frontend gallery page images (for Tab 3)
+        $galleryPagePosts = Gallery::where('show_on_gallery', true)
+            ->orderBy('gallery_page_order', 'asc')
+            ->orderBy('updated_at', 'desc')
+            ->get();
+
+        // 4. Fetch library images with AJAX-friendly pagination (24 per page)
+        $libraryImages = Gallery::orderBy('created_at', 'desc')->paginate(24);
+
+        if ($request->ajax() || $request->has('ajax')) {
+            $html = view('admin.gallery.partials.media_cards', compact('libraryImages'))->render();
+            return response()->json([
+                'success' => true,
+                'html' => $html,
+                'hasMore' => $libraryImages->hasMorePages()
+            ]);
+        }
+
+        return view('admin.gallery.index', compact('homepagePosts', 'galleryPagePosts', 'libraryImages'));
+    }
+
+    /**
+     * Add a custom image upload directly to the gallery library.
+     */
+    public function galleryAddCustom(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'title' => 'nullable|string|max:255',
+            'image' => 'required|image|mimes:jpeg,png,jpg,webp|max:5120',
+        ]);
+
+        if ($validator->fails()) {
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $validator->errors()->first(),
+                    'errors' => $validator->errors()
+                ], 422);
+            }
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        try {
+            if ($request->hasFile('image')) {
+                $imagePath = $this->uploadImage($request->file('image'));
+
+                $galleryItem = Gallery::create([
+                    'title' => $request->input('title'),
+                    'image_path' => $imagePath,
+                    'is_custom' => true,
+                    'show_on_homepage' => false,
+                    'show_on_gallery' => false,
+                ]);
+
+                // Clear caches
+                \Cache::forget('home_gallery_posts');
+                \Cache::forget('api_gallery_posts');
+
+                if ($request->ajax() || $request->wantsJson()) {
+                    return response()->json([
+                        'success' => true,
+                        'message' => 'মিডিয়া লাইব্রেরিতে ছবি সফলভাবে আপলোড করা হয়েছে!',
+                        'item' => $galleryItem
+                    ]);
+                }
+                return redirect()->back()->with('success', 'মিডিয়া লাইব্রেরিতে ছবি সফলভাবে আপলোড করা হয়েছে!');
+            }
+
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'কোনো ছবি পাওয়া যায়নি!'
+                ], 400);
+            }
+            return redirect()->back()->with('error', 'কোনো ছবি পাওয়া যায়নি!');
+
+        } catch (\Exception $e) {
+            Log::error('Gallery custom upload failed: ' . $e->getMessage());
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'ছবি আপলোড করতে ব্যর্থ হয়েছে!'
+                ], 500);
+            }
+            return redirect()->back()->with('error', 'ছবি আপলোড করতে ব্যর্থ হয়েছে!');
+        }
+    }
+
+    /**
+     * Delete custom upload from database and physical disk storage.
+     */
+    public function galleryDeleteCustom($id)
+    {
+        try {
+            $gallery = Gallery::findOrFail($id);
+
+            if ($gallery->is_custom) {
+                $this->deleteImage($gallery->image_path);
+                $gallery->delete();
+
+                // Clear caches
+                \Cache::forget('home_gallery_posts');
+                \Cache::forget('api_gallery_posts');
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'ছবিটি লাইব্রেরি ও স্টোরেজ থেকে ডিলিট করা হয়েছে!'
+                ]);
+            }
+
+            return response()->json([
+                'success' => false,
+                'message' => 'ব্লগ পোস্টের ছবি এখান থেকে সরাসরি ডিলিট করা যাবে না!'
+            ], 403);
+
+        } catch (\Exception $e) {
+            Log::error('Gallery destroy failed: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'ছবি ডিলিট করতে ব্যর্থ হয়েছে!'
+            ], 500);
+        }
+    }
+
+    /**
+     * Toggle show_on_homepage status of any library image.
+     */
+    public function galleryToggleHomepage($id)
+    {
+        try {
+            $gallery = Gallery::findOrFail($id);
+
+            $path = public_path($gallery->image_path);
+            if (!file_exists($path) || filesize($path) == 0) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'সার্ভারে ছবিটির মূল ফাইল পাওয়া যায়নি!'
+                ], 422);
+            }
+
+            if (!$gallery->show_on_homepage) {
+                // Check if already 8 images are active on homepage
+                $activeCount = Gallery::where('show_on_homepage', true)->count();
+                if ($activeCount >= 8) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'হোমপেজ গ্যালারিতে সর্বোচ্চ ৮টি ছবি সক্রিয় রাখা সম্ভব! দয়া করে অন্য ছবি নিষ্ক্রিয় করুন।'
+                    ], 422);
+                }
+            }
+
+            $gallery->show_on_homepage = !$gallery->show_on_homepage;
+
+            if ($gallery->show_on_homepage) {
+                $nextOrder = Gallery::where('show_on_homepage', true)->max('gallery_order') + 1;
+                $gallery->gallery_order = $nextOrder;
+            }
+
+            $gallery->save();
+
+            // Clear caches
+            \Cache::forget('home_gallery_posts');
+            \Cache::forget('api_gallery_posts');
+
+            return response()->json([
+                'success' => true,
+                'show_on_homepage' => $gallery->show_on_homepage,
+                'message' => $gallery->show_on_homepage ? 'হোমপেজ গ্যালারিতে যুক্ত করা হয়েছে!' : 'হোমপেজ গ্যালারি থেকে বাদ দেওয়া হয়েছে!'
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Gallery toggle homepage failed: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'স্ট্যাটাস পরিবর্তন করতে ব্যর্থ হয়েছে!'
+            ], 500);
+        }
+    }
+
+    /**
+     * Toggle show_on_gallery status of any library image.
+     */
+    public function galleryToggleGalleryPage($id)
+    {
+        try {
+            $gallery = Gallery::findOrFail($id);
+
+            $path = public_path($gallery->image_path);
+            if (!file_exists($path) || filesize($path) == 0) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'সার্ভারে ছবিটির মূল ফাইল পাওয়া যায়নি!'
+                ], 422);
+            }
+
+            $gallery->show_on_gallery = !$gallery->show_on_gallery;
+
+            if ($gallery->show_on_gallery) {
+                $nextOrder = Gallery::where('show_on_gallery', true)->max('gallery_page_order') + 1;
+                $gallery->gallery_page_order = $nextOrder;
+            }
+
+            $gallery->save();
+
+            // Clear caches
+            \Cache::forget('home_gallery_posts');
+            \Cache::forget('api_gallery_posts');
+
+            return response()->json([
+                'success' => true,
+                'show_on_gallery' => $gallery->show_on_gallery,
+                'message' => $gallery->show_on_gallery ? 'গ্যালারি পেজে যুক্ত করা হয়েছে!' : 'গ্যালারি পেজ থেকে বাদ দেওয়া হয়েছে!'
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Gallery toggle gallerypage failed: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'স্ট্যাটাস পরিবর্তন করতে ব্যর্থ হয়েছে!'
+            ], 500);
+        }
+    }
+
+    /**
+     * Reorder active homepage gallery images.
+     */
+    public function reorderHomepage(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'order' => 'required|array',
+            'order.*' => 'required|integer|exists:galleries,id',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->first()
+            ], 422);
+        }
+
+        try {
+            foreach ($request->order as $index => $id) {
+                Gallery::where('id', $id)->update(['gallery_order' => $index + 1]);
+            }
+
+            // Clear caches
+            \Cache::forget('home_gallery_posts');
+            \Cache::forget('api_gallery_posts');
+
+            return response()->json([
+                'success' => true,
+                'message' => 'হোমপেজ গ্যালারি সর্ট অর্ডার সফলভাবে আপডেট করা হয়েছে!'
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Homepage reorder failed: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'সর্ট অর্ডার আপডেট করতে ব্যর্থ হয়েছে!'
+            ], 500);
+        }
+    }
+
+    /**
+     * Reorder active gallery page images.
+     */
+    public function reorderGalleryPage(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'order' => 'required|array',
+            'order.*' => 'required|integer|exists:galleries,id',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->first()
+            ], 422);
+        }
+
+        try {
+            foreach ($request->order as $index => $id) {
+                Gallery::where('id', $id)->update(['gallery_page_order' => $index + 1]);
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'গ্যালারি পেজ সর্ট অর্ডার সফলভাবে আপডেট করা হয়েছে!'
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Gallery page reorder failed: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'সর্ট অর্ডার আপডেট করতে ব্যর্থ হয়েছে!'
+            ], 500);
+        }
+    }
+
+    /**
+     * Generate SEO-friendly slug supporting Unicode/Bengali characters
+     */
+    protected function generateSlug($title)
+    {
+        $slug = preg_replace('/[^\p{L}\p{N}]+/u', '-', $title);
+        $slug = trim($slug, '-');
+        return mb_strtolower($slug);
+    }
+
+    /**
+     * Upload CKEditor content images.
+     */
+    public function uploadContentImage(\Illuminate\Http\Request $request)
+    {
+        if ($request->hasFile('upload')) {
+            $file = $request->file('upload');
+            $extension = $file->getClientOriginalExtension();
+            $fileName = 'blog_content_' . time() . '_' . \Illuminate\Support\Str::random(10) . '.' . $extension;
+            $file->move(public_path('uploads/blog/content'), $fileName);
+            $url = asset('uploads/blog/content/' . $fileName);
+            
+            return response()->json([
+                'url' => $url
+            ]);
+        }
+        
+        return response()->json([
+            'error' => 'কোনো ফাইল আপলোড করা হয়নি।'
+        ], 400);
+    }
+
+    /**
+     * Generate SEO metadata and translated English slug using AI or local fallback.
+     */
+    public function generateSeo(\Illuminate\Http\Request $request)
+    {
+        $title = trim($request->input('title'));
+        $shortDescription = trim($request->input('short_description'));
+        $content = strip_tags($request->input('content'));
+
+        if (empty($title)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'মেটা ডেটা তৈরি করতে শিরোনাম আবশ্যক।'
+            ], 422);
+        }
+
+        // Try to get Gemini API key from environment
+        $apiKey = env('GEMINI_API_KEY');
+
+        if ($apiKey) {
+            try {
+                $client = new \GuzzleHttp\Client([
+                    'timeout' => 12.0,
+                ]);
+                $promptText = "You are an SEO expert. Generate SEO metadata in Bengali and a translated English slug for a blog post with the following details:\n"
+                            . "Title: {$title}\n"
+                            . "Description: {$shortDescription}\n"
+                            . "Content: " . mb_substr($content, 0, 1000) . "\n\n"
+                            . "Respond ONLY with a valid JSON object containing the keys:\n"
+                            . "1. \"meta_title\" (Bengali, SEO friendly, maximum 60 characters)\n"
+                            . "2. \"meta_description\" (Bengali, SEO friendly, summarizing the post, maximum 160 characters)\n"
+                            . "3. \"meta_keywords\" (Bengali, comma-separated list of 5-8 relevant keywords)\n"
+                            . "4. \"slug\" (English translated slug of the title, lowercase, hyphenated, no special characters, maximum 60 characters)\n\n"
+                            . "Do not include markdown code block formatting or any other text, just raw JSON.";
+
+                $response = $client->post('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' . $apiKey, [
+                    'json' => [
+                        'contents' => [
+                            [
+                                'parts' => [
+                                    [
+                                        'text' => $promptText
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ],
+                    'headers' => [
+                        'Content-Type' => 'application/json'
+                    ]
+                ]);
+
+                $result = json_decode($response->getBody()->getContents(), true);
+                $text = $result['candidates'][0]['content']['parts'][0]['text'] ?? '';
+                
+                // Bulletproof JSON extractor
+                $firstBracket = strpos($text, '{');
+                $lastBracket = strrpos($text, '}');
+                if ($firstBracket !== false && $lastBracket !== false) {
+                    $jsonString = substr($text, $firstBracket, $lastBracket - $firstBracket + 1);
+                    $data = json_decode($jsonString, true);
+                    
+                    if ($data && isset($data['meta_title']) && isset($data['meta_description'])) {
+                        return response()->json([
+                            'success' => true,
+                            'meta_title' => trim($data['meta_title']),
+                            'meta_description' => trim($data['meta_description']),
+                            'meta_keywords' => trim($data['meta_keywords'] ?? ''),
+                            'slug' => trim($data['slug'] ?? '')
+                        ]);
+                    }
+                }
+            } catch (\Exception $e) {
+                \Log::error('Gemini API SEO Generator Error: ' . $e->getMessage());
+            }
+        }
+
+        // Fallback: Advanced Bengali text analyzer (fully functional local processor)
+        // 1. Meta Title
+        $metaTitle = mb_substr($title, 0, 60);
+
+        // 2. Meta Description
+        $metaDescSource = $shortDescription ?: $content;
+        $metaDescSource = preg_replace('/\s+/', ' ', $metaDescSource);
+        $metaDescription = mb_substr(trim($metaDescSource), 0, 155);
+
+        // 3. Meta Keywords
+        $stopWords = [
+            'এবং', 'কিন্তু', 'অথবা', 'অথচ', 'কিংবা', 'হলে', 'করে', 'হয়ে', 'থেকে', 'একটি', 'এই', 'সেই', 
+            'তার', 'তাদের', 'আমি', 'তুমি', 'আমরা', 'আপনার', 'নিজের', 'জন্য', 'সাথে', 'মধ্যে', 'দ্বারা', 
+            'দিয়ে', 'করতে', 'হলো', 'হবে', 'ছিল', 'আছে', 'করেছেন', 'হচ্ছে', 'তবে', 'তাই', 'নিয়ে', 
+            'থেকেও', 'কোন', 'কোনো', 'যেমন', 'কারণে', 'মাধ্যমে', 'হয়', 'করেছে', 'বলেন', 'হচ্ছে'
+        ];
+
+        // Combine title and description to extract rich terms
+        $combinedText = $title . ' ' . $shortDescription;
+        $rawWords = preg_split('/[\s,।?\-()]+/u', $combinedText);
+        $keywords = [];
+
+        foreach ($rawWords as $word) {
+            $word = trim($word);
+            // Keep words with length > 3 characters and filter out common Bengali stop words
+            if (mb_strlen($word) > 3 && !in_array($word, $stopWords)) {
+                // Remove numbers
+                if (!preg_match('/^[0-9\x{09e6}-\x{09ef}]+$/u', $word)) {
+                    $keywords[] = $word;
+                }
+            }
+        }
+
+        // Limit unique keywords to 8
+        $keywords = array_slice(array_unique($keywords), 0, 8);
+        $metaKeywords = implode(', ', $keywords);
+
+        // 4. Local Transliterator for English slug fallback
+        $map = [
+            'হ' => 'h', 'ে' => 'e', 'য' => 'z', 'ব' => 'b', 'ু' => 'u', 'ত' => 't', 'ত্' => 't',
+            'ও' => 'o', 'ী' => 'i', 'দ' => 'd', 'ম' => 'm', 'া' => 'a', 'ন' => 'n', 'ধ' => 'dh',
+            'র' => 'r', '্' => '', 'শ' => 'sh', 'স' => 's', 'ই' => 'i', 'ি' => 'i', 'ল' => 'l',
+            'প' => 'p', 'ো' => 'o', 'ট' => 't', 'ক' => 'k', 'ভ' => 'bh', 'গ' => 'g', 'অ' => 'o',
+            'ফ' => 'f', 'উ' => 'u', 'চ' => 'ch', 'জ' => 'j', 'ঙ' => 'ng', 'থ' => 'th', 'ড' => 'd',
+            'ণ' => 'n', 'খ' => 'kh', 'ঘ' => 'gh', 'ছ' => 'ch', 'ঝ' => 'jh', 'ঠ' => 'th', 'ঢ' => 'dh',
+            'ড়' => 'r', 'ঢ়' => 'rh', 'য়' => 'y', 'ৎ' => 't', 'ৈ' => 'oi', 'ৌ' => 'ou', 'ৃ' => 'ri'
+        ];
+
+        $shortTitle = \Illuminate\Support\Str::words($title, 8, '');
+        $result = '';
+        if (preg_match('/[\x{0980}-\x{09FF}]/u', $shortTitle)) {
+            $len = mb_strlen($shortTitle);
+            for ($i = 0; $i < $len; $i++) {
+                $char = mb_substr($shortTitle, $i, 1);
+                $result .= $map[$char] ?? $char;
+            }
+        } else {
+            $result = $shortTitle;
+        }
+
+        $localSlug = preg_replace('/[^\p{L}\p{N}]+/u', '-', $result);
+        $localSlug = trim($localSlug, '-');
+        $localSlug = mb_strtolower($localSlug);
+
+        return response()->json([
+            'success' => true,
+            'meta_title' => $metaTitle,
+            'meta_description' => $metaDescription,
+            'meta_keywords' => $metaKeywords,
+            'slug' => $localSlug,
+            'note' => 'Generated using local processor.'
+        ]);
+    }
+}

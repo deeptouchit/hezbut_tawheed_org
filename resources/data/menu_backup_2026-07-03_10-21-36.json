@@ -1,0 +1,735 @@
+{
+    "_comment": "হেজবুত তওহীদ ফাইনাল মেনু কনফিগারেশন ফাইল",
+    "version": "1.0.1",
+    "last_updated": "2026-07-03T10:19:03.718545Z",
+    "topbar_left": [],
+    "topbar_right": [],
+    "desktop_nav": [
+        {
+            "id": "menu_desktop_1",
+            "position": "1",
+            "type": "url",
+            "icon": "fas fa-home",
+            "is_featured": "false",
+            "parent_id": null,
+            "name": "হোম",
+            "url": "\/"
+        },
+        {
+            "id": "menu_desktop_2",
+            "position": "2",
+            "type": "url",
+            "icon": "fas fa-compass",
+            "is_featured": "false",
+            "parent_id": null,
+            "name": "দর্শন",
+            "url": "\/philosophy"
+        },
+        {
+            "id": "menu_desktop_3",
+            "position": "3",
+            "type": "url",
+            "icon": "fas fa-eye",
+            "is_featured": "false",
+            "parent_id": "menu_desktop_2",
+            "name": "দৃষ্টিভঙ্গি",
+            "url": "\/vision"
+        },
+        {
+            "id": "menu_desktop_4",
+            "position": "4",
+            "type": "url",
+            "icon": "fas fa-gavel",
+            "is_featured": "false",
+            "parent_id": "menu_desktop_2",
+            "name": "মূলনীতি",
+            "url": "\/principles"
+        },
+        {
+            "id": "menu_desktop_5",
+            "position": "5",
+            "type": "url",
+            "icon": "fas fa-scroll",
+            "is_featured": "false",
+            "parent_id": "menu_desktop_2",
+            "name": "ঘোষণাপত্র",
+            "url": "\/declaration"
+        },
+        {
+            "id": "menu_desktop_6",
+            "position": "6",
+            "type": "url",
+            "icon": "fas fa-question-circle",
+            "is_featured": "false",
+            "parent_id": "menu_desktop_2",
+            "name": "জিজ্ঞাসা",
+            "url": "\/faq"
+        },
+        {
+            "id": "menu_desktop_7",
+            "position": "7",
+            "type": "url",
+            "icon": "fas fa-tasks",
+            "is_featured": "false",
+            "parent_id": null,
+            "name": "কর্মধারা",
+            "url": "\/work"
+        },
+        {
+            "id": "menu_desktop_8",
+            "position": "8",
+            "type": "url",
+            "icon": "fas fa-calendar-alt",
+            "is_featured": "false",
+            "parent_id": "menu_desktop_7",
+            "name": "কর্মসূচি",
+            "url": "\/programs"
+        },
+        {
+            "id": "menu_desktop_9",
+            "position": "9",
+            "type": "url",
+            "icon": "fas fa-running",
+            "is_featured": "false",
+            "parent_id": "menu_desktop_7",
+            "name": "চলমান কার্যক্রম",
+            "url": "\/activities"
+        },
+        {
+            "id": "menu_desktop_10",
+            "position": "10",
+            "type": "url",
+            "icon": "fas fa-hand-holding-heart",
+            "is_featured": "false",
+            "parent_id": "menu_desktop_7",
+            "name": "সামাজিক উদ্যোগ",
+            "url": "\/social"
+        },
+        {
+            "id": "menu_desktop_11",
+            "position": "11",
+            "type": "url",
+            "icon": "fas fa-user-graduate",
+            "is_featured": "false",
+            "parent_id": "menu_desktop_7",
+            "name": "প্রশিক্ষণ",
+            "url": "\/training"
+        },
+        {
+            "id": "menu_desktop_12",
+            "position": "12",
+            "type": "url",
+            "icon": "fas fa-database",
+            "is_featured": "false",
+            "parent_id": null,
+            "name": "প্রবন্ধ ও প্রকাশনা",
+            "url": "\/knowledge"
+        },
+        {
+            "id": "menu_desktop_14",
+            "position": "13",
+            "type": "url",
+            "icon": "fas fa-book",
+            "is_featured": "false",
+            "parent_id": "menu_desktop_12",
+            "name": "বই",
+            "url": "\/books"
+        },
+        {
+            "id": "menu_desktop_15",
+            "position": "14",
+            "type": "url",
+            "icon": "fas fa-newspaper",
+            "is_featured": "false",
+            "parent_id": "menu_desktop_12",
+            "name": "প্রবন্ধ",
+            "url": "\/articles"
+        },
+        {
+            "id": "menu_desktop_16",
+            "position": "15",
+            "type": "url",
+            "icon": "fas fa-search",
+            "is_featured": "false",
+            "parent_id": "menu_desktop_12",
+            "name": "গবেষণা",
+            "url": "\/research"
+        },
+        {
+            "id": "menu_desktop_17",
+            "position": "16",
+            "type": "url",
+            "icon": "fas fa-archive",
+            "is_featured": "false",
+            "parent_id": "menu_desktop_12",
+            "name": "ডিজিটাল লাইব্রেরি",
+            "url": "\/library"
+        },
+        {
+            "id": "menu_desktop_18",
+            "position": "17",
+            "type": "url",
+            "icon": "fas fa-play-circle",
+            "is_featured": "false",
+            "parent_id": null,
+            "name": "মিডিয়া",
+            "url": "\/media"
+        },
+        {
+            "id": "menu_desktop_19",
+            "position": "18",
+            "type": "url",
+            "icon": "fas fa-video",
+            "is_featured": "false",
+            "parent_id": "menu_desktop_18",
+            "name": "ভিডিও",
+            "url": "\/videos"
+        },
+        {
+            "id": "menu_desktop_21",
+            "position": "19",
+            "type": "url",
+            "icon": "fas fa-images",
+            "is_featured": "false",
+            "parent_id": "menu_desktop_18",
+            "name": "গ্যালারি",
+            "url": "\/gallery"
+        },
+        {
+            "id": "menu_desktop_22",
+            "position": "20",
+            "type": "url",
+            "icon": "fas fa-broadcast-tower",
+            "is_featured": "false",
+            "parent_id": "menu_desktop_18",
+            "name": "সরাসরি সম্প্রচার",
+            "url": "\/live"
+        },
+        {
+            "id": "menu_desktop_23",
+            "position": "21",
+            "type": "url",
+            "icon": "fas fa-sitemap",
+            "is_featured": "false",
+            "parent_id": null,
+            "name": "সংগঠন",
+            "url": "\/organization"
+        },
+        {
+            "id": "menu_desktop_24",
+            "position": "22",
+            "type": "url",
+            "icon": "fas fa-user-shield",
+            "is_featured": "false",
+            "parent_id": "menu_desktop_23",
+            "name": "কেন্দ্রীয় নেতৃত্ব",
+            "url": "\/leadership"
+        },
+        {
+            "id": "menu_desktop_25",
+            "position": "23",
+            "type": "url",
+            "icon": "fas fa-map-marked-alt",
+            "is_featured": "false",
+            "parent_id": "menu_desktop_23",
+            "name": "শাখাসমূহ",
+            "url": "\/branches"
+        },
+        {
+            "id": "menu_desktop_26",
+            "position": "24",
+            "type": "url",
+            "icon": "fas fa-network-wired",
+            "is_featured": "false",
+            "parent_id": "menu_desktop_23",
+            "name": "সাংগঠনিক কাঠামো",
+            "url": "\/structure"
+        },
+        {
+            "id": "menu_desktop_27",
+            "position": "25",
+            "type": "url",
+            "icon": "fas fa-bolt",
+            "is_featured": "false",
+            "parent_id": null,
+            "name": "সাম্প্রতিক",
+            "url": "\/recent"
+        },
+        {
+            "id": "menu_desktop_28",
+            "position": "26",
+            "type": "route",
+            "icon": "fas fa-newspaper",
+            "is_featured": "false",
+            "parent_id": "menu_desktop_27",
+            "name": "সংবাদ",
+            "url": "blog"
+        },
+        {
+            "id": "menu_desktop_29",
+            "position": "27",
+            "type": "url",
+            "icon": "fas fa-bullhorn",
+            "is_featured": "false",
+            "parent_id": "menu_desktop_27",
+            "name": "ঘোষণা",
+            "url": "\/announcements"
+        },
+        {
+            "id": "menu_desktop_30",
+            "position": "28",
+            "type": "url",
+            "icon": "fas fa-calendar-check",
+            "is_featured": "false",
+            "parent_id": "menu_desktop_27",
+            "name": "ইভেন্ট",
+            "url": "\/events"
+        },
+        {
+            "id": "menu_desktop_31",
+            "position": "29",
+            "type": "url",
+            "icon": "fas fa-link",
+            "is_featured": "false",
+            "parent_id": null,
+            "name": "সংযোগ",
+            "url": "\/connect"
+        },
+        {
+            "id": "menu_desktop_32",
+            "position": "30",
+            "type": "route",
+            "icon": "fas fa-envelope",
+            "is_featured": "false",
+            "parent_id": "menu_desktop_31",
+            "name": "যোগাযোগ",
+            "url": "contact"
+        },
+        {
+            "id": "menu_desktop_33",
+            "position": "31",
+            "type": "url",
+            "icon": "fas fa-comment-alt",
+            "is_featured": "false",
+            "parent_id": "menu_desktop_31",
+            "name": "মতামত",
+            "url": "\/feedback"
+        },
+        {
+            "id": "menu_desktop_20",
+            "position": "32",
+            "type": "url",
+            "icon": "fas fa-volume-up",
+            "is_featured": "false",
+            "parent_id": null,
+            "name": "অডিও",
+            "url": "\/audios"
+        },
+        {
+            "id": "menu_desktop_34",
+            "position": "33",
+            "type": "url",
+            "icon": "fas fa-user-plus",
+            "is_featured": "true",
+            "parent_id": null,
+            "name": "যোগদান করুন",
+            "url": "\/join"
+        }
+    ],
+    "mobile_nav": [
+        {
+            "id": "menu_mobile_1",
+            "position": 1,
+            "type": "url",
+            "icon": "fas fa-home",
+            "is_featured": false,
+            "parent_id": null,
+            "name": "হোম",
+            "url": "\/"
+        },
+        {
+            "id": "menu_mobile_2",
+            "position": 2,
+            "type": "url",
+            "icon": "fas fa-compass",
+            "is_featured": false,
+            "parent_id": null,
+            "name": "দর্শন",
+            "url": "\/philosophy"
+        },
+        {
+            "id": "menu_mobile_3",
+            "position": 1,
+            "type": "url",
+            "icon": "fas fa-eye",
+            "is_featured": false,
+            "parent_id": "menu_mobile_2",
+            "name": "দৃষ্টিভঙ্গি",
+            "url": "\/vision"
+        },
+        {
+            "id": "menu_mobile_4",
+            "position": 2,
+            "type": "url",
+            "icon": "fas fa-gavel",
+            "is_featured": false,
+            "parent_id": "menu_mobile_2",
+            "name": "মূলনীতি",
+            "url": "\/principles"
+        },
+        {
+            "id": "menu_mobile_5",
+            "position": 3,
+            "type": "url",
+            "icon": "fas fa-scroll",
+            "is_featured": false,
+            "parent_id": "menu_mobile_2",
+            "name": "ঘোষণাপত্র",
+            "url": "\/declaration"
+        },
+        {
+            "id": "menu_mobile_6",
+            "position": 4,
+            "type": "url",
+            "icon": "fas fa-question-circle",
+            "is_featured": false,
+            "parent_id": "menu_mobile_2",
+            "name": "জিজ্ঞাসা",
+            "url": "\/faq"
+        },
+        {
+            "id": "menu_mobile_7",
+            "position": 3,
+            "type": "url",
+            "icon": "fas fa-tasks",
+            "is_featured": false,
+            "parent_id": null,
+            "name": "কর্মধারা",
+            "url": "\/work"
+        },
+        {
+            "id": "menu_mobile_8",
+            "position": 1,
+            "type": "url",
+            "icon": "fas fa-calendar-alt",
+            "is_featured": false,
+            "parent_id": "menu_mobile_7",
+            "name": "কর্মসূচি",
+            "url": "\/programs"
+        },
+        {
+            "id": "menu_mobile_9",
+            "position": 2,
+            "type": "url",
+            "icon": "fas fa-running",
+            "is_featured": false,
+            "parent_id": "menu_mobile_7",
+            "name": "চলমান কার্যক্রম",
+            "url": "\/activities"
+        },
+        {
+            "id": "menu_mobile_10",
+            "position": 3,
+            "type": "url",
+            "icon": "fas fa-hand-holding-heart",
+            "is_featured": false,
+            "parent_id": "menu_mobile_7",
+            "name": "সামাজিক উদ্যোগ",
+            "url": "\/social"
+        },
+        {
+            "id": "menu_mobile_11",
+            "position": 4,
+            "type": "url",
+            "icon": "fas fa-user-graduate",
+            "is_featured": false,
+            "parent_id": "menu_mobile_7",
+            "name": "প্রশিক্ষণ",
+            "url": "\/training"
+        },
+        {
+            "id": "menu_mobile_12",
+            "position": 4,
+            "type": "url",
+            "icon": "fas fa-database",
+            "is_featured": false,
+            "parent_id": null,
+            "name": "জ্ঞানভান্ডার",
+            "url": "\/knowledge"
+        },
+        {
+            "id": "menu_mobile_13",
+            "position": 1,
+            "type": "url",
+            "icon": "fas fa-book-open",
+            "is_featured": false,
+            "parent_id": "menu_mobile_12",
+            "name": "প্রকাশনা",
+            "url": "\/publications"
+        },
+        {
+            "id": "menu_mobile_14",
+            "position": 2,
+            "type": "url",
+            "icon": "fas fa-book",
+            "is_featured": false,
+            "parent_id": "menu_mobile_12",
+            "name": "বই",
+            "url": "\/books"
+        },
+        {
+            "id": "menu_mobile_15",
+            "position": 3,
+            "type": "url",
+            "icon": "fas fa-newspaper",
+            "is_featured": false,
+            "parent_id": "menu_mobile_12",
+            "name": "প্রবন্ধ",
+            "url": "\/articles"
+        },
+        {
+            "id": "menu_mobile_16",
+            "position": 4,
+            "type": "url",
+            "icon": "fas fa-search",
+            "is_featured": false,
+            "parent_id": "menu_mobile_12",
+            "name": "গবেষণা",
+            "url": "\/research"
+        },
+        {
+            "id": "menu_mobile_17",
+            "position": 5,
+            "type": "url",
+            "icon": "fas fa-archive",
+            "is_featured": false,
+            "parent_id": "menu_mobile_12",
+            "name": "ডিজিটাল লাইব্রেরি",
+            "url": "\/library"
+        },
+        {
+            "id": "menu_mobile_18",
+            "position": 5,
+            "type": "url",
+            "icon": "fas fa-play-circle",
+            "is_featured": false,
+            "parent_id": null,
+            "name": "মিডিয়া",
+            "url": "\/media"
+        },
+        {
+            "id": "menu_mobile_19",
+            "position": 1,
+            "type": "url",
+            "icon": "fas fa-video",
+            "is_featured": false,
+            "parent_id": "menu_mobile_18",
+            "name": "ভিডিও",
+            "url": "\/videos"
+        },
+        {
+            "id": "menu_mobile_20",
+            "position": 2,
+            "type": "url",
+            "icon": "fas fa-volume-up",
+            "is_featured": false,
+            "parent_id": "menu_mobile_18",
+            "name": "অডিও",
+            "url": "\/audios"
+        },
+        {
+            "id": "menu_mobile_21",
+            "position": 3,
+            "type": "url",
+            "icon": "fas fa-images",
+            "is_featured": false,
+            "parent_id": "menu_mobile_18",
+            "name": "গ্যালারি",
+            "url": "\/gallery"
+        },
+        {
+            "id": "menu_mobile_22",
+            "position": 4,
+            "type": "url",
+            "icon": "fas fa-broadcast-tower",
+            "is_featured": false,
+            "parent_id": "menu_mobile_18",
+            "name": "সরাসরি সম্প্রচার",
+            "url": "\/live"
+        },
+        {
+            "id": "menu_mobile_23",
+            "position": 6,
+            "type": "url",
+            "icon": "fas fa-sitemap",
+            "is_featured": false,
+            "parent_id": null,
+            "name": "সংগঠন",
+            "url": "\/organization"
+        },
+        {
+            "id": "menu_mobile_24",
+            "position": 1,
+            "type": "url",
+            "icon": "fas fa-user-shield",
+            "is_featured": false,
+            "parent_id": "menu_mobile_23",
+            "name": "কেন্দ্রীয় নেতৃত্ব",
+            "url": "\/leadership"
+        },
+        {
+            "id": "menu_mobile_25",
+            "position": 2,
+            "type": "url",
+            "icon": "fas fa-map-marked-alt",
+            "is_featured": false,
+            "parent_id": "menu_mobile_23",
+            "name": "শাখাসমূহ",
+            "url": "\/branches"
+        },
+        {
+            "id": "menu_mobile_26",
+            "position": 3,
+            "type": "url",
+            "icon": "fas fa-network-wired",
+            "is_featured": false,
+            "parent_id": "menu_mobile_23",
+            "name": "সাংগঠনিক কাঠামো",
+            "url": "\/structure"
+        },
+        {
+            "id": "menu_mobile_27",
+            "position": 7,
+            "type": "url",
+            "icon": "fas fa-bolt",
+            "is_featured": false,
+            "parent_id": null,
+            "name": "সাম্প্রতিক",
+            "url": "\/recent"
+        },
+        {
+            "id": "menu_mobile_28",
+            "position": 1,
+            "type": "route",
+            "icon": "fas fa-newspaper",
+            "is_featured": false,
+            "parent_id": "menu_mobile_27",
+            "name": "সংবাদ",
+            "url": "blog"
+        },
+        {
+            "id": "menu_mobile_29",
+            "position": 2,
+            "type": "url",
+            "icon": "fas fa-bullhorn",
+            "is_featured": false,
+            "parent_id": "menu_mobile_27",
+            "name": "ঘোষণা",
+            "url": "\/announcements"
+        },
+        {
+            "id": "menu_mobile_30",
+            "position": 3,
+            "type": "url",
+            "icon": "fas fa-calendar-check",
+            "is_featured": false,
+            "parent_id": "menu_mobile_27",
+            "name": "ইভেন্ট",
+            "url": "\/events"
+        },
+        {
+            "id": "menu_mobile_31",
+            "position": 8,
+            "type": "url",
+            "icon": "fas fa-link",
+            "is_featured": false,
+            "parent_id": null,
+            "name": "সংযোগ",
+            "url": "\/connect"
+        },
+        {
+            "id": "menu_mobile_32",
+            "position": 1,
+            "type": "route",
+            "icon": "fas fa-envelope",
+            "is_featured": false,
+            "parent_id": "menu_mobile_31",
+            "name": "যোগাযোগ",
+            "url": "contact"
+        },
+        {
+            "id": "menu_mobile_33",
+            "position": 2,
+            "type": "url",
+            "icon": "fas fa-comment-alt",
+            "is_featured": false,
+            "parent_id": "menu_mobile_31",
+            "name": "مতামত",
+            "url": "\/feedback"
+        },
+        {
+            "id": "menu_mobile_34",
+            "position": 9,
+            "type": "url",
+            "icon": "fas fa-user-plus",
+            "is_featured": true,
+            "parent_id": null,
+            "name": "যোগদান করুন",
+            "url": "\/join"
+        }
+    ],
+    "footer_quick_links": [
+        {
+            "id": "footer_quick_1",
+            "name": "হোম",
+            "url": "\/",
+            "icon": "fas fa-chevron-right",
+            "type": "url",
+            "position": 1
+        },
+        {
+            "id": "footer_quick_2",
+            "name": "দর্শন",
+            "url": "\/philosophy",
+            "icon": "fas fa-chevron-right",
+            "type": "url",
+            "position": 2
+        },
+        {
+            "id": "footer_quick_3",
+            "name": "জ্ঞানভান্ডার",
+            "url": "\/knowledge",
+            "icon": "fas fa-chevron-right",
+            "type": "url",
+            "position": 3
+        },
+        {
+            "id": "footer_quick_4",
+            "name": "যোগাযোগ",
+            "url": "contact",
+            "icon": "fas fa-chevron-right",
+            "type": "route",
+            "position": 4
+        }
+    ],
+    "footer_customer_service": [
+        {
+            "id": "footer_service_1",
+            "name": "প্রাইভেসি পলিসি",
+            "url": "privacy",
+            "icon": "fas fa-chevron-right",
+            "type": "route",
+            "position": 1
+        },
+        {
+            "id": "footer_service_2",
+            "name": "শর্তাবলী",
+            "url": "terms",
+            "icon": "fas fa-chevron-right",
+            "type": "route",
+            "position": 2
+        }
+    ],
+    "footer_about": [],
+    "footer_contact": []
+}

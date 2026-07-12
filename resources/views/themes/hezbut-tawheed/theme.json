@@ -1,0 +1,95 @@
+{
+    "name": "Hezbut Tawheed Classic",
+    "folder": "hezbut-tawheed",
+    "version": "1.0.0",
+    "author": "Antigravity",
+    "author_url": "https://hezbuttawheed.org",
+    "description": "A smart, professional, responsive political portal theme for Hezbut Tawheed.",
+    "license": "Commercial",
+    "license_url": "https://hezbuttawheed.org/license",
+    "screenshot": "screenshot.png",
+    "thumbnail": "thumbnail.png",
+    "is_core": true,
+    "tags": [
+        "portal",
+        "political",
+        "movement",
+        "islam",
+        "bangladesh",
+        "organization"
+    ],
+    "requires": {
+        "php": "8.0.0",
+        "laravel": "10.0.0",
+        "tms": "1.0.0"
+    },
+    "settings": {
+        "colors": {
+            "primary": "#10b981",
+            "primary_dark": "#006A4E",
+            "primary_light": "#34d399",
+            "secondary": "#f59e0b",
+            "danger": "#ef4444",
+            "warning": "#f59e0b",
+            "info": "#3b82f6"
+        },
+        "layout": {
+            "container_width": "1280px",
+            "sidebar_position": "right",
+            "posts_per_page": 12,
+            "posts_per_row_mobile": 1,
+            "posts_per_row_tablet": 2,
+            "posts_per_row_desktop": 3
+        },
+        "header": {
+            "sticky": true,
+            "show_top_bar": true,
+            "show_category_menu": true
+        },
+        "footer": {
+            "show_newsletter": true,
+            "show_social_links": true,
+            "show_payment_methods": false
+        },
+        "features": {
+            "dark_mode": false,
+            "ajax_search": true,
+            "lazy_load": true
+        }
+    },
+    "features": [
+        "responsive-design",
+        "mobile-first",
+        "news-ticker",
+        "photo-gallery",
+        "video-gallery",
+        "publications-showcase",
+        "lazy-load-images",
+        "seo-friendly",
+        "fast-loading",
+        "bangla-language-support"
+    ],
+    "dependencies": {
+        "plugins": [],
+        "packages": []
+    },
+    "translations": {
+        "bn": "Bengali",
+        "en": "English"
+    },
+    "menu_positions": [
+        "desktop_nav",
+        "mobile_nav",
+        "topbar_left",
+        "topbar_right",
+        "footer_quick_links",
+        "footer_about",
+        "footer_contact"
+    ],
+    "widget_positions": [
+        "sidebar_left",
+        "sidebar_right",
+        "footer_top",
+        "footer_bottom"
+    ]
+}
