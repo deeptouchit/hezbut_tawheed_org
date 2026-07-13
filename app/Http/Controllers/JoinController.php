@@ -20,6 +20,7 @@ class JoinController extends Controller
                 'membership_type'   => 'required|string|in:primary,pledge',
                 'name'              => 'required|string|max:100',
                 'dob'               => 'nullable|date',
+                'age'               => 'nullable|string|max:50',
                 'father_husband'    => 'nullable|string|max:100',
                 'phone'             => 'required|string|max:25',
                 'present_address'   => 'nullable|string|max:500',
@@ -30,18 +31,20 @@ class JoinController extends Controller
                 'how_knew'          => 'required|string|max:100',
                 'person_name'       => 'nullable|string|max:100',
                 'person_phone'      => 'nullable|string|max:25',
+                'current_unit_amir' => 'nullable|string|max:200',
             ]);
 
             $howKnewStr = $request->how_knew;
             $typeLabel = $request->membership_type === 'primary' ? 'প্রাথমিক সদস্য পদ' : 'পাঁচ দফা ভিত্তিক অঙ্গীকার পত্র';
 
             $msgContent = "যোগদানের আবেদন টাইপ: {$typeLabel}\n" .
-                          "জন্ম তারিখ: " . ($request->dob ?? 'N/A') . "\n" .
+                          "বয়স: " . ($request->age ?? 'N/A') . "\n" .
                           "পিতা / স্বামীর নাম: " . ($request->father_husband ?? 'N/A') . "\n" .
                           "বর্তমান ঠিকানা: " . ($request->present_address ?? 'N/A') . "\n" .
                           "স্থায়ী ঠিকানা: " . ($request->permanent_address ?? 'N/A') . "\n" .
                           "পেশা: " . ($request->occupation ?? 'N/A') . "\n" .
                           "শিক্ষাগত যোগ্যতা: " . ($request->education ?? 'N/A') . "\n" .
+                          "বর্তমান ইউনিট ও আমির: " . ($request->current_unit_amir ?? 'N/A') . "\n" .
                           "দক্ষতা / পারদর্শিতা: " . ($request->experience ?? 'N/A') . "\n" .
                           "আন্দোলন সম্পর্কে জানার উপায়: {$howKnewStr}\n" .
                           "পরিচিত ব্যক্তির নাম: " . ($request->person_name ?? 'N/A') . "\n" .

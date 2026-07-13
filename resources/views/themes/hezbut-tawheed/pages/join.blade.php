@@ -45,16 +45,33 @@
                         <div class="tab-pane fade show active animate-fade-in" id="primary-content" role="tabpanel" aria-labelledby="primary-tab">
                             <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white border-light-grey mb-4" 
                                  style="border-top: 4px solid #006A4E !important;">
-                                <h3 class="fw-bold mb-3 text-success-brand text-center" style="font-size: 1.5rem;">প্রাথমিক সদস্য পদ লাভের অঙ্গীকার</h3>
-                                <p class="text-secondary lh-lg mb-4 text-center" style="font-size: 0.96rem; max-width: 800px; margin: 0 auto;">
-                                    আল্লাহর তওহীদ ভিত্তিক সত্যদীন ও শান্তির বাণী সাধারণ মানুষের মাঝে ছড়িয়ে দিতে এবং হেযবুত তওহীদের সমাজ সংস্কারমূলক মানবিক উদ্যোগে অংশ নিতে আপনি প্রাথমিক সদস্য পদের আবেদন করতে পারেন।
-                                </p>
+                                <p class="text-center text-secondary small mb-1" style="font-family: 'Baloo Da 2', sans-serif;">বিসমিল্লাহির রাহমানির রাহিম</p>
+                                <img src="{{ url('uploads/pages/monogram_ht.svg') }}" alt="Hezbut Tawheed Monogram" style="height: 100px; width: auto;" class="d-block mx-auto my-3">
+                                
+                                <div class="d-flex justify-content-center my-3">
+                                    <div class="px-4 py-2 border border-2 border-dark rounded-pill bg-light" style="max-width: 280px; text-align: center;">
+                                        <span class="fw-bold text-dark" style="font-size: 1.15rem; font-family: 'Baloo Da 2', sans-serif; letter-spacing: 0.5px;">প্রাথমিক সদস্য ফরম</span>
+                                    </div>
+                                </div>
+                                <h2 class="text-center fw-bold mb-4" style="color: #006A4E; font-size: 2.2rem; font-family: 'Baloo Da 2', sans-serif;">হেযবুত তওহীদ</h2>
+
+                                <div class="p-4 rounded-4 mb-4 border border-light-grey" style="background-color: #fcfdfc; border-left: 5px solid #006A4E !important; font-family: 'Baloo Da 2', sans-serif;">
+                                    <p class="lh-lg text-dark mb-3" style="font-size: 1.05rem; text-align: justify; font-weight: 600;">
+                                        আমি এই মর্মে সাক্ষ্য দিচ্ছি যে, আল্লাহ ছাড়া কোনো ইলাহ (হুকুমদাতা, বিধানদাতা) নেই এবং হযরত মুহাম্মদ (স.) আল্লাহর প্রেরিত রসুল। আমি বিশ্বাস করি, মানবজীবনে শান্তি ও সুবিচার প্রতিষ্ঠার জন্য আল্লাহ তাঁর শেষ নবীর মাধ্যমে হেদায়াহ ও সত্য দীন প্রেরণ করেছেন। বর্তমান বিশ্বে চলমান অশান্তি দূর করে শান্তি কায়েমের জন্য আল্লাহর দেওয়া সেই হেদায়াহ ও সত্য দীন প্রতিষ্ঠার কোনো বিকল্প নেই। পৃথিবীতে শান্তি প্রতিষ্ঠার এই মহান লক্ষ্য নিয়েই হেযবুত তওহীদ সংগ্রাম চালিয়ে যাচ্ছে।
+                                    </p>
+                                    <p class="lh-lg text-dark mb-0" style="font-size: 1.05rem; text-align: justify; font-weight: 600;">
+                                        আমি হেযবুত তওহীদের এই লক্ষ্য ও সংগ্রামের সঙ্গে একাত্মতা পোষণ করে এ আন্দোলনের এমাম জনাব হোসাইন মোহাম্মদ সেলিমের নেতৃত্বে দীন প্রতিষ্ঠার সংগ্রামে শামিল হলাম। আমি আমার জান-মাল দিয়ে আল্লাহর দীন প্রতিষ্ঠার এই সংগ্রামে সদা সচেষ্ট থাকব, ইনশাআল্লাহ।
+                                    </p>
+                                </div>
+
+                                <div class="text-center small mb-4 pb-3 border-bottom text-muted" style="font-family: 'Baloo Da 2', sans-serif; font-size: 0.85rem; font-weight: 600;">
+                                    কেন্দ্রীয় কার্যালয়: বাসা- ৩, রোড- ২০/এ, সেক্টর- ১৪, উত্তরা, ঢাকা। ফোন: ০১৭১১০০৫০২৫, ০১৬১৭-৩২৯৩৯২
+                                </div>
                                 
                                 <!-- FORM 1: Primary Membership Form -->
-                                <div class="border-top pt-5 mt-4">
+                                <div class="pt-2">
                                     <div class="mb-4 text-center">
-                                        <span class="badge badge-gold px-3 py-2 rounded fw-bold text-uppercase tracking-wider" style="font-size: 0.78rem;">আবেদন পত্র</span>
-                                        <h4 class="fw-bold mb-1 text-dark mt-2" style="font-size: 1.35rem;">ফরম পূরণ করুন (প্রাথমিক সদস্য পদ)</h4>
+                                        <h4 class="fw-bold mb-1 text-dark" style="font-size: 1.35rem;">সদস্য পদের তথ্য</h4>
                                         <p class="text-muted small">অনগ্রহ করে নিচের ফরমটি সঠিক তথ্য দিয়ে পূরণ করুন। তারকা (*) চিহ্নিত ফিল্ডগুলো আবশ্যক।</p>
                                     </div>
 
@@ -71,19 +88,27 @@
                                                 </div>
                                             </div>
 
+                                            <!-- Date -->
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="form-label text-dark fw-semibold small">তারিখ *</label>
+                                                    <input type="date" name="join_date" class="form-control py-3 rounded-3" value="{{ old('join_date', date('Y-m-d')) }}" required style="font-size: 0.9rem; box-shadow: none;">
+                                                </div>
+                                            </div>
+
+                                            <!-- Father's Name -->
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="form-label text-dark fw-semibold small">পিতার নাম</label>
+                                                    <input type="text" name="father_husband" class="form-control py-3 rounded-3" placeholder="পিতার নাম..." value="{{ old('father_husband') }}" style="font-size: 0.9rem; box-shadow: none;">
+                                                </div>
+                                            </div>
+
                                             <!-- Mobile No -->
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label class="form-label text-dark fw-semibold small">মোবাইল নম্বর *</label>
                                                     <input type="text" name="phone" class="form-control py-3 rounded-3" placeholder="মোবাইল নম্বর..." value="{{ old('phone') }}" required style="font-size: 0.9rem; box-shadow: none;">
-                                                </div>
-                                            </div>
-
-                                            <!-- Present Address -->
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label class="form-label text-dark fw-semibold small">বর্তমান ঠিকানা *</label>
-                                                    <input type="text" name="present_address" class="form-control py-3 rounded-3" placeholder="বর্তমান ঠিকানা..." value="{{ old('present_address') }}" required style="font-size: 0.9rem; box-shadow: none;">
                                                 </div>
                                             </div>
 
@@ -95,10 +120,42 @@
                                                 </div>
                                             </div>
 
+                                            <!-- Education -->
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="form-label text-dark fw-semibold small">শিক্ষা</label>
+                                                    <input type="text" name="education" class="form-control py-3 rounded-3" placeholder="শিক্ষাগত যোগ্যতা..." value="{{ old('education') }}" style="font-size: 0.9rem; box-shadow: none;">
+                                                </div>
+                                            </div>
+
+                                            <!-- Age -->
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="form-label text-dark fw-semibold small">বয়স *</label>
+                                                    <input type="text" name="age" class="form-control py-3 rounded-3" placeholder="বয়স..." value="{{ old('age') }}" required style="font-size: 0.9rem; box-shadow: none;">
+                                                </div>
+                                            </div>
+
+                                            <!-- Current Unit & Amir -->
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="form-label text-dark fw-semibold small">বর্তমান ইউনিট ও আমির</label>
+                                                    <input type="text" name="current_unit_amir" class="form-control py-3 rounded-3" placeholder="বর্তমান ইউনিট ও আমির..." value="{{ old('current_unit_amir') }}" style="font-size: 0.9rem; box-shadow: none;">
+                                                </div>
+                                            </div>
+
+                                            <!-- Address -->
+                                            <div class="col-12">
+                                                <div class="form-group">
+                                                    <label class="form-label text-dark fw-semibold small">ঠিকানা *</label>
+                                                    <textarea name="present_address" rows="3" class="form-control rounded-3" placeholder="ঠিকানা..." required style="font-size: 0.9rem; box-shadow: none;">{{ old('present_address') }}</textarea>
+                                                </div>
+                                            </div>
+
                                             <!-- How did you know about the movement -->
                                             <div class="col-12">
                                                 <div class="form-group">
-                                                    <label class="form-label text-dark fw-semibold small d-block">কিভাবে আন্দোলন সম্পর্কে জেনেছেন? *</label>
+                                                    <label class="form-label text-dark fw-semibold small d-block">কীভাবে জেনেছেন (মাধ্যম)? *</label>
                                                     <div class="d-flex flex-wrap gap-3 mt-1">
                                                         @foreach($ways as $index => $way)
                                                             <div class="form-check">
@@ -130,7 +187,7 @@
 
                                             <!-- Submit Button -->
                                             <div class="col-12 text-end mt-4">
-                                                <button type="submit" class="btn btn-brand-success text-white fw-bold px-5 py-3 rounded shadow-sm w-100 transition">
+                                                <button type="submit" class="btn btn-brand-success text-white fw-bold px-5 py-3 rounded shadow-sm w-100 transition" style="background-color: #006A4E; border: none;">
                                                     আবেদনপত্র জমা দিন <i class="fas fa-paper-plane ms-2 text-warning" style="font-size: 13px;"></i>
                                                 </button>
                                             </div>
