@@ -47,10 +47,10 @@
                     <!-- Element 1: কাবা -->
                     <div class="col-lg-6">
                         <div class="family-member-card p-4 h-100 d-flex flex-column" style="border-left: 5px solid #006A4E !important;">
+                            <div class="text-center p-2 bg-light rounded-3 mb-3 border" style="overflow: hidden; background-color: #f8f9fa;">
+                                <img src="{{ asset('/uploads/pages/monogram_kaba.svg') }}" alt="১. কাবা" class="img-fluid rounded" style="max-height: 130px; object-fit: contain;" />
+                            </div>
                             <div class="d-flex align-items-center gap-3 mb-3">
-                                <div class="bg-success text-white rounded-circle p-3 d-flex align-items-center justify-content-center shadow-sm" style="width: 50px; height: 50px; min-width: 50px; background-color: #006A4E !important;">
-                                    <i class="fas fa-kaaba fa-lg"></i>
-                                </div>
                                 <h4 class="fw-bold mb-0" style="font-family: var(--font-bengali); color: #006A4E; font-size: 1.25rem;">১. কাবা (ঐক্যের প্রতীক)</h4>
                             </div>
                             <p class="text-secondary mb-0" style="line-height: 1.7; text-align: justify; font-size: 0.95rem;">
@@ -62,10 +62,10 @@
                     <!-- Element 2: রসুলাল্লাহর রওজা -->
                     <div class="col-lg-6">
                         <div class="family-member-card p-4 h-100 d-flex flex-column" style="border-left: 5px solid #D4AF37 !important;">
+                            <div class="text-center p-2 bg-light rounded-3 mb-3 border" style="overflow: hidden; background-color: #f8f9fa;">
+                                <img src="{{ asset('/uploads/pages/monogram_raoza.svg') }}" alt="২. রসুলাল্লাহর রওজা" class="img-fluid rounded" style="max-height: 130px; object-fit: contain;" />
+                            </div>
                             <div class="d-flex align-items-center gap-3 mb-3">
-                                <div class="text-white rounded-circle p-3 d-flex align-items-center justify-content-center shadow-sm" style="width: 50px; height: 50px; min-width: 50px; background-color: #D4AF37 !important;">
-                                    <i class="fas fa-mosque fa-lg"></i>
-                                </div>
                                 <h4 class="fw-bold mb-0" style="font-family: var(--font-bengali); color: #006A4E; font-size: 1.25rem;">২. রসুলাল্লাহর রওজা (শৃঙ্খলার প্রতীক)</h4>
                             </div>
                             <p class="text-secondary mb-3" style="line-height: 1.7; text-align: justify; font-size: 0.95rem;">
@@ -84,10 +84,10 @@
                     <!-- Element 3: পবিত্র কোর’আন -->
                     <div class="col-lg-6">
                         <div class="family-member-card p-4 h-100 d-flex flex-column" style="border-left: 5px solid #006A4E !important;">
+                            <div class="text-center p-2 bg-light rounded-3 mb-3 border" style="overflow: hidden; background-color: #f8f9fa;">
+                                <img src="{{ asset('/uploads/pages/monogram_quran.svg') }}" alt="৩. পবিত্র কোর’আন" class="img-fluid rounded" style="max-height: 130px; object-fit: contain;" />
+                            </div>
                             <div class="d-flex align-items-center gap-3 mb-3">
-                                <div class="bg-success text-white rounded-circle p-3 d-flex align-items-center justify-content-center shadow-sm" style="width: 50px; height: 50px; min-width: 50px; background-color: #006A4E !important;">
-                                    <i class="fas fa-book-open fa-lg"></i>
-                                </div>
                                 <h4 class="fw-bold mb-0" style="font-family: var(--font-bengali); color: #006A4E; font-size: 1.25rem;">৩. পবিত্র কোর’আন (আনুগত্যের প্রতীক)</h4>
                             </div>
                             <p class="text-secondary mb-0" style="line-height: 1.7; text-align: justify; font-size: 0.95rem;">
@@ -99,10 +99,10 @@
                     <!-- Element 4: হেযবুত তওহীদ -->
                     <div class="col-lg-6">
                         <div class="family-member-card p-4 h-100 d-flex flex-column" style="border-left: 5px solid #D4AF37 !important;">
+                            <div class="text-center p-2 bg-light rounded-3 mb-3 border" style="overflow: hidden; background-color: #f8f9fa;">
+                                <img src="{{ asset('/uploads/pages/monogram_ht.svg') }}" alt="৪. হেযবুত তওহীদ" class="img-fluid rounded" style="max-height: 130px; object-fit: contain;" />
+                            </div>
                             <div class="d-flex align-items-center gap-3 mb-3">
-                                <div class="text-white rounded-circle p-3 d-flex align-items-center justify-content-center shadow-sm" style="width: 50px; height: 50px; min-width: 50px; background-color: #D4AF37 !important;">
-                                    <i class="fas fa-flag fa-lg"></i>
-                                </div>
                                 <h4 class="fw-bold mb-0" style="font-family: var(--font-bengali); color: #006A4E; font-size: 1.25rem;">৪. হেযবুত তওহীদ (হেজরতের প্রতীক)</h4>
                             </div>
                             <p class="text-secondary mb-0" style="line-height: 1.7; text-align: justify; font-size: 0.95rem;">
@@ -114,10 +114,10 @@
                     <!-- Element 5: তলোয়ার -->
                     <div class="col-lg-12">
                         <div class="family-member-card p-4 h-100 d-flex flex-column" style="border-left: 5px solid #006A4E !important;">
+                            <div class="text-center p-2 bg-light rounded-3 mb-3 border" style="overflow: hidden; background-color: #f8f9fa;">
+                                <img src="{{ asset('/uploads/pages/monogram_sword.svg') }}" alt="৫. তলোয়ার" class="img-fluid rounded" style="max-height: 140px; object-fit: contain;" />
+                            </div>
                             <div class="d-flex align-items-center gap-3 mb-3">
-                                <div class="bg-success text-white rounded-circle p-3 d-flex align-items-center justify-content-center shadow-sm" style="width: 50px; height: 50px; min-width: 50px; background-color: #006A4E !important;">
-                                    <i class="fas fa-shield-alt fa-lg"></i>
-                                </div>
                                 <h4 class="fw-bold mb-0" style="font-family: var(--font-bengali); color: #006A4E; font-size: 1.25rem;">৫. তলোয়ার (অন্যায় অবিচারের বিরুদ্ধে সংগ্রামের প্রতীক)</h4>
                             </div>
                             <p class="text-secondary mb-0" style="line-height: 1.7; text-align: justify; font-size: 0.95rem;">
