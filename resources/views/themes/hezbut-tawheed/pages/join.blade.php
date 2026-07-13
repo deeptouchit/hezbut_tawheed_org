@@ -300,21 +300,23 @@
                                 <!-- FORM 2: 5-Point Pledge Form -->
                                 <div class="border-top pt-5">
                                     <div class="mb-4 text-center">
-                                        <span class="badge badge-gold px-3 py-2 rounded fw-bold text-uppercase tracking-wider" style="font-size: 0.78rem;">অঙ্গীকার পত্র ফর্ম</span>
-                                        <h4 class="fw-bold mb-1 text-dark mt-2" style="font-size: 1.35rem;">ফরম পূরণ করুন (পাঁচ দফা ভিত্তিক অঙ্গীকার)</h4>
-                                        <p class="text-muted small">অনগ্রহ করে অঙ্গীকারপত্রটি মনোযোগ দিয়ে পড়ে নিচের ফরমটি সঠিক তথ্য দিয়ে পূরণ করুন।</p>
+                                        <h4 class="fw-bold mb-1 text-dark" style="font-size: 1.35rem;">অঙ্গীকারনামা ফরম</h4>
+                                        <p class="text-muted small">অনগ্রহ করে অঙ্গীকারপত্রটি মনোযোগ দিয়ে পড়ে নিচের ফরমটি সঠিক তথ্য দিয়ে পূরণ করুন। * চিহ্নিত ফিল্ডগুলো আবশ্যক।</p>
                                     </div>
 
-                                    <form action="{{ route('join.submit') }}" method="POST">
+                                    <form action="{{ route('join.submit') }}" method="POST" style="font-family: 'Baloo Da 2', sans-serif;">
                                         @csrf
                                         <input type="hidden" name="membership_type" value="pledge">
 
-                                        <div class="row g-3">
+                                        <div class="row g-4">
                                             <!-- Name -->
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label class="form-label text-dark fw-semibold small">নাম *</label>
-                                                    <input type="text" name="name" class="form-control py-3 rounded-3" placeholder="নাম..." value="{{ old('name') }}" required style="font-size: 0.9rem; box-shadow: none;">
+                                                    <div class="input-group-custom">
+                                                        <span class="input-icon"><i class="fas fa-user"></i></span>
+                                                        <input type="text" name="name" class="form-control-custom" placeholder="আপনার পূর্ণ নাম লিখুন" value="{{ old('name') }}" required>
+                                                    </div>
                                                 </div>
                                             </div>
 
@@ -322,7 +324,10 @@
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label class="form-label text-dark fw-semibold small">জন্ম তারিখ</label>
-                                                    <input type="date" name="dob" class="form-control py-3 rounded-3" value="{{ old('dob') }}" style="font-size: 0.9rem; box-shadow: none;">
+                                                    <div class="input-group-custom">
+                                                        <span class="input-icon"><i class="fas fa-calendar-alt"></i></span>
+                                                        <input type="date" name="dob" class="form-control-custom" value="{{ old('dob') }}">
+                                                    </div>
                                                 </div>
                                             </div>
 
@@ -330,7 +335,10 @@
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label class="form-label text-dark fw-semibold small">পিতা / স্বামীর নাম</label>
-                                                    <input type="text" name="father_husband" class="form-control py-3 rounded-3" placeholder="পিতা / স্বামীর নাম..." value="{{ old('father_husband') }}" style="font-size: 0.9rem; box-shadow: none;">
+                                                    <div class="input-group-custom">
+                                                        <span class="input-icon"><i class="fas fa-user-friends"></i></span>
+                                                        <input type="text" name="father_husband" class="form-control-custom" placeholder="পিতা / স্বামীর নাম লিখুন" value="{{ old('father_husband') }}">
+                                                    </div>
                                                 </div>
                                             </div>
 
@@ -338,15 +346,21 @@
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label class="form-label text-dark fw-semibold small">মোবাইল নম্বর *</label>
-                                                    <input type="text" name="phone" class="form-control py-3 rounded-3" placeholder="মোবাইল নম্বর..." value="{{ old('phone') }}" required style="font-size: 0.9rem; box-shadow: none;">
+                                                    <div class="input-group-custom">
+                                                        <span class="input-icon"><i class="fas fa-phone-alt"></i></span>
+                                                        <input type="text" name="phone" class="form-control-custom" placeholder="১১ ডিজিটের মোবাইল নম্বর লিখুন" value="{{ old('phone') }}" required>
+                                                    </div>
                                                 </div>
                                             </div>
 
                                             <!-- Present Address -->
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label class="form-label text-dark fw-semibold small">বর্তমান ঠিকানা</label>
-                                                    <textarea name="present_address" rows="3" class="form-control rounded-3" placeholder="বর্তমান ঠিকানা..." style="font-size: 0.9rem; box-shadow: none;">{{ old('present_address') }}</textarea>
+                                                    <label class="form-label text-dark fw-semibold small">বর্তমান ঠিকানা *</label>
+                                                    <div class="input-group-custom align-items-start">
+                                                        <span class="input-icon pt-3"><i class="fas fa-map-marker-alt"></i></span>
+                                                        <textarea name="present_address" rows="3" class="form-control-custom" placeholder="বর্তমান ঠিকানা বিস্তারিত লিখুন" required style="height: auto; padding-top: 12px;">{{ old('present_address') }}</textarea>
+                                                    </div>
                                                 </div>
                                             </div>
 
@@ -354,7 +368,10 @@
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label class="form-label text-dark fw-semibold small">স্থায়ী ঠিকানা</label>
-                                                    <textarea name="permanent_address" rows="3" class="form-control rounded-3" placeholder="স্থায়ী ঠিকানা..." style="font-size: 0.9rem; box-shadow: none;">{{ old('permanent_address') }}</textarea>
+                                                    <div class="input-group-custom align-items-start">
+                                                        <span class="input-icon pt-3"><i class="fas fa-map-marker-alt"></i></span>
+                                                        <textarea name="permanent_address" rows="3" class="form-control-custom" placeholder="স্থায়ী ঠিকানা বিস্তারিত লিখুন" style="height: auto; padding-top: 12px;">{{ old('permanent_address') }}</textarea>
+                                                    </div>
                                                 </div>
                                             </div>
 
@@ -362,7 +379,10 @@
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label class="form-label text-dark fw-semibold small">পেশা</label>
-                                                    <input type="text" name="occupation" class="form-control py-3 rounded-3" placeholder="পেশা..." value="{{ old('occupation') }}" style="font-size: 0.9rem; box-shadow: none;">
+                                                    <div class="input-group-custom">
+                                                        <span class="input-icon"><i class="fas fa-briefcase"></i></span>
+                                                        <input type="text" name="occupation" class="form-control-custom" placeholder="আপনার পেশা লিখুন" value="{{ old('occupation') }}">
+                                                    </div>
                                                 </div>
                                             </div>
 
@@ -370,7 +390,10 @@
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label class="form-label text-dark fw-semibold small">শিক্ষাগত যোগ্যতা</label>
-                                                    <input type="text" name="education" class="form-control py-3 rounded-3" placeholder="শিক্ষাগত যোগ্যতা..." value="{{ old('education') }}" style="font-size: 0.9rem; box-shadow: none;">
+                                                    <div class="input-group-custom">
+                                                        <span class="input-icon"><i class="fas fa-graduation-cap"></i></span>
+                                                        <input type="text" name="education" class="form-control-custom" placeholder="শিক্ষাগত যোগ্যতা লিখুন" value="{{ old('education') }}">
+                                                    </div>
                                                 </div>
                                             </div>
 
@@ -378,21 +401,26 @@
                                             <div class="col-12">
                                                 <div class="form-group">
                                                     <label class="form-label text-dark fw-semibold small">কোন বিষয়ে পারদর্শী (একাধিক হলে কমা ব্যবহার করে লিখুন)</label>
-                                                    <input type="text" name="experience" class="form-control py-3 rounded-3" placeholder="উদাঃ উপস্থাপনা, লেখালেখি, গ্রাফিক্স ডিজাইন..." value="{{ old('experience') }}" style="font-size: 0.9rem; box-shadow: none;">
+                                                    <div class="input-group-custom">
+                                                        <span class="input-icon"><i class="fas fa-star"></i></span>
+                                                        <input type="text" name="experience" class="form-control-custom" placeholder="উদাঃ উপস্থাপনা, লেখালেখি, গ্রাফিক্স ডিজাইন..." value="{{ old('experience') }}">
+                                                    </div>
                                                 </div>
                                             </div>
 
                                             <!-- How did you know about the movement -->
                                             <div class="col-12">
                                                 <div class="form-group">
-                                                    <label class="form-label text-dark fw-semibold small d-block">কিভাবে আন্দোলন সম্পর্কে জেনেছেন? *</label>
-                                                    <div class="d-flex flex-wrap gap-3 mt-1">
+                                                    <label class="form-label text-dark fw-semibold small d-block">কীভাবে জেনেছেন (মাধ্যম)? *</label>
+                                                    <div class="row g-2 mt-1">
                                                         @foreach($ways as $index => $way)
-                                                            <div class="form-check">
-                                                                <input class="form-check-input check-way-pledge" type="radio" name="how_knew" value="{{ $way }}" id="wayPledge{{ $index }}" required
-                                                                       {{ old('how_knew') == $way ? 'checked' : '' }}>
-                                                                <label class="form-check-label text-secondary" for="wayPledge{{ $index }}" style="font-size: 0.88rem; cursor: pointer;">
-                                                                    {{ $way }}
+                                                            <div class="col-6 col-md-4">
+                                                                <label class="way-select-card" for="wayPledge{{ $index }}">
+                                                                    <input class="d-none check-way-pledge" type="radio" name="how_knew" value="{{ $way }}" id="wayPledge{{ $index }}" required {{ old('how_knew') == $way ? 'checked' : '' }}>
+                                                                    <span class="way-card-content">
+                                                                        <i class="far fa-circle status-dot"></i>
+                                                                        <span class="way-name">{{ $way }}</span>
+                                                                    </span>
                                                                 </label>
                                                             </div>
                                                         @endforeach
@@ -400,25 +428,31 @@
                                                 </div>
                                             </div>
 
-                                            <!-- Person Details (Conditional) -->
+                                            <!-- Conditional Person Fields -->
                                             <div class="col-md-6 person-fields-pledge" style="display: none;">
                                                 <div class="form-group">
-                                                    <label class="form-label text-dark fw-semibold small">ব্যक्तियों নাম (ব্যক্তির মাধ্যমে হয়ে থাকলে)</label>
-                                                    <input type="text" name="person_name" class="form-control py-3 rounded-3" placeholder="পরিচিত ব্যক্তির নাম..." value="{{ old('person_name') }}" style="font-size: 0.9rem; box-shadow: none;">
+                                                    <label class="form-label text-dark fw-semibold small">পরিচিত ব্যক্তির নাম</label>
+                                                    <div class="input-group-custom">
+                                                        <span class="input-icon"><i class="fas fa-user-check"></i></span>
+                                                        <input type="text" name="person_name" class="form-control-custom" placeholder="পরিচিত ব্যক্তির নাম লিখুন" value="{{ old('person_name') }}">
+                                                    </div>
                                                 </div>
                                             </div>
 
                                             <div class="col-md-6 person-fields-pledge" style="display: none;">
                                                 <div class="form-group">
                                                     <label class="form-label text-dark fw-semibold small">পরিচিত ব্যক্তির মোবাইল নম্বর</label>
-                                                    <input type="text" name="person_phone" class="form-control py-3 rounded-3" placeholder="মোবাইল নম্বর..." value="{{ old('person_phone') }}" style="font-size: 0.9rem; box-shadow: none;">
+                                                    <div class="input-group-custom">
+                                                        <span class="input-icon"><i class="fas fa-phone-square-alt"></i></span>
+                                                        <input type="text" name="person_phone" class="form-control-custom" placeholder="মোবাইল নম্বর লিখুন" value="{{ old('person_phone') }}">
+                                                    </div>
                                                 </div>
                                             </div>
 
                                             <!-- Submit Button -->
-                                            <div class="col-12 text-end mt-4">
-                                                <button type="submit" class="btn btn-brand-success text-white fw-bold px-4 py-2 w-100 transition">
-                                                    আবেদনপত্র জমা দিন <i class="fas fa-paper-plane ms-2 text-warning" style="font-size: 13px;"></i>
+                                            <div class="col-12 text-end mt-5">
+                                                <button type="submit" class="btn btn-brand-success text-white fw-bold px-4 py-2 w-100 transition" style="background-color: #006A4E; border: none; font-size: 0.95rem; border-radius: 8px !important; box-shadow: 0 3px 10px rgba(0, 106, 78, 0.1) !important;">
+                                                    আবেদনপত্র জমা দিন <i class="fas fa-paper-plane ms-2 text-warning" style="font-size: 14px;"></i>
                                                 </button>
                                             </div>
                                         </div>
