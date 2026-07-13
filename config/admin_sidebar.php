@@ -188,7 +188,7 @@ return [
                 [
                     'order'       => 3,
                     'route'       => 'admin.join-requests.index',
-                    'label'       => 'সদস্য পদের আবেদন',
+                    'label'       => 'Join Requests',
                     'icon'        => 'fas fa-user-plus nav-icon ml-2',
                     'active'      => ['admin/join-requests*'],
                     'activeRoute' => ['admin.join-requests.*'],
@@ -212,7 +212,7 @@ return [
                 [
                     'order'       => 6,
                     'route'       => 'admin.suggestions.index',
-                    'label'       => 'নাগরিক পরামর্শ ও মতামত',
+                    'label'       => 'Suggestions & Feedback',
                     'icon'        => 'fas fa-comment-dots nav-icon ml-2',
                     'active'      => ['admin/suggestions*'],
                     'activeRoute' => ['admin.suggestions.*'],
