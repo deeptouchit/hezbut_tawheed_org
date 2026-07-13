@@ -18,24 +18,6 @@
                 
                 <!-- Blog Listing Column (Left: col-lg-8) -->
                 <div class="col-lg-8">
-                    <!-- Search & Filter Summary -->
-                    @if(request()->filled('search') || request()->filled('category') || request()->filled('tag'))
-                        <div class="bg-white p-3 rounded-3 shadow-sm border border-light-grey mb-4 d-flex justify-content-between align-items-center" style="font-family: 'Baloo Da 2', sans-serif; font-size: 0.92rem;">
-                            <span class="text-secondary">
-                                ফিল্টারিং রেজাল্ট: 
-                                @if(request()->filled('search'))
-                                    সার্চ কীওয়ার্ড: <strong class="text-dark">"{{ request('search') }}"</strong>
-                                @endif
-                                @if(request()->filled('category'))
-                                    ক্যাটাগরি: <strong class="text-success">"{{ request('category') }}"</strong>
-                                @endif
-                                @if(request()->filled('tag'))
-                                    ট্যাগ: <strong class="text-primary">"#{{ request('tag') }}"</strong>
-                                @endif
-                            </span>
-                            <a href="{{ route('blog') }}" class="btn btn-sm btn-outline-danger rounded-pill px-3 py-1 fw-bold" style="font-size: 11px;">ক্লিয়ার করুন</a>
-                        </div>
-                    @endif
 
                     <!-- Grid list of article cards -->
                     <div class="row g-4">
