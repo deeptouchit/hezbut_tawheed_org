@@ -32,12 +32,14 @@ class JoinController extends Controller
                 'person_name'       => 'nullable|string|max:100',
                 'person_phone'      => 'nullable|string|max:25',
                 'current_unit_amir' => 'nullable|string|max:200',
+                'join_date'         => 'nullable|string|max:50',
             ]);
 
             $howKnewStr = $request->how_knew;
             $typeLabel = $request->membership_type === 'primary' ? 'প্রাথমিক সদস্য পদ' : 'পাঁচ দফা ভিত্তিক অঙ্গীকার পত্র';
 
             $msgContent = "যোগদানের আবেদন টাইপ: {$typeLabel}\n" .
+                          "তারিখ: " . ($request->join_date ?? 'N/A') . "\n" .
                           "বয়স: " . ($request->age ?? 'N/A') . "\n" .
                           "পিতা / স্বামীর নাম: " . ($request->father_husband ?? 'N/A') . "\n" .
                           "বর্তমান ঠিকানা: " . ($request->present_address ?? 'N/A') . "\n" .
