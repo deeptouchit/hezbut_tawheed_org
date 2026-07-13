@@ -52,44 +52,50 @@
 @endpush
 
 @section('filter_input')
-<div class="filter-card">
-    <div class="row align-items-end">
-        <div class="col-md-3 mb-3">
-            <div class="input-group">
-                <span class="input-group-text"><i class="fas fa-search"></i></span>
-                <input type="text" id="search-input" class="form-control" placeholder="নাম, মোবাইল, পিতা, ঠিকানা..." autocomplete="off" value="{{ request('search') }}">
+<!-- Filter Section -->
+<div class="card border shadow-none mb-2 bg-light-subtle">
+    <div class="card-body p-2">
+        <div class="row g-2 align-items-center">
+            <div class="col-md-3 col-sm-6">
+                <input type="text" id="search-input" class="form-control" placeholder="নাম, মোবাইল, পিতা, ঠিকানা খুঁজুন..." autocomplete="off" value="{{ request('search') }}">
             </div>
-        </div>
-        <div class="col-md-2 mb-3">
-            <select id="type-filter" class="form-select">
-                <option value="">সব আবেদনের ধরন</option>
-                <option value="primary" {{ request('membership_type') == 'primary' ? 'selected' : '' }}>প্রাথমিক সদস্য</option>
-                <option value="pledge" {{ request('membership_type') == 'pledge' ? 'selected' : '' }}>পাঁচ দফা ভিত্তিক অঙ্গীকার</option>
-            </select>
-        </div>
-        <div class="col-md-2 mb-3">
-            <select id="status-filter" class="form-select">
-                <option value="">সব স্ট্যাটাস</option>
-                <option value="unread" {{ request('status') == 'unread' ? 'selected' : '' }}>অপঠিত</option>
-                <option value="read" {{ request('status') == 'read' ? 'selected' : '' }}>পঠিত</option>
-                <option value="approved" {{ request('status') == 'approved' ? 'selected' : '' }}>অনুমোদিত</option>
-                <option value="rejected" {{ request('status') == 'rejected' ? 'selected' : '' }}>প্রত্যাখ্যাত</option>
-            </select>
-        </div>
-        <div class="col-md-2 mb-3">
-            <div class="input-group">
-                <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+            <div class="col-md-2 col-sm-6">
+                <select id="type-filter" class="form-select">
+                    <option value="">সব আবেদনের ধরন</option>
+                    <option value="primary" {{ request('membership_type') == 'primary' ? 'selected' : '' }}>প্রাথমিক সদস্য</option>
+                    <option value="pledge" {{ request('membership_type') == 'pledge' ? 'selected' : '' }}>পাঁচ দফা ভিত্তিক অঙ্গীকার</option>
+                </select>
+            </div>
+            <div class="col-md-2 col-sm-6">
+                <select id="status-filter" class="form-select">
+                    <option value="">সব স্ট্যাটাস</option>
+                    <option value="unread" {{ request('status') == 'unread' ? 'selected' : '' }}>অপঠিত</option>
+                    <option value="read" {{ request('status') == 'read' ? 'selected' : '' }}>পঠিত</option>
+                    <option value="approved" {{ request('status') == 'approved' ? 'selected' : '' }}>অনুমোদিত</option>
+                    <option value="rejected" {{ request('status') == 'rejected' ? 'selected' : '' }}>প্রত্যাখ্যাত</option>
+                </select>
+            </div>
+            <div class="col-md-2 col-sm-6">
                 <input type="date" id="date-from-filter" class="form-control" placeholder="তারিখ থেকে" value="{{ request('date_from') }}">
             </div>
-        </div>
-        <div class="col-md-3 mb-3">
-            <div class="d-flex gap-2">
-                <button id="reset-filter" class="btn btn-secondary w-50">
-                    <i class="fas fa-undo-alt"></i> রিসেট
-                </button>
-                <button id="bulk-delete-btn" class="btn btn-danger w-50" style="display: none;">
-                    <i class="fas fa-trash"></i> ডিলিট (<span id="selected-count">0</span>)
-                </button>
+            <div class="col-md-1 col-sm-6">
+                <select id="per-page-filter" class="form-select">
+                    <option value="10" {{ request('per_page') == 10 ? 'selected' : '' }}>১০টি</option>
+                    <option value="20" {{ request('per_page') == 20 ? 'selected' : (request('per_page') == '' ? 'selected' : '') }}>২০টি</option>
+                    <option value="50" {{ request('per_page') == 50 ? 'selected' : '' }}>৫০টি</option>
+                    <option value="100" {{ request('per_page') == 100 ? 'selected' : '' }}>১০০টি</option>
+                    <option value="-1" {{ request('per_page') == -1 ? 'selected' : '' }}>সব</option>
+                </select>
+            </div>
+            <div class="col-md-2 col-sm-6">
+                <div class="d-flex gap-2">
+                    <button id="reset-filter" class="btn btn-secondary w-50" title="রিসেট ফিল্টার">
+                        <i class="fas fa-undo-alt"></i>
+                    </button>
+                    <button id="bulk-delete-btn" class="btn btn-danger w-50" style="display: none;" title="বাল্ক ডিলিট">
+                        <i class="fas fa-trash"></i> (<span id="selected-count">0</span>)
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -98,6 +104,112 @@
 
 @section('content')
 <div class="container-fluid">
+    <!-- Statistics Cards -->
+    <div class="row g-2 mb-3">
+        <!-- Total Requests -->
+        <div class="col-md-2 col-6">
+            <div class="card metric-card border-left-info h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="text-muted small d-block mb-0" style="font-size: 11px;">মোট আবেদন</span>
+                            <h5 class="mb-0 fw-bold">{{ number_format($stats['total']) }}</h5>
+                        </div>
+                        <div class="stat-icon bg-info bg-opacity-10 text-info">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Unread Requests -->
+        <div class="col-md-2 col-6">
+            <div class="card metric-card border-left-danger h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="text-muted small d-block mb-0" style="font-size: 11px;">অপঠিত</span>
+                            <h5 class="mb-0 fw-bold">{{ number_format($stats['unread']) }}</h5>
+                        </div>
+                        <div class="stat-icon bg-danger bg-opacity-10 text-danger">
+                            <i class="fas fa-circle"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Read Requests -->
+        <div class="col-md-2 col-6">
+            <div class="card metric-card border-left-info h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="text-muted small d-block mb-0" style="font-size: 11px;">পঠিত</span>
+                            <h5 class="mb-0 fw-bold">{{ number_format($stats['read']) }}</h5>
+                        </div>
+                        <div class="stat-icon bg-info bg-opacity-10 text-info">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approved Requests -->
+        <div class="col-md-2 col-6">
+            <div class="card metric-card border-left-success h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="text-muted small d-block mb-0" style="font-size: 11px;">অনুমোদিত</span>
+                            <h5 class="mb-0 fw-bold">{{ number_format($stats['approved']) }}</h5>
+                        </div>
+                        <div class="stat-icon bg-success bg-opacity-10 text-success">
+                            <i class="fas fa-check"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Primary Type -->
+        <div class="col-md-2 col-6">
+            <div class="card metric-card border-left-primary h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="text-muted small d-block mb-0" style="font-size: 11px;">প্রাথমিক সদস্য</span>
+                            <h5 class="mb-0 fw-bold">{{ number_format($stats['primary']) }}</h5>
+                        </div>
+                        <div class="stat-icon bg-primary bg-opacity-10 text-primary">
+                            <i class="fas fa-id-card"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pledge Type -->
+        <div class="col-md-2 col-6">
+            <div class="card metric-card border-left-warning h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="text-muted small d-block mb-0" style="font-size: 11px;">অঙ্গীকারনামা</span>
+                            <h5 class="mb-0 fw-bold">{{ number_format($stats['pledge']) }}</h5>
+                        </div>
+                        <div class="stat-icon bg-warning bg-opacity-10 text-warning">
+                            <i class="fas fa-file-contract"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Table Card -->
     <div class="card">
         <div class="card-header">
             <h3 class="card-title">
@@ -116,13 +228,12 @@
                     <button id="bulk-status-btn" class="btn btn-primary btn-sm me-2" style="display: none;">
                         <i class="fas fa-edit"></i> আপডেট
                     </button>
-                    <button id="refresh-btn" class="btn btn-secondary btn-sm" title="রিফ্রেশ">
+                    <button id="refresh-btn" class="btn btn-info btn-sm" title="রিফ্রেশ">
                         <i class="fas fa-sync-alt"></i>
                     </button>
                 </div>
             </div>
         </div>
-
         <div class="card-body p-1">
             <!-- Loading Spinner -->
             <div id="loading-spinner" class="text-center py-4" style="display: none;">
@@ -130,73 +241,6 @@
                     <span class="visually-hidden">Loading...</span>
                 </div>
                 <p class="mt-2 text-muted">ডাটা লোড হচ্ছে...</p>
-            </div>
-
-            <!-- Success/Error Messages -->
-            @if(session('success'))
-                <div class="alert alert-success alert-dismissible fade show m-3" role="alert">
-                    <i class="fas fa-check-circle me-2"></i> {{ session('success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            @endif
-
-            <!-- Statistics Cards -->
-            <div class="row m-3">
-                <div class="col-md-2 col-6">
-                    <div class="info-box">
-                        <span class="info-box-icon bg-info elevation-1">
-                            <i class="fas fa-user-plus"></i>
-                        </span>
-                        <div class="info-box-content">
-                            <span class="info-box-text">মোট আবেদন</span>
-                            <span class="info-box-number">{{ number_format($stats['total']) }}</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-2 col-6">
-                    <div class="info-box">
-                        <span class="info-box-icon bg-danger elevation-1">
-                            <i class="fas fa-circle"></i>
-                        </span>
-                        <div class="info-box-content">
-                            <span class="info-box-text">অপঠিত</span>
-                            <span class="info-box-number">{{ number_format($stats['unread']) }}</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-2 col-6">
-                    <div class="info-box">
-                        <span class="info-box-icon bg-info elevation-1">
-                            <i class="fas fa-check-circle"></i>
-                        </span>
-                        <div class="info-box-content">
-                            <span class="info-box-text">পঠিত</span>
-                            <span class="info-box-number">{{ number_format($stats['read']) }}</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-2 col-6">
-                    <div class="info-box">
-                        <span class="info-box-icon bg-success elevation-1">
-                            <i class="fas fa-check"></i>
-                        </span>
-                        <div class="info-box-content">
-                            <span class="info-box-text">অনুমোদিত</span>
-                            <span class="info-box-number">{{ number_format($stats['approved']) }}</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-2 col-6">
-                    <div class="info-box">
-                        <span class="info-box-icon bg-secondary elevation-1">
-                            <i class="fas fa-times"></i>
-                        </span>
-                        <div class="info-box-content">
-                            <span class="info-box-text">প্রত্যাখ্যাত</span>
-                            <span class="info-box-number">{{ number_format($stats['rejected']) }}</span>
-                        </div>
-                    </div>
-                </div>
             </div>
 
             <!-- Table Container -->

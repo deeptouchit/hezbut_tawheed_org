@@ -1,7 +1,7 @@
 {{-- resources/views/admin/join_requests/partials/table.blade.php --}}
 
 <div class="table-responsive">
-    <table class="table table-bordered table-hover table-striped">
+    <table class="table table-bordered table-striped table-hover table-sm text-nowrap" style="width: 100%;">
         <thead class="table-light">
             <tr>
                 <th width="30">
