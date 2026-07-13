@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\BookController;
 use App\Http\Controllers\Admin\BranchController;
 use App\Http\Controllers\Admin\CacheToolsController;
 use App\Http\Controllers\Admin\ContactMessageController;
+use App\Http\Controllers\Admin\JoinRequestController;
 use App\Http\Controllers\Admin\EmailTemplateController;
 use App\Http\Controllers\Admin\LeaderController;
 use App\Http\Controllers\Admin\LiveBroadcastController;
@@ -338,6 +339,16 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::post('contacts/mark-as-unread', [ContactMessageController::class, 'markAsUnread'])->name('contacts.mark-as-unread');
     Route::get('contacts/export', [ContactMessageController::class, 'export'])->name('contacts.export');
     Route::get('contacts/statistics', [ContactMessageController::class, 'getStatistics'])->name('contacts.statistics');
+
+    // =============================================
+    // JOIN REQUESTS ROUTES
+    // =============================================
+    Route::get('join-requests', [JoinRequestController::class, 'index'])->name('join-requests.index');
+    Route::get('join-requests/{id}', [JoinRequestController::class, 'show'])->name('join-requests.show');
+    Route::post('join-requests/{id}/status', [JoinRequestController::class, 'updateStatus'])->name('join-requests.update-status');
+    Route::delete('join-requests/{id}', [JoinRequestController::class, 'destroy'])->name('join-requests.destroy');
+    Route::post('join-requests/bulk-delete', [JoinRequestController::class, 'bulkDelete'])->name('join-requests.bulk-delete');
+    Route::post('join-requests/bulk-status', [JoinRequestController::class, 'bulkStatus'])->name('join-requests.bulk-status');
 
     // =============================================
     // SUGGESTIONS / FEEDBACK ROUTES

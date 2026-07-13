@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ContactMessage;
+use App\Models\JoinRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -23,7 +23,7 @@ class JoinController extends Controller
                 'age'               => 'nullable|string|max:50',
                 'father_husband'    => 'nullable|string|max:100',
                 'phone'             => 'required|string|max:25',
-                'present_address'   => 'nullable|string|max:500',
+                'present_address'   => 'required|string|max:500',
                 'permanent_address' => 'nullable|string|max:500',
                 'occupation'        => 'nullable|string|max:100',
                 'education'         => 'nullable|string|max:100',
@@ -35,32 +35,25 @@ class JoinController extends Controller
                 'join_date'         => 'nullable|string|max:50',
             ]);
 
-            $howKnewStr = $request->how_knew;
-            $typeLabel = $request->membership_type === 'primary' ? 'প্রাথমিক সদস্য পদ' : 'পাঁচ দফা ভিত্তিক অঙ্গীকার পত্র';
-
-            $msgContent = "যোগদানের আবেদন টাইপ: {$typeLabel}\n" .
-                          "তারিখ: " . ($request->join_date ?? 'N/A') . "\n" .
-                          "বয়স: " . ($request->age ?? 'N/A') . "\n" .
-                          "পিতা / স্বামীর নাম: " . ($request->father_husband ?? 'N/A') . "\n" .
-                          "বর্তমান ঠিকানা: " . ($request->present_address ?? 'N/A') . "\n" .
-                          "স্থায়ী ঠিকানা: " . ($request->permanent_address ?? 'N/A') . "\n" .
-                          "পেশা: " . ($request->occupation ?? 'N/A') . "\n" .
-                          "শিক্ষাগত যোগ্যতা: " . ($request->education ?? 'N/A') . "\n" .
-                          "বর্তমান ইউনিট ও আমির: " . ($request->current_unit_amir ?? 'N/A') . "\n" .
-                          "দক্ষতা / পারদর্শিতা: " . ($request->experience ?? 'N/A') . "\n" .
-                          "আন্দোলন সম্পর্কে জানার উপায়: {$howKnewStr}\n" .
-                          "পরিচিত ব্যক্তির নাম: " . ($request->person_name ?? 'N/A') . "\n" .
-                          "পরিচিত ব্যক্তির মোবাইল নম্বর: " . ($request->person_phone ?? 'N/A');
-
-            ContactMessage::create([
-                'name'       => $request->name,
-                'email'      => 'membership@hezbuttawheed.org',
-                'phone'      => $request->phone,
-                'subject'    => "নতুন সদস্য পদের আবেদন - ({$typeLabel})",
-                'message'    => $msgContent,
-                'ip_address' => $request->ip(),
-                'user_agent' => $request->userAgent(),
-                'status'     => 'unread',
+            JoinRequest::create([
+                'membership_type'   => $request->membership_type,
+                'name'              => $request->name,
+                'join_date'         => $request->join_date ?? ($request->membership_type === 'pledge' ? null : date('Y-m-d')),
+                'father_husband'    => $request->father_husband,
+                'age'               => $request->age ?? ($request->dob ? now()->diff(\Carbon\Carbon::parse($request->dob))->y . ' বছর' : null),
+                'occupation'        => $request->occupation,
+                'education'         => $request->education,
+                'phone'             => $request->phone,
+                'current_unit_amir' => $request->current_unit_amir,
+                'present_address'   => $request->present_address,
+                'permanent_address' => $request->permanent_address,
+                'experience'        => $request->experience,
+                'how_knew'          => $request->how_knew,
+                'person_name'       => $request->person_name,
+                'person_phone'      => $request->person_phone,
+                'ip_address'        => $request->ip(),
+                'user_agent'        => $request->userAgent(),
+                'status'            => 'unread',
             ]);
 
             return back()->with('success', 'আপনার সদস্য পদের আবেদনটি সফলভাবে গৃহীত হয়েছে! আমরা খুব শীঘ্রই আপনার সাথে যোগাযোগ করব ইনশাআল্লাহ।');

@@ -157,8 +157,8 @@ return [
             'order'       => 5,
             'title'       => 'Communication',
             'icon'        => 'fas fa-bullhorn',
-            'active'      => ['admin/newsletter*', 'admin/contacts*', 'admin/testimonials*', 'admin/suggestions*'],
-            'activeRoute' => ['admin.newsletter.*', 'admin.contacts.*', 'admin.testimonials.*', 'admin.suggestions.*'],
+            'active'      => ['admin/newsletter*', 'admin/contacts*', 'admin/testimonials*', 'admin/suggestions*', 'admin/join-requests*'],
+            'activeRoute' => ['admin.newsletter.*', 'admin.contacts.*', 'admin.testimonials.*', 'admin.suggestions.*', 'admin.join-requests.*'],
             'roles'       => ['super_admin', 'admin', 'manager'],
             'items'       => [
                 [
@@ -184,6 +184,14 @@ return [
                     'icon'        => 'fas fa-phone nav-icon ml-2',
                     'active'      => ['admin/contacts*'],
                     'activeRoute' => ['admin.contacts.*'],
+                ],
+                [
+                    'order'       => 3,
+                    'route'       => 'admin.join-requests.index',
+                    'label'       => 'সদস্য পদের আবেদন',
+                    'icon'        => 'fas fa-user-plus nav-icon ml-2',
+                    'active'      => ['admin/join-requests*'],
+                    'activeRoute' => ['admin.join-requests.*'],
                 ],
                 [
                     'order'       => 4,
