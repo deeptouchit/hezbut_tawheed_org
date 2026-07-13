@@ -1609,3 +1609,403 @@ h1, h2, h3, h4, h5, h6 {
         font-size: 1.05rem;
     }
 }
+
+
+/* ============================================================
+   VERBATIM EDITORIAL STEPPER - PROGRAMS PAGE - Premium Green-Gold
+   ============================================================ */
+.prog-section {
+    background: #f8fafc;
+    padding: 5rem 0 7rem;
+}
+
+.prog-header {
+    max-width: 850px;
+    margin: 0 auto 4rem;
+    text-align: center;
+}
+
+.prog-title {
+    font-size: 3rem;
+    font-weight: 900;
+    color: #0f172a;
+    letter-spacing: -0.025em;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+    font-family: var(--font-bengali);
+}
+
+.prog-title .highlight {
+    color: #006A4E; /* Premium Green */
+    position: relative;
+}
+.prog-title .highlight::after {
+    content: '';
+    position: absolute;
+    bottom: 4px;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: #D4AF37; /* Gold */
+    border-radius: 2px;
+}
+
+.prog-subtitle {
+    color: #1e293b;
+    font-size: 1.25rem;
+    font-weight: 650;
+    line-height: 1.6;
+}
+
+/* ---------- Editorial Intro ---------- */
+.prog-intro-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 28px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.02);
+    padding: 4rem;
+    max-width: 950px;
+    margin: 0 auto 4rem;
+}
+
+.prog-intro-text {
+    font-size: 1.125rem;
+    line-height: 1.9;
+    color: #1e293b;
+}
+
+.prog-intro-text p {
+    margin-bottom: 1.75rem;
+    font-weight: 600;
+}
+
+/* ---------- 5 Point Statement Callout ---------- */
+.statement-callout {
+    background: #e6f4ea; /* Soft Green Background */
+    border-left: 4px solid #006A4E; /* Green Left Border */
+    border-radius: 0 20px 20px 0;
+    padding: 2.5rem;
+    margin: 2.5rem 0;
+}
+
+.statement-callout h3 {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: #006A4E;
+    margin-bottom: 1.5rem;
+    font-family: var(--font-bengali);
+}
+
+.statement-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.statement-item {
+    background: #ffffff;
+    border: 1px solid #dcdfdc;
+    color: #006A4E;
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    box-shadow: 0 2px 4px rgba(0, 106, 78, 0.04);
+}
+
+.statement-item i {
+    color: #D4AF37 !important; /* Gold icons */
+}
+
+/* ---------- Interactive Stepper Container ---------- */
+.stepper-container {
+    max-width: 950px;
+    margin: 0 auto;
+}
+
+/* Stepper Row */
+.stepper-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    margin-bottom: 4rem;
+    padding: 0 1rem;
+}
+
+.stepper-line-bg {
+    position: absolute;
+    top: 30px;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: #e2e8f0;
+    z-index: 1;
+}
+
+.stepper-line-active {
+    position: absolute;
+    top: 30px;
+    left: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #006A4E, #D4AF37);
+    z-index: 2;
+    width: 0%;
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.step-node {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    flex: 1;
+}
+
+.step-circle {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 3px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: #1e293b;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.step-label {
+    margin-top: 0.75rem;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #1e293b;
+    transition: all 0.3s ease;
+    text-align: center;
+    white-space: nowrap;
+}
+
+/* Hover States */
+.step-node:hover .step-circle {
+    border-color: #006A4E;
+    color: #006A4E;
+    transform: translateY(-2px);
+}
+
+/* Active States */
+.step-node.active .step-circle {
+    background: linear-gradient(135deg, #006A4E, #D4AF37);
+    border-color: #006A4E;
+    color: #ffffff;
+    box-shadow: 0 10px 15px -3px rgba(0, 106, 78, 0.3);
+}
+
+.step-node.active .step-label {
+    color: #006A4E;
+    font-size: 1.05rem;
+}
+
+/* Completed States */
+.step-node.completed .step-circle {
+    border-color: #006A4E;
+    color: #006A4E;
+}
+
+/* ---------- Content Display Panel ---------- */
+.step-panel-wrapper {
+    position: relative;
+    min-height: 400px;
+}
+
+.step-panel {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 32px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.02);
+    padding: 3.5rem;
+    display: none;
+    opacity: 0;
+    transform: translateY(15px);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.step-panel.active {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.panel-grid {
+    display: grid;
+    grid-template-columns: 1.25fr 0.75fr;
+    gap: 3rem;
+    align-items: center;
+}
+
+.panel-details h3 {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    line-height: 1.35;
+    font-family: var(--font-bengali);
+}
+
+.panel-details h3 i {
+    color: #006A4E;
+}
+
+.panel-text {
+    font-size: 1.1rem;
+    color: #1e293b;
+    line-height: 1.9;
+    font-weight: 600;
+}
+
+.panel-illustration {
+    background: linear-gradient(135deg, #e6f4ea, #fbf7e6);
+    border-radius: 24px;
+    padding: 3rem 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    height: 100%;
+    min-height: 250px;
+}
+
+.illustration-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: #ffffff;
+    color: #006A4E;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.2rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0, 106, 78, 0.1);
+}
+
+.illustration-quote {
+    font-size: 1.1rem;
+    font-style: italic;
+    color: #006A4E;
+    font-weight: 700;
+    line-height: 1.6;
+    font-family: var(--font-bengali);
+}
+
+/* ---------- Navigation Buttons ---------- */
+.stepper-nav-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 3rem;
+}
+
+.btn-stepper {
+    padding: 0.75rem 1.75rem;
+    font-weight: 700;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.05rem;
+}
+
+.btn-prev {
+    background: #f1f5f9;
+    color: #1e293b;
+    border: 1px solid #cbd5e1;
+}
+.btn-prev:hover {
+    background: #e2e8f0;
+    color: #0f172a;
+}
+
+.btn-next {
+    background: linear-gradient(135deg, #006A4E, #D4AF37);
+    color: #ffffff;
+    border: none;
+    box-shadow: 0 4px 10px rgba(0, 106, 78, 0.2);
+}
+.btn-next:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 15px rgba(0, 106, 78, 0.3);
+}
+
+/* ---------- Mobile Optimization ---------- */
+@media (max-width: 767.98px) {
+    .prog-title {
+        font-size: 2.25rem;
+    }
+    .prog-intro-card {
+        padding: 2rem 1.5rem;
+        border-radius: 20px;
+    }
+    .stepper-row {
+        flex-direction: column;
+        gap: 2rem;
+        align-items: flex-start;
+        padding-left: 2rem;
+        margin-bottom: 3rem;
+    }
+    .stepper-line-bg {
+        left: 50px;
+        top: 0;
+        bottom: 0;
+        width: 4px;
+        height: 100%;
+    }
+    .stepper-line-active {
+        left: 50px;
+        top: 0;
+        width: 4px;
+        height: 0%;
+    }
+    .step-node {
+        flex-direction: row;
+        gap: 1.5rem;
+        width: 100%;
+    }
+    .step-circle {
+        width: 56px;
+        height: 56px;
+        font-size: 1.2rem;
+    }
+    .step-label {
+        margin-top: 0;
+        text-align: left;
+    }
+    .step-panel {
+        padding: 2.5rem 1.5rem;
+        border-radius: 20px;
+    }
+    .panel-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+    .panel-details h3 {
+        font-size: 1.5rem;
+    }
+    .panel-text {
+        font-size: 1rem;
+    }
+}
