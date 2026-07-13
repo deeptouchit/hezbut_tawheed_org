@@ -161,7 +161,7 @@
                 <div class="row justify-content-center">
                     <div class="col-lg-10">
                         <div class="ratio ratio-16x9 rounded-4 overflow-hidden shadow">
-                            <iframe src="https://www.youtube.com/embed/g4SBE_hUWik?si=3i2nbtNwnD50itDz" title="হেযবুত তওহীদের মাননীয় এমাম জনাব হোসাইন মোহাম্মদ সেলিম" allowfullscreen></iframe>
+                            <iframe src="https://www.youtube.com/embed/PC_F7hKLWHI" title="হেযবুত তওহীদের মাননীয় এমাম জনাব হোসাইন মোহাম্মদ সেলিম" allowfullscreen></iframe>
                         </div>
                     </div>
                 </div>
