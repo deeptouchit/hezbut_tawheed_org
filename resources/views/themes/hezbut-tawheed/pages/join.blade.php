@@ -45,11 +45,6 @@
                         <div class="tab-pane fade show active animate-fade-in" id="primary-content" role="tabpanel" aria-labelledby="primary-tab">
                             <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white border-light-grey mb-4" 
                                  style="border-top: 4px solid #006A4E !important;">
-                                @if($setting->getSetting('company_logo'))
-                                <img src="{{ asset($setting->getSetting('company_logo')) }}" alt="Hezbut Tawheed Logo" style="height: 120px; width: auto; object-fit: contain;" class="d-block mx-auto my-3">
-                                @else
-                                <img src="{{ url('uploads/pages/monogram_ht.svg') }}" alt="Hezbut Tawheed Monogram" style="height: 120px; width: auto;" class="d-block mx-auto my-3">
-                                @endif
                                 
                                 <div class="d-flex justify-content-center my-3">
                                     <div class="px-4 py-2 border border-2 border-dark rounded-pill bg-light" style="max-width: 280px; text-align: center;">
@@ -237,7 +232,7 @@
 
                                             <!-- Submit Button -->
                                             <div class="col-12 text-end mt-5">
-                                                <button type="submit" class="btn btn-brand-success text-white fw-bold px-5 py-3 rounded shadow-sm w-100 transition" style="background-color: #006A4E; border: none; font-size: 1.05rem; border-radius: 12px !important; box-shadow: 0 4px 15px rgba(0, 106, 78, 0.15) !important;">
+                                                <button type="submit" class="btn btn-brand-success text-white fw-bold px-4 py-2 w-100 transition" style="background-color: #006A4E; border: none; font-size: 0.95rem; border-radius: 8px !important; box-shadow: 0 3px 10px rgba(0, 106, 78, 0.1) !important;">
                                                     আবেদনপত্র জমা দিন <i class="fas fa-paper-plane ms-2 text-warning" style="font-size: 14px;"></i>
                                                 </button>
                                             </div>
@@ -422,7 +417,7 @@
 
                                             <!-- Submit Button -->
                                             <div class="col-12 text-end mt-4">
-                                                <button type="submit" class="btn btn-brand-success text-white fw-bold px-5 py-3 rounded shadow-sm w-100 transition">
+                                                <button type="submit" class="btn btn-brand-success text-white fw-bold px-4 py-2 w-100 transition">
                                                     আবেদনপত্র জমা দিন <i class="fas fa-paper-plane ms-2 text-warning" style="font-size: 13px;"></i>
                                                 </button>
                                             </div>
