@@ -49,7 +49,7 @@ p {
 }
 
 .text-secondary {
-    color: #475569 !important;
+    color: #1e293b !important;
 }
 
 .text-muted {
@@ -587,7 +587,7 @@ p {
     justify-content: center;
     border-radius: 50%;
     background-color: #f1f5f9;
-    color: #475569;
+    color: #1e293b;
     border: none;
     font-size: 0.95rem;
     transition: all 0.2s ease;
@@ -973,7 +973,7 @@ p {
 
 /* --- At a Glance Tabs Section --- */
 .glance-section .nav-pills .nav-link {
-    color: #475569;
+    color: #1e293b;
     background-color: #f8fafc;
     border: 1px solid #e2e8f0 !important;
 }
@@ -1580,7 +1580,7 @@ p {
             box-shadow: 0 20px 25px -5px rgba(16, 185, 129, 0.25), 0 10px 10px -6px rgba(16, 185, 129, 0.15) !important;
         }
         .testimonial-card p {
-            color: #475569 !important;
+            color: #1e293b !important;
             font-size: 0.95rem !important;
             line-height: 1.7 !important;
             margin-bottom: 1.5rem !important;
@@ -1758,7 +1758,7 @@ p {
             scale: 1.1;
         }
         .page-body p {
-            color: #475569;
+            color: #1e293b;
             text-align: justify;
         }
 
@@ -1776,13 +1776,13 @@ p {
         }
         .activity-body p {
             margin-bottom: 1.25rem;
-            color: #475569;
+            color: #1e293b;
             text-align: justify;
         }
         .activity-body ul, .activity-body ol {
             margin-bottom: 1.5rem;
             padding-left: 1.5rem;
-            color: #475569;
+            color: #1e293b;
         }
         .activity-body li {
             margin-bottom: 0.5rem;
@@ -1818,7 +1818,7 @@ p {
             align-items: center;
             padding: 10px 15px;
             border-radius: 10px;
-            color: #475569;
+            color: #1e293b;
             text-decoration: none;
             font-size: 0.95rem;
             font-weight: 500;
@@ -1829,7 +1829,7 @@ p {
         }
         .category-count-badge {
             background-color: #f1f5f9;
-            color: #64748b;
+            color: #1e293b;
             font-size: 11px;
             border-radius: 20px;
             padding: 4px 8px;
@@ -1842,7 +1842,7 @@ p {
             display: inline-block;
             padding: 5px 12px;
             background-color: #f1f5f9;
-            color: #475569;
+            color: #1e293b;
             border-radius: 20px;
             font-size: 12px;
             font-weight: 500;
@@ -1938,7 +1938,7 @@ p {
             justify-content: space-between;
             padding: 10px 14px;
             border-radius: 8px;
-            color: #475569;
+            color: #1e293b;
             text-decoration: none !important;
             font-size: 0.92rem;
             font-weight: 500;
@@ -1952,7 +1952,7 @@ p {
         }
         .category-premium-row .category-count-badge {
             background-color: #f1f5f9;
-            color: #64748b;
+            color: #1e293b;
             font-size: 10.5px;
             padding: 4px 10px;
             border-radius: 50px;
@@ -1996,7 +1996,7 @@ p {
             justify-content: flex-start;
             text-align: left;
             background: #f1f5f9;
-            color: #475569;
+            color: #1e293b;
             font-size: 11px;
             font-weight: 600;
             padding: 8px 12px;
@@ -2086,7 +2086,7 @@ p {
             justify-content: space-between;
             padding: 10px 14px;
             border-radius: 8px;
-            color: #475569;
+            color: #1e293b;
             text-decoration: none !important;
             font-size: 0.92rem;
             font-weight: 500;
@@ -2100,7 +2100,7 @@ p {
         }
         .category-premium-row .category-count-badge {
             background-color: #f1f5f9;
-            color: #64748b;
+            color: #1e293b;
             font-size: 10.5px;
             padding: 4px 10px;
             border-radius: 50px;
@@ -2142,7 +2142,7 @@ p {
             display: inline-flex;
             align-items: center;
             background: #f1f5f9;
-            color: #475569;
+            color: #1e293b;
             font-size: 11px;
             font-weight: 600;
             padding: 4px 12px;
@@ -2192,7 +2192,7 @@ p {
             align-items: center;
             padding: 10px 15px;
             border-radius: 10px;
-            color: #475569;
+            color: #1e293b;
             text-decoration: none;
             font-size: 0.95rem;
             font-weight: 500;
@@ -2203,7 +2203,7 @@ p {
         }
         .category-count-badge {
             background-color: #f1f5f9;
-            color: #64748b;
+            color: #1e293b;
             font-size: 11px;
             border-radius: 20px;
             padding: 4px 8px;
@@ -2216,7 +2216,7 @@ p {
             display: inline-block;
             padding: 5px 12px;
             background-color: #f1f5f9;
-            color: #475569;
+            color: #1e293b;
             border-radius: 20px;
             font-size: 12px;
             font-weight: 500;
@@ -3105,7 +3105,7 @@ p {
     /* Filter Pills styling */
     .btn-filter {
         border: 1px solid #f1f5f9;
-        color: #475569;
+        color: #1e293b;
         background-color: #ffffff;
         transition: all 0.25s ease;
         font-size: 0.88rem;
@@ -3129,7 +3129,7 @@ p {
     .small-text-link {
         font-size: 11px;
         font-weight: 600;
-        color: #64748b;
+        color: #1e293b;
         text-decoration: none !important;
         transition: color 0.2s;
         font-family: var(--font-bengali);
@@ -3141,7 +3141,7 @@ p {
     .hover-glow-btn {
         transition: all 0.2s;
         border-color: #cbd5e1;
-        color: #64748b;
+        color: #1e293b;
     }
     .hover-glow-btn:hover {
         border-color: #10B981;
@@ -3278,7 +3278,7 @@ p {
     }
 
     .dec-subtitle {
-        color: #475569;
+        color: #1e293b;
         font-weight: 600;
         font-size: 1.2rem;
         line-height: 1.75;
@@ -3376,7 +3376,7 @@ p {
     .point-desc {
         font-size: 1.05rem;
         font-weight: 600;
-        color: #475569;
+        color: #1e293b;
         line-height: 1.8;
         margin: 0;
     }
@@ -3414,7 +3414,7 @@ p {
     .charter-footer p {
         font-size: 1.05rem;
         font-weight: 600;
-        color: #475569;
+        color: #1e293b;
         line-height: 1.8;
         margin-bottom: 2rem;
     }
@@ -3557,7 +3557,7 @@ p {
             justify-content: space-between;
             padding: 10px 14px;
             border-radius: 8px;
-            color: #475569;
+            color: #1e293b;
             text-decoration: none !important;
             font-size: 0.92rem;
             font-weight: 500;
@@ -3571,7 +3571,7 @@ p {
         }
         .category-premium-row .category-count-badge {
             background-color: #f1f5f9;
-            color: #64748b;
+            color: #1e293b;
             font-size: 10.5px;
             padding: 4px 10px;
             border-radius: 50px;
@@ -3615,7 +3615,7 @@ p {
             justify-content: flex-start;
             text-align: left;
             background: #f1f5f9;
-            color: #475569;
+            color: #1e293b;
             font-size: 11px;
             font-weight: 600;
             padding: 8px 12px;
@@ -3686,7 +3686,7 @@ p {
     }
 
     .faq-subtitle {
-        color: #475569;
+        color: #1e293b;
         font-weight: 600;
         font-size: 1.2rem;
         line-height: 1.75;
@@ -3733,7 +3733,7 @@ p {
         left: 1.25rem;
         top: 50%;
         transform: translateY(-50%);
-        color: #64748b;
+        color: #1e293b;
         font-size: 1.1rem;
         pointer-events: none;
     }
@@ -3748,7 +3748,7 @@ p {
     .filter-pill {
         border: none;
         background: #f1f5f9;
-        color: #475569;
+        color: #1e293b;
         padding: 0.5rem 1.25rem;
         border-radius: 30px;
         font-size: 0.95rem;
@@ -3832,7 +3832,7 @@ p {
 
     .faq-icon-indicator {
         font-size: 1rem;
-        color: #64748b;
+        color: #1e293b;
         transition: transform 0.3s ease;
         flex-shrink: 0;
     }
@@ -3865,7 +3865,7 @@ p {
         padding: 1.5rem 1.5rem 1.75rem 3.25rem;
         font-size: 1.05rem;
         font-weight: 600;
-        color: #475569;
+        color: #1e293b;
         line-height: 1.8;
         border-top: 1px solid #f1f5f9;
     }
@@ -4179,7 +4179,7 @@ p {
         /* Pills Tab Navigation Premium Design */
         .custom-tab-btn {
             background-color: #ffffff !important;
-            color: #475569 !important;
+            color: #1e293b !important;
             border: 1px solid #cbd5e1 !important;
             box-shadow: 0 2px 4px rgba(0,0,0,0.02);
         }
@@ -4378,7 +4378,7 @@ p {
         /* Filter Pills styling */
         .btn-filter {
             border: 1px solid #e2e8f0;
-            color: #475569;
+            color: #1e293b;
             background-color: #ffffff;
             transition: all 0.3s ease;
             font-size: 0.85rem;
@@ -4439,7 +4439,7 @@ p {
         /* Social icons & view profile styling */
         .btn-view-profile {
             background-color: #f1f5f9;
-            color: #475569;
+            color: #1e293b;
             border: 1px solid #cbd5e1;
             font-size: 0.75rem;
             padding: 5px 12px;
@@ -4960,7 +4960,7 @@ p {
         .countdown-item .label {
             font-size: 11px;
             font-weight: bold;
-            color: #64748b;
+            color: #1e293b;
             margin-top: 4px;
             font-family: var(--font-bengali);
         }
@@ -5050,7 +5050,7 @@ p {
             margin: 2rem 0;
             font-style: italic;
             border-radius: 0 8px 8px 0;
-            color: #475569;
+            color: #1e293b;
         }
         .page-body img {
             max-width: 100%;
@@ -5199,7 +5199,7 @@ p {
             justify-content: space-between;
             padding: 10px 14px;
             border-radius: 8px;
-            color: #475569;
+            color: #1e293b;
             text-decoration: none !important;
             font-size: 0.92rem;
             font-weight: 500;
@@ -5213,7 +5213,7 @@ p {
         }
         .category-premium-row .category-count-badge {
             background-color: #f1f5f9;
-            color: #64748b;
+            color: #1e293b;
             font-size: 10.5px;
             padding: 4px 10px;
             border-radius: 50px;
@@ -5257,7 +5257,7 @@ p {
             justify-content: flex-start;
             text-align: left;
             background: #f1f5f9;
-            color: #475569;
+            color: #1e293b;
             font-size: 11px;
             font-weight: 600;
             padding: 8px 12px;
@@ -5570,7 +5570,7 @@ p {
     }
 
     .prog-subtitle {
-        color: #475569;
+        color: #1e293b;
         font-size: 1.25rem;
         font-weight: 500;
         line-height: 1.6;
@@ -5695,7 +5695,7 @@ p {
         justify-content: center;
         font-size: 1.35rem;
         font-weight: 800;
-        color: #64748b;
+        color: #1e293b;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
     }
@@ -5704,7 +5704,7 @@ p {
         margin-top: 0.75rem;
         font-size: 0.95rem;
         font-weight: 700;
-        color: #64748b;
+        color: #1e293b;
         transition: all 0.3s ease;
         text-align: center;
         white-space: nowrap;
@@ -5844,7 +5844,7 @@ p {
 
     .btn-prev {
         background: #f1f5f9;
-        color: #475569;
+        color: #1e293b;
         border: 1px solid #cbd5e1;
     }
     .btn-prev:hover {
@@ -5972,7 +5972,7 @@ p {
 
     .research-lead-text {
         font-size: 1.2rem;
-        color: #475569;
+        color: #1e293b;
         line-height: 1.8;
         font-weight: 500;
         margin-bottom: 2rem;
@@ -5981,7 +5981,7 @@ p {
 
     .research-body-text {
         font-size: 1.05rem;
-        color: #64748b;
+        color: #1e293b;
         line-height: 1.75;
         font-weight: 500;
         margin-bottom: 0;
@@ -6082,7 +6082,7 @@ p {
     }
 
     .pillar-card p {
-        color: #475569;
+        color: #1e293b;
         font-size: 0.98rem;
         line-height: 1.6;
         margin-bottom: 0;
@@ -6151,7 +6151,7 @@ p {
 
     .project-desc {
         font-size: 1.05rem;
-        color: #475569;
+        color: #1e293b;
         line-height: 1.7;
         margin-bottom: 1.75rem;
         text-align: justify;
@@ -6232,7 +6232,7 @@ p {
 
     .book-writer-text {
         font-size: 0.88rem;
-        color: #64748b;
+        color: #1e293b;
         margin-bottom: 1.25rem;
     }
 
@@ -6298,7 +6298,7 @@ p {
     .post-meta {
         font-size: 0.9rem;
         font-weight: 600;
-        color: #64748b;
+        color: #1e293b;
         margin-bottom: 0.8rem;
         display: flex;
         align-items: center;
@@ -6319,7 +6319,7 @@ p {
     }
 
     .post-card-excerpt {
-        color: #475569;
+        color: #1e293b;
         font-size: 0.98rem;
         line-height: 1.6;
         margin-bottom: 1.5rem;
@@ -6347,7 +6347,7 @@ p {
         background: #ffffff;
         border: 1px solid #e2e8f0;
         border-radius: 24px;
-        color: #64748b;
+        color: #1e293b;
     }
 
     .empty-state i {
@@ -6418,7 +6418,7 @@ p {
     }
 
     .soc-subtitle {
-        color: #64748b;
+        color: #1e293b;
         font-size: 1.2rem;
         font-weight: 500;
         line-height: 1.6;
@@ -6477,7 +6477,7 @@ p {
     .post-meta {
         font-size: 0.95rem;
         font-weight: 600;
-        color: #64748b;
+        color: #1e293b;
         margin-bottom: 0.85rem;
         display: flex;
         align-items: center;
@@ -6499,7 +6499,7 @@ p {
     }
 
     .post-card-excerpt {
-        color: #475569;
+        color: #1e293b;
         font-size: 1.02rem;
         line-height: 1.65;
         font-weight: 500;
@@ -6574,7 +6574,7 @@ p {
         background: #ffffff;
         border: 1px solid #e2e8f0;
         border-radius: 24px;
-        color: #64748b;
+        color: #1e293b;
     }
 
     .empty-state i {
@@ -6705,7 +6705,7 @@ p {
     .tragedy-media-caption {
         font-size: 0.95rem;
         font-weight: 700;
-        color: #64748b;
+        color: #1e293b;
         text-align: center;
         margin-top: 1rem;
         display: block;
@@ -6848,7 +6848,7 @@ p {
 
     .stat-text-label {
         font-size: 0.95rem;
-        color: #64748b;
+        color: #1e293b;
         font-weight: 600;
     }
 
@@ -6979,7 +6979,7 @@ p {
             height: 38px;
             border-radius: 50%;
             background-color: #f1f5f9;
-            color: #475569;
+            color: #1e293b;
             border: 1px solid #e2e8f0;
             display: inline-flex;
             align-items: center;
@@ -7094,7 +7094,7 @@ p {
         }
         .secondary-control {
             font-size: 1.15rem;
-            color: #475569;
+            color: #1e293b;
             width: 42px;
             height: 42px;
             border-radius: 50%;
@@ -7194,7 +7194,7 @@ p {
         .filter-btn {
             border: 1px solid #cbd5e1 !important;
             background: #ffffff;
-            color: #475569;
+            color: #1e293b;
             border-radius: 30px;
             padding: 8px 24px;
             font-family: var(--font-bengali);
@@ -7547,7 +7547,7 @@ p {
         border-radius: 8px;
         border: 1px solid #e2e8f0;
         background: #ffffff;
-        color: #475569;
+        color: #1e293b;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -7662,7 +7662,7 @@ p {
 
     .train-lead-text {
         font-size: 1.15rem;
-        color: #475569;
+        color: #1e293b;
         line-height: 1.75;
         font-weight: 500;
         margin-bottom: 2.5rem;
@@ -7706,7 +7706,7 @@ p {
     }
 
     .program-details p {
-        color: #475569;
+        color: #1e293b;
         font-size: 1rem;
         line-height: 1.6;
         font-weight: 500;
@@ -7767,7 +7767,7 @@ p {
     .stat-label {
         font-size: 0.95rem;
         font-weight: 700;
-        color: #475569;
+        color: #1e293b;
     }
 
     /* Dynamic Activities/Sports News Grid */
@@ -7844,7 +7844,7 @@ p {
     .post-meta {
         font-size: 0.95rem;
         font-weight: 600;
-        color: #64748b;
+        color: #1e293b;
         margin-bottom: 0.85rem;
         display: flex;
         align-items: center;
@@ -7866,7 +7866,7 @@ p {
     }
 
     .post-card-excerpt {
-        color: #475569;
+        color: #1e293b;
         font-size: 1.02rem;
         line-height: 1.65;
         font-weight: 500;
@@ -7899,7 +7899,7 @@ p {
         background: #ffffff;
         border: 1px solid #e2e8f0;
         border-radius: 24px;
-        color: #64748b;
+        color: #1e293b;
     }
 
     .empty-state i {
@@ -8101,7 +8101,7 @@ p {
             border-radius: 50%;
             border: 1px solid #cbd5e1;
             background-color: #ffffff;
-            color: #475569;
+            color: #1e293b;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -8246,7 +8246,7 @@ p {
     }
 
     .vision-subtitle {
-        color: #475569;
+        color: #1e293b;
         font-weight: 600;
         line-height: 1.8;
         letter-spacing: 0.01em;
@@ -8304,7 +8304,7 @@ p {
         padding: 0.9rem 1.5rem;
         border: none;
         background: transparent;
-        color: #475569;
+        color: #1e293b;
         font-size: 0.95rem;
         font-weight: 600;
         text-align: left;
@@ -8321,7 +8321,7 @@ p {
         justify-content: center;
         width: 24px;
         height: 24px;
-        color: #64748b;
+        color: #1e293b;
         font-size: 0.95rem;
         flex-shrink: 0;
         transition: color 0.2s ease;
@@ -8338,7 +8338,7 @@ p {
         padding: 0.15rem 0.45rem;
         border-radius: 6px;
         background: #e2e8f0;
-        color: #475569;
+        color: #1e293b;
         transition: all 0.2s ease;
     }
     .vision-tab-btn:hover {
@@ -8406,7 +8406,7 @@ p {
     .panel-subtitle-tag {
         font-size: 0.7rem;
         font-weight: 700;
-        color: #64748b;
+        color: #1e293b;
         text-transform: uppercase;
         letter-spacing: 0.08em;
         display: inline-flex;
@@ -8501,7 +8501,7 @@ p {
     .qa-answer {
         font-size: 1.05rem;
         font-weight: 600;
-        color: #475569;
+        color: #1e293b;
         line-height: 1.8;
         margin-bottom: 0;
         padding-left: 2.25rem;
