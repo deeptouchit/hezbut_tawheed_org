@@ -45,8 +45,11 @@
                         <div class="tab-pane fade show active animate-fade-in" id="primary-content" role="tabpanel" aria-labelledby="primary-tab">
                             <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white border-light-grey mb-4" 
                                  style="border-top: 4px solid #006A4E !important;">
-                                <p class="text-center text-secondary small mb-1" style="font-family: 'Baloo Da 2', sans-serif;">বিসমিল্লাহির রাহমানির রাহিম</p>
-                                <img src="{{ url('uploads/pages/monogram_ht.svg') }}" alt="Hezbut Tawheed Monogram" style="height: 100px; width: auto;" class="d-block mx-auto my-3">
+                                @if($setting->getSetting('company_logo'))
+                                <img src="{{ asset($setting->getSetting('company_logo')) }}" alt="Hezbut Tawheed Logo" style="height: 120px; width: auto; object-fit: contain;" class="d-block mx-auto my-3">
+                                @else
+                                <img src="{{ url('uploads/pages/monogram_ht.svg') }}" alt="Hezbut Tawheed Monogram" style="height: 120px; width: auto;" class="d-block mx-auto my-3">
+                                @endif
                                 
                                 <div class="d-flex justify-content-center my-3">
                                     <div class="px-4 py-2 border border-2 border-dark rounded-pill bg-light" style="max-width: 280px; text-align: center;">
@@ -55,36 +58,38 @@
                                 </div>
                                 <h2 class="text-center fw-bold mb-4" style="color: #006A4E; font-size: 2.2rem; font-family: 'Baloo Da 2', sans-serif;">হেযবুত তওহীদ</h2>
 
-                                <div class="p-4 rounded-4 mb-4 border border-light-grey" style="background-color: #fcfdfc; border-left: 5px solid #006A4E !important; font-family: 'Baloo Da 2', sans-serif;">
+                                <div class="p-4 rounded-4 mb-5 border border-light-grey" style="background-color: #fcfdfc; border-left: 5px solid #006A4E !important; font-family: 'Baloo Da 2', sans-serif;">
                                     <p class="lh-lg text-dark mb-3" style="font-size: 1.05rem; text-align: justify; font-weight: 600;">
-                                        আমি এই মর্মে সাক্ষ্য দিচ্ছি যে, আল্লাহ ছাড়া কোনো ইলাহ (হুকুমদাতা, বিধানদাতা) নেই এবং হযরত মুহাম্মদ (স.) আল্লাহর প্রেরিত রসুল। আমি বিশ্বাস করি, মানবজীবনে শান্তি ও সুবিচার প্রতিষ্ঠার জন্য আল্লাহ তাঁর শেষ নবীর মাধ্যমে হেদায়াহ ও সত্য দীন প্রেরণ করেছেন। বর্তমান বিশ্বে চলমান অশান্তি দূর করে শান্তি কায়েমের জন্য আল্লাহর দেওয়া সেই হেদায়াহ ও সত্য দীন প্রতিষ্ঠার কোনো বিকল্প নেই। পৃথিবীতে শান্তি প্রতিষ্ঠার এই মহান লক্ষ্য নিয়েই হেযবুত তওহীদ সংগ্রাম চালিয়ে যাচ্ছে।
+                                        আমি এই মর্মে সাক্ষ্য দিচ্ছি যে, allah ছাড়া কোনো ইলাহ (হুকুমদাতা, বিধানদাতা) নেই এবং হযরত মুহাম্মদ (স.) আল্লাহর প্রেরিত রসুল। আমি বিশ্বাস করি, মানবজীবনে শান্তি ও সুবিচার প্রতিষ্ঠার জন্য আল্লাহ তাঁর শেষ নবীর মাধ্যমে হেদায়াহ ও সত্য দীন প্রেরণ করেছেন। বর্তমান বিশ্বে চলমান অশান্তি দূর করে শান্তি কায়েমের জন্য আল্লাহর দেওয়া সেই হেদায়াহ ও সত্য দীন প্রতিষ্ঠার কোনো বিকল্প নেই। পৃথিবীতে শান্তি প্রতিষ্ঠার এই মহান লক্ষ্য নিয়েই হেযবুত তওহীদ সংগ্রাম চালিয়ে যাচ্ছে।
                                     </p>
                                     <p class="lh-lg text-dark mb-0" style="font-size: 1.05rem; text-align: justify; font-weight: 600;">
                                         আমি হেযবুত তওহীদের এই লক্ষ্য ও সংগ্রামের সঙ্গে একাত্মতা পোষণ করে এ আন্দোলনের এমাম জনাব হোসাইন মোহাম্মদ সেলিমের নেতৃত্বে দীন প্রতিষ্ঠার সংগ্রামে শামিল হলাম। আমি আমার জান-মাল দিয়ে আল্লাহর দীন প্রতিষ্ঠার এই সংগ্রামে সদা সচেষ্ট থাকব, ইনশাআল্লাহ।
                                     </p>
                                 </div>
 
-                                <div class="text-center small mb-4 pb-3 border-bottom text-muted" style="font-family: 'Baloo Da 2', sans-serif; font-size: 0.85rem; font-weight: 600;">
-                                    কেন্দ্রীয় কার্যালয়: বাসা- ৩, রোড- ২০/এ, সেক্টর- ১৪, উত্তরা, ঢাকা। ফোন: ০১৭১১০০৫০২৫, ০১৬১৭-৩২৯৩৯২
-                                </div>
-                                
                                 <!-- FORM 1: Primary Membership Form -->
                                 <div class="pt-2">
-                                    <div class="mb-4 text-center">
-                                        <h4 class="fw-bold mb-1 text-dark" style="font-size: 1.35rem;">সদস্য পদের তথ্য</h4>
-                                        <p class="text-muted small">অনগ্রহ করে নিচের ফরমটি সঠিক তথ্য দিয়ে পূরণ করুন। তারকা (*) চিহ্নিত ফিল্ডগুলো আবশ্যক।</p>
-                                    </div>
-
-                                    <form action="{{ route('join.submit') }}" method="POST">
+                                    <form action="{{ route('join.submit') }}" method="POST" style="font-family: 'Baloo Da 2', sans-serif;">
                                         @csrf
                                         <input type="hidden" name="membership_type" value="primary">
 
-                                        <div class="row g-3">
+                                        <div class="row g-4">
+                                            <!-- Group 1: Personal Info -->
+                                            <div class="col-12">
+                                                <h5 class="fw-bold mb-1 d-flex align-items-center gap-2" style="color: #006A4E; font-size: 1.25rem;">
+                                                    <span class="d-inline-flex align-items-center justify-content-center bg-light text-success-brand rounded-circle" style="width: 28px; height: 28px; font-size: 0.85rem;"><i class="fas fa-user-circle"></i></span>
+                                                    ব্যক্তিগত তথ্য
+                                                </h5>
+                                            </div>
+                                            
                                             <!-- Name -->
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label class="form-label text-dark fw-semibold small">নাম *</label>
-                                                    <input type="text" name="name" class="form-control py-3 rounded-3" placeholder="নাম..." value="{{ old('name') }}" required style="font-size: 0.9rem; box-shadow: none;">
+                                                    <div class="input-group-custom">
+                                                        <span class="input-icon"><i class="fas fa-user"></i></span>
+                                                        <input type="text" name="name" class="form-control-custom" placeholder="আপনার পূর্ণ নাম লিখুন" value="{{ old('name') }}" required>
+                                                    </div>
                                                 </div>
                                             </div>
 
@@ -92,7 +97,10 @@
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label class="form-label text-dark fw-semibold small">তারিখ *</label>
-                                                    <input type="date" name="join_date" class="form-control py-3 rounded-3" value="{{ old('join_date', date('Y-m-d')) }}" required style="font-size: 0.9rem; box-shadow: none;">
+                                                    <div class="input-group-custom">
+                                                        <span class="input-icon"><i class="fas fa-calendar-alt"></i></span>
+                                                        <input type="date" name="join_date" class="form-control-custom" value="{{ old('join_date', date('Y-m-d')) }}" required>
+                                                    </div>
                                                 </div>
                                             </div>
 
@@ -100,31 +108,10 @@
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label class="form-label text-dark fw-semibold small">পিতার নাম</label>
-                                                    <input type="text" name="father_husband" class="form-control py-3 rounded-3" placeholder="পিতার নাম..." value="{{ old('father_husband') }}" style="font-size: 0.9rem; box-shadow: none;">
-                                                </div>
-                                            </div>
-
-                                            <!-- Mobile No -->
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label class="form-label text-dark fw-semibold small">মোবাইল নম্বর *</label>
-                                                    <input type="text" name="phone" class="form-control py-3 rounded-3" placeholder="মোবাইল নম্বর..." value="{{ old('phone') }}" required style="font-size: 0.9rem; box-shadow: none;">
-                                                </div>
-                                            </div>
-
-                                            <!-- Occupation -->
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label class="form-label text-dark fw-semibold small">পেশা</label>
-                                                    <input type="text" name="occupation" class="form-control py-3 rounded-3" placeholder="পেশা..." value="{{ old('occupation') }}" style="font-size: 0.9rem; box-shadow: none;">
-                                                </div>
-                                            </div>
-
-                                            <!-- Education -->
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label class="form-label text-dark fw-semibold small">শিক্ষা</label>
-                                                    <input type="text" name="education" class="form-control py-3 rounded-3" placeholder="শিক্ষাগত যোগ্যতা..." value="{{ old('education') }}" style="font-size: 0.9rem; box-shadow: none;">
+                                                    <div class="input-group-custom">
+                                                        <span class="input-icon"><i class="fas fa-user-friends"></i></span>
+                                                        <input type="text" name="father_husband" class="form-control-custom" placeholder="পিতার নাম লিখুন" value="{{ old('father_husband') }}">
+                                                    </div>
                                                 </div>
                                             </div>
 
@@ -132,7 +119,51 @@
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label class="form-label text-dark fw-semibold small">বয়স *</label>
-                                                    <input type="text" name="age" class="form-control py-3 rounded-3" placeholder="বয়স..." value="{{ old('age') }}" required style="font-size: 0.9rem; box-shadow: none;">
+                                                    <div class="input-group-custom">
+                                                        <span class="input-icon"><i class="fas fa-birthday-cake"></i></span>
+                                                        <input type="text" name="age" class="form-control-custom" placeholder="আপনার বয়স লিখুন" value="{{ old('age') }}" required>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Occupation -->
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="form-label text-dark fw-semibold small">পেশা</label>
+                                                    <div class="input-group-custom">
+                                                        <span class="input-icon"><i class="fas fa-briefcase"></i></span>
+                                                        <input type="text" name="occupation" class="form-control-custom" placeholder="আপনার পেশা লিখুন" value="{{ old('occupation') }}">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Education -->
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="form-label text-dark fw-semibold small">শিক্ষা</label>
+                                                    <div class="input-group-custom">
+                                                        <span class="input-icon"><i class="fas fa-graduation-cap"></i></span>
+                                                        <input type="text" name="education" class="form-control-custom" placeholder="শিক্ষাগত যোগ্যতা লিখুন" value="{{ old('education') }}">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Group 2: Contact Info -->
+                                            <div class="col-12 mt-3">
+                                                <h5 class="fw-bold mb-1 d-flex align-items-center gap-2" style="color: #006A4E; font-size: 1.25rem;">
+                                                    <span class="d-inline-flex align-items-center justify-content-center bg-light text-success-brand rounded-circle" style="width: 28px; height: 28px; font-size: 0.85rem;"><i class="fas fa-address-book"></i></span>
+                                                    যোগাযোগের তথ্য
+                                                </h5>
+                                            </div>
+
+                                            <!-- Mobile No -->
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="form-label text-dark fw-semibold small">মোবাইল নম্বর *</label>
+                                                    <div class="input-group-custom">
+                                                        <span class="input-icon"><i class="fas fa-phone-alt"></i></span>
+                                                        <input type="text" name="phone" class="form-control-custom" placeholder="১১ ডিজিটের মোবাইল নম্বর লিখুন" value="{{ old('phone') }}" required>
+                                                    </div>
                                                 </div>
                                             </div>
 
@@ -140,7 +171,10 @@
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label class="form-label text-dark fw-semibold small">বর্তমান ইউনিট ও আমির</label>
-                                                    <input type="text" name="current_unit_amir" class="form-control py-3 rounded-3" placeholder="বর্তমান ইউনিট ও আমির..." value="{{ old('current_unit_amir') }}" style="font-size: 0.9rem; box-shadow: none;">
+                                                    <div class="input-group-custom">
+                                                        <span class="input-icon"><i class="fas fa-users-cog"></i></span>
+                                                        <input type="text" name="current_unit_amir" class="form-control-custom" placeholder="ইউনিট ও আমিরের নাম (যদি থাকে)" value="{{ old('current_unit_amir') }}">
+                                                    </div>
                                                 </div>
                                             </div>
 
@@ -148,47 +182,63 @@
                                             <div class="col-12">
                                                 <div class="form-group">
                                                     <label class="form-label text-dark fw-semibold small">ঠিকানা *</label>
-                                                    <textarea name="present_address" rows="3" class="form-control rounded-3" placeholder="ঠিকানা..." required style="font-size: 0.9rem; box-shadow: none;">{{ old('present_address') }}</textarea>
-                                                </div>
-                                            </div>
-
-                                            <!-- How did you know about the movement -->
-                                            <div class="col-12">
-                                                <div class="form-group">
-                                                    <label class="form-label text-dark fw-semibold small d-block">কীভাবে জেনেছেন (মাধ্যম)? *</label>
-                                                    <div class="d-flex flex-wrap gap-3 mt-1">
-                                                        @foreach($ways as $index => $way)
-                                                            <div class="form-check">
-                                                                <input class="form-check-input check-way-primary" type="radio" name="how_knew" value="{{ $way }}" id="wayPrimary{{ $index }}" required
-                                                                       {{ old('how_knew') == $way ? 'checked' : '' }}>
-                                                                <label class="form-check-label text-secondary" for="wayPrimary{{ $index }}" style="font-size: 0.88rem; cursor: pointer;">
-                                                                    {{ $way }}
-                                                                </label>
-                                                            </div>
-                                                        @endforeach
+                                                    <div class="input-group-custom align-items-start">
+                                                        <span class="input-icon pt-3"><i class="fas fa-map-marker-alt"></i></span>
+                                                        <textarea name="present_address" rows="3" class="form-control-custom" placeholder="আপনার ঠিকানা বিস্তারিত লিখুন" required style="height: auto; padding-top: 12px;">{{ old('present_address') }}</textarea>
                                                     </div>
                                                 </div>
                                             </div>
 
-                                            <!-- Conditional Fields for Primary -->
+                                            <!-- Group 3: Media -->
+                                            <div class="col-12 mt-3">
+                                                <h5 class="fw-bold mb-1 d-flex align-items-center gap-2" style="color: #006A4E; font-size: 1.25rem;">
+                                                    <span class="d-inline-flex align-items-center justify-content-center bg-light text-success-brand rounded-circle" style="width: 28px; height: 28px; font-size: 0.85rem;"><i class="fas fa-question-circle"></i></span>
+                                                    কীভাবে জেনেছেন (মাধ্যম)? *
+                                                </h5>
+                                            </div>
+
+                                            <!-- How did you know -->
+                                            <div class="col-12">
+                                                <div class="row g-2">
+                                                    @foreach($ways as $index => $way)
+                                                        <div class="col-6 col-md-4">
+                                                            <label class="way-select-card" for="wayPrimary{{ $index }}">
+                                                                <input class="d-none check-way-primary" type="radio" name="how_knew" value="{{ $way }}" id="wayPrimary{{ $index }}" required {{ old('how_knew') == $way ? 'checked' : '' }}>
+                                                                <span class="way-card-content">
+                                                                    <i class="far fa-circle status-dot"></i>
+                                                                    <span class="way-name">{{ $way }}</span>
+                                                                </span>
+                                                            </label>
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                            </div>
+
+                                            <!-- Conditional Person Fields -->
                                             <div class="col-md-6 person-fields-primary" style="display: none;">
                                                 <div class="form-group">
-                                                    <label class="form-label text-dark fw-semibold small">ব্যক্তির নাম (ব্যক্তির মাধ্যমে হয়ে থাকলে)</label>
-                                                    <input type="text" name="person_name" class="form-control py-3 rounded-3" placeholder="পরিচিত ব্যক্তির নাম..." value="{{ old('person_name') }}" style="font-size: 0.9rem; box-shadow: none;">
+                                                    <label class="form-label text-dark fw-semibold small">পরিচিত ব্যক্তির নাম</label>
+                                                    <div class="input-group-custom">
+                                                        <span class="input-icon"><i class="fas fa-user-check"></i></span>
+                                                        <input type="text" name="person_name" class="form-control-custom" placeholder="পরিচিত ব্যক্তির নাম লিখুন" value="{{ old('person_name') }}">
+                                                    </div>
                                                 </div>
                                             </div>
 
                                             <div class="col-md-6 person-fields-primary" style="display: none;">
                                                 <div class="form-group">
                                                     <label class="form-label text-dark fw-semibold small">পরিচিত ব্যক্তির মোবাইল নম্বর</label>
-                                                    <input type="text" name="person_phone" class="form-control py-3 rounded-3" placeholder="মোবাইল নম্বর..." value="{{ old('person_phone') }}" style="font-size: 0.9rem; box-shadow: none;">
+                                                    <div class="input-group-custom">
+                                                        <span class="input-icon"><i class="fas fa-phone-square-alt"></i></span>
+                                                        <input type="text" name="person_phone" class="form-control-custom" placeholder="মোবাইল নম্বর লিখুন" value="{{ old('person_phone') }}">
+                                                    </div>
                                                 </div>
                                             </div>
 
                                             <!-- Submit Button -->
-                                            <div class="col-12 text-end mt-4">
-                                                <button type="submit" class="btn btn-brand-success text-white fw-bold px-5 py-3 rounded shadow-sm w-100 transition" style="background-color: #006A4E; border: none;">
-                                                    আবেদনপত্র জমা দিন <i class="fas fa-paper-plane ms-2 text-warning" style="font-size: 13px;"></i>
+                                            <div class="col-12 text-end mt-5">
+                                                <button type="submit" class="btn btn-brand-success text-white fw-bold px-5 py-3 rounded shadow-sm w-100 transition" style="background-color: #006A4E; border: none; font-size: 1.05rem; border-radius: 12px !important; box-shadow: 0 4px 15px rgba(0, 106, 78, 0.15) !important;">
+                                                    আবেদনপত্র জমা দিন <i class="fas fa-paper-plane ms-2 text-warning" style="font-size: 14px;"></i>
                                                 </button>
                                             </div>
                                         </div>
