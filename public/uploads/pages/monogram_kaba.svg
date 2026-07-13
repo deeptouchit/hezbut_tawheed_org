@@ -1,12 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="645" height="275.979" viewBox="0 0 645 275.979">
 <g id="Kaba" transform="translate(-448 -808)">
-<rect id="BG" width="645" height="275.979" rx="10" transform="translate(448 808)" fill="#fff"></rect>
-<g id="Layer_2" data-name="Layer 2" transform="translate(864 860)">
+<rect id="BG" width="645" height="275.979" rx="10" transform="translate(448 808)" fill="none"></rect>
+<g id="Layer_2" data-name="Layer 2" transform="translate(692.75 860)">
 <g id="Layer_1" data-name="Layer 1">
 <path id="Path_5781" data-name="Path 5781" d="M0,0V171.668H24.843v-6.545H6.553V6.545h142.6V165.123H130.88v6.582H155.7V0Z" fill="#231f20"></path>
 </g>
 </g>
-<line id="Line_21" data-name="Line 21" y2="87" transform="translate(790.5 914.5)" fill="none" stroke="#001036" stroke-width="1"></line>
+
 
 </g>
 </svg>

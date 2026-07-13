@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="645" height="275.979" viewBox="0 0 645 275.979">
 <g id="Kaba" transform="translate(-448 -808)">
-<rect id="BG" width="645" height="275.979" rx="10" transform="translate(448 808)" fill="#fff"></rect>
-<g id="Layer_2" data-name="Layer 2" transform="translate(853 854)">
+<rect id="BG" width="645" height="275.979" rx="10" transform="translate(448 808)" fill="none"></rect>
+<g id="Layer_2" data-name="Layer 2" transform="translate(681.75 854)">
 <g id="Layer_1" data-name="Layer 1">
 <path id="Path_8434" data-name="Path 8434" d="M150.24,55.42l2.89-1.97.84,1.72-2.72,1.93Z" fill="#fff"></path>
 <path id="Path_8435" data-name="Path 8435" d="M15.78,93.93c-.68,2.56-1.31,5.17-2,7.71l1.28.2c-.52,3.31-1,6.68-1.36,10l-2.34-.28.84-6.81-.86-.14.44-3.3,1.2.2c.64-2.59,1.3-5.17,2.1-7.68Zm-2.71,11-.45,3.58.87.09L14,105Z" fill="#bb9a5c"></path>
@@ -42,7 +42,7 @@
 <path id="Path_8470" data-name="Path 8470" d="M120.29,21c-4.55-2.76-8.78-4.5-13.9-6.95l-1.5-2.9-.88,1.7a68.44,68.44,0,0,1-12.16-7.8l1-1.19a39.25,39.25,0,0,0,5.62-1l-1.39,2c-1,.24-1.92.43-2.9.62A67,67,0,0,0,102.71,11l2.4-6.54,3,1.67-1.06,4.58,1.7,3.35a94.179,94.179,0,0,1,12.08,6.1l-.47.93Z" fill="#bb9a5c"></path>
 </g>
 </g>
-<line id="Line_21" data-name="Line 21" y2="87" transform="translate(790.5 914.5)" fill="none" stroke="#001036" stroke-width="1"></line>
+
 
 </g>
 </svg>
