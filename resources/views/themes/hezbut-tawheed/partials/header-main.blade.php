@@ -126,7 +126,7 @@ $topbarRight = \App\Helpers\MenuHelper::getMenuData()['topbar_right'] ?? [];
                     @php $firstMenu = true; @endphp
                     @foreach(\App\Helpers\MenuHelper::getNavbarMenu('desktop_nav') as $item)
                     @if(empty($item['children']))
-                    @if($item['name'] != 'যোগদান করুন' && $item['name'] != 'যোগ দিন' && $item['name'] != 'Join Us' && $item['name'] != 'যুক্ত হোন')
+                    @if((!isset($item['is_featured']) || ($item['is_featured'] !== 'true' && $item['is_featured'] !== true)) && $item['name'] != 'যোগদান করুন' && $item['name'] != 'যোগ দিন' && $item['name'] != 'Join Us' && $item['name'] != 'যুক্ত হোন')
                     <li>
                         <a class="nav-link-ht {{ \App\Helpers\MenuHelper::isActive($item) ? 'active' : '' }}" href="{{ \App\Helpers\MenuHelper::getMenuUrl($item) }}" {!! $firstMenu ? 'style="padding-left: 12px !important;"' : '' !!}>
                             <span>{{ $item['name'] }}</span>
@@ -258,9 +258,8 @@ $topbarRight = \App\Helpers\MenuHelper::getMenuData()['topbar_right'] ?? [];
                     });
                 </script>
 
-                <!-- Highlight Button "যোগدان করুন" -->
                 @foreach(\App\Helpers\MenuHelper::getNavbarMenu('desktop_nav') as $item)
-                @if(empty($item['children']) && ($item['name'] == 'যোগدان করুন' || $item['name'] == 'যোগ দিন' || $item['name'] == 'Join Us' || $item['name'] == 'যুক্ত হোন'))
+                @if(empty($item['children']) && ((isset($item['is_featured']) && ($item['is_featured'] === 'true' || $item['is_featured'] === true)) || $item['name'] == 'যোগদান করুন' || $item['name'] == 'যোগ দিন' || $item['name'] == 'Join Us' || $item['name'] == 'যুক্ত হোন'))
                 <a class="btn btn-success btn-sm px-3 fw-bold d-flex align-items-center justify-content-center" href="{{ \App\Helpers\MenuHelper::getMenuUrl($item) }}" style="background-color: var(--primary-green) !important; border-color: var(--primary-green) !important; font-size: 0.85rem; height: 32px; border-radius: 4px;">
                     {{ $item['name'] }}
                 </a>
@@ -315,7 +314,7 @@ $topbarRight = \App\Helpers\MenuHelper::getMenuData()['topbar_right'] ?? [];
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
                 @foreach(\App\Helpers\MenuHelper::getNavbarMenu('desktop_nav') as $item)
                 @if(empty($item['children']))
-                @if($item['name'] == 'যোগদান করুন' || $item['name'] == 'যোগ দিন' || $item['name'] == 'Join Us' || $item['name'] == 'যুক্ত হোন')
+                @if((isset($item['is_featured']) && ($item['is_featured'] === 'true' || $item['is_featured'] === true)) || $item['name'] == 'যোগদান করুন' || $item['name'] == 'যোগ দিন' || $item['name'] == 'Join Us' || $item['name'] == 'যুক্ত হোন')
                 <li class="nav-item nav-item-btn my-2 w-100 text-center">
                     <a class="btn bg-gradient-btn px-4 py-1 w-75" href="{{ \App\Helpers\MenuHelper::getMenuUrl($item) }}" style="color: white !important;">
                         {{ $item['name'] }}
