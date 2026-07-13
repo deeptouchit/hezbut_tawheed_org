@@ -6,16 +6,16 @@
 
 {{-- ১. হিরো ব্যানার --}}
 @include('theme::partials.hero_banner', [
-'title' => 'মাননীয় এমামুযযামান',
-'subtitle' => 'জনাব মোহাম্মদ বায়াজীদ খান পন্নী (১৯২৫ - ২০১২)',
-'badge_text' => 'আন্দোলনের প্রতিষ্ঠাতা এমামুযযামান',
+'title' => 'মানুষ আজ যে সভ্যতার বড়াই করছে সত্যি কি এটা সভ্যতা? আমি বলবো, না। এটা সভ্যতা নয়।',
+'subtitle' => ' — মাননীয় এমামুযযামান জনাব মোহাম্মদ বায়াজীদ খান পন্নী',
+'badge_text' => 'আন্দোলনের প্রতিষ্ঠাতা',
 'badge_icon' => 'fas fa-user-tie'
 ])
 
 <section class="py-5 page-body">
     <div class="container">
 
-        {{-- ২. বড় বাণী / কোট সেকশন --}}
+        <!-- {{-- ২. বড় বাণী / কোট সেকশন --}}
         <div class="row justify-content-center mb-5">
             <div class="col-lg-10">
                 <div class="bio-quote-box p-4 p-md-5 text-center">
@@ -27,7 +27,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
 
         {{-- ৩. জন্ম ও পরিচিতি সেকশন --}}
         <div class="row align-items-center mb-5 pb-4">
