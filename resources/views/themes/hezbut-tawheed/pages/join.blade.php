@@ -20,14 +20,14 @@
                     <!-- Tabs Navigation Buttons -->
                     <ul class="nav nav-pills justify-content-center gap-3 mb-5" id="joinTab" role="tablist">
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link active py-3 px-4 rounded-pill fw-bold border border-light-grey text-dark transition custom-tab-btn" 
+                            <button class="nav-link active py-3 px-4 rounded-3 fw-bold border border-light-grey text-dark transition custom-tab-btn" 
                                     id="primary-tab" data-bs-toggle="tab" data-bs-target="#primary-content" type="button" role="tab" 
                                     aria-controls="primary-content" aria-selected="true" style="font-size: 0.95rem;">
                                 <i class="fas fa-id-card me-2 tab-icon"></i> প্রাথমিক সদস্য পদ
                             </button>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link py-3 px-4 rounded-pill fw-bold border border-light-grey text-dark transition custom-tab-btn" 
+                            <button class="nav-link py-3 px-4 rounded-3 fw-bold border border-light-grey text-dark transition custom-tab-btn" 
                                     id="pledge-tab" data-bs-toggle="tab" data-bs-target="#pledge-content" type="button" role="tab" 
                                     aria-controls="pledge-content" aria-selected="false" style="font-size: 0.95rem;">
                                 <i class="fas fa-file-contract me-2 tab-icon"></i> পাঁচ দফা ভিত্তিক অঙ্গীকার পত্র
@@ -47,7 +47,7 @@
                                  style="border-top: 4px solid #006A4E !important;">
                                 
                                 <div class="d-flex justify-content-center my-3">
-                                    <div class="px-4 py-2 border border-2 border-dark rounded-pill bg-light" style="max-width: 280px; text-align: center;">
+                                    <div class="px-4 py-2 border border-2 border-dark rounded-3 bg-light" style="max-width: 280px; text-align: center;">
                                         <span class="fw-bold text-dark" style="font-size: 1.15rem; font-family: 'Baloo Da 2', sans-serif; letter-spacing: 0.5px;">প্রাথমিক সদস্য ফরম</span>
                                     </div>
                                 </div>
