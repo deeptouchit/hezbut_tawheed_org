@@ -37,7 +37,7 @@ class BlogController extends Controller
                 $query->byTag($request->tag);
             }
 
-            $blogs = $query->paginate(12);
+            $blogs = $query->paginate(26);
 
             // সাইডবার ডাটা (ক্যাশে রাখা)
             $categories = Cache::remember('blog_categories', 3600, function () {
@@ -70,6 +70,13 @@ class BlogController extends Controller
                 }
                 return array_values(array_unique($tagsArray));
             });
+
+            if ($request->ajax()) {
+                return response()->json([
+                    'html' => view('theme::pages.blog.partials.blog_list', compact('blogs'))->render(),
+                    'hasMore' => $blogs->hasMorePages()
+                ]);
+            }
 
             return view('theme::pages.blog.index', compact(
                 'blogs',
@@ -187,7 +194,7 @@ class BlogController extends Controller
                 ->with(['author'])
                 ->where('category_id', $category->id)
                 ->orderBy('published_at', 'desc')
-                ->paginate(12);
+                ->paginate(26);
 
             $categories = Cache::remember('blog_categories', 3600, function () {
                 return BlogCategory::active()->ordered()->get();
@@ -200,6 +207,13 @@ class BlogController extends Controller
             $recentPosts = Cache::remember('blog_recent_posts', 3600, function () {
                 return Blog::published()->recent()->take(5)->get();
             });
+
+            if ($request->ajax()) {
+                return response()->json([
+                    'html' => view('theme::pages.blog.partials.blog_list', compact('blogs'))->render(),
+                    'hasMore' => $blogs->hasMorePages()
+                ]);
+            }
 
             return view('theme::pages.blog.category', compact(
                 'category',
@@ -228,7 +242,7 @@ class BlogController extends Controller
                 ->with(['author', 'category'])
                 ->byTag($decodedTag)  // ← Scope ব্যবহার
                 ->orderBy('published_at', 'desc')
-                ->paginate(12);
+                ->paginate(26);
 
             $categories = Cache::remember('blog_categories', 3600, function () {
                 return BlogCategory::active()->ordered()->get();
@@ -241,6 +255,13 @@ class BlogController extends Controller
             $recentPosts = Cache::remember('blog_recent_posts', 3600, function () {
                 return Blog::published()->recent()->take(5)->get();
             });
+
+            if ($request->ajax()) {
+                return response()->json([
+                    'html' => view('theme::pages.blog.partials.blog_list', compact('blogs'))->render(),
+                    'hasMore' => $blogs->hasMorePages()
+                ]);
+            }
 
             return view('theme::pages.blog.tag', compact(
                 'blogs',
@@ -292,7 +313,7 @@ class BlogController extends Controller
                 ->with(['author', 'category'])
                 ->search($query)
                 ->orderBy('published_at', 'desc')
-                ->paginate(12);
+                ->paginate(26);
 
             $categories = Cache::remember('blog_categories', 3600, function () {
                 return BlogCategory::active()->ordered()->get();
@@ -359,6 +380,18 @@ class BlogController extends Controller
             $comment->user_agent = $request->userAgent();
 
             $comment->save();
+
+            // Send database notification to admins
+            try {
+                \App\Models\Notification::sendToAdmins(
+                    'নতুন ব্লগ মন্তব্য',
+                    $comment->name . ' একটি মন্তব্য লিখেছেন যা অনুমোদনের অপেক্ষায় আছে।',
+                    'system',
+                    route('admin.blog.comments.show', $comment->id)
+                );
+            } catch (\Exception $e) {
+                Log::error('Blog comment notification error: ' . $e->getMessage());
+            }
 
             return back()->with('success', 'আপনার কমেন্টটি সফলভাবে জমা হয়েছে। মডারেশনের পরে প্রকাশ করা হবে।');
 
@@ -478,7 +511,7 @@ public function archive(Request $request)
     /**
      * ঘোষণা ও বিবৃতি লিস্টিং পেজ
      */
-    public function pressReleases()
+    public function pressReleases(Request $request)
     {
         try {
             $blogs = Blog::published()
@@ -487,7 +520,7 @@ public function archive(Request $request)
                 })
                 ->with(['author', 'category'])
                 ->orderBy('published_at', 'desc')
-                ->paginate(12);
+                ->paginate(26);
 
             $categories = Cache::remember('blog_categories', 3600, function () {
                 return BlogCategory::active()->ordered()->get();
@@ -519,6 +552,13 @@ public function archive(Request $request)
                 }
                 return array_values(array_unique($tagsArray));
             });
+
+            if ($request->ajax()) {
+                return response()->json([
+                    'html' => view('theme::pages.blog.partials.blog_list', compact('blogs'))->render(),
+                    'hasMore' => $blogs->hasMorePages()
+                ]);
+            }
 
             return view('theme::pages.press-releases', compact(
                 'blogs',
@@ -537,7 +577,7 @@ public function archive(Request $request)
     /**
      * ইভেন্ট ও অনুষ্ঠানসমূহ লিস্টিং পেজ
      */
-    public function events()
+    public function events(Request $request)
     {
         try {
             $blogs = Blog::published()
@@ -546,7 +586,7 @@ public function archive(Request $request)
                 })
                 ->with(['author', 'category'])
                 ->orderBy('published_at', 'desc')
-                ->paginate(12);
+                ->paginate(26);
 
             $categories = Cache::remember('blog_categories', 3600, function () {
                 return BlogCategory::active()->ordered()->get();
@@ -578,6 +618,13 @@ public function archive(Request $request)
                 }
                 return array_values(array_unique($tagsArray));
             });
+
+            if ($request->ajax()) {
+                return response()->json([
+                    'html' => view('theme::pages.blog.partials.blog_list', compact('blogs'))->render(),
+                    'hasMore' => $blogs->hasMorePages()
+                ]);
+            }
 
             return view('theme::pages.events', compact(
                 'blogs',

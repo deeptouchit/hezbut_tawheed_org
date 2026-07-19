@@ -256,7 +256,8 @@ $(document).ready(function() {
     function attachEventHandlers() {
         // Toggle status
         $('.toggle-status').off('click').on('click', function() {
-            var id = $(this).data('id');
+            var btn = $(this);
+            var id = btn.data('id');
 
             $.ajax({
                 url: '{{ url("admin/books") }}/' + id + '/toggle-status',
@@ -265,7 +266,13 @@ $(document).ready(function() {
                 success: function(response) {
                     if (response.success) {
                         toastr.success(response.message);
-                        loadBooks();
+                        if (response.is_active) {
+                            btn.removeClass('btn-warning').addClass('btn-success');
+                            btn.html('<i class="fas fa-check-circle"></i> সক্রিয়');
+                        } else {
+                            btn.removeClass('btn-success').addClass('btn-warning');
+                            btn.html('<i class="fas fa-times-circle"></i> নিষ্ক্রিয়');
+                        }
                         updateStats();
                     } else {
                         toastr.error(response.message);
@@ -279,7 +286,8 @@ $(document).ready(function() {
 
         // Toggle popular
         $('.toggle-popular').off('change').on('change', function() {
-            var id = $(this).data('id');
+            var input = $(this);
+            var id = input.data('id');
 
             $.ajax({
                 url: '{{ url("admin/books") }}/' + id + '/toggle-popular',
@@ -288,20 +296,22 @@ $(document).ready(function() {
                 success: function(response) {
                     if (response.success) {
                         toastr.success(response.message);
-                        loadBooks();
                     } else {
                         toastr.error(response.message);
+                        input.prop('checked', !input.prop('checked'));
                     }
                 },
                 error: function() {
                     toastr.error('জনপ্রিয় স্ট্যাটাস পরিবর্তন করতে ব্যর্থ হয়েছে');
+                    input.prop('checked', !input.prop('checked'));
                 }
             });
         });
 
         // Toggle bestseller
         $('.toggle-bestseller').off('change').on('change', function() {
-            var id = $(this).data('id');
+            var input = $(this);
+            var id = input.data('id');
 
             $.ajax({
                 url: '{{ url("admin/books") }}/' + id + '/toggle-bestseller',
@@ -310,21 +320,23 @@ $(document).ready(function() {
                 success: function(response) {
                     if (response.success) {
                         toastr.success(response.message);
-                        loadBooks();
                     } else {
                         toastr.error(response.message);
+                        input.prop('checked', !input.prop('checked'));
                     }
                 },
                 error: function() {
                     toastr.error('বেস্ট সেলার স্ট্যাটাস পরিবর্তন করতে ব্যর্থ হয়েছে');
+                    input.prop('checked', !input.prop('checked'));
                 }
             });
         });
 
         // Update popular order
         $('.update-order').off('change').on('change', function() {
-            var id = $(this).data('id');
-            var val = $(this).val();
+            var input = $(this);
+            var id = input.data('id');
+            var val = input.val();
 
             $.ajax({
                 url: '{{ url("admin/books") }}/' + id + '/update-order',
@@ -336,7 +348,6 @@ $(document).ready(function() {
                 success: function(response) {
                     if (response.success) {
                         toastr.success(response.message);
-                        loadBooks();
                     } else {
                         toastr.error(response.message);
                     }

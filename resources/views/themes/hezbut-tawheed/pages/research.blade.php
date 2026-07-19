@@ -215,7 +215,7 @@
                                 <img src="{{ $book->image_url }}" alt="{{ $book->title }}" class="book-cover-img">
                                 <h3 class="book-title-text">{{ $book->title }}</h3>
                                 <p class="book-writer-text">{{ $book->writer ?? 'হেযবুত তওহীদ' }}</p>
-                                <a href="{{ route('library.read', $book->slug) }}" class="book-btn-link">
+                                <a href="{{ route('books.read', $book->slug) }}" class="book-btn-link">
                                     পড়তে শুরু করুন <i class="fas fa-chevron-right"></i>
                                 </a>
                             </div>

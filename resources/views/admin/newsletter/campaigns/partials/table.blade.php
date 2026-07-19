@@ -1,74 +1,75 @@
+{{-- resources/views/admin/newsletter/campaigns/partials/table.blade.php --}}
+
 <div class="table-responsive">
-    <table class="table table-bordered table-striped table-hover">
-        <thead class="thead-dark">
-            <tr>
-                <th width="50">ID</th>
+    <table class="table table-bordered table-striped table-hover table-sm text-nowrap" style="width: 100%;">
+        <thead>
+            <tr class="text-center">
+                <th>ID</th>
                 <th>বিষয়</th>
                 <th>প্রাপক</th>
                 <th>স্ট্যাটাস</th>
                 <th>পাঠানো হয়েছে</th>
                 <th>তৈরির তারিখ</th>
-                <th width="120">অ্যাকশন</th>
+                <th>অ্যাকশন</th>
             </tr>
         </thead>
         <tbody>
             @forelse($campaigns as $campaign)
-            <tr>
-                <td class="text-center">{{ $campaign->id }}</td>
-                <td>
+            <tr class="text-center">
+                <td>{{ $loop->iteration }}</td>
+                <td class="text-start">
                     <strong>{{ $campaign->subject }}</strong>
-                    @if($campaign->title)<br><small>{{ $campaign->title }}</small>@endif
+                    <!-- @if($campaign->title)<br><small class="text-muted">{{ $campaign->title }}</small>@endif -->
                 </td>
-                <td class="text-center">
+                <td>
                     @if($campaign->recipient_type == 'all')
-                        <span class="badge bg-primary">সব সাবস্ক্রাইবার</span>
+                    <span class="badge bg-primary">সব সাবস্ক্রাইবার</span>
                     @elseif($campaign->recipient_type == 'active_only')
-                        <span class="badge bg-success">সক্রিয় সাবস্ক্রাইবার</span>
+                    <span class="badge bg-success">সক্রিয় সাবস্ক্রাইবার</span>
                     @else
-                        <span class="badge bg-info">নির্বাচিত</span>
+                    <span class="badge bg-info">নির্বাচিত</span>
                     @endif
-                    <br><small>{{ number_format($campaign->total_recipients) }} জন</small>
+                    <!-- <br><small class="text-muted">{{ number_format($campaign->total_recipients) }} জন</small> -->
                 </td>
-                <td class="text-center">{!! $campaign->status_badge !!}</td>
-                <td class="text-center">
+                <td>{!! $campaign->status_badge !!}</td>
+                <td>
                     @if($campaign->sent_at)
-                        {{ $campaign->sent_at->format('d M, Y') }}
+                    {{ $campaign->sent_at->format('d M, Y') }}
                     @elseif($campaign->scheduled_at)
-                        <span class="text-warning">{{ $campaign->scheduled_at->format('d M, Y h:i A') }}</span>
+                    <span class="text-warning">{{ $campaign->scheduled_at->format('d M, Y h:i A') }}</span>
                     @else
-                        <span class="text-muted">-</span>
+                    <span class="text-muted">-</span>
                     @endif
                 </td>
-                <td class="text-center">{{ $campaign->created_at->format('d M, Y') }}<br>
-                <small>by {{ $campaign->creator->name ?? 'Admin' }}</small></td>
-                <td class="text-center">
+                <td>
+                    {{ $campaign->created_at->format('d M, Y') }}<br>
+                    <!-- <small class="text-muted">by {{ $campaign->creator->name ?? 'Admin' }}</small> -->
+                </td>
+                <td class="p-0">
                     <div class="btn-group btn-group-sm">
                         <a href="{{ route('admin.newsletter.campaigns.show', $campaign->id) }}" class="btn btn-info" title="দেখুন">
-                            <i class="fas fa-eye"></i>
+                            <i class="fas fa-eye text-white"></i>
                         </a>
                         @if($campaign->status == 'draft')
-                            <button class="btn btn-success send-campaign" data-id="{{ $campaign->id }}" data-name="{{ $campaign->subject }}" title="পাঠান">
-                                <i class="fas fa-paper-plane"></i>
-                            </button>
-                            <a href="{{ route('admin.newsletter.campaigns.edit', $campaign->id) }}" class="btn btn-primary" title="এডিট">
-                                <i class="fas fa-edit"></i>
-                            </a>
+                        <button class="btn btn-success send-campaign" data-id="{{ $campaign->id }}" data-name="{{ $campaign->subject }}" title="পাঠান">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
                         @endif
                         @if(in_array($campaign->status, ['draft', 'scheduled', 'failed']))
-                            <button class="btn btn-danger delete-campaign" data-id="{{ $campaign->id }}" data-name="{{ $campaign->subject }}" title="ডিলিট">
-                                <i class="fas fa-trash"></i>
-                            </button>
+                        <button class="btn btn-danger delete-campaign" data-id="{{ $campaign->id }}" data-name="{{ $campaign->subject }}" title="ডিলিট">
+                            <i class="fas fa-trash"></i>
+                        </button>
                         @endif
                     </div>
-                </table>
+                </td>
             </tr>
             @empty
             <tr>
-                <td colspan="7" class="text-center py-4">
-                    <i class="fas fa-campaign fa-2x mb-2 d-block text-muted"></i>
-                    <p class="text-muted">কোনো ক্যাম্পেইন পাওয়া যায়নি।</p>
-                    <a href="{{ route('admin.newsletter.campaigns.create') }}" class="btn btn-primary btn-sm">
-                        <i class="fas fa-plus"></i> প্রথম ক্যাম্পেইন তৈরি করুন
+                <td colspan="7" class="text-center py-5">
+                    <i class="fas fa-bullhorn fa-3x text-muted mb-3 d-block"></i>
+                    <p class="text-muted mb-0">কোনো ক্যাম্পেইন পাওয়া যায়নি।</p>
+                    <a href="{{ route('admin.newsletter.campaigns.create') }}" class="btn btn-primary btn-sm mt-3">
+                        <i class="fas fa-plus mr-1"></i> প্রথম ক্যাম্পেইন তৈরি করুন
                     </a>
                 </td>
             </tr>
@@ -77,12 +78,11 @@
     </table>
 </div>
 
-@if($campaigns->isNotEmpty())
+<!-- Pagination -->
+@if(isset($campaigns) && method_exists($campaigns, 'links'))
 <div class="row mt-3">
-    <div class="col-md-12">
-        <div class="float-right">
-            {{ $campaigns->appends(request()->query())->links('pagination::bootstrap-4') }}
-        </div>
+    <div class="col-12 d-flex justify-content-center">
+        {{ $campaigns->withQueryString()->links('pagination::bootstrap-5') }}
     </div>
 </div>
 @endif

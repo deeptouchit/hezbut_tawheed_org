@@ -31,20 +31,42 @@
         overflow: hidden;
         text-overflow: ellipsis;
     }
-    .info-box {
-        cursor: default;
-        transition: all 0.3s ease;
-    }
-    .info-box:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    }
     .pending-row {
         font-weight: 600;
         background-color: #fff3cd;
     }
     .pending-row:hover {
         background-color: #ffe69c;
+    }
+
+    .metric-card {
+        border-radius: 8px;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.05);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .metric-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 10px -3px rgba(0, 0, 0, 0.08);
+    }
+    .metric-card .card-body {
+        padding: 10px 14px !important;
+    }
+    .border-left-primary { border-left: 3px solid #006A4E !important; }
+    .border-left-success { border-left: 3px solid #2e7d32 !important; }
+    .border-left-info { border-left: 3px solid #0288d1 !important; }
+    .border-left-warning { border-left: 4px solid #f57c00 !important; }
+    .border-left-danger { border-left: 4px solid #d32f2f !important; }
+    .border-left-secondary { border-left: 4px solid #757575 !important; }
+
+    .stat-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
     }
 </style>
 @endpush
@@ -91,40 +113,71 @@
 @section('content')
 <div class="container-fluid">
     <!-- Statistics Cards -->
-    <div class="row mb-4">
+    <div class="row g-2 mb-3">
+        <!-- Total -->
         <div class="col-md-3 col-6">
-            <div class="info-box shadow-sm">
-                <span class="info-box-icon bg-primary"><i class="fas fa-comments"></i></span>
-                <div class="info-box-content">
-                    <span class="info-box-text">মোট পরামর্শ</span>
-                    <span class="info-box-number">{{ number_format($stats['total']) }}</span>
+            <div class="card metric-card border-left-info h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="text-muted small d-block mb-0" style="font-size: 11px;">মোট পরামর্শ</span>
+                            <h5 class="mb-0 fw-bold">{{ number_format($stats['total']) }}</h5>
+                        </div>
+                        <div class="stat-icon bg-info bg-opacity-10 text-info">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+
+        <!-- Pending -->
         <div class="col-md-3 col-6">
-            <div class="info-box shadow-sm">
-                <span class="info-box-icon bg-warning"><i class="fas fa-clock"></i></span>
-                <div class="info-box-content">
-                    <span class="info-box-text">পেন্ডিং পরামর্শ</span>
-                    <span class="info-box-number text-warning">{{ number_format($stats['pending']) }}</span>
+            <div class="card metric-card border-left-warning h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="text-muted small d-block mb-0" style="font-size: 11px;">পেন্ডিং পরামর্শ</span>
+                            <h5 class="mb-0 fw-bold">{{ number_format($stats['pending']) }}</h5>
+                        </div>
+                        <div class="stat-icon bg-warning bg-opacity-10 text-warning">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+
+        <!-- Reviewed -->
         <div class="col-md-3 col-6">
-            <div class="info-box shadow-sm">
-                <span class="info-box-icon bg-success"><i class="fas fa-check-circle"></i></span>
-                <div class="info-box-content">
-                    <span class="info-box-text">রিভিউড পরামর্শ</span>
-                    <span class="info-box-number text-success">{{ number_format($stats['reviewed']) }}</span>
+            <div class="card metric-card border-left-success h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="text-muted small d-block mb-0" style="font-size: 11px;">রিভিউড পরামর্শ</span>
+                            <h5 class="mb-0 fw-bold">{{ number_format($stats['reviewed']) }}</h5>
+                        </div>
+                        <div class="stat-icon bg-success bg-opacity-10 text-success">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+
+        <!-- Today -->
         <div class="col-md-3 col-6">
-            <div class="info-box shadow-sm">
-                <span class="info-box-icon bg-info"><i class="fas fa-calendar-day"></i></span>
-                <div class="info-box-content">
-                    <span class="info-box-text">আজকের প্রাপ্তি</span>
-                    <span class="info-box-number text-info">{{ number_format($stats['today']) }}</span>
+            <div class="card metric-card border-left-primary h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="text-muted small d-block mb-0" style="font-size: 11px;">আজকের প্রাপ্তি</span>
+                            <h5 class="mb-0 fw-bold">{{ number_format($stats['today']) }}</h5>
+                        </div>
+                        <div class="stat-icon bg-primary bg-opacity-10 text-primary">
+                            <i class="fas fa-calendar-day"></i>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

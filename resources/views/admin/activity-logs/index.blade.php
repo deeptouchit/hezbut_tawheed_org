@@ -4,13 +4,34 @@
 
 @push('styles')
 <style>
-    .stats-card {
-        transition: all 0.2s ease;
-        cursor: pointer;
+    .metric-card {
+        border-radius: 8px;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.05);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
-    .stats-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    .metric-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 10px -3px rgba(0, 0, 0, 0.08);
+    }
+    .metric-card .card-body {
+        padding: 10px 14px !important;
+    }
+    .border-left-primary { border-left: 3px solid #006A4E !important; }
+    .border-left-success { border-left: 3px solid #2e7d32 !important; }
+    .border-left-info { border-left: 3px solid #0288d1 !important; }
+    .border-left-warning { border-left: 4px solid #f57c00 !important; }
+    .border-left-danger { border-left: 4px solid #d32f2f !important; }
+    .border-left-secondary { border-left: 4px solid #757575 !important; }
+
+    .stat-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
     }
     .log-table tr {
         transition: background 0.2s;
@@ -95,48 +116,69 @@
 
 @section('content')
 <div class="container-fluid">
-  <!-- Statistics Cards - Info Box Style -->
-<div class="row">
-    <div class="col-md-3 col-sm-6 col-12">
-        <div class="info-box">
-            <span class="info-box-icon bg-info"><i class="fas fa-database"></i></span>
-            <div class="info-box-content">
-                <span class="info-box-text">Total Logs</span>
-                <span class="info-box-number" id="totalLogs">{{ $stats['total'] ?? 0 }}</span>
+    <!-- Statistics Cards -->
+    <div class="row g-2 mb-3">
+        <div class="col-md-3 col-6">
+            <div class="card metric-card border-left-info h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="text-muted small d-block mb-0" style="font-size: 11px;">Total Logs</span>
+                            <h5 class="mb-0 fw-bold metric-number" id="totalLogs">{{ number_format($stats['total'] ?? 0) }}</h5>
+                        </div>
+                        <div class="stat-icon bg-info bg-opacity-10 text-info">
+                            <i class="fas fa-database"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="card metric-card border-left-success h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="text-muted small d-block mb-0" style="font-size: 11px;">Today</span>
+                            <h5 class="mb-0 fw-bold metric-number" id="todayLogs">{{ number_format($stats['today'] ?? 0) }}</h5>
+                        </div>
+                        <div class="stat-icon bg-success bg-opacity-10 text-success">
+                            <i class="fas fa-calendar-day"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="card metric-card border-left-warning h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="text-muted small d-block mb-0" style="font-size: 11px;">This Week</span>
+                            <h5 class="mb-0 fw-bold metric-number" id="weekLogs">{{ number_format($stats['week'] ?? 0) }}</h5>
+                        </div>
+                        <div class="stat-icon bg-warning bg-opacity-10 text-warning">
+                            <i class="fas fa-calendar-week"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="card metric-card border-left-danger h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="text-muted small d-block mb-0" style="font-size: 11px;">This Month</span>
+                            <h5 class="mb-0 fw-bold metric-number" id="monthLogs">{{ number_format($stats['month'] ?? 0) }}</h5>
+                        </div>
+                        <div class="stat-icon bg-danger bg-opacity-10 text-danger">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-
-    <div class="col-md-3 col-sm-6 col-12">
-        <div class="info-box">
-            <span class="info-box-icon bg-success"><i class="fas fa-calendar-day"></i></span>
-            <div class="info-box-content">
-                <span class="info-box-text">Today</span>
-                <span class="info-box-number" id="todayLogs">{{ $stats['today'] ?? 0 }}</span>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-3 col-sm-6 col-12">
-        <div class="info-box">
-            <span class="info-box-icon bg-warning"><i class="fas fa-calendar-week"></i></span>
-            <div class="info-box-content">
-                <span class="info-box-text">This Week</span>
-                <span class="info-box-number" id="weekLogs">{{ $stats['week'] ?? 0 }}</span>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-3 col-sm-6 col-12">
-        <div class="info-box">
-            <span class="info-box-icon bg-danger"><i class="fas fa-calendar-alt"></i></span>
-            <div class="info-box-content">
-                <span class="info-box-text">This Month</span>
-                <span class="info-box-number" id="monthLogs">{{ $stats['month'] ?? 0 }}</span>
-            </div>
-        </div>
-    </div>
-</div>
     <!-- Chart Row -->
     <div class="row mb-4">
         <div class="col-md-12">
@@ -310,6 +352,12 @@ $(document).ready(function() {
             success: function(response) {
                 if (response.success && response.html) {
                     $('#logs-table-container').html(response.html);
+                    if (response.stats) {
+                        $('#totalLogs').text(response.stats.total);
+                        $('#todayLogs').text(response.stats.today);
+                        $('#weekLogs').text(response.stats.week);
+                        $('#monthLogs').text(response.stats.month);
+                    }
                     attachEventHandlers();
                 }
                 $('#loading-spinner').hide();

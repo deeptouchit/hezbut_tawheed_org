@@ -142,7 +142,7 @@
                                                     {{ $book->title }}
                                                 </h6>
                                                 <p class="text-muted small mb-2 text-truncate" style="font-size: 11px;">লেখক: {{ $book->writer }}</p>
-                                                <a href="{{ route('library.read', $book->slug) }}" class="btn btn-sm btn-success rounded-pill px-3 py-1 fw-bold" style="font-size: 11px;">
+                                                <a href="{{ route('books.read', $book->slug) }}" class="btn btn-sm btn-success rounded-pill px-3 py-1 fw-bold" style="font-size: 11px;">
                                                     <i class="fas fa-book-open me-1"></i> পড়ুন
                                                 </a>
                                             </div>

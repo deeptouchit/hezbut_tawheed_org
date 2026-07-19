@@ -20,6 +20,8 @@ class Branch extends Model
         'contact_person_name',
         'contact_person_designation',
         'google_map_url',
+        'latitude',
+        'longitude',
         'image',
         'sort_order',
         'is_active',

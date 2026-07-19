@@ -132,13 +132,23 @@ class RefactorBlogCategoriesTags extends Command
                     'meta_description' => 'হেজবুত তওহীদের সাধারণ আলোচনা ও বিবিধ বিষয়ের পোস্ট',
                     'status' => true,
                     'sort_order' => 9,
+                ],
+                [
+                    'id' => 10,
+                    'name' => 'প্রেস রিলিজ ও বিবৃতি',
+                    'slug' => 'press-release',
+                    'description' => 'হেযবুত তওহীদের নীতিগত অবস্থান, বিবৃতি ও প্রেস রিলিজ',
+                    'meta_title' => 'প্রেস রিলিজ ও বিবৃতি - হেজবুত তওহীদ',
+                    'meta_description' => 'হেজবুত তওহীদের অফিশিয়াল প্রেস রিলিজ, বিজ্ঞপ্তি ও নীতিগত বিবৃতি',
+                    'status' => true,
+                    'sort_order' => 10,
                 ]
             ];
 
             foreach ($categoriesData as $cat) {
                 BlogCategory::create($cat);
             }
-            $this->info('Successfully created 9 new categories.');
+            $this->info('Successfully created 10 new categories.');
 
             // 4. Clean and Truncate the tags table
             Tag::truncate();
@@ -152,7 +162,7 @@ class RefactorBlogCategoriesTags extends Command
                 'history-of-persecution' => ['হামলা', 'নির্যাতন', 'আক্রান্ত', 'হত্যাকাণ্ড', 'পাবনা', 'নিহত', 'আহত', 'পিটিয়ে হত্যা', 'মিথ্যা অপবাদ', 'মানবাধিকার', 'দাঙ্গা', 'লুটপাট', 'উগ্রপন্থী'],
                 // Strictly synced by WP API at the end
                 'approval-and-legality' => [],
-                'news-and-statements' => ['বিজ্ঞপ্তি', 'বিবৃতি', 'সংবাদ সম্মেলন', 'আনুষ্ঠানিক', 'গণমাধ্যম', 'প্রতিবেদন', 'বক্তব্য'],
+                'press-release' => ['বিজ্ঞপ্তি', 'বিবৃতি', 'সংবাদ বিজ্ঞপ্তি', 'প্রেস বিজ্ঞপ্তি', 'প্রেস রিলিজ', 'আনুষ্ঠানিক বিবৃতি', 'লিখিত বক্তব্য', 'সংবাদ সম্মেলন', 'প্রেসক্লাব', 'প্রেস ক্লাব', 'সাংবাদিক', 'সাংবাদিকদের', 'প্রেস ব্রিফিং', 'মিট দ্য প্রেস', 'মিট দ্যা প্রেস'],
                 'events-and-programs' => ['সভা', 'সেমিনার', 'সম্মেলন', 'জনসভা', 'র‌্যালি', 'মানববন্ধন', 'সুধী সমাবেশ', 'উদ্বোধন', 'সফর', 'উপস্থিত', 'আয়োজন', 'কর্মসূচি', 'অনুষ্ঠান'],
                 // Strictly synced by WP API at the end
                 'activities' => [],
@@ -164,6 +174,7 @@ class RefactorBlogCategoriesTags extends Command
                 'ideology-and-religion' => ['islam', 'prophet', 'quran', 'hadith', 'belief', 'tawheed', 'peace', 'extremism', 'militancy', 'religion', 'religious', 'faith', 'allah', 'muslim', 'muslims'],
                 // Strictly synced by WP API at the end
                 'activities' => [],
+                'press-release' => ['press release', 'press-release', 'announcement', 'declaration'],
                 'events-and-programs' => ['seminar', 'conference', 'rally', 'meeting', 'assembly', 'inauguration', 'discussion meeting'],
                 'rebuttal-and-legal' => ['court', 'lawsuit', 'legal', 'verdict', 'allegation', 'rebuttal', 'false case', 'conspiracy', 'statement'],
                 'history-of-persecution' => ['attack', 'persecution', 'torture', 'kill', 'murder', 'massacre', 'wounded', 'injured', 'assault'],
@@ -173,7 +184,7 @@ class RefactorBlogCategoriesTags extends Command
             ];
 
             // 6. Recategorize posts using chunking (100 posts at a time for memory safety)
-            $categoryCounts = array_fill(1, 9, 0);
+            $categoryCounts = array_fill(1, 10, 0);
             $uniqueTags = [];
             $slugRedirects = [];
             $generatedPostSlugs = [];
@@ -316,8 +327,54 @@ class RefactorBlogCategoriesTags extends Command
                                 'history-of-persecution' => 5,
                                 'approval-and-legality' => 6,
                                 'articles-and-editorials' => 7,
+                                'press-release' => 10,
                             ];
                             $categoryId = $slugMap[$highestSlug] ?? 9;
+                        }
+                    }
+
+                    // Validate history-of-persecution (ID 5) to only contain Hezbut Tawheed members persecution
+                    if ($categoryId == 5) {
+                        $isHTRelated = false;
+                        
+                        // Check if the title itself contains persecution terms
+                        $titleLower = mb_strtolower($title);
+                        $persecutionWords = ['হামলা', 'নির্যাতন', 'হত্যাকাণ্ড', 'হানি', 'খুন', 'হত্যা', 'আক্রান্ত', 'লুটপাট', 'দাঙ্গা', 'উগ্রপন্থী', 'মিট দ্যা প্রেস', 'সোনাইমুড়ী', 'সোনাইমুড়ি', 'সন্ত্রাসী', 'persecution', 'attack', 'kill', 'murder', 'wounded', 'injured', 'assault'];
+                        $hasPersecutionWordInTitle = false;
+                        foreach ($persecutionWords as $pw) {
+                            if (mb_strpos($titleLower, $pw) !== false) {
+                                $hasPersecutionWordInTitle = true;
+                                break;
+                            }
+                        }
+
+                        if ($hasPersecutionWordInTitle) {
+                            // Check if it also has HT keywords or location keywords in the title
+                            $targetKeywords = [
+                                'হেযবুত', 'হেজবুত', 'তাওহীদ', 'তওহীদ', 'সুজন', 'সদস্য', 'আমাদের কর্মী', 'আমাদের উপর', 'আমাদের ওপর',
+                                'পাবনা', 'হবিগঞ্জ', 'সুনামগঞ্জ', 'মাদারীপুর', 'রংপুর', 'ব্রাহ্মণবাড়ীয়া', 'কুষ্টিয়া', 'টাঙ্গাইল', 'ফেনী', 'নরসিংদী', 'নোয়াখালী', 'সোনাইমুড়ী', 'সোনাইমুড়ি',
+                                'hezbut', 'tawheed', 'tawhid', 'salim', 'panni', 'sujon', 'imam', 'our member', 'our members', 'attack on us'
+                            ];
+                            foreach ($targetKeywords as $tkw) {
+                                if (mb_strpos($titleLower, $tkw) !== false) {
+                                    $isHTRelated = true;
+                                    break;
+                                }
+                            }
+                        }
+                        
+                        if (!$isHTRelated) {
+                            // If it's English, demote to 8 (english-articles)
+                            if (!$isBengali) {
+                                $categoryId = 8;
+                            } else {
+                                // For Bengali, choose between 1 (ideology-and-religion) and 7 (articles-and-editorials)
+                                if (isset($scores['ideology-and-religion']) && $scores['ideology-and-religion'] > $scores['articles-and-editorials']) {
+                                    $categoryId = 1;
+                                } else {
+                                    $categoryId = 7;
+                                }
+                            }
                         }
                     }
 
@@ -637,12 +694,16 @@ class RefactorBlogCategoriesTags extends Command
                 1 => 'à¦†à¦¦à¦°à§�à¦¶à¦¿à¦• à¦“ à¦§à¦°à§�à¦®à§€à§Ÿ à¦¦à§ƒà¦·à§�à¦Ÿà¦¿à¦­à¦™à§�à¦—à¦¿',
                 2 => 'à¦¸à§‡à¦¬à¦¾à¦®à§‚à¦²à¦• à¦“ à¦¸à¦šà§‡à¦¤à¦¨à¦¤à¦¾ à¦•à¦¾à¦°à§�à¦¯à¦•à§�à¦°à¦®',
                 3 => 'à¦…à¦¨à§�à¦·à§�à¦ à¦¾à¦¨ à¦“ à¦•à¦°à§�à¦®à¦¸à§‚à¦šà¦¿',
-                4 => 'à¦…à¦ªà¦ªà§�à¦°à¦šà¦¾à¦°à§‡à¦° à¦œà¦¬à¦¾à¦¬ à¦“ à¦†à¦‡à¦¨à¦¿ à¦²à§œà¦¾à¦‡',
-                5 => 'à¦¨à¦¿à¦°à§�à¦¯à¦¾à¦¤à¦¨à§‡à¦° à¦‡à¦¤à¦¿à¦¹à¦¾à¦¸ à¦“ à¦®à¦¾à¦¨à¦¬à¦¾à¦§à¦¿à¦•à¦¾à¦°',
-                6 => 'à¦•à¦¾à¦°à§�à¦¯à¦•à§�à¦°à¦®à§‡à¦° à¦…à¦¨à§�à¦®à§‹à¦¦à¦¨ à¦“ à¦¬à§ˆà¦§à¦¤à¦¾',
-                7 => 'à¦¨à¦¿à¦¬à¦¨à§�à¦§ à¦“ à¦¸à¦®à§�à¦ªà¦¾à¦¦à¦•à§€à§Ÿ',
+                1 => 'à¦†à¦¦à¦°à§à¦¶à¦¿à¦• à¦“ à¦§à¦°à§à¦®à§€à§Ÿ à¦¦à§ƒà¦·à§à¦Ÿà¦¿à¦­à¦™à§à¦—à¦¿',
+                2 => 'à¦¸à§‡à¦¬à¦¾à¦®à§‚à¦²à¦• à¦“ à¦¸à¦šà§‡à¦¤à¦¨à¦¤à¦¾ à¦•à¦¾à¦°à§à¦¯à¦•à§à¦°à¦®',
+                3 => 'à¦…à¦¨à§à¦·à§à¦ à¦¾à¦¨ à¦“ à¦•à¦°à§à¦®à¦¸à§‚à¦šà¦¿',
+                4 => 'à¦…à¦ªà¦ªà§à¦°à¦šà¦¾à¦°à§‡à¦° à¦œà¦¬à¦¾à¦¬ à¦“ à¦†à¦‡à¦¨à¦¿ à¦²à§œà¦¾à¦‡',
+                5 => 'à¦¨à¦¿à¦°à§à¦¯à¦¾à¦¤à¦¨à§‡à¦° à¦‡à¦¤à¦¿à¦¹à¦¾à¦¸ à¦“ à¦®à¦¾à¦¨à¦¬à¦¾à¦§à¦¿à¦•à¦¾à¦°',
+                6 => 'à¦•à¦¾à¦°à§à¦¯à¦•à§à¦°à¦®à§‡à¦° à¦…à¦¨à§à¦®à§‹à¦¦à¦¨ à¦“ à¦¬à§ˆà¦§à¦¤à¦¾',
+                7 => 'à¦¨à¦¿à¦¬à¦¨à§à¦§ à¦“ à¦¸à¦®à§à¦ªà¦¾à¦¦à¦•à§€à§Ÿ',
                 8 => 'English Articles',
-                9 => 'à¦¸à¦¾à¦§à¦¾à¦°à¦£ à¦†à¦²à§‹à¦šà¦¨à¦¾'
+                9 => 'à¦¸à¦¾à¦§à¦¾à¦°à¦£ à¦†à¦²à§‹à¦šà¦¨à¦¾',
+                10 => 'প্রেস রিলিজ ও বিবৃতি'
             ];
 
             foreach ($categoryNames as $id => $name) {

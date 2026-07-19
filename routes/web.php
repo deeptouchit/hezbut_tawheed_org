@@ -35,11 +35,15 @@ Route::get('/activities/{slug}', [ActivityController::class, 'show'])->name('act
 Route::get('/books', [BookController::class, 'index'])->name('books.index');
 Route::get('/books/load-more', [BookController::class, 'loadMore'])->name('books.load-more');
 Route::get('/books/{slug}', [BookController::class, 'show'])->name('books.show');
+Route::get('/books/{slug}/read', [BookController::class, 'read'])->name('books.read');
 Route::post('/books/{id}/review', [BookController::class, 'storeReview'])->name('books.review.store');
 
-// Digital Library
-Route::get('/library', [LibraryController::class, 'index'])->name('library.index');
-Route::get('/library/read/{slug}', [LibraryController::class, 'read'])->name('library.read');
+// Legacy Redirects
+Route::redirect('/publications', '/books', 301);
+Route::get('/library', [BookController::class, 'libraryIndex'])->name('books.library');
+Route::get('/library/read/{slug}', function ($slug) {
+    return redirect()->route('books.read', $slug, 301);
+});
 
 // Videos
 Route::get('/videos', [VideoController::class, 'index'])->name('videos.index');

@@ -47,21 +47,25 @@ class TestimonialController extends Controller
         $perPage = $request->get('per_page', 20);
 
         if ($request->ajax()) {
-            $testimonials = ($perPage == '-1') ? $query->get() : $query->paginate((int)$perPage);
+            if ($perPage == '-1') {
+                $testimonials = $query->paginate(999999);
+            } else {
+                $testimonials = $query->paginate((int)$perPage);
+            }
             $html = view('admin.testimonials.partials.table', compact('testimonials'))->render();
             return response()->json([
                 'success' => true,
                 'html' => $html,
-                'total' => $testimonials->total() ?? $testimonials->count(),
+                'total' => $testimonials->total(),
                 'pagination' => [
-                    'total' => $testimonials->total() ?? $testimonials->count(),
-                    'current_page' => $testimonials->currentPage() ?? 1,
-                    'last_page' => $testimonials->lastPage() ?? 1,
+                    'total' => $testimonials->total(),
+                    'current_page' => $testimonials->currentPage(),
+                    'last_page' => $testimonials->lastPage(),
                 ]
             ]);
         }
 
-        $testimonials = $query->paginate($perPage);
+        $testimonials = ($perPage == '-1') ? $query->paginate(999999) : $query->paginate((int)$perPage);
 
         // Statistics
         $stats = [

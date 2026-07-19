@@ -41,20 +41,6 @@ class User extends Authenticatable
     ];
 
     // Relationships
-    public function customer()
-    {
-        return $this->hasOne(Customer::class);
-    }
-
-    public function orders()
-    {
-        return $this->hasMany(Order::class);
-    }
-
-    public function deliveryOrders()
-    {
-        return $this->hasMany(Order::class, 'delivery_man_id');
-    }
 
     // Accessors
     public function getAvatarAttribute()
@@ -77,10 +63,7 @@ class User extends Authenticatable
         return $this->role === 'manager';
     }
 
-    public function getIsCustomerAttribute()
-    {
-        return $this->role === 'customer';
-    }
+
 
     public function getIsActiveAttribute()
     {
@@ -93,10 +76,7 @@ class User extends Authenticatable
         return $query->where('status', 'active');
     }
 
-    public function scopeCustomers($query)
-    {
-        return $query->where('role', 'customer');
-    }
+
 
     public function scopeAdmins($query)
     {

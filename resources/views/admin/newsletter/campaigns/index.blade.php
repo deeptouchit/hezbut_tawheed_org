@@ -2,6 +2,40 @@
 
 @section('page-title', 'নিউজলেটার ক্যাম্পেইন')
 
+@push('styles')
+<style>
+    .metric-card {
+        border-radius: 8px;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.05);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .metric-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 10px -3px rgba(0, 0, 0, 0.08);
+    }
+    .metric-card .card-body {
+        padding: 10px 14px !important;
+    }
+    .border-left-primary { border-left: 3px solid #006A4E !important; }
+    .border-left-success { border-left: 3px solid #2e7d32 !important; }
+    .border-left-info { border-left: 3px solid #0288d1 !important; }
+    .border-left-warning { border-left: 4px solid #f57c00 !important; }
+    .border-left-danger { border-left: 4px solid #d32f2f !important; }
+    .border-left-secondary { border-left: 4px solid #757575 !important; }
+
+    .stat-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+    }
+</style>
+@endpush
+
 @section('filter_input')
 <div class="row px-3">
     <div class="col-md-4">
@@ -42,40 +76,64 @@
 @section('content')
 <div class="container-fluid">
     <!-- Statistics Cards -->
-    <div class="row">
-        <div class="col-md-3 col-sm-6 col-12">
-            <div class="info-box">
-                <span class="info-box-icon bg-info"><i class="fas fa-campaign"></i></span>
-                <div class="info-box-content">
-                    <span class="info-box-text">মোট ক্যাম্পেইন</span>
-                    <span class="info-box-number">{{ $stats['total'] }}</span>
+    <div class="row g-2 mb-3">
+        <div class="col-md-3 col-6">
+            <div class="card metric-card border-left-info h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="text-muted small d-block mb-0" style="font-size: 11px;">মোট ক্যাম্পেইন</span>
+                            <h5 class="mb-0 fw-bold metric-number">{{ number_format($stats['total']) }}</h5>
+                        </div>
+                        <div class="stat-icon bg-info bg-opacity-10 text-info">
+                            <i class="fas fa-bullhorn"></i>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-3 col-sm-6 col-12">
-            <div class="info-box">
-                <span class="info-box-icon bg-success"><i class="fas fa-check-circle"></i></span>
-                <div class="info-box-content">
-                    <span class="info-box-text">সেন্ট</span>
-                    <span class="info-box-number">{{ $stats['sent'] }}</span>
+        <div class="col-md-3 col-6">
+            <div class="card metric-card border-left-success h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="text-muted small d-block mb-0" style="font-size: 11px;">সেন্ট</span>
+                            <h5 class="mb-0 fw-bold metric-number">{{ number_format($stats['sent']) }}</h5>
+                        </div>
+                        <div class="stat-icon bg-success bg-opacity-10 text-success">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-3 col-sm-6 col-12">
-            <div class="info-box">
-                <span class="info-box-icon bg-warning"><i class="fas fa-clock"></i></span>
-                <div class="info-box-content">
-                    <span class="info-box-text">শিডিউলড</span>
-                    <span class="info-box-number">{{ $stats['scheduled'] }}</span>
+        <div class="col-md-3 col-6">
+            <div class="card metric-card border-left-warning h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="text-muted small d-block mb-0" style="font-size: 11px;">শিডিউলড</span>
+                            <h5 class="mb-0 fw-bold metric-number">{{ number_format($stats['scheduled']) }}</h5>
+                        </div>
+                        <div class="stat-icon bg-warning bg-opacity-10 text-warning">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-3 col-sm-6 col-12">
-            <div class="info-box">
-                <span class="info-box-icon bg-secondary"><i class="fas fa-pen"></i></span>
-                <div class="info-box-content">
-                    <span class="info-box-text">ড্রাফট</span>
-                    <span class="info-box-number">{{ $stats['draft'] }}</span>
+        <div class="col-md-3 col-6">
+            <div class="card metric-card border-left-secondary h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="text-muted small d-block mb-0" style="font-size: 11px;">ড্রাফট</span>
+                            <h5 class="mb-0 fw-bold metric-number">{{ number_format($stats['draft']) }}</h5>
+                        </div>
+                        <div class="stat-icon bg-secondary bg-opacity-10 text-secondary">
+                            <i class="fas fa-pen"></i>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -137,10 +195,10 @@ $(document).ready(function() {
                     $('#campaigns-table-container').html(response.html);
 
                     if (response.stats) {
-                        $('.info-box-number').eq(0).text(response.stats.total);
-                        $('.info-box-number').eq(1).text(response.stats.sent);
-                        $('.info-box-number').eq(2).text(response.stats.scheduled);
-                        $('.info-box-number').eq(3).text(response.stats.draft);
+                        $('.metric-number').eq(0).text(response.stats.total);
+                        $('.metric-number').eq(1).text(response.stats.sent);
+                        $('.metric-number').eq(2).text(response.stats.scheduled);
+                        $('.metric-number').eq(3).text(response.stats.draft);
                     }
 
                     attachEventHandlers();

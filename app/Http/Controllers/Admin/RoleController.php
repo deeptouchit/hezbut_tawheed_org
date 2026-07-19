@@ -31,13 +31,23 @@ class RoleController extends Controller
             });
         }
 
-        $roles = ($perPage == '-1') ? $query->get() : $query->paginate((int)$perPage);
+        if ($perPage == '-1' || $perPage == 'all') {
+            $roles = $query->paginate(999999);
+        } else {
+            $roles = $query->paginate((int)$perPage);
+        }
+
+        $stats = [
+            'total' => Role::count(),
+            'permissions_total' => Permission::count(),
+        ];
 
         if ($request->ajax()) {
             $html = view('admin.roles.partials.table', compact('roles'))->render();
             return response()->json([
                 'success' => true,
                 'html' => $html,
+                'stats' => $stats,
                 'pagination' => [
                     'total' => $roles->total(),
                     'current_page' => $roles->currentPage(),
@@ -46,7 +56,7 @@ class RoleController extends Controller
             ]);
         }
 
-        return view('admin.roles.index', compact('roles', 'search', 'perPage'));
+        return view('admin.roles.index', compact('roles', 'search', 'perPage', 'stats'));
     }
 
     /**

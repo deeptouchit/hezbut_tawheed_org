@@ -19,50 +19,11 @@
                 <!-- Blog Listing Column (Left: col-lg-8) -->
                 <div class="col-lg-8">
                     <!-- Grid list of article cards -->
-                    <div class="row g-4">
+                    <div class="row g-4" id="blog-posts-container">
                         @forelse($blogs as $blog)
-                            <div class="col-md-6 mb-2">
-                                <article class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden bg-white hover-grow-card transition d-flex flex-column justify-content-between">
-                                    <div>
-                                        <!-- Image Header -->
-                                        <div class="position-relative overflow-hidden w-100" style="height: 180px; background-color: #f8fafc;">
-                                            <img src="{{ $blog->featured_image_url }}" alt="{{ $blog->title }}" class="w-100 h-100 object-cover zoom-img-hover">
-                                            <span class="position-absolute badge rounded px-3 py-2 fw-bold text-white bg-success-brand" 
-                                                  style="font-size: 9px; right: 15px; top: 15px; z-index: 10; font-family: 'Baloo Da 2', sans-serif;">
-                                                {{ $blog->category->name ?? 'ইভেন্ট' }}
-                                            </span>
-                                        </div>
-
-                                        <!-- Card Body -->
-                                        <div class="p-4">
-                                            <!-- Date and views meta row -->
-                                            <div class="d-flex align-items-center gap-3 mb-2 text-muted" style="font-size: 11px; font-family: 'Baloo Da 2', sans-serif;">
-                                                <span><i class="far fa-calendar-alt text-success me-1"></i> {{ $blog->published_at ? $blog->published_at->format('d M, Y') : $blog->created_at->format('d M, Y') }}</span>
-                                                <span><i class="far fa-eye text-success me-1"></i> {{ $blog->views }} ভিউ</span>
-                                            </div>
-
-                                            <h4 class="card-title fw-bold mb-3" style="font-family: 'Baloo Da 2', sans-serif; font-size: 1.15rem; line-height: 1.45; color: #1e293b !important;">
-                                                <a href="{{ route('blog.detail', $blog->slug) }}" class="text-decoration-none text-dark hover-green-text transition">
-                                                    {{ Str::limit($blog->title, 60) }}
-                                                </a>
-                                            </h4>
-
-                                            <p class="card-text text-secondary mb-0" style="font-family: 'Baloo Da 2', sans-serif; font-size: 0.9rem; line-height: 1.6; text-align: justify;">
-                                                {{ Str::limit(strip_tags($blog->content), 120) }}
-                                            </p>
-                                        </div>
-                                    </div>
-
-                                    <!-- Footer reading action -->
-                                    <div class="card-footer bg-transparent border-0 px-4 pb-4 pt-0">
-                                        <a href="{{ route('blog.detail', $blog->slug) }}" class="text-success fw-bold text-decoration-none d-inline-flex align-items-center gap-1 hover-arrow-move" style="font-family: 'Baloo Da 2', sans-serif; font-size: 13px;">
-                                            বিস্তারিত পড়ুন <i class="fas fa-arrow-right arrow-icon" style="font-size: 11px;"></i>
-                                        </a>
-                                    </div>
-                                </article>
-                            </div>
+                            @include('theme::pages.blog.partials.blog_card', ['blog' => $blog])
                         @empty
-                            <div class="col-12 text-center py-5 bg-white rounded-4 shadow-sm border border-light">
+                            <div class="col-12 text-center py-5 bg-white rounded-3 shadow-sm border border-light">
                                 <div class="text-muted mb-3"><i class="far fa-sad-tear fa-3x text-success"></i></div>
                                 <h4 class="text-dark fw-bold" style="font-family: 'Baloo Da 2', sans-serif;">দুঃখিত, কোনো ইভেন্ট বা অনুষ্ঠান খুঁজে পাওয়া যায়নি!</h4>
                                 <p class="text-secondary small">বর্তমানে কোনো ইভেন্ট বা অনুষ্ঠান আপডেট করা হয়নি।</p>
@@ -70,10 +31,12 @@
                         @endforelse
                     </div>
 
-                    <!-- Pagination -->
+                    <!-- Load More Button -->
                     @if($blogs->hasPages())
-                        <div class="pagination-wrapper mt-5 d-flex justify-content-center">
-                            {{ $blogs->links('pagination::bootstrap-5') }}
+                        <div class="text-center mt-5" id="load-more-wrapper">
+                            <button id="load-more-btn" data-next-page="2" class="btn btn-success rounded-3 fw-bold px-5 py-2.5 shadow-sm transition hover-grow-card" style="font-family: 'Baloo Da 2', sans-serif; font-size: 14px;">
+                                আরও ইভেন্ট লোড করুন <i class="fas fa-sync-alt ms-2" id="load-more-icon"></i>
+                            </button>
                         </div>
                     @endif
                 </div>
@@ -148,5 +111,50 @@
 
     <!-- Custom CSS Styles -->
     
+
+@push('scripts')
+<script>
+$(document).ready(function() {
+    $('#load-more-btn').on('click', function() {
+        var btn = $(this);
+        var page = btn.data('next-page');
+        var icon = $('#load-more-icon');
+        
+        btn.prop('disabled', true);
+        icon.addClass('fa-spin');
+        
+        var currentUrl = new URL(window.location.href);
+        currentUrl.searchParams.set('page', page);
+        
+        $.ajax({
+            url: currentUrl.toString(),
+            type: 'GET',
+            dataType: 'json',
+            success: function(response) {
+                if (response.html) {
+                    $('#blog-posts-container').append(response.html);
+                    
+                    if (response.hasMore) {
+                        btn.data('next-page', page + 1);
+                        btn.prop('disabled', false);
+                    } else {
+                        $('#load-more-wrapper').fadeOut();
+                    }
+                } else {
+                    $('#load-more-wrapper').fadeOut();
+                }
+            },
+            error: function() {
+                toastr.error('নিবন্ধ লোড করতে ব্যর্থ হয়েছে');
+                btn.prop('disabled', false);
+            },
+            complete: function() {
+                icon.removeClass('fa-spin');
+            }
+        });
+    });
+});
+</script>
+@endpush
 
 @endsection

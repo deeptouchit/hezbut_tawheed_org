@@ -21,7 +21,7 @@ class SuggestionController extends Controller
                 'message' => 'required|string|min:5|max:5000',
             ]);
 
-            Suggestion::create([
+            $suggestion = Suggestion::create([
                 'name' => strip_tags($request->name),
                 'contact' => strip_tags($request->contact),
                 'subject' => $request->subject ? strip_tags($request->subject) : 'মতামত/পরামর্শ',
@@ -30,6 +30,18 @@ class SuggestionController extends Controller
                 'user_agent' => $request->userAgent(),
                 'status' => 'pending',
             ]);
+
+            // Send database notification to admins
+            try {
+                \App\Models\Notification::sendToAdmins(
+                    'নতুন পরামর্শ/মতামত',
+                    $request->name . ' একটি নতুন পরামর্শ/মতামত পাঠিয়েছেন: ' . \Illuminate\Support\Str::limit($request->message, 50),
+                    'system',
+                    route('admin.suggestions.show', $suggestion->id)
+                );
+            } catch (\Exception $e) {
+                Log::error('Suggestion notification error: ' . $e->getMessage());
+            }
 
             if ($request->ajax()) {
                 return response()->json([

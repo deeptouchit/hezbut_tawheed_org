@@ -38,6 +38,35 @@
         text-overflow: ellipsis;
     }
     
+    .metric-card {
+        border-radius: 8px;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.05);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .metric-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 10px -3px rgba(0, 0, 0, 0.08);
+    }
+    .metric-card .card-body {
+        padding: 10px 14px !important;
+    }
+    .border-left-primary { border-left: 3px solid #006A4E !important; }
+    .border-left-success { border-left: 3px solid #2e7d32 !important; }
+    .border-left-info { border-left: 3px solid #0288d1 !important; }
+    .border-left-warning { border-left: 4px solid #f57c00 !important; }
+    .border-left-danger { border-left: 4px solid #d32f2f !important; }
+    .border-left-secondary { border-left: 4px solid #757575 !important; }
+
+    .stat-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+    }
 </style>
 @endpush
 
@@ -117,62 +146,97 @@
 
 
 
-  <!-- Info Box with Icons -->
-<div class="row">
-    <div class="col-md-2 col-sm-6 col-12">
-        <div class="info-box">
-            <span class="info-box-icon bg-info"><i class="fas fa-star"></i></span>
-            <div class="info-box-content">
-                <span class="info-box-text">মোট</span>
-                <span class="info-box-number">{{ $stats['total'] ?? 0 }}</span>
+    <!-- Statistics Cards -->
+    <div class="row g-2 mb-3 px-3">
+        <!-- Total Comments -->
+        <div class="col-md-2 col-6">
+            <div class="card metric-card border-left-info h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="text-muted small d-block mb-0" style="font-size: 11px;">মোট মতামত</span>
+                            <h5 class="mb-0 fw-bold">{{ number_format($stats['total'] ?? 0) }}</h5>
+                        </div>
+                        <div class="stat-icon bg-info bg-opacity-10 text-info">
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="col-md-2 col-sm-6 col-12">
-        <div class="info-box">
-            <span class="info-box-icon bg-success"><i class="fas fa-check-circle"></i></span>
-            <div class="info-box-content">
-                <span class="info-box-text">সক্রিয়</span>
-                <span class="info-box-number">{{ $stats['active'] ?? 0 }}</span>
+        <!-- Approved Comments -->
+        <div class="col-md-2 col-6">
+            <div class="card metric-card border-left-success h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="text-muted small d-block mb-0" style="font-size: 11px;">সক্রিয়</span>
+                            <h5 class="mb-0 fw-bold">{{ number_format($stats['active'] ?? 0) }}</h5>
+                        </div>
+                        <div class="stat-icon bg-success bg-opacity-10 text-success">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="col-md-2 col-sm-6 col-12">
-        <div class="info-box">
-            <span class="info-box-icon bg-danger"><i class="fas fa-times-circle"></i></span>
-            <div class="info-box-content">
-                <span class="info-box-text">নিষ্ক্রিয়</span>
-                <span class="info-box-number">{{ $stats['inactive'] ?? 0 }}</span>
+        <!-- Pending Comments -->
+        <div class="col-md-2 col-6">
+            <div class="card metric-card border-left-danger h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="text-muted small d-block mb-0" style="font-size: 11px;">নিষ্ক্রিয়</span>
+                            <h5 class="mb-0 fw-bold">{{ number_format($stats['inactive'] ?? 0) }}</h5>
+                        </div>
+                        <div class="stat-icon bg-danger bg-opacity-10 text-danger">
+                            <i class="fas fa-times-circle"></i>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="col-md-3 col-sm-6 col-12">
-        <div class="info-box">
-            <span class="info-box-icon bg-warning"><i class="fas fa-star-half-alt"></i></span>
-            <div class="info-box-content">
-                <span class="info-box-text">গড় রেটিং</span>
-                <span class="info-box-number">{{ number_format($stats['avg_rating'] ?? 0, 1) }} ★</span>
+        <!-- Avg Rating -->
+        <div class="col-md-3 col-6">
+            <div class="card metric-card border-left-warning h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="text-muted small d-block mb-0" style="font-size: 11px;">গড় রেটিং</span>
+                            <h5 class="mb-0 fw-bold">{{ number_format($stats['avg_rating'] ?? 0, 1) }} ★</h5>
+                        </div>
+                        <div class="stat-icon bg-warning bg-opacity-10 text-warning">
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="col-md-3 col-sm-6 col-12">
-        <div class="info-box">
-            <span class="info-box-icon bg-secondary"><i class="fas fa-chart-bar"></i></span>
-            <div class="info-box-content">
-                <span class="info-box-text">রেটিং ডিস্ট্রিবিউশন</span>
-                <span class="info-box-number">
-                    {{-- @foreach($stats['ratings'] ?? [] as $star => $count)
-                        <span class="badge bg-warning me-1">{{ $star }}★: {{ $count }}</span>
-                    @endforeach --}}
-                </span>
+        <!-- Rating Distribution -->
+        <div class="col-md-3 col-6">
+            <div class="card metric-card border-left-secondary h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="text-muted small d-block mb-0" style="font-size: 11px;">রেটিং ডিস্ট্রিবিউশন</span>
+                            <div class="mt-1">
+                                @foreach($stats['ratings'] ?? [] as $star => $count)
+                                    <span class="badge bg-warning text-dark me-1" style="font-size: 9px; padding: 2px 4px;">{{ $star }}★: {{ $count }}</span>
+                                @endforeach
+                            </div>
+                        </div>
+                        <div class="stat-icon bg-secondary bg-opacity-10 text-secondary">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</div>
             <!-- Table Container -->
             <div id="testimonials-table-container">
                 @include('admin.testimonials.partials.table', ['testimonials' => $testimonials])

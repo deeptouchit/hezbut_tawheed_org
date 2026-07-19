@@ -33,14 +33,6 @@
         overflow: hidden;
         text-overflow: ellipsis;
     }
-    .info-box {
-        cursor: default;
-        transition: all 0.3s ease;
-    }
-    .info-box:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    }
     .unread-row {
         font-weight: 600;
         background-color: #fff3cd;
@@ -53,6 +45,36 @@
     }
     .replied-row:hover {
         background-color: #a3cfbb;
+    }
+
+    .metric-card {
+        border-radius: 8px;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.05);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .metric-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 10px -3px rgba(0, 0, 0, 0.08);
+    }
+    .metric-card .card-body {
+        padding: 10px 14px !important;
+    }
+    .border-left-primary { border-left: 3px solid #006A4E !important; }
+    .border-left-success { border-left: 3px solid #2e7d32 !important; }
+    .border-left-info { border-left: 3px solid #0288d1 !important; }
+    .border-left-warning { border-left: 4px solid #f57c00 !important; }
+    .border-left-danger { border-left: 4px solid #d32f2f !important; }
+    .border-left-secondary { border-left: 4px solid #757575 !important; }
+
+    .stat-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
     }
 </style>
 @endpush
@@ -151,70 +173,105 @@
             @endif
 
             <!-- Statistics Cards -->
-            <div class="row m-3">
+            <div class="row g-2 mb-3 px-3">
+                <!-- Total -->
                 <div class="col-md-2 col-6">
-                    <div class="info-box">
-                        <span class="info-box-icon bg-info elevation-1">
-                            <i class="fas fa-envelope"></i>
-                        </span>
-                        <div class="info-box-content">
-                            <span class="info-box-text">মোট বার্তা</span>
-                            <span class="info-box-number">{{ number_format($stats['total'] ?? 0) }}</span>
+                    <div class="card metric-card border-left-info h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="text-muted small d-block mb-0" style="font-size: 11px;">মোট বার্তা</span>
+                                    <h5 class="mb-0 fw-bold">{{ number_format($stats['total'] ?? 0) }}</h5>
+                                </div>
+                                <div class="stat-icon bg-info bg-opacity-10 text-info">
+                                    <i class="fas fa-envelope"></i>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
+
+                <!-- Unread -->
                 <div class="col-md-2 col-6">
-                    <div class="info-box">
-                        <span class="info-box-icon bg-danger elevation-1">
-                            <i class="fas fa-circle"></i>
-                        </span>
-                        <div class="info-box-content">
-                            <span class="info-box-text">অপঠিত</span>
-                            <span class="info-box-number">{{ number_format($stats['unread'] ?? 0) }}</span>
+                    <div class="card metric-card border-left-danger h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="text-muted small d-block mb-0" style="font-size: 11px;">অপঠিত</span>
+                                    <h5 class="mb-0 fw-bold">{{ number_format($stats['unread'] ?? 0) }}</h5>
+                                </div>
+                                <div class="stat-icon bg-danger bg-opacity-10 text-danger">
+                                    <i class="fas fa-circle"></i>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
+
+                <!-- Read -->
                 <div class="col-md-2 col-6">
-                    <div class="info-box">
-                        <span class="info-box-icon bg-info elevation-1">
-                            <i class="fas fa-check-circle"></i>
-                        </span>
-                        <div class="info-box-content">
-                            <span class="info-box-text">পঠিত</span>
-                            <span class="info-box-number">{{ number_format($stats['read'] ?? 0) }}</span>
+                    <div class="card metric-card border-left-primary h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="text-muted small d-block mb-0" style="font-size: 11px;">পঠিত</span>
+                                    <h5 class="mb-0 fw-bold">{{ number_format($stats['read'] ?? 0) }}</h5>
+                                </div>
+                                <div class="stat-icon bg-primary bg-opacity-10 text-primary">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
+
+                <!-- Replied -->
                 <div class="col-md-2 col-6">
-                    <div class="info-box">
-                        <span class="info-box-icon bg-success elevation-1">
-                            <i class="fas fa-reply"></i>
-                        </span>
-                        <div class="info-box-content">
-                            <span class="info-box-text">উত্তর দেওয়া</span>
-                            <span class="info-box-number">{{ number_format($stats['replied'] ?? 0) }}</span>
+                    <div class="card metric-card border-left-success h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="text-muted small d-block mb-0" style="font-size: 11px;">উত্তর দেওয়া</span>
+                                    <h5 class="mb-0 fw-bold">{{ number_format($stats['replied'] ?? 0) }}</h5>
+                                </div>
+                                <div class="stat-icon bg-success bg-opacity-10 text-success">
+                                    <i class="fas fa-reply"></i>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
+
+                <!-- Today -->
                 <div class="col-md-2 col-6">
-                    <div class="info-box">
-                        <span class="info-box-icon bg-warning elevation-1">
-                            <i class="fas fa-calendar-day"></i>
-                        </span>
-                        <div class="info-box-content">
-                            <span class="info-box-text">আজকের</span>
-                            <span class="info-box-number">{{ number_format($stats['today'] ?? 0) }}</span>
+                    <div class="card metric-card border-left-warning h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="text-muted small d-block mb-0" style="font-size: 11px;">আজকের</span>
+                                    <h5 class="mb-0 fw-bold">{{ number_format($stats['today'] ?? 0) }}</h5>
+                                </div>
+                                <div class="stat-icon bg-warning bg-opacity-10 text-warning">
+                                    <i class="fas fa-calendar-day"></i>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
+
+                <!-- This Week -->
                 <div class="col-md-2 col-6">
-                    <div class="info-box">
-                        <span class="info-box-icon bg-secondary elevation-1">
-                            <i class="fas fa-calendar-week"></i>
-                        </span>
-                        <div class="info-box-content">
-                            <span class="info-box-text">এই সপ্তাহে</span>
-                            <span class="info-box-number">{{ number_format($stats['this_week'] ?? 0) }}</span>
+                    <div class="card metric-card border-left-secondary h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="text-muted small d-block mb-0" style="font-size: 11px;">এই সপ্তাহে</span>
+                                    <h5 class="mb-0 fw-bold">{{ number_format($stats['this_week'] ?? 0) }}</h5>
+                                </div>
+                                <div class="stat-icon bg-secondary bg-opacity-10 text-secondary">
+                                    <i class="fas fa-calendar-week"></i>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

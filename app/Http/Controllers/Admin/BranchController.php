@@ -80,6 +80,8 @@ class BranchController extends Controller
             'phone' => 'nullable|string|max:255',
             'email' => 'nullable|email|max:255',
             'google_map_url' => 'nullable|string',
+            'latitude' => 'nullable|numeric|between:-90,90',
+            'longitude' => 'nullable|numeric|between:-180,180',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'sort_order' => 'required|integer|min:0',
         ]);
@@ -163,6 +165,8 @@ class BranchController extends Controller
             'phone' => 'nullable|string|max:255',
             'email' => 'nullable|email|max:255',
             'google_map_url' => 'nullable|string',
+            'latitude' => 'nullable|numeric|between:-90,90',
+            'longitude' => 'nullable|numeric|between:-180,180',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'sort_order' => 'required|integer|min:0',
         ]);

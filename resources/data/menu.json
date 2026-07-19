@@ -1,7 +1,7 @@
 {
     "_comment": "হেজবুত তওহীদ ফাইনাল মেনু কনফিগারেশন ফাইল",
     "version": "1.0.1",
-    "last_updated": "2026-07-13T09:26:18.137420Z",
+    "last_updated": "2026-07-19T11:51:09.221025Z",
     "topbar_left": [
         {
             "id": "topbar_l_phone",
@@ -293,7 +293,7 @@
             "is_featured": "false",
             "parent_id": "menu_desktop_publications_parent",
             "name": "বই ও প্রকাশনা",
-            "url": "\/publications"
+            "url": "\/books"
         },
         {
             "id": "menu_desktop_library",
@@ -695,7 +695,7 @@
             "is_featured": false,
             "parent_id": "menu_mobile_publications_parent",
             "name": "বই ও প্রকাশনা",
-            "url": "\/publications"
+            "url": "\/books"
         },
         {
             "id": "menu_mobile_library",

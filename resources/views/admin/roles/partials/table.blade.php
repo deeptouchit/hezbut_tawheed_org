@@ -1,8 +1,8 @@
 <div class="table-responsive">
-    <table class="table table-bordered table-striped table-hover">
-        <thead class="thead-dark">
-            <tr>
-                <th width="50">#</th>
+    <table class="table table-bordered table-striped table-hover table-sm text-nowrap" style="width: 100%;">
+        <thead>
+            <tr class="text-center">
+                <th width="50">ID</th>
                 <th>Name</th>
                 <th>Guard Name</th>
                 <th>Users</th>
@@ -10,18 +10,18 @@
             </tr>
         </thead>
         <tbody>
-            @forelse($roles as $index => $role)
-            <tr>
-                <td class="text-center">{{ $roles->firstItem() + $index }}</td>
-                <td><code>{{ $role->name }}</code></td>
+            @forelse($roles as $role)
+            <tr class="text-center">
+                <td>{{ $loop->iteration }}</td>
+                <td class="text-start"><code>{{ $role->name }}</code></td>
                 <td>{{ $role->guard_name }}</td>
-                <td class="text-center">{{ $role->users()->count() }}</td>
-                <td class="text-center">
+                <td><span class="badge bg-secondary" style="padding: 4px 8px; border-radius: 4px;">{{ $role->users()->count() }}</span></td>
+                <td class="p-0">
                     <div class="btn-group btn-group-sm">
                         <button class="btn btn-info permissions-role" data-id="{{ $role->id }}" title="Permissions">
-                            <i class="fas fa-key"></i>
+                            <i class="fas fa-key text-white"></i>
                         </button>
-                        <button class="btn btn-warning edit-role"
+                        <button class="btn btn-primary edit-role"
                                 data-id="{{ $role->id }}"
                                 data-name="{{ $role->name }}"
                                 data-guard_name="{{ $role->guard_name }}"
@@ -50,3 +50,12 @@
         </tbody>
     </table>
 </div>
+
+<!-- Pagination -->
+@if(isset($roles) && method_exists($roles, 'links'))
+<div class="row mt-3">
+    <div class="col-12 d-flex justify-content-center">
+        {{ $roles->withQueryString()->links('pagination::bootstrap-5') }}
+    </div>
+</div>
+@endif

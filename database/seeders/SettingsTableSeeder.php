@@ -68,7 +68,7 @@ class SettingsTableSeeder extends Seeder
             ],
             [
                 'key'         => 'company_email',
-                'value'       => 'info@hezbuttawheed.org',
+                'value'       => 'askhezbuttawheed@gmail.com',
                 'label'       => 'ইমেইল ঠিকানা',
                 'type'        => 'email',
                 'group'       => 'general',

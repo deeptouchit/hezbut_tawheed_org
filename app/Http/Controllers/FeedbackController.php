@@ -8,11 +8,18 @@ use Illuminate\Support\Facades\Log;
 
 class FeedbackController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $feedbacks = Testimonial::active()
             ->ordered()
             ->paginate(12);
+
+        if ($request->ajax()) {
+            return response()->json([
+                'html' => view('theme::pages.feedback_list', compact('feedbacks'))->render(),
+                'hasMore' => $feedbacks->hasMorePages()
+            ]);
+        }
 
         return view('theme::pages.feedback', compact('feedbacks'));
     }
@@ -29,7 +36,7 @@ class FeedbackController extends Controller
                 'rating'      => 'required|integer|min:1|max:5',
             ]);
 
-            Testimonial::create([
+            $testimonial = Testimonial::create([
                 'name'        => $request->name,
                 'email'       => $request->email,
                 'phone'       => $request->phone,
@@ -40,8 +47,22 @@ class FeedbackController extends Controller
                 'company'     => 'সাধারণ নাগরিক',
             ]);
 
+            // Send database notification to admins
+            try {
+                \App\Models\Notification::sendToAdmins(
+                    'নতুন মতামত/উদ্ধৃতি',
+                    $request->name . ' একটি নতুন মতামত পাঠিয়েছেন যা অনুমোদনের অপেক্ষায় আছে।',
+                    'system',
+                    route('admin.testimonials.show', $testimonial->id)
+                );
+            } catch (\Exception $e) {
+                Log::error('Feedback notification error: ' . $e->getMessage());
+            }
+
             return back()->with('success', 'আপনার মূল্যবান মতামত পাঠানোর জন্য ধন্যবাদ! এটি মডারেটরের অনুমোদনের পর ওয়েবসাইটে প্রকাশ করা হবে।');
 
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            throw $e;
         } catch (\Exception $e) {
             Log::error('Feedback submit error: ' . $e->getMessage());
             return back()

@@ -9,11 +9,27 @@
 
 @section('content')
 
+    @php
+        $searchForm = '
+            <div class="row justify-content-center mt-4">
+                <div class="col-md-6 col-lg-5">
+                    <form action="' . route('books.index') . '" method="GET" class="input-group shadow-sm rounded-pill overflow-hidden bg-white p-1">
+                        <input type="text" name="search" class="form-control border-0 px-4" placeholder="বইয়ের নাম বা লেখক খুঁজুন..." value="' . htmlspecialchars(request('search', '')) . '" style="font-family: \'Baloo Da 2\', sans-serif; height: 46px; outline: none !important; box-shadow: none;">
+                        <button class="btn btn-success px-4 rounded-pill fw-bold" type="submit" style="height: 46px; background-color: #006A4E; border-color: #006A4E;">
+                            <i class="fas fa-search me-1"></i> খুঁজুন
+                        </button>
+                    </form>
+                </div>
+            </div>
+        ';
+    @endphp
+
     @include('theme::partials.hero_banner', [
         'title' => isset($page) ? $page->title : 'আমাদের প্রকাশিত বইসমূহ',
         'subtitle' => 'সত্য উন্মোচনে এবং চেতনা বিকাশে জ্ঞানগর্ভ প্রকাশনাসমূহ',
         'badge_text' => 'বই ও প্রকাশনা',
-        'badge_icon' => 'fas fa-book'
+        'badge_icon' => 'fas fa-book',
+        'extra_html' => $searchForm
     ])
 
     <!-- Section 1: Popular Books (Top 10 Reader Choice) -->
@@ -141,14 +157,21 @@
                 </h3>
             </div>
 
+            @if(request('search'))
+                <div class="mb-4 text-muted" style="font-family: 'Baloo Da 2', sans-serif;">
+                    <i class="fas fa-search-plus me-1"></i> "<strong>{{ request('search') }}</strong>" অনুসন্ধান ফলাফলে <strong>{{ $books->total() }}</strong> টি বই পাওয়া গিয়েছে।
+                    <a href="{{ route('books.index') }}" class="text-success ms-2 fw-bold text-decoration-none">ফিল্টার মুছুন</a>
+                </div>
+            @endif
+
             <!-- Category Filter Tabs -->
             <div class="ht-cat-tabs-container">
-                <a href="{{ route('page.show', 'publications') }}#all-books-section" 
+                <a href="{{ route('books.index') }}#all-books-section" 
                    class="ht-cat-tab {{ !request('category') ? 'active' : '' }}">
                     সকল প্রকাশনা
                 </a>
                 @foreach($categories as $cat)
-                    <a href="{{ route('page.show', 'publications') }}?category={{ $cat->slug }}#all-books-section" 
+                    <a href="{{ route('books.index') }}?category={{ $cat->slug }}#all-books-section" 
                        class="ht-cat-tab {{ request('category') == $cat->slug ? 'active' : '' }}">
                         {{ $cat->name }}
                     </a>
@@ -189,7 +212,8 @@ $(document).ready(function() {
             type: 'GET',
             data: { 
                 page: page,
-                category: category
+                category: category,
+                search: urlParams.get('search') || ''
             },
             success: function(response) {
                 $('#spinner').hide();

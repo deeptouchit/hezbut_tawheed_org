@@ -278,7 +278,7 @@ return [
                     'route'       => 'admin.email.index',
                     'label'       => 'Email Settings',
                     'icon'        => 'fas fa-envelope nav-icon ml-2',
-                    'active'      => ['admin/email*'],
+                    'active'      => ['admin/email', 'admin/email/*'],
                     'activeRoute' => ['admin.email.*'],
                 ],
                 [

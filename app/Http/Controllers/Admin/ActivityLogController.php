@@ -60,30 +60,13 @@ class ActivityLogController extends Controller
 
         // FIXED: Per page handling
         if ($perPage == '-1' || $perPage == 'all') {
-            $logs = $query->get();
+            $logs = $query->paginate(999999);
+            $logs->appends($request->query());
         } else {
             $perPage = is_numeric($perPage) ? (int)$perPage : 20;
             $logs = $query->paginate($perPage);
+            $logs->appends($request->query());
         }
-
-        // For AJAX request - FIXED
-        if ($request->ajax() || $request->wantsJson()) {
-            $html = view('admin.activity-logs.partials.table', compact('logs'))->render();
-            return response()->json([
-                'success' => true,
-                'html' => $html,
-                'pagination' => [
-                    'total' => $logs instanceof \Illuminate\Pagination\LengthAwarePaginator ? $logs->total() : $logs->count(),
-                    'current_page' => $logs instanceof \Illuminate\Pagination\LengthAwarePaginator ? $logs->currentPage() : 1,
-                    'last_page' => $logs instanceof \Illuminate\Pagination\LengthAwarePaginator ? $logs->lastPage() : 1,
-                ]
-            ]);
-        }
-
-        // Get filter options for dropdowns
-        $actions = ActivityLog::select('action')->distinct()->whereNotNull('action')->pluck('action');
-        $modules = ActivityLog::select('module')->distinct()->whereNotNull('module')->pluck('module');
-        $users = User::select('id', 'name')->orderBy('name')->get();
 
         // Get statistics
         $stats = [
@@ -92,6 +75,26 @@ class ActivityLogController extends Controller
             'week' => ActivityLog::whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])->count(),
             'month' => ActivityLog::whereMonth('created_at', now()->month)->count(),
         ];
+
+        // For AJAX request - FIXED
+        if ($request->ajax() || $request->wantsJson()) {
+            $html = view('admin.activity-logs.partials.table', compact('logs'))->render();
+            return response()->json([
+                'success' => true,
+                'html' => $html,
+                'stats' => $stats,
+                'pagination' => [
+                    'total' => $logs->total(),
+                    'current_page' => $logs->currentPage(),
+                    'last_page' => $logs->lastPage(),
+                ]
+            ]);
+        }
+
+        // Get filter options for dropdowns
+        $actions = ActivityLog::select('action')->distinct()->whereNotNull('action')->pluck('action');
+        $modules = ActivityLog::select('module')->distinct()->whereNotNull('module')->pluck('module');
+        $users = User::select('id', 'name')->orderBy('name')->get();
 
         return view('admin.activity-logs.index', compact(
             'logs', 'actions', 'modules', 'users', 'stats',

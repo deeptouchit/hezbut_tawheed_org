@@ -32,6 +32,18 @@ class NewsletterController extends Controller
             'subscribed_at' => now(),
         ]);
 
+        // Send database notification to admins
+        try {
+            \App\Models\Notification::sendToAdmins(
+                'নতুন নিউজলেটার সাবস্ক্রিপশন',
+                ($request->name ?? 'একজন ভিজিটর') . ' (' . $request->email . ') নিউজলেটারে সাবস্ক্রাইব করেছেন।',
+                'customer',
+                route('admin.newsletter.subscribers.index')
+            );
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Newsletter subscription notification error: ' . $e->getMessage());
+        }
+
         return response()->json([
             'success' => true,
             'message' => 'সাবস্ক্রিপশন সফল! ধন্যবাদ।'

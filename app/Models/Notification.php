@@ -125,7 +125,7 @@ class Notification extends Model
      */
     public static function sendToAdmins($title, $message, $type = 'system', $link = null)
     {
-        $adminIds = User::role('admin')->pluck('id')->toArray();
+        $adminIds = User::admins()->pluck('id')->toArray();
         return self::sendToUsers($adminIds, $title, $message, $type, $link);
     }
 

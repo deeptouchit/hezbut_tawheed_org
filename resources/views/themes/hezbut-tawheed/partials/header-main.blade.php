@@ -38,14 +38,17 @@ $topbarRight = \App\Helpers\MenuHelper::getMenuData()['topbar_right'] ?? [];
             </div>
 
             <!-- Two Columns (Left Top Menu & Right Top Menu - Inline Row Layout) -->
-            <div class="flex-grow-1 d-flex align-items-center justify-content-center gap-4">
+            <div class="flex-grow-1 d-flex align-items-center justify-content-end gap-4">
                 <!-- Column 1: Left Top Menu (Horizontal) -->
                 <div style="font-family: var(--font-bengali); border-right: 1px solid #e2e8f0; padding-right: 1.5rem;">
                     <ul class="list-unstyled mb-0 d-flex align-items-center gap-3">
                         @foreach($topbarLeft as $item)
                         <li>
-                            <a href="{{ \App\Helpers\MenuHelper::getMenuUrl($item) }}" class="text-decoration-none" style="font-size: 0.92rem; color: #475569; font-weight: 500; transition: color 0.2s;" onmouseover="this.style.color='var(--primary-green)';" onmouseout="this.style.color='#475569';">
-                                {{ $item['name'] ?? $item['text'] ?? '' }}
+                            <a href="{{ \App\Helpers\MenuHelper::getMenuUrl($item) }}" class="text-decoration-none d-flex align-items-center gap-1.5" style="font-size: 0.92rem; color: #475569; font-weight: 500; transition: color 0.2s;" onmouseover="this.style.color='var(--primary-green)';" onmouseout="this.style.color='#475569';">
+                                @if(!empty($item['icon']))
+                                <i class="{{ $item['icon'] }}" style="font-size: 0.85rem; color: var(--primary-green); margin-right: 4px;"></i>
+                                @endif
+                                <span>{{ $item['name'] ?? $item['text'] ?? '' }}</span>
                             </a>
                         </li>
                         @endforeach
@@ -160,7 +163,7 @@ $topbarRight = \App\Helpers\MenuHelper::getMenuData()['topbar_right'] ?? [];
                 <!-- Search Toggler -->
                 <div class="position-relative header-search-container">
                     <form action="{{ route('blog.search') }}" method="GET" class="d-flex align-items-center position-relative mb-0" id="headerSearchForm">
-                        <input type="text" name="q" id="headerSearchInput" class="form-control form-control-sm rounded px-3" placeholder="খুঁজুন..." style="font-size: 0.8rem; width: 240px; padding-right: 28px; border: 1px solid #e2e8f0; height: 32px; transition: width 0.3s ease;" value="{{ request('q') }}" autocomplete="off">
+                        <input type="text" name="q" id="headerSearchInput" class="form-control form-control-sm rounded px-3" placeholder="খুঁজুন..." style="font-size: 0.8rem; width: 180px; padding-right: 28px; border: 1px solid #e2e8f0; height: 32px; transition: width 0.3s ease;" value="{{ request('q') }}" autocomplete="off">
                         <button type="submit" class="border-0 bg-transparent position-absolute" style="right: 8px; top: 50%; transform: translateY(-50%); color: #64748b; font-size: 0.8rem;" aria-label="Search">
                             <i class="fas fa-search"></i>
                         </button>
@@ -270,13 +273,6 @@ $topbarRight = \App\Helpers\MenuHelper::getMenuData()['topbar_right'] ?? [];
                 <a href="https://hezbuttawheed.com" target="_blank" class="d-flex align-items-center border px-3 py-1 bg-white text-secondary font-weight-bold text-decoration-none" style="font-size: 0.78rem; border-color: #e2e8f0 !important; height: 32px; border-radius: 4px;">
                     <span class="text-secondary" style="font-weight: 600;">Eng</span>
                 </a>
-
-                <!-- Login -->
-                @if(!auth()->check())
-                <a href="{{ route('admin.login') }}" class="btn btn-outline-secondary btn-sm px-3 d-flex align-items-center gap-1" style="font-size: 0.85rem; height: 32px; border-radius: 4px;">
-                    <i class="far fa-user"></i> Login
-                </a>
-                @endif
             </div>
         </div>
     </div>
@@ -349,7 +345,7 @@ $topbarRight = \App\Helpers\MenuHelper::getMenuData()['topbar_right'] ?? [];
             <!-- Action Items (Search Filter and Language Switcher) -->
             <div class="action-buttons-group d-flex align-items-center gap-2 justify-content-center mt-3 mt-lg-0">
                 <form action="{{ route('blog.search') }}" method="GET" class="d-flex align-items-center position-relative me-1">
-                    <input type="text" name="q" class="form-control form-control-sm rounded-pill px-3" placeholder="অনুসন্ধান..." style="font-size: 0.8rem; width: 140px; padding-right: 28px; border-color: #dee2e6;" value="{{ request('q') }}">
+                    <input type="text" name="q" class="form-control form-control-sm rounded-pill px-3" placeholder="অনুসন্ধান..." style="font-size: 0.8rem; width: 125px; padding-right: 28px; border-color: #dee2e6;" value="{{ request('q') }}">
                     <button type="submit" class="border-0 bg-transparent position-absolute" style="right: 8px; top: 50%; transform: translateY(-50%); color: #64748b; font-size: 0.85rem;" aria-label="Search">
                         <i class="fas fa-search"></i>
                     </button>

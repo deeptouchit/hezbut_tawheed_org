@@ -47,7 +47,7 @@
                                 <div class="form-group mb-3">
                                     <label class="form-label font-weight-bold text-secondary">লিংক URL (ঐচ্ছিক)</label>
                                     <input type="text" name="link" class="form-control @error('link') is-invalid @enderror"
-                                           value="{{ old('link', $slider->link) }}" placeholder="যেমন: /products অথবা https://bograbazar.com/products">
+                                           value="{{ old('link', $slider->link) }}" placeholder="যেমন: /books অথবা https://hezbuttawheed.org/books">
                                     @error('link') <span class="invalid-feedback font-weight-bold">{{ $message }}</span> @enderror
                                 </div>
                             </div>
@@ -66,7 +66,7 @@
                                 <div class="form-group mb-3">
                                     <label class="form-label font-weight-bold text-secondary">বাটন টেক্সট (ঐচ্ছিক)</label>
                                     <input type="text" name="button_text" class="form-control @error('button_text') is-invalid @enderror"
-                                           value="{{ old('button_text', $slider->button_text) }}" placeholder="যেমন: এখনই কিনুন">
+                                           value="{{ old('button_text', $slider->button_text) }}" placeholder="যেমন: বিস্তারিত জানুন">
                                     @error('button_text') <span class="invalid-feedback font-weight-bold">{{ $message }}</span> @enderror
                                 </div>
                             </div>

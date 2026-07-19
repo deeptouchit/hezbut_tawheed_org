@@ -20,47 +20,31 @@
                 <div class="col-lg-7">
                     <h3 class="fw-bold mb-4" style="color: #0f172a; font-size: 1.5rem;"><i class="fas fa-quote-left text-success-brand me-2"></i>প্রতিক্রিয়াসমূহ</h3>
                     
-                    <div class="row g-3">
-                        @forelse($feedbacks as $feedback)
-                            <div class="col-12">
-                                <div class="card border-0 shadow-sm rounded-4 p-4 bg-white border-light-grey position-relative hover-grow-card transition">
-                                    <div class="d-flex align-items-center mb-3">
-                                        <div class="rounded-circle overflow-hidden shadow-sm flex-shrink-0" style="width: 55px; height: 55px; border: 2px solid #e2e8f0;">
-                                            <img src="{{ $feedback->avatar_url }}" alt="{{ $feedback->name }}" class="w-100 h-100 object-cover">
-                                        </div>
-                                        <div class="ms-3">
-                                            <h6 class="fw-bold text-dark mb-0" style="font-size: 1.02rem;">{{ $feedback->name }}</h6>
-                                            <span class="text-muted small d-block" style="font-size: 0.82rem;">{{ $feedback->designation }}{{ $feedback->company ? ' | ' . $feedback->company : '' }}</span>
-                                        </div>
-                                    </div>
-                                    <div class="mb-3 rating-stars-row">
-                                        {!! $feedback->rating_stars !!}
-                                    </div>
-                                    <p class="text-secondary lh-lg mb-0" style="font-size: 0.92rem; text-align: justify;">
-                                        "{{ $feedback->content }}"
-                                    </p>
-                                </div>
-                            </div>
-                        @empty
-                            <div class="col-12 text-center py-5 bg-white rounded-4 shadow-sm border border-light-grey">
+                    <div class="row g-3" id="feedback-posts-container">
+                        @if(count($feedbacks) > 0)
+                            @include('theme::pages.feedback_list', compact('feedbacks'))
+                        @else
+                            <div class="col-12 text-center py-5 bg-white rounded-3 shadow-sm border border-light-grey">
                                 <div class="text-muted mb-3"><i class="far fa-comments fa-3x text-success"></i></div>
                                 <h4 class="text-dark fw-bold">বর্তমানে কোনো মতামত নেই!</h4>
                                 <p class="text-secondary small">প্রথম মতামতটি ডানপাশের ফর্ম ব্যবহার করে আপনিই দিন।</p>
                             </div>
-                        @endforelse
+                        @endif
                     </div>
 
-                    <!-- Pagination -->
+                    <!-- Load More Button -->
                     @if($feedbacks->hasPages())
-                        <div class="pagination-wrapper mt-5 d-flex justify-content-center">
-                            {{ $feedbacks->links('pagination::bootstrap-5') }}
+                        <div class="text-center mt-5" id="load-more-wrapper">
+                            <button id="load-more-btn" data-next-page="2" class="btn btn-success rounded-3 fw-bold px-5 py-2.5 shadow-sm transition hover-grow-card" style="font-family: 'Baloo Da 2', sans-serif; font-size: 14px;">
+                                আরও মতামত লোড করুন <i class="fas fa-sync-alt ms-2" id="load-more-icon"></i>
+                            </button>
                         </div>
                     @endif
                 </div>
 
                 <!-- Feedback Submit Form Column (Right: col-lg-5) -->
                 <div class="col-lg-5">
-                    <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white border-light-grey position-sticky" style="top: 90px; z-index: 10;">
+                    <div class="card border-0 shadow-sm rounded-3 p-4 p-md-5 bg-white border-light-grey position-sticky" style="top: 90px; z-index: 10;">
                         <span class="fw-bold text-uppercase tracking-wider text-success-brand" style="font-size: 0.8rem; letter-spacing: 1px;">মতামত দিন</span>
                         <h3 class="fw-bold mb-4 mt-1" style="color: #0f172a; font-size: 1.5rem;">আপনার প্রতিক্রিয়া জানান</h3>
                         
@@ -107,7 +91,7 @@
                                         <div class="rating-input-wrapper d-flex gap-2">
                                             @for($i = 5; $i >= 1; $i--)
                                                 <input type="radio" id="star{{ $i }}" name="rating" value="{{ $i }}" class="btn-check" {{ old('rating', 5) == $i ? 'checked' : '' }}>
-                                                <label for="star{{ $i }}" class="btn btn-outline-light border border-light-grey text-dark-50 rounded-pill py-1 px-3" style="font-size: 0.82rem; cursor: pointer;">
+                                                <label for="star{{ $i }}" class="btn btn-outline-light border border-light-grey text-dark-50 rounded-3 py-1 px-3" style="font-size: 0.82rem; cursor: pointer;">
                                                     {{ $i }} <i class="fas fa-star text-warning ms-1"></i>
                                                 </label>
                                             @endfor
@@ -146,5 +130,50 @@
 
     <!-- Custom CSS Styles -->
     
+
+@push('scripts')
+<script>
+$(document).ready(function() {
+    $('#load-more-btn').on('click', function() {
+        var btn = $(this);
+        var page = btn.data('next-page');
+        var icon = $('#load-more-icon');
+        
+        btn.prop('disabled', true);
+        icon.addClass('fa-spin');
+        
+        var currentUrl = new URL(window.location.href);
+        currentUrl.searchParams.set('page', page);
+        
+        $.ajax({
+            url: currentUrl.toString(),
+            type: 'GET',
+            dataType: 'json',
+            success: function(response) {
+                if (response.html) {
+                    $('#feedback-posts-container').append(response.html);
+                    
+                    if (response.hasMore) {
+                        btn.data('next-page', page + 1);
+                        btn.prop('disabled', false);
+                    } else {
+                        $('#load-more-wrapper').fadeOut();
+                    }
+                } else {
+                    $('#load-more-wrapper').fadeOut();
+                }
+            },
+            error: function() {
+                toastr.error('মতামত লোড করতে ব্যর্থ হয়েছে');
+                btn.prop('disabled', false);
+            },
+            complete: function() {
+                icon.removeClass('fa-spin');
+            }
+        });
+    });
+});
+</script>
+@endpush
 
 @endsection

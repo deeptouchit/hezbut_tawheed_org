@@ -32,22 +32,21 @@ class EmailTemplateController extends Controller
 
         $perPage = $request->input('per_page', 20);
 
-        if ($perPage == 'all') {
-            $templates = $query->get();
-            $currentPage = \Illuminate\Pagination\LengthAwarePaginator::resolveCurrentPage();
-            $templates = new \Illuminate\Pagination\LengthAwarePaginator(
-                $templates->forPage($currentPage, $templates->count()),
-                $templates->count(),
-                $templates->count(),
-                $currentPage,
-                ['path' => \Illuminate\Pagination\Paginator::resolveCurrentPath()]
-            );
+        if ($perPage == 'all' || $perPage == '-1') {
+            $templates = $query->paginate(999999);
+            $templates->appends($request->query());
         } else {
             $perPage = is_numeric($perPage) ? (int)$perPage : 20;
             $perPage = in_array($perPage, [10, 20, 30, 50, 100, 200]) ? $perPage : 20;
             $templates = $query->paginate($perPage);
             $templates->appends($request->query());
         }
+
+        $stats = [
+            'total' => EmailTemplate::count(),
+            'active' => EmailTemplate::where('is_active', true)->count(),
+            'inactive' => EmailTemplate::where('is_active', false)->count(),
+        ];
 
         $types = EmailTemplate::distinct()->pluck('type');
 
@@ -56,6 +55,7 @@ class EmailTemplateController extends Controller
             return response()->json([
                 'success' => true,
                 'html' => $html,
+                'stats' => $stats,
                 'pagination' => [
                     'total' => $templates->total(),
                     'current_page' => $templates->currentPage(),
@@ -64,7 +64,7 @@ class EmailTemplateController extends Controller
             ]);
         }
 
-        return view('admin.email-templates.index', compact('templates', 'types'));
+        return view('admin.email-templates.index', compact('templates', 'types', 'stats'));
     }
 
     /**

@@ -38,10 +38,10 @@
                 </div>
                 <div class="ht-book-writer text-center" style="text-align: center !important; width: 100%;">{{ $book->writer ?? 'হেযবুত তওহীদ' }}</div>
                 <div class="ht-book-pricing text-center" style="text-align: center !important; width: 100%;">
-                    @if($book->price !== null && $book->price !== '')
-                        মূল্য ৳{{ $book->price }}{{ str_contains($book->price, 'ক') || str_contains($book->price, 'খ') || str_contains($book->price, 'গ') || $book->price == '০' || $book->price == '0' ? '' : '/-' }}
+                    @if($book->price !== null && $book->price !== '' && $book->price != '০' && $book->price != '0')
+                        মূল্য ৳{{ $book->price }}{{ str_contains($book->price, 'ক') || str_contains($book->price, 'খ') || str_contains($book->price, 'গ') ? '' : '/-' }}
                     @else
-                        ফ্রি / PDF
+                        বিনামূল্যে
                     @endif
                 </div>
             </div>

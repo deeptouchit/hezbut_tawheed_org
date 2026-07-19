@@ -32,7 +32,7 @@
             <div class="ht-breadcrumb">
                 <a href="/"><i class="fas fa-home me-1"></i>হোম</a>
                 <span class="mx-2"><i class="fas fa-chevron-right" style="font-size: 9px; color: #a0aec0;"></i></span>
-                <a href="{{ route('page.show', 'publications') }}">প্রকাশনা</a>
+                <a href="{{ route('books.index') }}">প্রকাশনা</a>
                 <span class="mx-2"><i class="fas fa-chevron-right" style="font-size: 9px; color: #a0aec0;"></i></span>
                 <span class="text-muted">{{ Str::limit($book->title, 35) }}</span>
             </div>
@@ -77,18 +77,19 @@
                             <!-- Right Sub-column: Core details -->
                             <div class="col-md-7">
                                 <h1 class="ht-rokomari-title">{{ $book->title }}</h1>
-                                <p class="ht-rokomari-subtitle">{{ $book->description ? Str::limit($book->description, 75) : 'সত্য উন্মোচনে এবং চেতনা বিকাশে বিশেষ প্রকাশনা' }}</p>
+                                <p class="ht-rokomari-subtitle">{{ $book->description ? Str::limit($book->description, 150) : 'সত্য উন্মোচনে এবং চেতনা বিকাশে বিশেষ প্রকাশনা' }}</p>
                                 
                                 <div class="ht-rokomari-author">
-                                    by <a href="#">{{ $book->writer ?? 'হেযবুত তওহীদ' }}</a>
+                                    লেখক: <span class="fw-semibold">{{ $book->writer ?? 'হেযবুত তওহীদ' }}</span>
                                 </div>
                                 
-                                <!-- Seller Badge & Stars Rating -->
-                                <div class="d-flex align-items-center flex-wrap gap-2.5 mb-3">
-                                    <span class="ht-badge-bestseller">
-                                        <i class="fas fa-fire"></i> #10 Best Seller
-                                    </span>
-                                    <span class="text-muted small">in {{ $book->category ? $book->category->name : 'প্রকাশনা' }}</span>
+                                <div class="d-flex align-items-center flex-wrap gap-2.5 mb-3 mt-2">
+                                    @if($book->is_bestseller)
+                                        <span class="ht-badge-bestseller">
+                                            <i class="fas fa-fire"></i> বেস্ট সেলার
+                                        </span>
+                                    @endif
+                                    <span class="text-muted small">ক্যাটাগরি: {{ $book->category ? $book->category->name : 'প্রকাশনা' }}</span>
                                 </div>
 
                                 <div class="d-flex align-items-center gap-2 mb-3">
@@ -101,61 +102,39 @@
                                             @endif
                                         @endfor
                                     </div>
-                                    <span class="text-muted small" style="font-family: 'Baloo Da 2', sans-serif;">{{ $avgRating }} Ratings | {{ $totalReviews }} Reviews</span>
-                                </div>
-
-                                <!-- Wishlist counter -->
-                                <div class="text-muted small mb-3" style="font-family: 'Baloo Da 2', sans-serif;">
-                                    <i class="far fa-heart me-1"></i> ২০৫ জনের প্রিয় তালিকায় আছে বইটি
+                                    <span class="text-muted small" style="font-family: 'Baloo Da 2', sans-serif;">({{ $avgRating }} রেটিং | {{ $totalReviews }} রিভিউ)</span>
                                 </div>
 
                                 <!-- Pricing -->
-                                <div class="ht-rokomari-price-row">
-                                    @if($book->price !== null && $book->price !== '')
-                                        <span>TK. {{ $book->price }}</span>
+                                <div class="ht-rokomari-price-row mb-4">
+                                    @if($book->price !== null && $book->price !== '' && $book->price != '০' && $book->price != '0')
+                                        <span>৳ {{ $book->price }}</span>
                                         @if($book->old_price)
-                                            <span class="ht-rokomari-price-old">TK. {{ $book->old_price }}</span>
+                                            <span class="ht-rokomari-price-old">৳ {{ $book->old_price }}</span>
                                         @endif
                                     @else
-                                        <span class="text-success fs-5">ফ্রি সংস্করণ</span>
+                                        <span class="text-success fs-5 fw-bold"><i class="fas fa-check-circle me-1"></i> বিনামূল্যে</span>
                                     @endif
-                                </div>
-
-                                <!-- Rokomari Blue Offer Box -->
-                                <div class="ht-rokomari-promo-banner">
-                                    <div class="fw-bold mb-1"><i class="fas fa-shipping-fast me-1"></i> অ্যাপে ১ম অর্ডারে ফ্রি শিপিং ১৯৯+ টাকা এমাউন্টে</div>
-                                    <div class="small opacity-90">প্রোমোকোড: APP1ST</div>
-                                </div>
-
-                                <!-- Stock status -->
-                                <div class="ht-stock-status">
-                                    <i class="fas fa-check-circle"></i> In Stock (স্টক আউট হওয়ার আগেই অর্ডার করুন)
-                                </div>
-                                <div class="text-muted small mb-4" style="font-family: 'Baloo Da 2', sans-serif;">
-                                    * স্টক আউট হওয়ার আগেই অর্ডার করুন
-                                </div>
-
-                                <!-- Dotted Promo Info Box -->
-                                <div class="p-3 mb-4 rounded border" style="border-color: #ffd6a5 !important; background-color: #fffaf0; font-family: 'Baloo Da 2', sans-serif; font-size: 13px; line-height: 1.5; color: #7b341e;">
-                                    <span class="text-warning"><i class="fas fa-tags me-1"></i></span> শায়েস্তা খাঁ অফারে বই ও পণ্যে ৭১% পর্যন্ত ছাড় ও <strong>FREE SHIPPING</strong> শুধুমাত্র অ্যাপ থেকে প্রথমবার অর্ডারে <strong>APP1ST</strong> প্রোমোকোড ব্যবহারে ১৯৯৳+ অর্ডারে। <a href="#" class="text-primary text-decoration-none">আরও দেখুন <i class="fas fa-chevron-down" style="font-size: 9px;"></i></a>
                                 </div>
 
                                 <!-- Buy / Download Buttons -->
                                 <div class="d-flex flex-wrap gap-3">
+                                    <a href="{{ route('books.read', $book->slug) }}" class="ht-btn-rokomari-blue" style="background-color: #006A4E; border-color: #006A4E; color: white !important;">
+                                        <i class="fas fa-book-open me-1"></i> অনলাইনে পড়ুন (Read Online)
+                                    </a>
                                     @if($book->pdf_url)
-                                        <a href="{{ $book->pdf_url }}" target="_blank" class="ht-btn-rokomari-blue">
-                                            <i class="fas fa-cloud-download-alt me-1"></i> পিডিএফ ডাউনলোড করুন (Free PDF)
+                                        <a href="{{ asset($book->pdf_url) }}" target="_blank" class="ht-btn-rokomari-gray text-decoration-none d-flex align-items-center justify-content-center" style="border: 1px solid #cbd5e1; color: #475569; padding: 0 20px; height: 46px; border-radius: 4px; font-weight: 600; font-size: 0.95rem;">
+                                            <i class="fas fa-cloud-download-alt me-1"></i> পিডিএফ ডাউনলোড করুন
                                         </a>
                                     @endif
-                                    <a href="https://wa.me/8801611883300" target="_blank" class="ht-btn-rokomari-orange">
-                                        <i class="fas fa-shopping-bag me-1"></i> এখনই কিনুন (Buy Now)
+                                    <a href="https://wa.me/8801711005025" target="_blank" class="ht-btn-rokomari-orange text-decoration-none d-flex align-items-center justify-content-center">
+                                        <i class="fab fa-whatsapp me-1"></i> হোয়াটসঅ্যাপে অর্ডার করুন
                                     </a>
                                 </div>
 
-                                <!-- Share / Wishlist -->
-                                <div class="ht-action-links">
-                                    <a href="#" class="ht-action-link-item"><i class="far fa-heart"></i> পছন্দের তালিকায় রাখুন</a>
-                                    <a href="#" class="ht-action-link-item"><i class="fas fa-share-alt"></i> বন্ধুদের সাথে শেয়ার করুন</a>
+                                <!-- Share -->
+                                <div class="ht-action-links mt-3">
+                                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(request()->fullUrl()) }}" target="_blank" class="ht-action-link-item"><i class="fab fa-facebook me-1"></i> ফেসবুকে শেয়ার করুন</a>
                                 </div>
                             </div>
                         </div>
@@ -388,24 +367,15 @@
                                         <span class="ht-rokomari-recent-writer">{{ $recent->writer ?? 'হেযবুত তওহীদ' }}</span>
                                         
                                         <!-- Rating stars -->
-                                        <div class="text-warning mb-1" style="font-size: 11px;">
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <span class="text-muted ms-1" style="font-size: 10px;">(87)</span>
-                                        </div>
-
                                         <!-- Price -->
                                         <div class="ht-rokomari-recent-price">
-                                            @if($recent->price !== null && $recent->price !== '')
-                                                TK. {{ $recent->price }}
+                                            @if($recent->price !== null && $recent->price !== '' && $recent->price != 0)
+                                                ৳ {{ $recent->price }}
                                                 @if($recent->old_price)
-                                                    <span class="text-muted text-decoration-line-through fw-normal ms-1" style="font-size: 11px;">TK. {{ $recent->old_price }}</span>
+                                                    <span class="text-muted text-decoration-line-through fw-normal ms-1" style="font-size: 11px;">৳ {{ $recent->old_price }}</span>
                                                 @endif
                                             @else
-                                                TK. 0 (Free PDF)
+                                                ফ্রি (Free PDF)
                                             @endif
                                         </div>
                                     </div>
@@ -416,7 +386,7 @@
                         </div>
 
                         <div class="mt-4 pt-3 border-top border-light">
-                            <a href="{{ route('page.show', 'publications') }}" class="btn btn-outline-success btn-sm w-100 fw-bold py-2" style="font-family: 'Baloo Da 2', sans-serif; border-color: #38a169; color: #38a169;">
+                            <a href="{{ route('books.index') }}" class="btn btn-outline-success btn-sm w-100 fw-bold py-2" style="font-family: 'Baloo Da 2', sans-serif; border-color: #38a169; color: #38a169;">
                                 সব প্রকাশনা দেখুন <i class="fas fa-list ms-1"></i>
                             </a>
                         </div>

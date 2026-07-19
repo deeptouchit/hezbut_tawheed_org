@@ -129,6 +129,32 @@
                         @enderror
                     </div>
                 </div>
+
+                <!-- Geographical Coordinates (Latitude & Longitude) -->
+                <div class="form-section shadow-sm bg-white border border-light">
+                    <h5 class="fw-bold text-dark-green mb-3 border-bottom pb-2">ভৌগোলিক স্থানাঙ্ক (Geographical Coordinates)</h5>
+                    <div class="row">
+                        <!-- Latitude -->
+                        <div class="col-md-6 mb-3">
+                            <label for="latitude" class="form-label fw-bold">অক্ষাংশ (Latitude)</label>
+                            <input type="text" name="latitude" id="latitude" class="form-control @error('latitude') is-invalid @enderror" placeholder="যেমন: 23.8103" value="{{ old('latitude') }}">
+                            <small class="text-muted"><i class="fas fa-info-circle"></i> মান অবশ্যই -৯০ থেকে ৯০ এর মধ্যে সংখ্যা হতে হবে।</small>
+                            @error('latitude')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <!-- Longitude -->
+                        <div class="col-md-6 mb-3">
+                            <label for="longitude" class="form-label fw-bold">দ্রাঘিমাংশ (Longitude)</label>
+                            <input type="text" name="longitude" id="longitude" class="form-control @error('longitude') is-invalid @enderror" placeholder="যেমন: 90.4125" value="{{ old('longitude') }}">
+                            <small class="text-muted"><i class="fas fa-info-circle"></i> মান অবশ্যই -১৮০ থেকে ১৮০ এর মধ্যে সংখ্যা হতে হবে।</small>
+                            @error('longitude')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Right Column: Settings & Image -->

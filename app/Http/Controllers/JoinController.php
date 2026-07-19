@@ -35,7 +35,7 @@ class JoinController extends Controller
                 'join_date'         => 'nullable|string|max:50',
             ]);
 
-            JoinRequest::create([
+            $joinRequest = JoinRequest::create([
                 'membership_type'   => $request->membership_type,
                 'name'              => $request->name,
                 'join_date'         => $request->join_date ?? ($request->membership_type === 'pledge' ? null : date('Y-m-d')),
@@ -55,6 +55,18 @@ class JoinController extends Controller
                 'user_agent'        => $request->userAgent(),
                 'status'            => 'unread',
             ]);
+
+            // Send database notification to admins
+            try {
+                \App\Models\Notification::sendToAdmins(
+                    'নতুন যোগদানের আবেদন',
+                    $request->name . ' একটি নতুন সদস্য পদের আবেদন জমা দিয়েছেন।',
+                    'customer',
+                    route('admin.join-requests.show', $joinRequest->id)
+                );
+            } catch (\Exception $e) {
+                Log::error('Join request notification error: ' . $e->getMessage());
+            }
 
             return back()->with('success', 'আপনার সদস্য পদের আবেদনটি সফলভাবে গৃহীত হয়েছে! আমরা খুব শীঘ্রই আপনার সাথে যোগাযোগ করব ইনশাআল্লাহ।');
 

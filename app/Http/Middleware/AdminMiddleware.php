@@ -44,7 +44,7 @@ class AdminMiddleware
                 ], 401);
             }
 
-            return redirect()->route('login')
+            return redirect()->route('admin.login')
                 ->with('error', 'আপনাকে লগইন করতে হবে।')
                 ->with('alert-type', 'error');
         }
@@ -67,7 +67,7 @@ class AdminMiddleware
                 ], 403);
             }
 
-            return redirect()->route('login')
+            return redirect()->route('admin.login')
                 ->withErrors(['email' => $statusCheck['message']])
                 ->with('alert-type', 'error');
         }
@@ -222,6 +222,7 @@ class AdminMiddleware
 
         if (str_contains($routeName, 'dashboard') ||
             str_contains($routeName, 'profile') ||
+            str_contains($routeName, 'logout') ||
             $routeName === 'admin.home') {
             return true;
         }

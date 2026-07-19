@@ -16,17 +16,20 @@ class DatabaseSeeder extends Seeder
         $this->call(SettingsTableSeeder::class);
         $this->call(MarketingSettingsSeeder::class);
         $this->call(ThemeSeeder::class);
+        $this->call(BranchLatLngSeeder::class);
+        $this->call(EmailTemplateSeeder::class);
 
         // 2. Demo/Fake Seeders (Only run in local/testing/development environments)
         if (!app()->environment('production')) {
             $this->call(SliderSeeder::class);
             $this->call(TestimonialSeeder::class);
-            $this->call(BlogCategorySeeder::class);
-            $this->call(BlogSeeder::class);
-            $this->call(BlogCommentSeeder::class);
+            // $this->call(BlogCategorySeeder::class);
+            // $this->call(BlogSeeder::class);
+            // $this->call(BlogCommentSeeder::class);
             $this->call(PageSeeder::class);
             $this->call(LiveBroadcastSeeder::class);
             $this->call(SongSeeder::class);
+            $this->call(CommunicationDemoSeeder::class);
         }
     }
 }

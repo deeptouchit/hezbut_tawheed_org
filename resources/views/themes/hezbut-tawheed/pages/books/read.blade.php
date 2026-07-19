@@ -27,7 +27,7 @@
             
             <div class="sidebar-book-list" id="sidebar-book-list">
                 <!-- Current Book listed at top for ease -->
-                <a href="{{ route('library.read', $book->slug) }}" class="sidebar-book-item active">
+                <a href="{{ route('books.read', $book->slug) }}" class="sidebar-book-item active">
                     <img src="{{ $book->image_url }}" alt="{{ $book->title }}" loading="lazy">
                     <div style="flex-grow: 1; overflow: hidden;">
                         <div class="small fw-bold text-truncate" title="{{ $book->title }}">{{ $book->title }}</div>
@@ -36,7 +36,7 @@
                 </a>
 
                 @foreach($otherBooks as $ob)
-                    <a href="{{ route('library.read', $ob->slug) }}" class="sidebar-book-item">
+                    <a href="{{ route('books.read', $ob->slug) }}" class="sidebar-book-item">
                         <img src="{{ $ob->image_url }}" alt="{{ $ob->title }}" loading="lazy">
                         <div style="flex-grow: 1; overflow: hidden;">
                             <div class="small fw-bold text-truncate" title="{{ $ob->title }}">{{ $ob->title }}</div>
@@ -59,7 +59,7 @@
                     <button class="btn btn-control" id="btn-fullscreen" title="ফুল স্ক্রিন ভিউ">
                         <i class="fas fa-expand"></i> <span class="d-none d-md-inline">ফুল স্ক্রিন</span>
                     </button>
-                    <a href="{{ route('library.index') }}" class="btn btn-control btn-gold">
+                    <a href="{{ route('books.index') }}" class="btn btn-control btn-gold">
                         <i class="fas fa-arrow-left"></i> <span class="d-none d-md-inline">লাইব্রেরী</span>
                     </a>
                 </div>

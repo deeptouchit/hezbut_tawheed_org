@@ -244,6 +244,11 @@ class MenuHelper
 
         // 3. Special Route-based Context Matching to prevent broad wildcard collision
         if ($currentRouteName !== null) {
+            // If we are on the book reader page (books.read), highlight "Digital Library" (/library)
+            if ($currentRouteName === 'books.read') {
+                return $itemPath === 'library';
+            }
+
             // If we are on a blog category page, only match if the item is that specific category
             if ($currentRouteName === 'blog.category') {
                 $currentSlug = request()->route('slug');

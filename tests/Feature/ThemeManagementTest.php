@@ -25,7 +25,38 @@ class ThemeManagementTest extends TestCase
      */
     public function can_upload_valid_theme_zip()
     {
-        $this->markTestSkipped('Security scan blocks valid themes - needs investigation');
+        Storage::fake('local');
+
+        $zipPath = $this->createValidThemeZip();
+
+        $file = new UploadedFile(
+            $zipPath,
+            'valid-theme.zip',
+            'application/zip',
+            null,
+            true
+        );
+
+        $response = $this->post('/admin/themes/upload', [
+            'theme_zip' => $file
+        ]);
+
+        @unlink($zipPath);
+
+        $response->assertStatus(200);
+        $response->assertJson(['success' => true]);
+
+        // Clean up the created folder from views/themes/
+        $jsonData = $response->json();
+        $themeFolder = $jsonData['theme']['folder'];
+        $themePath = resource_path('views/themes/' . $themeFolder);
+        if (\Illuminate\Support\Facades\File::exists($themePath)) {
+            \Illuminate\Support\Facades\File::deleteDirectory($themePath);
+        }
+        $assetPath = public_path('themes/' . $themeFolder);
+        if (\Illuminate\Support\Facades\File::exists($assetPath)) {
+            \Illuminate\Support\Facades\File::deleteDirectory($assetPath);
+        }
     }
 
     /**
@@ -73,7 +104,77 @@ class ThemeManagementTest extends TestCase
      */
     public function duplicate_theme_upload_should_be_blocked()
     {
-        $this->markTestSkipped('First upload fails due to security scan');
+        Storage::fake('local');
+
+        // Create a unique theme ZIP name
+        $tempDir = sys_get_temp_dir() . '/duplicate_theme_' . uniqid();
+        mkdir($tempDir);
+        mkdir($tempDir . '/layouts');
+        file_put_contents($tempDir . '/layouts/app.blade.php', '@yield("content")');
+        
+        $folderName = 'duplicate-theme-test';
+        file_put_contents($tempDir . '/theme.json', json_encode([
+            'name' => 'Duplicate Theme Test',
+            'version' => '1.0.0',
+            'author' => 'System',
+            'description' => 'Duplicate theme test description'
+        ]));
+
+        $zipPath = sys_get_temp_dir() . '/duplicate_theme_' . uniqid() . '.zip';
+        $zip = new \ZipArchive();
+        $zip->open($zipPath, \ZipArchive::CREATE);
+        $files = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($tempDir));
+        foreach ($files as $file) {
+            if (!$file->isDir()) {
+                $filePath = $file->getRealPath();
+                $relativePath = substr($filePath, strlen($tempDir) + 1);
+                $zip->addFile($filePath, $relativePath);
+            }
+        }
+        $zip->close();
+        $this->deleteDirectory($tempDir);
+
+        $file = new UploadedFile(
+            $zipPath,
+            'duplicate-theme-test.zip',
+            'application/zip',
+            null,
+            true
+        );
+
+        // Upload first time
+        $response1 = $this->post('/admin/themes/upload', [
+            'theme_zip' => $file
+        ]);
+        $response1->assertStatus(200);
+
+        // Upload second time (duplicate)
+        $file2 = new UploadedFile(
+            $zipPath,
+            'duplicate-theme-test.zip',
+            'application/zip',
+            null,
+            true
+        );
+        $response2 = $this->post('/admin/themes/upload', [
+            'theme_zip' => $file2
+        ]);
+
+        @unlink($zipPath);
+
+        $response2->assertStatus(400);
+        $response2->assertJson(['success' => false]);
+        $this->assertStringContainsString('ইতিমধ্যে ইনস্টল', $response2->json()['message']);
+
+        // Clean up from views/themes/
+        $themePath = resource_path('views/themes/' . $folderName);
+        if (\Illuminate\Support\Facades\File::exists($themePath)) {
+            \Illuminate\Support\Facades\File::deleteDirectory($themePath);
+        }
+        $assetPath = public_path('themes/' . $folderName);
+        if (\Illuminate\Support\Facades\File::exists($assetPath)) {
+            \Illuminate\Support\Facades\File::deleteDirectory($assetPath);
+        }
     }
 
     /**
@@ -320,6 +421,41 @@ class ThemeManagementTest extends TestCase
         $zip = new \ZipArchive();
         $zip->open($zipPath, \ZipArchive::CREATE);
         $zip->addFromString('../malicious.php', '<?php echo "hacked"; ?>');
+
+        $files = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($tempDir));
+        foreach ($files as $file) {
+            if (!$file->isDir()) {
+                $filePath = $file->getRealPath();
+                $relativePath = substr($filePath, strlen($tempDir) + 1);
+                $zip->addFile($filePath, $relativePath);
+            }
+        }
+        $zip->close();
+
+        $this->deleteDirectory($tempDir);
+
+        return $zipPath;
+    }
+
+    private function createValidThemeZip(): string
+    {
+        $tempDir = sys_get_temp_dir() . '/valid_theme_' . uniqid();
+        mkdir($tempDir);
+        mkdir($tempDir . '/layouts');
+
+        file_put_contents($tempDir . '/layouts/app.blade.php', '@yield("content")');
+        file_put_contents($tempDir . '/theme.json', json_encode([
+            'name' => 'Valid Theme ' . uniqid(),
+            'version' => '1.0.0',
+            'author' => 'System',
+            'description' => 'A valid theme description',
+            'settings' => [],
+            'requires' => []
+        ]));
+
+        $zipPath = sys_get_temp_dir() . '/valid_theme_' . uniqid() . '.zip';
+        $zip = new \ZipArchive();
+        $zip->open($zipPath, \ZipArchive::CREATE);
 
         $files = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($tempDir));
         foreach ($files as $file) {

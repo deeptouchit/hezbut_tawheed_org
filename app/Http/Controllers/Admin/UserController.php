@@ -49,24 +49,38 @@ class UserController extends Controller
 
         // Per page
         $perPage = $request->get('per_page', 20);
-        if ($perPage == 'all') {
-            $users = $query->latest()->get();
+        if ($perPage == 'all' || $perPage == '-1') {
+            $users = $query->latest()->paginate(999999);
+            $users->appends($request->query());
         } else {
             $users = $query->latest()->paginate((int)$perPage);
+            $users->appends($request->query());
         }
+
+        $stats = [
+            'total' => User::count(),
+            'active' => User::where('status', 'active')->count(),
+            'inactive' => User::where('status', '!=', 'active')->count(),
+        ];
 
         // For AJAX request
         if ($request->ajax()) {
             $html = view('admin.users.partials.table', compact('users'))->render();
             return response()->json([
                 'success' => true,
-                'html' => $html
+                'html' => $html,
+                'stats' => $stats,
+                'pagination' => [
+                    'total' => $users->total(),
+                    'current_page' => $users->currentPage(),
+                    'last_page' => $users->lastPage(),
+                ]
             ]);
         }
 
         $roles = Role::all();
 
-        return view('admin.users.index', compact('users', 'roles'));
+        return view('admin.users.index', compact('users', 'roles', 'stats'));
     }
 
     /**

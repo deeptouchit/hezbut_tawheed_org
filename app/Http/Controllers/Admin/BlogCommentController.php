@@ -75,21 +75,25 @@ class BlogCommentController extends Controller
 
           // AJAX Request
         if ($request->ajax()) {
-            $comments = ($perPage == '-1') ? $query->get() : $query->paginate((int)$perPage);
+            if ($perPage == '-1') {
+                $comments = $query->paginate(999999);
+            } else {
+                $comments = $query->paginate((int)$perPage);
+            }
             $html     = view('admin.blog.comments.partials.table', compact('comments'))->render();
             return response()->json([
                 'success'    => true,
                 'html'       => $html,
-                'total'      => $comments->total() ?? $comments->count(),
+                'total'      => $comments->total(),
                 'pagination' => [
-                    'total'        => $comments->total() ?? $comments->count(),
-                    'current_page' => $comments->currentPage() ?? 1,
-                    'last_page'    => $comments->lastPage() ?? 1,
+                    'total'        => $comments->total(),
+                    'current_page' => $comments->currentPage(),
+                    'last_page'    => $comments->lastPage(),
                 ]
             ]);
         }
 
-        $comments = $query->paginate($perPage);
+        $comments = ($perPage == '-1') ? $query->paginate(999999) : $query->paginate((int)$perPage);
 
           // Statistics
         $stats = [
