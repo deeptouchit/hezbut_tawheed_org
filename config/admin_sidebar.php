@@ -313,8 +313,8 @@ return [
             'order'       => 8,
             'title'       => 'User Management',
             'icon'        => 'fas fa-user-shield',
-            'active'      => ['admin/users*', 'admin/roles*', 'admin/permissions*', 'admin/activity-logs*'],
-            'activeRoute' => ['admin.users.*', 'admin.roles.*', 'admin.permissions.*', 'admin.activity-logs.*'],
+            'active'      => ['admin/users*', 'admin/roles*', 'admin/permissions*', 'admin/activity-logs*', 'admin/visitors*'],
+            'activeRoute' => ['admin.users.*', 'admin.roles.*', 'admin.permissions.*', 'admin.activity-logs.*', 'admin.visitors.*'],
             'roles'       => ['super_admin'],
             'items'       => [
                 [
@@ -348,6 +348,14 @@ return [
                     'icon'        => 'fas fa-history nav-icon ml-2',
                     'active'      => ['admin/activity-logs*'],
                     'activeRoute' => ['admin.activity-logs.*'],
+                ],
+                [
+                    'order'       => 5,
+                    'route'       => 'admin.visitors.index',
+                    'label'       => 'Visitor Logs',
+                    'icon'        => 'fas fa-history nav-icon ml-2',
+                    'active'      => ['admin/visitors*'],
+                    'activeRoute' => ['admin.visitors.*'],
                 ],
             ],
         ],

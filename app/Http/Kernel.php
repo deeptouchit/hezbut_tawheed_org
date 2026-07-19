@@ -38,6 +38,7 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
               // Add security headers for production
             \App\Http\Middleware\SecurityHeaders::class,
+            \App\Http\Middleware\TrackVisitorMiddleware::class,
         ],
 
         'api' => [

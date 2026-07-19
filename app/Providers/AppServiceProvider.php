@@ -30,6 +30,9 @@ class AppServiceProvider extends ServiceProvider
         view()->share('setting', new SettingsHelper());
         View::composer('*', MenuComposer::class);
 
+        // Register UserObserver
+        \App\Models\User::observe(\App\Observers\UserObserver::class);
+
         // ============================================
         // Auth ডাটা সব ভিউতে শেয়ার করো
         // ============================================

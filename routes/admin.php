@@ -58,6 +58,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::get('dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
     Route::get('dashboard/stats', [AdminDashboardController::class, 'getStats'])->name('dashboard.stats');
     Route::get('dashboard/chart-data', [AdminDashboardController::class, 'getChartData'])->name('dashboard.chart-data');
+    Route::get('visitors', [AdminDashboardController::class, 'visitors'])->name('visitors.index');
+    Route::post('visitors/bulk-delete', [AdminDashboardController::class, 'bulkDeleteVisitors'])->name('visitors.bulk-delete');
 
     // Newsletter
     Route::get('newsletter-subscribers', [NewsletterController::class, 'subscribers'])->name('newsletter.subscribers.index');
