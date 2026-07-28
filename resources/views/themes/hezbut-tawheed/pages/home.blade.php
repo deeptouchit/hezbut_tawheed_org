@@ -8,6 +8,12 @@
             {!! $homepageCss !!}
         </style>
     @endif
+    <style>
+        @media (max-width: 576px) {
+            .leader-img-wrapper { height: 240px !important; }
+            .editorial-card-wrapper { padding-left: 0 !important; padding-bottom: 0 !important; }
+        }
+    </style>
 @endpush
 
 @section('content')
@@ -149,7 +155,7 @@
                                     class="card-body p-4 text-center d-flex flex-column align-items-center justify-content-between">
                                     <div>
                                         <h4 class="fw-bold mb-2"
-                                            style="font-family: 'Baloo Da 2', sans-serif; color: #0f172a; font-size: 1.25rem; white-space: nowrap;">
+                                            style="font-family: 'Baloo Da 2', sans-serif; color: #0f172a; font-size: 1.25rem;">
                                             জনাব মোহাম্মদ বায়াজীদ খান পন্নী</h4>
                                         <div class="mb-3">
                                             <span class="px-3 py-1.5 rounded-pill fw-bold"
@@ -191,7 +197,7 @@
                                     class="card-body p-4 text-center d-flex flex-column align-items-center justify-content-between">
                                     <div>
                                         <h4 class="fw-bold mb-2"
-                                            style="font-family: 'Baloo Da 2', sans-serif; color: #0f172a; font-size: 1.25rem; white-space: nowrap;">
+                                            style="font-family: 'Baloo Da 2', sans-serif; color: #0f172a; font-size: 1.25rem;">
                                             জনাব হোসাইন মোহাম্মদ সেলিম</h4>
                                         <div class="mb-3">
                                             <span class="px-3 py-1.5 rounded-pill fw-bold"
@@ -350,7 +356,7 @@
 
                     <!-- Right Side: Editorial Image Card -->
                     <div class="col-lg-6">
-                        <div class="position-relative d-flex justify-content-center justify-content-lg-end"
+                        <div class="position-relative d-flex justify-content-center justify-content-lg-end editorial-card-wrapper"
                             style="padding-bottom: 20px; padding-left: 20px;">
                             <!-- Background decorative card -->
                             <div class="position-absolute"

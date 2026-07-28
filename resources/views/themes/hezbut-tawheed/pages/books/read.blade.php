@@ -4,7 +4,20 @@
 @section('meta_description', $book->description)
 
 @push('styles')
-
+    <style>
+        .btn-control {
+            min-height: 42px;
+            min-width: 42px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        @media (max-width: 576px) {
+            .reader-controls {
+                padding: 8px 12px !important;
+            }
+        }
+    </style>
 @endpush
 
 @section('content')
