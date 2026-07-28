@@ -101,8 +101,9 @@
                 <div class="col-lg-7">
                     <div class="card premium-contact-card p-4 p-md-5 h-100">
                         <div class="mb-4">
-                            <span class="section-badge-premium">বার্তা পাঠান</span>
-                            <h3 class="section-title-premium mt-2">আপনার মতামত লিখুন</h3>
+                            <span class="section-badge-premium">যোগাযোগ ফরম</span>
+                            <h3 class="section-title-premium mt-2">আমাদের কাছে বার্তা পাঠান</h3>
+                            <p class="text-muted small mb-0 mt-1">আপনার যেকোনো প্রশ্ন, পরামর্শ বা মতামতের জন্য নিচের ফর্মটি পূরণ করে পাঠান।</p>
                         </div>
                         
                         <form action="{{ route('contact.send') }}" method="POST" id="contactForm" novalidate>
@@ -117,7 +118,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="name" class="form-label text-dark fw-semibold small">আপনার নাম *</label>
-                                        <input type="text" name="name" id="name" class="form-control premium-input @error('name') is-invalid @enderror" placeholder="নাম লিখুন..." value="{{ old('name') }}" required>
+                                        <input type="text" name="name" id="name" class="form-control premium-input @error('name') is-invalid @enderror" placeholder="আপনার পূর্ণ নাম লিখুন..." value="{{ old('name') }}" required>
                                         @error('name')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -127,8 +128,8 @@
                                 <!-- Email -->
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="email" class="form-label text-dark fw-semibold small">আপনার ইমেল *</label>
-                                        <input type="email" name="email" id="email" class="form-control premium-input @error('email') is-invalid @enderror" placeholder="ইমেল লিখুন..." value="{{ old('email') }}" required>
+                                        <label for="email" class="form-label text-dark fw-semibold small">আপনার ইমেইল ঠিকানা *</label>
+                                        <input type="email" name="email" id="email" class="form-control premium-input @error('email') is-invalid @enderror" placeholder="উদাহরণ: name@domain.com" value="{{ old('email') }}" required>
                                         @error('email')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -138,8 +139,8 @@
                                 <!-- Phone -->
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="phone" class="form-label text-dark fw-semibold small">মোবাইল নম্বর *</label>
-                                        <input type="text" name="phone" id="phone" class="form-control premium-input @error('phone') is-invalid @enderror" placeholder="মোবাইল নম্বর..." value="{{ old('phone') }}" required>
+                                        <label for="phone" class="form-label text-dark fw-semibold small">মোবাইল বা ফোন নম্বর *</label>
+                                        <input type="text" name="phone" id="phone" class="form-control premium-input @error('phone') is-invalid @enderror" placeholder="মোবাইল নম্বর লিখুন..." value="{{ old('phone') }}" required>
                                         @error('phone')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -149,8 +150,8 @@
                                 <!-- Subject -->
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="subject" class="form-label text-dark fw-semibold small">বার্তার বিষয় *</label>
-                                        <input type="text" name="subject" id="subject" class="form-control premium-input @error('subject') is-invalid @enderror" placeholder="বিষয়..." value="{{ old('subject') }}" required>
+                                        <label for="subject" class="form-label text-dark fw-semibold small">যোগাযোগের বিষয় *</label>
+                                        <input type="text" name="subject" id="subject" class="form-control premium-input @error('subject') is-invalid @enderror" placeholder="বিষয় সংক্ষেপে লিখুন..." value="{{ old('subject') }}" required>
                                         @error('subject')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -160,8 +161,8 @@
                                 <!-- Message -->
                                 <div class="col-12">
                                     <div class="form-group">
-                                        <label for="message" class="form-label text-dark fw-semibold small">বার্তা *</label>
-                                        <textarea name="message" id="message" rows="5" class="form-control premium-input @error('message') is-invalid @enderror" placeholder="আপনার বার্তাটি বিস্তারিত লিখুন..." required>{{ old('message') }}</textarea>
+                                        <label for="message" class="form-label text-dark fw-semibold small">আপনার বার্তা *</label>
+                                        <textarea name="message" id="message" rows="5" class="form-control premium-input @error('message') is-invalid @enderror" placeholder="আপনার প্রশ্ন, পরামর্শ বা বিষয়বস্তু বিস্তারিত লিখুন..." required>{{ old('message') }}</textarea>
                                         @error('message')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
