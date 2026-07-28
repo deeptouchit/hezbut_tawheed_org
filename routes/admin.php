@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\BlogCategoryController;
 use App\Http\Controllers\Admin\BlogCommentController;
 use App\Http\Controllers\Admin\BlogController;
 use App\Http\Controllers\Admin\BookController;
+use App\Http\Controllers\Admin\BookChapterController;
 use App\Http\Controllers\Admin\BranchController;
 use App\Http\Controllers\Admin\CacheToolsController;
 use App\Http\Controllers\Admin\ContactMessageController;
@@ -39,6 +40,7 @@ use Illuminate\Support\Facades\Route;
 | Admin Guest Routes (Login)
 |--------------------------------------------------------------------------
 */
+
 Route::middleware('guest:admin')->prefix('admin')->name('admin.')->group(function () {
     Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');
     Route::post('/login', [AuthenticatedSessionController::class, 'store'])->name('login.submit');
@@ -60,6 +62,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::get('dashboard/chart-data', [AdminDashboardController::class, 'getChartData'])->name('dashboard.chart-data');
     Route::get('visitors', [AdminDashboardController::class, 'visitors'])->name('visitors.index');
     Route::post('visitors/bulk-delete', [AdminDashboardController::class, 'bulkDeleteVisitors'])->name('visitors.bulk-delete');
+    Route::delete('visitors/{id}', [AdminDashboardController::class, 'deleteVisitor'])->name('visitors.delete');
+    Route::post('visitors/clear-all', [AdminDashboardController::class, 'clearAllVisitors'])->name('visitors.clear-all');
 
     // Newsletter
     Route::get('newsletter-subscribers', [NewsletterController::class, 'subscribers'])->name('newsletter.subscribers.index');
@@ -389,6 +393,17 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::post('books/{id}/update-order', [BookController::class, 'updateOrder'])->name('books.update-order');
 
     // =============================================
+    // BOOK CHAPTERS (DIGITAL BOOK) MANAGEMENT
+    // =============================================
+    Route::get('book-chapters', [BookChapterController::class, 'index'])->name('book-chapters.index');
+    Route::get('book-chapters/create', [BookChapterController::class, 'create'])->name('book-chapters.create');
+    Route::post('book-chapters', [BookChapterController::class, 'store'])->name('book-chapters.store');
+    Route::get('book-chapters/{id}/edit', [BookChapterController::class, 'edit'])->name('book-chapters.edit');
+    Route::put('book-chapters/{id}', [BookChapterController::class, 'update'])->name('book-chapters.update');
+    Route::delete('book-chapters/{id}', [BookChapterController::class, 'destroy'])->name('book-chapters.destroy');
+    Route::post('book-chapters/{id}/toggle-status', [BookChapterController::class, 'toggleStatus'])->name('book-chapters.toggle-status');
+
+    // =============================================
     // VIDEO MANAGEMENT ROUTES
     // =============================================
     Route::get('videos', [VideoController::class, 'index'])->name('videos.index');
@@ -429,5 +444,4 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     // =============================================
     Route::resource('branches', BranchController::class);
     Route::post('branches/{id}/toggle-status', [BranchController::class, 'toggleStatus'])->name('branches.toggle-status');
-
 });

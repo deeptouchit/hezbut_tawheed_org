@@ -81,8 +81,8 @@ return [
             'order'       => 4,
             'title'       => 'Page Management',
             'icon'        => 'fas fa-file-invoice',
-            'active'      => ['admin/pages*', 'admin/activities*', 'admin/books*', 'admin/videos*', 'admin/live-broadcasts*', 'admin/songs*', 'admin/leaders*', 'admin/branches*', 'admin/gallery*'],
-            'activeRoute' => ['admin.pages.*', 'admin.activities.*', 'admin.books.*', 'admin.videos.*', 'admin.live-broadcasts.*', 'admin.songs.*', 'admin.leaders.*', 'admin.branches.*', 'admin.gallery.*'],
+            'active'      => ['admin/pages*', 'admin/activities*', 'admin/books*', 'admin/book-chapters*', 'admin/videos*', 'admin/live-broadcasts*', 'admin/songs*', 'admin/leaders*', 'admin/branches*', 'admin/gallery*'],
+            'activeRoute' => ['admin.pages.*', 'admin.activities.*', 'admin.books.*', 'admin.book-chapters.*', 'admin.videos.*', 'admin.live-broadcasts.*', 'admin.songs.*', 'admin.leaders.*', 'admin.branches.*', 'admin.gallery.*'],
             'roles'       => ['super_admin', 'admin', 'manager'],
             'items'       => [
                 [
@@ -100,6 +100,14 @@ return [
                     'icon'        => 'fas fa-book nav-icon ml-2',
                     'active'      => ['admin/books*'],
                     'activeRoute' => ['admin.books.*'],
+                ],
+                [
+                    'order'       => 3.5,
+                    'route'       => 'admin.book-chapters.index',
+                    'label'       => 'Digital Book Chapters',
+                    'icon'        => 'fas fa-book-open nav-icon ml-2',
+                    'active'      => ['admin/book-chapters*'],
+                    'activeRoute' => ['admin.book-chapters.*'],
                 ],
                 [
                     'order'       => 4,

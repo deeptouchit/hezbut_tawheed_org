@@ -1146,18 +1146,16 @@ public function reorder(Request $request)
 
         // 2. Fetch active homepage gallery images (for Tab 2)
         $homepagePosts = Gallery::where('show_on_homepage', true)
-            ->orderBy('gallery_order', 'asc')
-            ->orderBy('updated_at', 'desc')
+            ->orderBy('id', 'desc')
             ->get();
 
         // 3. Fetch active frontend gallery page images (for Tab 3)
         $galleryPagePosts = Gallery::where('show_on_gallery', true)
-            ->orderBy('gallery_page_order', 'asc')
-            ->orderBy('updated_at', 'desc')
+            ->orderBy('id', 'desc')
             ->get();
 
         // 4. Fetch library images with AJAX-friendly pagination (24 per page)
-        $libraryImages = Gallery::orderBy('created_at', 'desc')->paginate(24);
+        $libraryImages = Gallery::orderBy('id', 'desc')->paginate(24);
 
         if ($request->ajax() || $request->has('ajax')) {
             $html = view('admin.gallery.partials.media_cards', compact('libraryImages'))->render();

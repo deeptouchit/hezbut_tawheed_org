@@ -27,11 +27,7 @@ class BookController extends Controller
             if ($selectedCategory) {
                 $booksQuery->where('category_id', $selectedCategory->id);
             }
-            $booksQuery->where(function ($q) use ($search) {
-                $q->where('title', 'like', "%{$search}%")
-                  ->orWhere('writer', 'like', "%{$search}%")
-                  ->orWhere('description', 'like', "%{$search}%");
-            });
+            $booksQuery->search($search);
             
             $books = $booksQuery->orderBy('title', 'asc')
                 ->paginate(12)

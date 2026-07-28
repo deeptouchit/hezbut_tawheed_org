@@ -75,7 +75,7 @@ class AdminDashboardController extends Controller
             ->latest()
             ->limit(5)
             ->get()
-            ->map(function($post) {
+            ->map(function ($post) {
                 return [
                     'id'         => $post->id,
                     'title'      => $post->title,
@@ -91,7 +91,7 @@ class AdminDashboardController extends Controller
             ->latest()
             ->limit(5)
             ->get()
-            ->map(function($comment) {
+            ->map(function ($comment) {
                 return [
                     'id'         => $comment->id,
                     'author'     => $comment->commenter_name,
@@ -106,7 +106,7 @@ class AdminDashboardController extends Controller
         $recentMessages = ContactMessage::latest()
             ->limit(5)
             ->get()
-            ->map(function($msg) {
+            ->map(function ($msg) {
                 return [
                     'id'         => $msg->id,
                     'name'       => $msg->name,
@@ -121,7 +121,7 @@ class AdminDashboardController extends Controller
         $recentJoinRequests = JoinRequest::latest()
             ->limit(5)
             ->get()
-            ->map(function($req) {
+            ->map(function ($req) {
                 return [
                     'id'         => $req->id,
                     'name'       => $req->name,
@@ -287,6 +287,16 @@ class AdminDashboardController extends Controller
 
     public function visitors(Request $request)
     {
+        // Auto-ensure schema column 'isp' exists
+        if (\Illuminate\Support\Facades\Schema::hasTable('visitors') && !\Illuminate\Support\Facades\Schema::hasColumn('visitors', 'isp')) {
+            try {
+                \Illuminate\Support\Facades\Schema::table('visitors', function (\Illuminate\Database\Schema\Blueprint $table) {
+                    $table->string('isp', 150)->nullable()->default('Unknown')->after('city');
+                });
+            } catch (\Throwable $e) {
+            }
+        }
+
         $period = $request->get('period', 'all');
         $query = Visitor::query();
         $countryQuery = Visitor::select('country', DB::raw('count(distinct ip_address) as unique_visitors'))
@@ -312,19 +322,91 @@ class AdminDashboardController extends Controller
                 break;
         }
 
+        // Auto-resolve up to 10 unknown IP records per page view so existing logs get updated automatically
+        $unknownVisitors = Visitor::where(function ($q) {
+            $q->where('country', 'Unknown')
+                ->orWhereNull('country')
+                ->orWhere('isp', 'Unknown')
+                ->orWhereNull('isp');
+        })
+            ->limit(10)
+            ->get();
+
+        foreach ($unknownVisitors as $unVisitor) {
+            $geo = $this->resolveGeoLocation($unVisitor->ip_address);
+            if ($geo['country'] !== 'Unknown') {
+                $unVisitor->update([
+                    'country' => $geo['country'],
+                    'city'    => $geo['city'],
+                    'isp'     => $geo['isp'],
+                ]);
+            }
+        }
+
         $visitors = $query->latest()->paginate(20)->withQueryString();
         $countrySummary = $countryQuery->get();
 
         return view('admin.visitors.index', compact('visitors', 'countrySummary', 'period'));
     }
 
+    private function resolveGeoLocation(string $ip): array
+    {
+        if ($ip === '127.0.0.1' || $ip === '::1' || !filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
+            return [
+                'country' => 'Bangladesh',
+                'city'    => 'Dhaka',
+                'isp'     => 'Local ISP',
+            ];
+        }
+
+        return \Illuminate\Support\Facades\Cache::remember('geo_ip_' . $ip, 86400 * 7, function () use ($ip) {
+            try {
+                $response = \Illuminate\Support\Facades\Http::timeout(2)->get("http://ip-api.com/json/{$ip}?fields=status,country,city,isp,org");
+                if ($response->successful()) {
+                    $data = $response->json();
+                    if (($data['status'] ?? '') === 'success') {
+                        return [
+                            'country' => $data['country'] ?? 'Unknown',
+                            'city'    => $data['city'] ?? 'Unknown',
+                            'isp'     => $data['isp'] ?? $data['org'] ?? 'Unknown',
+                        ];
+                    }
+                }
+            } catch (\Throwable $e) {
+            }
+
+            return [
+                'country' => 'Unknown',
+                'city'    => 'Unknown',
+                'isp'     => 'Unknown',
+            ];
+        });
+    }
+
     public function bulkDeleteVisitors(Request $request)
     {
         $ids = $request->input('ids', []);
-        if (!empty($ids)) {
-            Visitor::whereIn('id', $ids)->delete();
-            return redirect()->back()->with('success', 'নির্বাচিত ভিজিটর লগ সফলভাবে মুছে ফেলা হয়েছে।');
+        if (is_string($ids)) {
+            $ids = json_decode($ids, true) ?? explode(',', $ids);
         }
+
+        if (!empty($ids)) {
+            $count = Visitor::whereIn('id', $ids)->delete();
+            return redirect()->back()->with('success', $count . ' টি নির্বাচিত ভিজিটর লগ সফলভাবে মুছে ফেলা হয়েছে।');
+        }
+
         return redirect()->back()->with('error', 'কোনো রেকর্ড নির্বাচন করা হয়নি।');
+    }
+
+    public function deleteVisitor($id)
+    {
+        Visitor::destroy($id);
+        return redirect()->back()->with('success', 'ভিজিটর লগ সফলভাবে মুছে ফেলা হয়েছে।');
+    }
+
+    public function clearAllVisitors()
+    {
+        Visitor::truncate();
+        return redirect()->back()->with('success', 'সকল ভিজিটর লগ সফলভাবে মুছে ফেলা হয়েছে।');
     }
 }

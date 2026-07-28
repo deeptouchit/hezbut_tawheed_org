@@ -22,9 +22,9 @@ class UserController extends Controller
         // Search
         if ($request->filled('search')) {
             $search = $request->search;
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%");
+                    ->orWhere('email', 'like', "%{$search}%");
             });
         }
 
@@ -88,7 +88,9 @@ class UserController extends Controller
      */
     public function create()
     {
-        $roles = Role::all();
+        $roles = auth()->user()->hasRole('super_admin')
+            ? Role::all()
+            : Role::where('name', '!=', 'super_admin')->get();
         $permissions = Permission::all();
 
         return view('admin.users.create', compact('roles', 'permissions'));
@@ -107,6 +109,10 @@ class UserController extends Controller
             'role' => 'required|exists:roles,name',
             'status' => 'required|in:active,inactive,suspended',
         ]);
+
+        if ($request->role === 'super_admin' && !auth()->user()->hasRole('super_admin')) {
+            return back()->withInput()->with('error', 'আপনি কাউকে সুপার এডমিন রোল প্রদান করতে পারবেন না।');
+        }
 
         try {
             DB::beginTransaction();
@@ -127,7 +133,6 @@ class UserController extends Controller
             return redirect()
                 ->route('admin.users.index')
                 ->with('success', 'ইউজার সফলভাবে তৈরি করা হয়েছে');
-
         } catch (\Exception $e) {
             DB::rollBack();
             return back()
@@ -152,7 +157,17 @@ class UserController extends Controller
     public function edit($id)
     {
         $user = User::findOrFail($id);
-        $roles = Role::all();
+
+        // Block modifying super admin if logged-in user is not super admin
+        if ($user->hasRole('super_admin') && !auth()->user()->hasRole('super_admin')) {
+            return redirect()
+                ->route('admin.users.index')
+                ->with('error', 'সুপার এডমিনের তথ্য পরিবর্তন করার অনুমতি আপনার নেই।');
+        }
+
+        $roles = auth()->user()->hasRole('super_admin')
+            ? Role::all()
+            : Role::where('name', '!=', 'super_admin')->get();
         $permissions = Permission::all();
         $userRoles = $user->getRoleNames()->toArray();
 
@@ -165,6 +180,17 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         $user = User::findOrFail($id);
+
+        // Block modifying super admin if logged-in user is not super admin
+        if ($user->hasRole('super_admin') && !auth()->user()->hasRole('super_admin')) {
+            return redirect()
+                ->route('admin.users.index')
+                ->with('error', 'সুপার এডমিনের তথ্য পরিবর্তন করার অনুমতি আপনার নেই।');
+        }
+
+        if ($request->role === 'super_admin' && !auth()->user()->hasRole('super_admin')) {
+            return back()->withInput()->with('error', 'আপনি কাউকে সুপার এডমিন রোল প্রদান করতে পারবেন না।');
+        }
 
         $request->validate([
             'name' => 'required|string|max:255',
@@ -196,7 +222,6 @@ class UserController extends Controller
             return redirect()
                 ->route('admin.users.index')
                 ->with('success', 'ইউজার সফলভাবে আপডেট করা হয়েছে');
-
         } catch (\Exception $e) {
             DB::rollBack();
             return back()
@@ -212,6 +237,17 @@ class UserController extends Controller
     {
         try {
             $user = User::findOrFail($id);
+
+            // Block deleting super admin if logged-in user is not super admin
+            if ($user->hasRole('super_admin') && !auth()->user()->hasRole('super_admin')) {
+                if (request()->ajax()) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'সুপার এডমিন অ্যাকাউন্ট ডিলিট করার অনুমতি আপনার নেই।'
+                    ], 403);
+                }
+                return redirect()->back()->with('error', 'সুপার এডমিন অ্যাকাউন্ট ডিলিট করার অনুমতি আপনার নেই।');
+            }
 
             // Prevent deleting yourself
             if ($user->id === auth()->id()) {
@@ -236,7 +272,6 @@ class UserController extends Controller
             return redirect()
                 ->route('admin.users.index')
                 ->with('success', 'ইউজার সফলভাবে মুছে ফেলা হয়েছে');
-
         } catch (\Exception $e) {
             if (request()->ajax()) {
                 return response()->json([
@@ -256,6 +291,14 @@ class UserController extends Controller
         try {
             $user = User::findOrFail($id);
 
+            // Block status change for super admin if logged-in user is not super admin
+            if ($user->hasRole('super_admin') && !auth()->user()->hasRole('super_admin')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'সুপার এডমিনের স্ট্যাটাস পরিবর্তন করার অনুমতি আপনার নেই।'
+                ], 403);
+            }
+
             if ($user->id === auth()->id()) {
                 return response()->json([
                     'success' => false,
@@ -270,7 +313,6 @@ class UserController extends Controller
                 'success' => true,
                 'message' => 'স্ট্যাটাস সফলভাবে পরিবর্তন করা হয়েছে'
             ]);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -284,13 +326,22 @@ class UserController extends Controller
      */
     public function bulkDelete(Request $request)
     {
-        $userIds = json_decode($request->user_ids);
+        $userIds = json_decode($request->user_ids, true);
+        if (!is_array($userIds)) {
+            $userIds = [];
+        }
 
         // Remove current user from deletion
         $userIds = array_diff($userIds, [auth()->id()]);
 
+        // If not super_admin, remove all super_admin user IDs from bulk delete
+        if (!auth()->user()->hasRole('super_admin')) {
+            $superAdminIds = User::role('super_admin')->pluck('id')->toArray();
+            $userIds = array_diff($userIds, $superAdminIds);
+        }
+
         if (empty($userIds)) {
-            return redirect()->back()->with('error', 'আপনি নিজের অ্যাকাউন্ট ডিলিট করতে পারবেন না');
+            return redirect()->back()->with('error', 'কোনো ডিলিটযোগ্য ইউজার নির্বাচন করা হয়নি বা আপনার অনুমতি নেই');
         }
 
         User::whereIn('id', $userIds)->delete();

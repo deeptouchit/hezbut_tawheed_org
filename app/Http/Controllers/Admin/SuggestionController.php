@@ -33,6 +33,11 @@ class SuggestionController extends Controller
             $query->where('status', $request->status);
         }
 
+        // Publish permission filter
+        if ($request->filled('allow_publish')) {
+            $query->where('allow_publish', $request->allow_publish);
+        }
+
         // Sorting
         $sortField = $request->get('sort', 'created_at');
         $sortDirection = $request->get('direction', 'desc');
@@ -110,7 +115,6 @@ class SuggestionController extends Controller
                 'success' => true,
                 'message' => 'পরামর্শ বার্তা সফলভাবে মুছে ফেলা হয়েছে!'
             ]);
-
         } catch (\Exception $e) {
             Log::error('Suggestion deletion failed: ' . $e->getMessage());
             return response()->json([
@@ -144,7 +148,6 @@ class SuggestionController extends Controller
                 'success' => true,
                 'message' => count($request->ids) . ' টি পরামর্শ সফলভাবে মুছে ফেলা হয়েছে!'
             ]);
-
         } catch (\Exception $e) {
             Log::error('Suggestion Bulk delete failed: ' . $e->getMessage());
             return response()->json([

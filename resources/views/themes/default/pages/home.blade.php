@@ -317,10 +317,12 @@
                 <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
                     @if($slider->hasLink())
                         <a href="{{ $slider->button_link }}" target="{{ $slider->target }}">
-                            <div class="carousel-item-bg" style="background-image: url('{{ asset($slider->image_url) }}');"></div>
+                            <div class="carousel-item-bg d-none d-md-block" style="background-image: url('{{ asset($slider->image_url) }}');"></div>
+                            <div class="carousel-item-bg d-block d-md-none" style="background-image: url('{{ asset($slider->mobile_image_url) }}');"></div>
                         </a>
                     @else
-                        <div class="carousel-item-bg" style="background-image: url('{{ asset($slider->image_url) }}');"></div>
+                        <div class="carousel-item-bg d-none d-md-block" style="background-image: url('{{ asset($slider->image_url) }}');"></div>
+                        <div class="carousel-item-bg d-block d-md-none" style="background-image: url('{{ asset($slider->mobile_image_url) }}');"></div>
                     @endif
                 </div>
             @empty

@@ -41,12 +41,12 @@ class Blog extends Model
         'views'        => 'integer',
         'sort_order'   => 'integer',
         'is_gallery'   => 'boolean',
-        'gallery_order'=> 'integer',
+        'gallery_order' => 'integer',
     ];
 
-      // =============================================
-      // Relationships
-      // =============================================
+    // =============================================
+    // Relationships
+    // =============================================
 
     public function author()
     {
@@ -86,7 +86,7 @@ class Blog extends Model
       // =============================================
       // Accessors
       // =============================================
-      /**
+    /**
      * Compatibility accessor to map image_url to featured_image_url
      */
     public function getImageUrlAttribute()
@@ -107,22 +107,22 @@ class Blog extends Model
             return $defaultImage;
         }
 
-          // যদি URL হয়
+        // যদি URL হয়
         if (filter_var($this->featured_image, FILTER_VALIDATE_URL)) {
             return $this->featured_image;
         }
 
-          // ✅ যদি ফাইল থাকে
+        // ✅ যদি ফাইল থাকে
         $fullPath = public_path($this->featured_image);
         if (file_exists($fullPath)) {
             return asset($this->featured_image);
         }
 
-          // কোনোটাই না হলে ডিফল্ট
+        // কোনোটাই না হলে ডিফল্ট
         return $defaultImage;
     }
 
-      /**
+    /**
      * ইমেজ আছে কিনা চেক (ভিউতে ব্যবহারের জন্য)
      */
     public function hasFeaturedImage()
@@ -141,7 +141,7 @@ class Blog extends Model
     public function getFormattedDateAttribute()
     {
         $date = $this->published_at ?? $this->created_at;
-        return $date ? $date->format('F j, Y'): '';
+        return $date ? $date->format('F j, Y') : '';
     }
 
 
@@ -155,10 +155,18 @@ class Blog extends Model
         }
 
         $banglaMonths = [
-            'January' => 'জানুয়ারি', 'February' => 'ফেব্রুয়ারি', 'March'     => 'মার্চ',
-            'April'   => 'এপ্রিল',    'May'      => 'মে',          'June'      => 'জুন',
-            'July'    => 'জুলাই',     'August'   => 'আগস্ট',       'September' => 'সেপ্টেম্বর',
-            'October' => 'অক্টোবর',   'November' => 'নভেম্বর',     'December'  => 'ডিসেম্বর'
+            'January' => 'জানুয়ারি',
+            'February' => 'ফেব্রুয়ারি',
+            'March'     => 'মার্চ',
+            'April'   => 'এপ্রিল',
+            'May'      => 'মে',
+            'June'      => 'জুন',
+            'July'    => 'জুলাই',
+            'August'   => 'আগস্ট',
+            'September' => 'সেপ্টেম্বর',
+            'October' => 'অক্টোবর',
+            'November' => 'নভেম্বর',
+            'December'  => 'ডিসেম্বর'
         ];
 
         $banglaNumbers = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
@@ -220,9 +228,9 @@ class Blog extends Model
         return urlencode($this->title);
     }
 
-      // =============================================
-      // Scopes
-      // =============================================
+    // =============================================
+    // Scopes
+    // =============================================
 
     public function scopeActive($query)
     {
@@ -265,17 +273,32 @@ class Blog extends Model
         $quotedTag = json_encode($tag);
         return $query->where(function ($q) use ($tag, $quotedTag) {
             $q->whereRaw('JSON_CONTAINS(tags, ?)', [$quotedTag])
-              ->orWhere('tags', 'LIKE', '%"' . $tag . '"%')
-              ->orWhere('tags', 'LIKE', '%' . $tag . '%');
+                ->orWhere('tags', 'LIKE', '%"' . $tag . '"%')
+                ->orWhere('tags', 'LIKE', '%' . $tag . '%');
         });
     }
 
     public function scopeSearch($query, $search)
     {
-        return $query->where(function ($q) use ($search) {
-            $q->where('title', 'LIKE', "%{$search}%")
-                ->orWhere('content', 'LIKE', "%{$search}%")
-                ->orWhere('short_description', 'LIKE', "%{$search}%");
+        $term = trim($search);
+        if (empty($term)) {
+            return $query;
+        }
+
+        $escaped = addcslashes($term, '%_');
+
+        return $query->where(function ($q) use ($term, $escaped) {
+            $q->where('title', 'LIKE', "%{$escaped}%")
+                ->orWhere('content', 'LIKE', "%{$escaped}%")
+                ->orWhere('short_description', 'LIKE', "%{$escaped}%")
+                ->orWhere('meta_title', 'LIKE', "%{$escaped}%")
+                ->orWhere('meta_description', 'LIKE', "%{$escaped}%")
+                ->orWhere('meta_keywords', 'LIKE', "%{$escaped}%")
+                ->orWhere('tags', 'LIKE', "%{$escaped}%")
+                ->orWhereHas('category', function ($cq) use ($escaped) {
+                    $cq->where('name', 'LIKE', "%{$escaped}%")
+                        ->orWhere('slug', 'LIKE', "%{$escaped}%");
+                });
         });
     }
 
@@ -290,9 +313,9 @@ class Blog extends Model
             ->whereYear('published_at', now()->year);
     }
 
-      // =============================================
-      // Methods
-      // =============================================
+    // =============================================
+    // Methods
+    // =============================================
 
     public function incrementViews()
     {
@@ -347,9 +370,9 @@ class Blog extends Model
             ->get();
     }
 
-      // =============================================
-      // Boot Method
-      // =============================================
+    // =============================================
+    // Boot Method
+    // =============================================
 
     protected static function boot()
     {

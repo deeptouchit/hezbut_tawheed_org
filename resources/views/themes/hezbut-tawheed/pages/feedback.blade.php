@@ -6,22 +6,24 @@
 
     @include('theme::partials.hero_banner', [
         'title' => 'নাগরিক মতামত ও প্রতিক্রিয়া',
-        'subtitle' => 'হেজবুত তওহীদের আদর্শ, সমাজ সংস্কার ও মানবিক কার্যক্রম সম্পর্কে দেশ-বিদেশের নাগরিকদের মূল্যবান মতামত',
+        'subtitle' =>
+            'হেজবুত তওহীদের আদর্শ, সমাজ সংস্কার ও মানবিক কার্যক্রম সম্পর্কে দেশ-বিদেশের নাগরিকদের মূল্যবান মতামত',
         'badge_text' => 'মতামত ও ফিডব্যাক',
-        'badge_icon' => 'fas fa-comments'
+        'badge_icon' => 'fas fa-comments',
     ])
 
     <!-- Feedback Main Section -->
     <div class="py-5" style="background-color: #f8fafc; font-family: 'Baloo Da 2', sans-serif;">
         <div class="container">
             <div class="row g-4">
-                
+
                 <!-- Feedback List Column (Left: col-lg-7) -->
                 <div class="col-lg-7">
-                    <h3 class="fw-bold mb-4" style="color: #0f172a; font-size: 1.5rem;"><i class="fas fa-quote-left text-success-brand me-2"></i>প্রতিক্রিয়াসমূহ</h3>
-                    
+                    <h3 class="fw-bold mb-4" style="color: #0f172a; font-size: 1.5rem;"><i
+                            class="fas fa-quote-left text-success-brand me-2"></i>প্রতিক্রিয়াসমূহ</h3>
+
                     <div class="row g-3" id="feedback-posts-container">
-                        @if(count($feedbacks) > 0)
+                        @if (count($feedbacks) > 0)
                             @include('theme::pages.feedback_list', compact('feedbacks'))
                         @else
                             <div class="col-12 text-center py-5 bg-white rounded-3 shadow-sm border border-light-grey">
@@ -33,9 +35,11 @@
                     </div>
 
                     <!-- Load More Button -->
-                    @if($feedbacks->hasPages())
+                    @if ($feedbacks->hasPages())
                         <div class="text-center mt-5" id="load-more-wrapper">
-                            <button id="load-more-btn" data-next-page="2" class="btn btn-success rounded-3 fw-bold px-5 py-2.5 shadow-sm transition hover-grow-card" style="font-family: 'Baloo Da 2', sans-serif; font-size: 14px;">
+                            <button id="load-more-btn" data-next-page="2"
+                                class="btn btn-success rounded-3 fw-bold px-5 py-2.5 shadow-sm transition hover-grow-card"
+                                style="font-family: 'Baloo Da 2', sans-serif; font-size: 14px;">
                                 আরও মতামত লোড করুন <i class="fas fa-sync-alt ms-2" id="load-more-icon"></i>
                             </button>
                         </div>
@@ -44,18 +48,25 @@
 
                 <!-- Feedback Submit Form Column (Right: col-lg-5) -->
                 <div class="col-lg-5">
-                    <div class="card border-0 shadow-sm rounded-3 p-4 p-md-5 bg-white border-light-grey position-sticky" style="top: 90px; z-index: 10;">
-                        <span class="fw-bold text-uppercase tracking-wider text-success-brand" style="font-size: 0.8rem; letter-spacing: 1px;">মতামত দিন</span>
-                        <h3 class="fw-bold mb-4 mt-1" style="color: #0f172a; font-size: 1.5rem;">আপনার প্রতিক্রিয়া জানান</h3>
-                        
+                    <div class="card border-0 shadow-sm rounded-3 p-4 p-md-5 bg-white border-light-grey position-sticky"
+                        style="top: 90px; z-index: 10;">
+                        <span class="fw-bold text-uppercase tracking-wider text-success-brand"
+                            style="font-size: 0.8rem; letter-spacing: 1px;">মতামত দিন</span>
+                        <h3 class="fw-bold mb-4 mt-1" style="color: #0f172a; font-size: 1.5rem;">আপনার প্রতিক্রিয়া জানান
+                        </h3>
+
                         <form action="{{ route('feedback.submit') }}" method="POST">
                             @csrf
                             <div class="row g-3">
                                 <!-- Name -->
                                 <div class="col-12">
                                     <div class="form-group">
-                                        <label for="name" class="form-label text-dark fw-semibold small">আপনার নাম *</label>
-                                        <input type="text" name="name" id="name" class="form-control py-3 rounded-3 @error('name') is-invalid @enderror" placeholder="নাম লিখুন..." value="{{ old('name') }}" required style="font-size: 0.9rem; box-shadow: none;">
+                                        <label for="name" class="form-label text-dark fw-semibold small">আপনার নাম
+                                            *</label>
+                                        <input type="text" name="name" id="name"
+                                            class="form-control py-3 rounded-3 @error('name') is-invalid @enderror"
+                                            placeholder="নাম লিখুন..." value="{{ old('name') }}" required
+                                            style="font-size: 0.9rem; box-shadow: none;">
                                         @error('name')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -65,8 +76,12 @@
                                 <!-- Email -->
                                 <div class="col-12">
                                     <div class="form-group">
-                                        <label for="email" class="form-label text-dark fw-semibold small">আপনার ইমেল *</label>
-                                        <input type="email" name="email" id="email" class="form-control py-3 rounded-3 @error('email') is-invalid @enderror" placeholder="ইমেল..." value="{{ old('email') }}" required style="font-size: 0.9rem; box-shadow: none;">
+                                        <label for="email" class="form-label text-dark fw-semibold small">আপনার ইমেল
+                                            *</label>
+                                        <input type="email" name="email" id="email"
+                                            class="form-control py-3 rounded-3 @error('email') is-invalid @enderror"
+                                            placeholder="ইমেল..." value="{{ old('email') }}" required
+                                            style="font-size: 0.9rem; box-shadow: none;">
                                         @error('email')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -76,8 +91,13 @@
                                 <!-- Profession -->
                                 <div class="col-12">
                                     <div class="form-group">
-                                        <label for="designation" class="form-label text-dark fw-semibold small">পেশা / পদবী *</label>
-                                        <input type="text" name="designation" id="designation" class="form-control py-3 rounded-3 @error('designation') is-invalid @enderror" placeholder="উদাঃ চাকুরীজীবী, শিক্ষক, ব্যবসায়ী..." value="{{ old('designation') }}" required style="font-size: 0.9rem; box-shadow: none;">
+                                        <label for="designation" class="form-label text-dark fw-semibold small">পেশা / পদবী
+                                            *</label>
+                                        <input type="text" name="designation" id="designation"
+                                            class="form-control py-3 rounded-3 @error('designation') is-invalid @enderror"
+                                            placeholder="উদাঃ চাকুরীজীবী, শিক্ষক, ব্যবসায়ী..."
+                                            value="{{ old('designation') }}" required
+                                            style="font-size: 0.9rem; box-shadow: none;">
                                         @error('designation')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -87,11 +107,16 @@
                                 <!-- Rating Selector -->
                                 <div class="col-12">
                                     <div class="form-group">
-                                        <label class="form-label text-dark fw-semibold small d-block">আপনার রেটিং (স্টার) *</label>
+                                        <label class="form-label text-dark fw-semibold small d-block">আপনার রেটিং (স্টার)
+                                            *</label>
                                         <div class="rating-input-wrapper d-flex gap-2">
-                                            @for($i = 5; $i >= 1; $i--)
-                                                <input type="radio" id="star{{ $i }}" name="rating" value="{{ $i }}" class="btn-check" {{ old('rating', 5) == $i ? 'checked' : '' }}>
-                                                <label for="star{{ $i }}" class="btn btn-outline-light border border-light-grey text-dark-50 rounded-3 py-1 px-3" style="font-size: 0.82rem; cursor: pointer;">
+                                            @for ($i = 5; $i >= 1; $i--)
+                                                <input type="radio" id="star{{ $i }}" name="rating"
+                                                    value="{{ $i }}" class="btn-check"
+                                                    {{ old('rating', 5) == $i ? 'checked' : '' }}>
+                                                <label for="star{{ $i }}"
+                                                    class="btn btn-outline-light border border-light-grey text-dark-50 rounded-3 py-1 px-3"
+                                                    style="font-size: 0.82rem; cursor: pointer;">
                                                     {{ $i }} <i class="fas fa-star text-warning ms-1"></i>
                                                 </label>
                                             @endfor
@@ -105,8 +130,12 @@
                                 <!-- Content -->
                                 <div class="col-12">
                                     <div class="form-group">
-                                        <label for="content" class="form-label text-dark fw-semibold small">আপনার প্রতিক্রিয়া *</label>
-                                        <textarea name="content" id="content" rows="4" class="form-control rounded-3 @error('content') is-invalid @enderror" placeholder="আমাদের আদর্শ ও কার্যক্রম সম্পর্কে আপনার মতামত লিখুন..." required style="font-size: 0.9rem; box-shadow: none;">{{ old('content') }}</textarea>
+                                        <label for="content" class="form-label text-dark fw-semibold small">আপনার
+                                            প্রতিক্রিয়া *</label>
+                                        <textarea name="content" id="content" rows="4"
+                                            class="form-control rounded-3 @error('content') is-invalid @enderror"
+                                            placeholder="আমাদের আদর্শ ও কার্যক্রম সম্পর্কে আপনার মতামত লিখুন..." required
+                                            style="font-size: 0.9rem; box-shadow: none;">{{ old('content') }}</textarea>
                                         @error('content')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -115,8 +144,10 @@
 
                                 <!-- Submit Button -->
                                 <div class="col-12 text-end mt-4">
-                                    <button type="submit" class="btn btn-brand-success text-white fw-bold px-4 py-3 rounded shadow-sm w-100 transition">
-                                        মতামত জমা দিন <i class="fas fa-paper-plane ms-2 text-warning" style="font-size: 13px;"></i>
+                                    <button type="submit"
+                                        class="btn btn-brand-success text-white fw-bold px-4 py-3 rounded shadow-sm w-100 transition">
+                                        মতামত জমা দিন <i class="fas fa-paper-plane ms-2 text-warning"
+                                            style="font-size: 13px;"></i>
                                     </button>
                                 </div>
                             </div>
@@ -129,51 +160,51 @@
     </div>
 
     <!-- Custom CSS Styles -->
-    
 
-@push('scripts')
-<script>
-$(document).ready(function() {
-    $('#load-more-btn').on('click', function() {
-        var btn = $(this);
-        var page = btn.data('next-page');
-        var icon = $('#load-more-icon');
-        
-        btn.prop('disabled', true);
-        icon.addClass('fa-spin');
-        
-        var currentUrl = new URL(window.location.href);
-        currentUrl.searchParams.set('page', page);
-        
-        $.ajax({
-            url: currentUrl.toString(),
-            type: 'GET',
-            dataType: 'json',
-            success: function(response) {
-                if (response.html) {
-                    $('#feedback-posts-container').append(response.html);
-                    
-                    if (response.hasMore) {
-                        btn.data('next-page', page + 1);
-                        btn.prop('disabled', false);
-                    } else {
-                        $('#load-more-wrapper').fadeOut();
-                    }
-                } else {
-                    $('#load-more-wrapper').fadeOut();
-                }
-            },
-            error: function() {
-                toastr.error('মতামত লোড করতে ব্যর্থ হয়েছে');
-                btn.prop('disabled', false);
-            },
-            complete: function() {
-                icon.removeClass('fa-spin');
-            }
-        });
-    });
-});
-</script>
-@endpush
+
+    @push('scripts')
+        <script>
+            $(document).ready(function() {
+                $('#load-more-btn').on('click', function() {
+                    var btn = $(this);
+                    var page = btn.data('next-page');
+                    var icon = $('#load-more-icon');
+
+                    btn.prop('disabled', true);
+                    icon.addClass('fa-spin');
+
+                    var currentUrl = new URL(window.location.href);
+                    currentUrl.searchParams.set('page', page);
+
+                    $.ajax({
+                        url: currentUrl.toString(),
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function(response) {
+                            if (response.html) {
+                                $('#feedback-posts-container').append(response.html);
+
+                                if (response.hasMore) {
+                                    btn.data('next-page', page + 1);
+                                    btn.prop('disabled', false);
+                                } else {
+                                    $('#load-more-wrapper').fadeOut();
+                                }
+                            } else {
+                                $('#load-more-wrapper').fadeOut();
+                            }
+                        },
+                        error: function() {
+                            toastr.error('মতামত লোড করতে ব্যর্থ হয়েছে');
+                            btn.prop('disabled', false);
+                        },
+                        complete: function() {
+                            icon.removeClass('fa-spin');
+                        }
+                    });
+                });
+            });
+        </script>
+    @endpush
 
 @endsection

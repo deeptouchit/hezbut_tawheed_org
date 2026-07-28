@@ -86,7 +86,8 @@ storage/framework/views
 
 # IDE
 .idea/
-.vscode/
+.vscode/sftp.json
+.vscode/ssh.json
 *.iml
 .project
 .classpath

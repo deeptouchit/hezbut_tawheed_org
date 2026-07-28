@@ -1,6 +1,6 @@
 @extends('admin.layouts.master')
 
-@section('page-title', 'সেটিংস ম্যানেজার')
+@section('page-title', 'Settings Manager')
 
 @php
     use App\Helpers\SettingsHelper;

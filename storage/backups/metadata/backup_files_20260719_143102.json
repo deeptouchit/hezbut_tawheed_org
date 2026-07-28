@@ -1,0 +1,22 @@
+{
+    "type": "files",
+    "size": 1273349260,
+    "hash": "955ac1e78bcb8de74fac2145a3b090f50c546ad5d27618caac3f0d8f0a85e558",
+    "file_count": 2794,
+    "backup_paths": [
+        "storage\/app\/public",
+        "storage\/app\/uploads",
+        "public\/uploads",
+        "storage\/app\/images"
+    ],
+    "excluded_patterns": [
+        "*.tmp",
+        "*.cache",
+        "*.log",
+        "thumbnails\/*",
+        ".DS_Store",
+        "Thumbs.db"
+    ],
+    "created_at": "2026-07-19T14:32:56.058989Z",
+    "version": "1.0"
+}

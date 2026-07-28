@@ -9,6 +9,18 @@ use Illuminate\Support\Facades\Log;
 class SuggestionController extends Controller
 {
     /**
+     * Display the suggestions form and page.
+     */
+    public function index()
+    {
+        $publishedSuggestions = Suggestion::where('allow_publish', 1)
+            ->latest()
+            ->paginate(10);
+
+        return view('theme::pages.suggestions', compact('publishedSuggestions'));
+    }
+
+    /**
      * Store a newly created suggestion in storage.
      */
     public function store(Request $request)
@@ -19,6 +31,7 @@ class SuggestionController extends Controller
                 'contact' => 'required|string|max:100',
                 'subject' => 'nullable|string|max:150',
                 'message' => 'required|string|min:5|max:5000',
+                'allow_publish' => 'nullable|boolean',
             ]);
 
             $suggestion = Suggestion::create([
@@ -26,6 +39,7 @@ class SuggestionController extends Controller
                 'contact' => strip_tags($request->contact),
                 'subject' => $request->subject ? strip_tags($request->subject) : 'মতামত/পরামর্শ',
                 'message' => strip_tags($request->message),
+                'allow_publish' => $request->boolean('allow_publish'),
                 'ip_address' => $request->ip(),
                 'user_agent' => $request->userAgent(),
                 'status' => 'pending',
@@ -51,7 +65,6 @@ class SuggestionController extends Controller
             }
 
             return back()->with('success', 'আপনার মূল্যবান পরামর্শ ও মতামত পাঠানোর জন্য ধন্যবাদ! এটি সফলভাবে আমাদের কেন্দ্রীয় তথ্যভাণ্ডারে সংরক্ষিত হয়েছে।');
-
         } catch (\Illuminate\Validation\ValidationException $e) {
             if ($request->ajax()) {
                 return response()->json([

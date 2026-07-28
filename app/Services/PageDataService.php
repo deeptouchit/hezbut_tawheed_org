@@ -22,8 +22,33 @@ class PageDataService
             'social' => $this->getSocialData($page),
             'training' => $this->getTrainingData($page),
             'research' => $this->getResearchData($page),
+            'faq' => $this->getFaqData($page),
             default => ['page' => $page]
         };
+    }
+
+    /**
+     * Get data required for FAQ page.
+     *
+     * @param \App\Models\Page $page
+     * @return array
+     */
+    protected function getFaqData($page)
+    {
+        $faqPosts = \App\Models\Blog::where('status', true)
+            ->where(function($q) {
+                $q->where('title', 'LIKE', '%প্রশ্নোত্তর%')
+                  ->orWhere('title', 'LIKE', '%জিজ্ঞাসা%')
+                  ->orWhere('tags', 'LIKE', '%প্রশ্নোত্তর%')
+                  ->orWhere('tags', 'LIKE', '%FAQ%');
+            })
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return [
+            'page' => $page,
+            'faqPosts' => $faqPosts,
+        ];
     }
     
     /**

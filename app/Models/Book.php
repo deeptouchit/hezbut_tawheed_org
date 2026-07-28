@@ -51,6 +51,14 @@ class Book extends Model
     }
 
     /**
+     * Get the chapters for the book.
+     */
+    public function chapters()
+    {
+        return $this->hasMany(BookChapter::class, 'book_id')->orderBy('sort_order', 'asc');
+    }
+
+    /**
      * Get the book cover image URL or a default placeholder.
      */
     public function getImageUrlAttribute()
@@ -62,7 +70,7 @@ class Book extends Model
             }
             return asset($this->image);
         }
-        
+
         return 'https://placehold.co/400x600/e9ecef/adb5bd?text=' . urlencode($this->title);
     }
 
@@ -78,5 +86,24 @@ class Book extends Model
             return asset($value);
         }
         return null;
+    }
+
+    /**
+     * Search scope for books
+     */
+    public function scopeSearch($query, $search)
+    {
+        $term = trim($search);
+        if (empty($term)) {
+            return $query;
+        }
+
+        $escaped = addcslashes($term, '%_');
+
+        return $query->where(function ($q) use ($escaped) {
+            $q->where('title', 'LIKE', "%{$escaped}%")
+                ->orWhere('writer', 'LIKE', "%{$escaped}%")
+                ->orWhere('description', 'LIKE', "%{$escaped}%");
+        });
     }
 }

@@ -19,25 +19,50 @@ class BlogController extends Controller
     {
         try {
             $query = Blog::published()
-                ->with(['author', 'category', 'comments'])
-                ->orderBy('published_at', 'desc');
+                ->with(['author', 'category', 'comments']);
 
-            // সার্চ
+            // ১. সার্চ
             if ($request->filled('search')) {
                 $query->search($request->search);
             }
 
-            // ক্যাটাগরি ফিল্টার
+            // ২. ক্যাটাগরি ফিল্টার
             if ($request->filled('category')) {
                 $query->byCategory($request->category);
             }
 
-            // ট্যাগ ফিল্টার
+            // ৩. ট্যাগ ফিল্টার
             if ($request->filled('tag')) {
                 $query->byTag($request->tag);
             }
 
-            $blogs = $query->paginate(26);
+            // ৪. সময়সীমা (Date Range) ফিল্টার
+            if ($request->filled('date_filter')) {
+                if ($request->date_filter === '7days') {
+                    $query->where('published_at', '>=', now()->subDays(7));
+                } elseif ($request->date_filter === 'this_month') {
+                    $query->whereMonth('published_at', now()->month)->whereYear('published_at', now()->year);
+                } elseif ($request->date_filter === 'this_year') {
+                    $query->whereYear('published_at', now()->year);
+                }
+            }
+
+            // ৫. সর্টিং (সাজানো)
+            if ($request->filled('sort')) {
+                if ($request->sort === 'popular') {
+                    $query->orderBy('views', 'desc');
+                } elseif ($request->sort === 'oldest') {
+                    $query->orderBy('published_at', 'asc');
+                } elseif ($request->sort === 'title_asc') {
+                    $query->orderBy('title', 'asc');
+                } else {
+                    $query->orderBy('published_at', 'desc');
+                }
+            } else {
+                $query->orderBy('published_at', 'desc');
+            }
+
+            $blogs = $query->paginate(26)->appends($request->all());
 
             // সাইডবার ডাটা (ক্যাশে রাখা)
             $categories = Cache::remember('blog_categories', 3600, function () {
@@ -85,7 +110,6 @@ class BlogController extends Controller
                 'recentPosts',
                 'allTags'
             ));
-
         } catch (\Exception $e) {
             Log::error('Blog index error: ' . $e->getMessage());
             return back()->with('error', 'ব্লগ লোড করতে সমস্যা হয়েছে!');
@@ -175,7 +199,6 @@ class BlogController extends Controller
                 'recentPosts',
                 'allTags'
             ));
-
         } catch (\Exception $e) {
             Log::error('Blog show error: ' . $e->getMessage());
             abort(404, 'ব্লগ পোস্টটি পাওয়া যায়নি!');
@@ -208,7 +231,7 @@ class BlogController extends Controller
                 return Blog::published()->recent()->take(5)->get();
             });
 
-            if ($request->ajax()) {
+            if (request()->ajax()) {
                 return response()->json([
                     'html' => view('theme::pages.blog.partials.blog_list', compact('blogs'))->render(),
                     'hasMore' => $blogs->hasMorePages()
@@ -222,7 +245,6 @@ class BlogController extends Controller
                 'popularPosts',
                 'recentPosts'
             ));
-
         } catch (\Exception $e) {
             Log::error('Blog category error: ' . $e->getMessage());
             abort(404, 'ক্যাটাগরিটি পাওয়া যায়নি!');
@@ -256,7 +278,7 @@ class BlogController extends Controller
                 return Blog::published()->recent()->take(5)->get();
             });
 
-            if ($request->ajax()) {
+            if (request()->ajax()) {
                 return response()->json([
                     'html' => view('theme::pages.blog.partials.blog_list', compact('blogs'))->render(),
                     'hasMore' => $blogs->hasMorePages()
@@ -270,50 +292,68 @@ class BlogController extends Controller
                 'popularPosts',
                 'recentPosts'
             ));
-
         } catch (\Exception $e) {
             Log::error('Blog tag error: ' . $e->getMessage());
             return back()->with('error', 'ট্যাগ লোড করতে সমস্যা হয়েছে!');
         }
     }
     /**
-     * সার্চ ব্লগ
+     * সার্চ ব্লগ (অ্যাডভান্সড ডাইনামিক ফিল্টারিং সহ)
      */
     public function search(Request $request)
     {
         try {
-            $query = $request->get('q');
+            $query = trim($request->get('q', ''));
+            $categoryId = $request->get('category_id');
+            $sort = $request->get('sort', 'latest');
 
-            if (empty($query)) {
-                if ($request->ajax()) {
+            // AJAX Live Search
+            if ($request->ajax()) {
+                if (empty($query)) {
                     return response()->json([]);
                 }
-                return redirect()->route('blog');
-            }
 
-            if ($request->ajax()) {
                 $blogs = Blog::published()
+                    ->with('category')
                     ->search($query)
                     ->orderBy('published_at', 'desc')
-                    ->take(5)
+                    ->take(6)
                     ->get();
-                
+
                 $results = [];
                 foreach ($blogs as $blog) {
                     $results[] = [
                         'title' => $blog->title,
                         'url' => route('blog.detail', $blog->slug),
-                        'image' => $blog->featured_image_url
+                        'image' => $blog->featured_image_url,
+                        'category' => $blog->category ? $blog->category->name : 'সাধারণ',
+                        'date' => $blog->published_at ? $blog->published_at->format('d M, Y') : ''
                     ];
                 }
                 return response()->json($results);
             }
 
-            $blogs = Blog::published()
-                ->with(['author', 'category'])
-                ->search($query)
-                ->orderBy('published_at', 'desc')
-                ->paginate(26);
+            // Full Search Page Query
+            $blogQuery = Blog::published()->with(['author', 'category']);
+
+            if (!empty($query)) {
+                $blogQuery->search($query);
+            }
+
+            if (!empty($categoryId)) {
+                $blogQuery->where('category_id', $categoryId);
+            }
+
+            // Sorting
+            if ($sort === 'oldest') {
+                $blogQuery->orderBy('published_at', 'asc');
+            } elseif ($sort === 'popular') {
+                $blogQuery->orderBy('views', 'desc');
+            } else {
+                $blogQuery->orderBy('published_at', 'desc');
+            }
+
+            $blogs = $blogQuery->paginate(24)->appends($request->all());
 
             $categories = Cache::remember('blog_categories', 3600, function () {
                 return BlogCategory::active()->ordered()->get();
@@ -332,9 +372,10 @@ class BlogController extends Controller
                 'query',
                 'categories',
                 'popularPosts',
-                'recentPosts'
+                'recentPosts',
+                'categoryId',
+                'sort'
             ));
-
         } catch (\Exception $e) {
             Log::error('Blog search error: ' . $e->getMessage());
             return back()->with('error', 'সার্চ করতে সমস্যা হয়েছে!');
@@ -394,7 +435,6 @@ class BlogController extends Controller
             }
 
             return back()->with('success', 'আপনার কমেন্টটি সফলভাবে জমা হয়েছে। মডারেশনের পরে প্রকাশ করা হবে।');
-
         } catch (\Exception $e) {
             Log::error('Blog comment error: ' . $e->getMessage());
             return back()->with('error', 'কমেন্ট জমা দিতে সমস্যা হয়েছে!');
@@ -422,7 +462,6 @@ class BlogController extends Controller
                 'success' => false,
                 'message' => 'আপনার এই কমেন্ট ডিলিট করার অনুমতি নেই!'
             ], 403);
-
         } catch (\Exception $e) {
             Log::error('Blog delete comment error: ' . $e->getMessage());
             return response()->json([
@@ -447,7 +486,6 @@ class BlogController extends Controller
                 'success' => true,
                 'message' => 'ব্লগ ক্যাশ রিফ্রেশ করা হয়েছে!'
             ]);
-
         } catch (\Exception $e) {
             Log::error('Blog cache refresh error: ' . $e->getMessage());
             return response()->json([
@@ -460,53 +498,52 @@ class BlogController extends Controller
     /**
      * ব্লগ পোস্ট আর্চিভ (সব পোস্ট দেখাবে)
      */
-   /**
- * ব্লগ আর্কাইভ
- */
-public function archive(Request $request)
-{
-    try {
-        $query = Blog::published()
-            ->with(['author', 'category']);
+    /**
+     * ব্লগ আর্কাইভ
+     */
+    public function archive(Request $request)
+    {
+        try {
+            $query = Blog::published()
+                ->with(['author', 'category']);
 
-        // ক্যাটাগরি ফিল্টার
-        if ($request->filled('category')) {
-            $query->byCategory($request->category);
+            // ক্যাটাগরি ফিল্টার
+            if ($request->filled('category')) {
+                $query->byCategory($request->category);
+            }
+
+            // সর্টিং
+            switch ($request->get('sort', 'newest')) {
+                case 'oldest':
+                    $query->orderBy('published_at', 'asc');
+                    break;
+                case 'popular':
+                    $query->orderBy('average_rating', 'desc');
+                    break;
+                case 'views':
+                    $query->orderBy('views', 'desc');
+                    break;
+                case 'newest':
+                default:
+                    $query->orderBy('published_at', 'desc');
+                    break;
+            }
+
+            $blogs = $query->paginate(24);
+
+            $categories = Cache::remember('blog_categories', 3600, function () {
+                return BlogCategory::active()->ordered()->get();
+            });
+
+            return view('theme::pages.blog.archive', compact(
+                'blogs',
+                'categories'
+            ));
+        } catch (\Exception $e) {
+            Log::error('Blog archive error: ' . $e->getMessage());
+            return back()->with('error', 'আর্কাইভ লোড করতে সমস্যা হয়েছে!');
         }
-
-        // সর্টিং
-        switch ($request->get('sort', 'newest')) {
-            case 'oldest':
-                $query->orderBy('published_at', 'asc');
-                break;
-            case 'popular':
-                $query->orderBy('average_rating', 'desc');
-                break;
-            case 'views':
-                $query->orderBy('views', 'desc');
-                break;
-            case 'newest':
-            default:
-                $query->orderBy('published_at', 'desc');
-                break;
-        }
-
-        $blogs = $query->paginate(24);
-
-        $categories = Cache::remember('blog_categories', 3600, function () {
-            return BlogCategory::active()->ordered()->get();
-        });
-
-        return view('theme::pages.blog.archive', compact(
-            'blogs',
-            'categories'
-        ));
-
-    } catch (\Exception $e) {
-        Log::error('Blog archive error: ' . $e->getMessage());
-        return back()->with('error', 'আর্কাইভ লোড করতে সমস্যা হয়েছে!');
     }
-}
 
     /**
      * ঘোষণা ও বিবৃতি লিস্টিং পেজ
@@ -567,7 +604,6 @@ public function archive(Request $request)
                 'recentPosts',
                 'allTags'
             ));
-
         } catch (\Exception $e) {
             Log::error('Press releases index error: ' . $e->getMessage());
             return back()->with('error', 'প্রেস রিলিজসমূহ লোড করতে সমস্যা হয়েছে!');
@@ -633,7 +669,6 @@ public function archive(Request $request)
                 'recentPosts',
                 'allTags'
             ));
-
         } catch (\Exception $e) {
             Log::error('Events index error: ' . $e->getMessage());
             return back()->with('error', 'ইভেন্টসমূহ লোড করতে সমস্যা হয়েছে!');

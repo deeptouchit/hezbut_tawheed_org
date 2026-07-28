@@ -212,18 +212,21 @@ class AdminMiddleware
      */
     private function hasAdditionalPermissions($user, Request $request): bool
     {
-        // Super admin has all permissions
-        if ($this->isSuperAdmin($user)) {
+        // Super admin and Admin roles have full permissions
+        if ($this->isSuperAdmin($user) || (method_exists($user, 'hasRole') && $user->hasRole('admin'))) {
             return true;
         }
 
         // Skip permission check for dashboard routes
-        $routeName = $request->route()->getName();
+        $routeName = $request->route() ? $request->route()->getName() : null;
 
-        if (str_contains($routeName, 'dashboard') ||
+        if (
+            empty($routeName) ||
+            str_contains($routeName, 'dashboard') ||
             str_contains($routeName, 'profile') ||
             str_contains($routeName, 'logout') ||
-            $routeName === 'admin.home') {
+            $routeName === 'admin.home'
+        ) {
             return true;
         }
 
@@ -232,9 +235,16 @@ class AdminMiddleware
             // Convert route name to permission format
             $permission = str_replace('admin.', '', $routeName);
 
-            // // Check if user has permission
-            if (!$user->hasPermissionTo($permission)) {
-                return false;
+            try {
+                // Check if user has permission
+                if (!$user->hasPermissionTo($permission)) {
+                    return false;
+                }
+            } catch (\Spatie\Permission\Exceptions\PermissionDoesNotExist $e) {
+                // Permission not defined in permissions table -> allow access by default for admin area
+                return true;
+            } catch (\Throwable $e) {
+                return true;
             }
         }
 
@@ -286,7 +296,7 @@ class AdminMiddleware
      */
     private function getUnauthorizedMessage(string $role): string
     {
-        return match($role) {
+        return match ($role) {
             'customer' => 'আপনি একজন সাধারণ গ্রাহক। এই পৃষ্ঠাটি অ্যাক্সেস করার জন্য আপনার প্রশাসনিক অনুমতি নেই।',
             'delivery_man' => 'আপনি একজন ডেলিভারি ম্যান। এই পৃষ্ঠাটি শুধুমাত্র প্রশাসকদের জন্য।',
             'super_admin', 'admin', 'manager' => 'আপনার যথেষ্ট অনুমতি নেই এই পৃষ্ঠাটি অ্যাক্সেস করার জন্য।',

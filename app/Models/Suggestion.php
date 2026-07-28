@@ -17,7 +17,25 @@ class Suggestion extends Model
         'subject',
         'message',
         'status',
+        'allow_publish',
         'ip_address',
         'user_agent',
     ];
+
+    /**
+     * Get the avatar URL attribute.
+     */
+    public function getAvatarUrlAttribute(): string
+    {
+        $name = urlencode($this->name ?? 'User');
+        return "https://ui-avatars.com/api/?name={$name}&size=200&background=006A4E&color=fff&rounded=true";
+    }
+
+    /**
+     * Get rating stars HTML.
+     */
+    public function getRatingStarsAttribute(): string
+    {
+        return '<i class="fas fa-star text-warning me-1"></i><i class="fas fa-star text-warning me-1"></i><i class="fas fa-star text-warning me-1"></i><i class="fas fa-star text-warning me-1"></i><i class="fas fa-star text-warning me-1"></i>';
+    }
 }

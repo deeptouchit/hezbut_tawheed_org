@@ -2,7 +2,7 @@
 
 @extends('admin.layouts.master')
 
-@section('page-title', 'ব্লগ পোস্ট ম্যানেজমেন্ট')
+@section('page-title', 'Blog Post Management')
 
 @push('styles')
 <style>

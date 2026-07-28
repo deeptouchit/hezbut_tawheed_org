@@ -19,13 +19,18 @@ use App\Http\Controllers\PrivacyController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\SuggestionController;
 use App\Http\Controllers\TermsController;
+use App\Http\Controllers\TestimonialController;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\SongController;
+use App\Http\Controllers\ConstitutionController;
 use Illuminate\Support\Facades\Route;
 
 // Home & About
 Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/about', function() { return redirect()->to('/about-us'); })->name('about');
+Route::get('/constitution', [ConstitutionController::class, 'index'])->name('constitution');
+Route::get('/about', function () {
+    return redirect()->to('/about-us');
+})->name('about');
 
 // Activities
 Route::get('/activities', [ActivityController::class, 'index'])->name('activities.index');
@@ -131,9 +136,14 @@ Route::get('/terms', [TermsController::class, 'index'])->name('terms');
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 Route::post('/contact', [ContactController::class, 'send'])->name('contact.send');
 
+// Testimonials (Citizen Quotes & Ratings - Dedicated System)
+Route::get('/testimonials', [TestimonialController::class, 'index'])->name('testimonials.index');
+Route::post('/testimonials', [TestimonialController::class, 'store'])->name('testimonials.submit');
+
 // Feedback & Suggestions
 Route::get('/feedback', [FeedbackController::class, 'index'])->name('feedback.index');
 Route::post('/feedback', [FeedbackController::class, 'store'])->name('feedback.submit');
+Route::get('/suggestions', [SuggestionController::class, 'index'])->name('suggestions.index');
 Route::post('/suggestions/store', [SuggestionController::class, 'store'])->name('suggestions.store');
 
 // Join / Membership

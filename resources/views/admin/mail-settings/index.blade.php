@@ -1,6 +1,6 @@
 @extends('admin.layouts.master')
 
-@section('page-title', 'ইমেইল সেটিংস')
+@section('page-title', 'Mail Settings')
 
 @section('filter_input')
     <div class="row px-3">

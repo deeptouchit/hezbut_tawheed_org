@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Visitor extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'ip_address',
         'user_agent',
@@ -15,6 +17,7 @@ class Visitor extends Model
         'platform',
         'country',
         'city',
+        'isp',
         'url',
         'referrer',
         'user_id',

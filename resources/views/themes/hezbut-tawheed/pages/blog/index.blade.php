@@ -14,6 +14,75 @@
     <!-- Blog Archive Main Section -->
     <div class="py-5" style="background-color: #f8fafc; min-height: 70vh;">
         <div class="container">
+
+            <!-- Advanced Search Bar Section -->
+            <div class="card border-0 shadow-sm rounded-4 p-4 mb-4 bg-white" style="border-top: 4px solid #006A4E !important; font-family: 'Baloo Da 2', sans-serif;">
+                <form action="{{ route('blog') }}" method="GET" id="advancedSearchForm">
+                    <div class="row g-3 align-items-center">
+                        <!-- Search Keyword Field -->
+                        <div class="col-lg-4 col-md-6">
+                            <label class="form-label text-dark fw-semibold small mb-1">
+                                <i class="fas fa-search text-success me-1"></i> কীওয়ার্ড খুঁজুন
+                            </label>
+                            <input type="text" name="search" class="form-control rounded-3 py-2 px-3 border" placeholder="বিষয়বস্তু বা শিরোনাম..." value="{{ request('search') }}" style="font-size: 0.9rem;">
+                        </div>
+
+                        <!-- Category Select Dropdown -->
+                        <div class="col-lg-3 col-md-6">
+                            <label class="form-label text-dark fw-semibold small mb-1">
+                                <i class="fas fa-folder text-success me-1"></i> ক্যাটাগরি
+                            </label>
+                            <select name="category" class="form-select rounded-3 py-2 px-3 border" style="font-size: 0.9rem; cursor: pointer;">
+                                <option value="">সকল ক্যাটাগরি</option>
+                                @foreach($categories as $cat)
+                                    <option value="{{ $cat->slug }}" {{ request('category') == $cat->slug ? 'selected' : '' }}>
+                                        {{ $cat->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <!-- Sort By Dropdown -->
+                        <div class="col-lg-3 col-md-6">
+                            <label class="form-label text-dark fw-semibold small mb-1">
+                                <i class="fas fa-sort-amount-down text-success me-1"></i> ক্রমানুসারে (Sort)
+                            </label>
+                            <select name="sort" class="form-select rounded-3 py-2 px-3 border" style="font-size: 0.9rem; cursor: pointer;">
+                                <option value="newest" {{ request('sort', 'newest') == 'newest' ? 'selected' : '' }}>🕒 সর্বশেষ প্রকাশিত</option>
+                                <option value="popular" {{ request('sort') == 'popular' ? 'selected' : '' }}>👁️ সর্বাধিক জনপ্রিয়/পঠিত</option>
+                                <option value="oldest" {{ request('sort') == 'oldest' ? 'selected' : '' }}>📜 প্রাচীনতম আগে</option>
+                                <option value="title_asc" {{ request('sort') == 'title_asc' ? 'selected' : '' }}>🔤 বর্ণানুক্রমিক (A-Z)</option>
+                            </select>
+                        </div>
+
+                        <!-- Date Filter Dropdown -->
+                        <div class="col-lg-2 col-md-6">
+                            <label class="form-label text-dark fw-semibold small mb-1">
+                                <i class="far fa-calendar-alt text-success me-1"></i> সময়সীমা
+                            </label>
+                            <select name="date_filter" class="form-select rounded-3 py-2 px-3 border" style="font-size: 0.9rem; cursor: pointer;">
+                                <option value="">সকল সময়</option>
+                                <option value="7days" {{ request('date_filter') == '7days' ? 'selected' : '' }}>গত ৭ দিন</option>
+                                <option value="this_month" {{ request('date_filter') == 'this_month' ? 'selected' : '' }}>চলতি মাস</option>
+                                <option value="this_year" {{ request('date_filter') == 'this_year' ? 'selected' : '' }}>চলতি বছর</option>
+                            </select>
+                        </div>
+
+                        <!-- Submit & Reset Buttons -->
+                        <div class="col-12 d-flex justify-content-end gap-2 mt-3 pt-2 border-top">
+                            @if(request()->filled('search') || request()->filled('category') || request()->filled('sort') || request()->filled('date_filter') || request()->filled('tag'))
+                                <a href="{{ route('blog') }}" class="btn btn-outline-secondary rounded-3 px-3 py-1.5 small fw-semibold text-decoration-none">
+                                    <i class="fas fa-undo me-1"></i> ফিল্টার রিসেট
+                                </a>
+                            @endif
+                            <button type="submit" class="btn text-white rounded-3 px-4 py-1.5 fw-bold shadow-sm" style="background-color: #006A4E; font-size: 0.9rem; border: none;">
+                                <i class="fas fa-filter me-1"></i> অনুসন্ধান ও ফিল্টার
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
             <div class="row">
                 
                 <!-- Blog Listing Column (Left: col-lg-8) -->

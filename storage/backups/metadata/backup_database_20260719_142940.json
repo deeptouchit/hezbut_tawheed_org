@@ -1,0 +1,16 @@
+{
+    "type": "database",
+    "size": 7866870,
+    "hash": "679727369056d4d9b8e8546db8d67093adc3d133fd5d37fac3e4e10c0f6eedd5",
+    "table_count": 35,
+    "created_at": "2026-07-19T14:30:15.983414Z",
+    "database": "htorg",
+    "excluded_tables": [
+        "migrations",
+        "failed_jobs",
+        "sessions",
+        "cache",
+        "cache_locks",
+        "password_resets"
+    ]
+}

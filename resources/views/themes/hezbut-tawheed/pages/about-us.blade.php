@@ -113,7 +113,7 @@
                                     </p>
                                 </div>
                                 <div class="mt-4">
-                                    <a href="{{ $currentLeader ? route('leadership.show', $currentLeader->slug) : route('about') . '#chairman' }}" class="btn text-white w-100 fw-bold d-flex align-items-center justify-content-center gap-2" style="background-color: #006A4E; border-radius: 8px; padding: 10px 16px; font-size: 13.5px; transition: all 0.2s ease; border: none; ">
+                                    <a href="{{ url('/emam-ht') }}" class="btn text-white w-100 fw-bold d-flex align-items-center justify-content-center gap-2" style="background-color: #006A4E; border-radius: 8px; padding: 10px 16px; font-size: 13.5px; transition: all 0.2s ease; border: none; ">
                                         <span>বিস্তারিত জীবনী</span>
                                         <i class="fas fa-arrow-right" style="font-size: 11px;"></i>
                                     </a>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Testimonial;
+use App\Models\Suggestion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -11,7 +12,7 @@ class FeedbackController extends Controller
     public function index(Request $request)
     {
         $feedbacks = Testimonial::active()
-            ->ordered()
+            ->latest('id')
             ->paginate(12);
 
         if ($request->ajax()) {
@@ -60,7 +61,6 @@ class FeedbackController extends Controller
             }
 
             return back()->with('success', 'আপনার মূল্যবান মতামত পাঠানোর জন্য ধন্যবাদ! এটি মডারেটরের অনুমোদনের পর ওয়েবসাইটে প্রকাশ করা হবে।');
-
         } catch (\Illuminate\Validation\ValidationException $e) {
             throw $e;
         } catch (\Exception $e) {

@@ -6,6 +6,7 @@ use App\Helpers\SettingsHelper;
 use App\Models\Theme;
 use App\Services\ThemeService;
 use App\View\Composers\MenuComposer;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth; // ✅ Auth ফ্যাসেড যোগ করো
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
@@ -27,6 +28,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Paginator::useBootstrapFive();
+
         view()->share('setting', new SettingsHelper());
         View::composer('*', MenuComposer::class);
 

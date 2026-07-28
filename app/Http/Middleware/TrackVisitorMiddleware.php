@@ -5,9 +5,10 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
-
 use App\Models\Visitor;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Cache;
 
 class TrackVisitorMiddleware
 {
@@ -98,13 +99,28 @@ class TrackVisitorMiddleware
             }
         }
 
+        // Get Client Real IP
+        $ip = $request->header('cf-connecting-ip')
+            ?? $request->header('x-forwarded-for')
+            ?? $request->ip();
+
+        if (str_contains($ip, ',')) {
+            $ip = trim(explode(',', $ip)[0]);
+        }
+
+        // Resolve IP Geolocation & ISP
+        $geo = $this->resolveIpGeoLocation($ip);
+
         try {
             Visitor::create([
-                'ip_address' => $request->ip(),
+                'ip_address' => $ip,
                 'user_agent' => substr($userAgent, 0, 500),
                 'device'     => $device,
                 'browser'    => $browser,
                 'platform'   => $platform,
+                'country'    => $geo['country'],
+                'city'       => $geo['city'],
+                'isp'        => $geo['isp'],
                 'url'        => Str::limit($request->fullUrl(), 250),
                 'referrer'   => Str::limit($request->header('referer'), 250),
                 'user_id'    => auth()->check() ? auth()->id() : null,
@@ -114,5 +130,43 @@ class TrackVisitorMiddleware
         }
 
         return $response;
+    }
+
+    /**
+     * Resolve IP Geolocation (Country, City, ISP)
+     */
+    private function resolveIpGeoLocation(string $ip): array
+    {
+        if ($ip === '127.0.0.1' || $ip === '::1' || !filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
+            return [
+                'country' => 'Bangladesh',
+                'city'    => 'Dhaka',
+                'isp'     => 'Local ISP',
+            ];
+        }
+
+        return Cache::remember('geo_ip_' . $ip, 86400 * 7, function () use ($ip) {
+            try {
+                $response = Http::timeout(2)->get("http://ip-api.com/json/{$ip}?fields=status,country,city,isp,org");
+                if ($response->successful()) {
+                    $data = $response->json();
+                    if (($data['status'] ?? '') === 'success') {
+                        return [
+                            'country' => $data['country'] ?? 'Unknown',
+                            'city'    => $data['city'] ?? 'Unknown',
+                            'isp'     => $data['isp'] ?? $data['org'] ?? 'Unknown',
+                        ];
+                    }
+                }
+            } catch (\Throwable $e) {
+                // Ignore API timeouts
+            }
+
+            return [
+                'country' => 'Unknown',
+                'city'    => 'Unknown',
+                'isp'     => 'Unknown',
+            ];
+        });
     }
 }
