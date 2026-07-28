@@ -10,8 +10,14 @@
     @endif
     <style>
         @media (max-width: 576px) {
-            .leader-img-wrapper { height: 240px !important; }
-            .editorial-card-wrapper { padding-left: 0 !important; padding-bottom: 0 !important; }
+            .leader-img-wrapper {
+                height: 240px !important;
+            }
+
+            .editorial-card-wrapper {
+                padding-left: 0 !important;
+                padding-bottom: 0 !important;
+            }
         }
     </style>
 @endpush

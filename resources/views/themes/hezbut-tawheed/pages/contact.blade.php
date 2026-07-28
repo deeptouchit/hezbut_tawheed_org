@@ -107,6 +107,11 @@
                         
                         <form action="{{ route('contact.send') }}" method="POST" id="contactForm" novalidate>
                             @csrf
+                            <!-- Honeypot & Submission Time anti-spam fields -->
+                            <input type="hidden" name="_form_time" value="{{ time() }}">
+                            <div style="display: none !important; visibility: hidden !important;">
+                                <input type="text" name="website" tabindex="-1" autocomplete="off" placeholder="Leave this empty">
+                            </div>
                             <div class="row g-3">
                                 <!-- Name -->
                                 <div class="col-md-6">

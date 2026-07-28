@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Mail\ContactMail;
 use App\Models\ContactMessage;
+use App\Services\AntiSpamService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -11,6 +12,20 @@ use Illuminate\Support\Facades\Validator;
 
 class ContactController extends Controller
 {
+    /**
+     * Return a fake success response to trick spam bots into exiting.
+     */
+    protected function fakeSuccessResponse(Request $request)
+    {
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'আপনার বার্তা সফলভাবে পাঠানো হয়েছে! আমরা শীঘ্রই আপনার সাথে যোগাযোগ করব।'
+            ]);
+        }
+        return back()->with('success', 'আপনার বার্তা সফলভাবে পাঠানো হয়েছে! আমরা শীঘ্রই আপনার সাথে যোগাযোগ করব।');
+    }
+
     /**
      * Contact Page দেখান
      */
@@ -28,17 +43,22 @@ class ContactController extends Controller
     public function send(Request $request)
     {
         try {
-            // Honeypot spam check: if 'website' field has any content, it is likely a bot.
+            // 1. Honeypot spam check: if 'website' field has any content, it is likely a bot.
             if ($request->filled('website')) {
                 Log::warning('Contact form honeypot spam attempt blocked from IP: ' . $request->ip());
-                // Return success to fool the bot into thinking it succeeded
-                if ($request->ajax() || $request->wantsJson()) {
-                    return response()->json([
-                        'success' => true,
-                        'message' => 'আপনার বার্তা সফলভাবে পাঠানো হয়েছে! আমরা শীঘ্রই আপনার সাথে যোগাযোগ করব।'
-                    ]);
-                }
-                return back()->with('success', 'আপনার বার্তা সফলভাবে পাঠানো হয়েছে! আমরা শীঘ্রই আপনার সাথে যোগাযোগ করব।');
+                return $this->fakeSuccessResponse($request);
+            }
+
+            // 2. Form Submission Time Gap Check (Bots submit < 3 seconds)
+            $formTime = $request->input('_form_time');
+            if ($formTime && (time() - intval($formTime)) < 3) {
+                Log::warning('Contact form fast submission spam blocked from IP: ' . $request->ip());
+                return $this->fakeSuccessResponse($request);
+            }
+
+            // 3. Multi-Layer AntiSpam Audit (Script, Domain, Link, Keyword Filters)
+            if (AntiSpamService::isSpam($request->all(), $request->ip())) {
+                return $this->fakeSuccessResponse($request);
             }
 
             // Validation

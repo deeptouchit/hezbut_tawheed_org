@@ -134,7 +134,7 @@ Route::get('/terms', [TermsController::class, 'index'])->name('terms');
 
 // Contact
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
-Route::post('/contact', [ContactController::class, 'send'])->name('contact.send');
+Route::post('/contact', [ContactController::class, 'send'])->middleware('throttle:3,10')->name('contact.send');
 
 // Testimonials (Citizen Quotes & Ratings - Dedicated System)
 Route::get('/testimonials', [TestimonialController::class, 'index'])->name('testimonials.index');
