@@ -1,0 +1,38 @@
+[
+    {
+        "icon": "fas fa-gift",
+        "title": "ফ্রি ডেলিভারি",
+        "description": "১৫০০+ টাকায় ফ্রি ডেলিভারি",
+        "tag": "সারাদেশে"
+    },
+    {
+        "icon": "fas fa-clock",
+        "title": "৬০ মিনিট ডেলিভারি",
+        "description": "সারাদেশে দ্রুত ডেলিভারি",
+        "tag": "গ্যারান্টি"
+    },
+    {
+        "icon": "fas fa-shield-alt",
+        "title": "প্রামাণিক পণ্য",
+        "description": "১০০% অথেনটিক প্রোডাক্ট",
+        "tag": "সার্টিফাইড"
+    },
+    {
+        "icon": "fas fa-undo-alt",
+        "title": "সহজ রিটার্ন",
+        "description": "৩০ দিনে রিটার্ন সুবিধা",
+        "tag": "নো কোশ্চেন"
+    },
+    {
+        "icon": "fas fa-headset",
+        "title": "২৪\/৭ সাপোর্ট",
+        "description": "যেকোনো সময় সহায়তা",
+        "tag": "লাইভ চ্যাট"
+    },
+    {
+        "icon": "fas fa-credit-card",
+        "title": "সহজ পেমেন্ট",
+        "description": "নগদ, বিকাশ, কার্ড",
+        "tag": "সকল পদ্ধতি"
+    }
+]

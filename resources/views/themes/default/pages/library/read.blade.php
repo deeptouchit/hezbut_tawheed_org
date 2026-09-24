@@ -1,0 +1,427 @@
+@extends('theme::layouts.app')
+
+@section('title', 'পড়ুন: ' . $book->title . ' - ডিজিটাল লাইব্রেরী')
+@section('meta_description', $book->description)
+
+@push('styles')
+<style>
+    /* ============================================================
+       PREMIUM SMART PDF READER LAYOUT (LIGHT ORGANIC STYLE)
+       ============================================================ */
+    .reader-container {
+        display: flex;
+        height: calc(100vh - 100px);
+        background-color: #f8fafc;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    /* Fullscreen Height Adjustment */
+    #reader-container:fullscreen {
+        height: 100vh !important;
+    }
+    #reader-container:-webkit-full-screen {
+        height: 100vh !important;
+    }
+    #reader-container:-moz-full-screen {
+        height: 100vh !important;
+    }
+    #reader-container:-ms-fullscreen {
+        height: 100vh !important;
+    }
+    
+    /* Left Sidebar: Book Selector */
+    .reader-sidebar {
+        width: 320px;
+        background: #ffffff;
+        border-right: 1px solid #e2e8f0;
+        display: flex;
+        flex-direction: column;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 100;
+        flex-shrink: 0;
+    }
+
+    .reader-sidebar.collapsed {
+        margin-left: -320px;
+    }
+
+    .sidebar-header {
+        padding: 1.5rem;
+        border-bottom: 1px solid #e2e8f0;
+        background: #f8fafc;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .sidebar-search-box {
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid #e2e8f0;
+        background: #ffffff;
+    }
+
+    .sidebar-search-input {
+        background: #f8fafc;
+        border: 1px solid #cbd5e1;
+        color: #0f172a;
+        border-radius: 12px;
+        padding: 0.6rem 1rem;
+        width: 100%;
+        font-size: 0.95rem;
+        outline: none;
+        transition: all 0.2s ease;
+    }
+
+    .sidebar-search-input:focus {
+        border-color: #006a4e;
+        box-shadow: 0 0 0 2px rgba(0, 106, 78, 0.15);
+    }
+
+    .sidebar-book-list {
+        overflow-y: auto;
+        flex-grow: 1;
+        padding: 1.25rem;
+        background: #f8fafc;
+    }
+
+    /* Custom Scrollbar for Sidebar */
+    .sidebar-book-list::-webkit-scrollbar {
+        width: 6px;
+    }
+    .sidebar-book-list::-webkit-scrollbar-track {
+        background: #f8fafc;
+    }
+    .sidebar-book-list::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 3px;
+    }
+
+    .sidebar-book-item {
+        display: flex;
+        gap: 1rem;
+        padding: 0.85rem;
+        border-radius: 14px;
+        text-decoration: none !important;
+        color: #334155;
+        margin-bottom: 0.75rem;
+        transition: all 0.2s ease;
+        border: 1px solid #e2e8f0;
+        background: #ffffff;
+    }
+
+    .sidebar-book-item:hover {
+        background: #f1f5f9;
+        color: #006a4e;
+        border-color: #cbd5e1;
+    }
+
+    .sidebar-book-item.active {
+        background: #ecfdf5;
+        border-color: #a7f3d0;
+        color: #006a4e;
+        font-weight: 700;
+    }
+
+    .sidebar-book-item img {
+        width: 48px;
+        height: 68px;
+        object-fit: cover;
+        border-radius: 6px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+    
+    /* Main Reader Viewport */
+    .reader-viewport {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        transition: all 0.3s ease;
+        background: #f1f5f9;
+    }
+    
+    /* Reader Top Bar Controls */
+    .reader-controls {
+        background: #ffffff;
+        border-bottom: 1px solid #e2e8f0;
+        padding: 1rem 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+        z-index: 90;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+    }
+    
+    /* Control Buttons */
+    .btn-control {
+        border: 1px solid #cbd5e1;
+        background: #ffffff;
+        color: #334155;
+        padding: 0.5rem 1rem;
+        border-radius: 10px;
+        font-weight: 700;
+        font-size: 0.9rem;
+        transition: all 0.2s ease;
+        text-decoration: none !important;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .btn-control:hover {
+        background: #f8fafc;
+        color: #006a4e;
+        border-color: #006a4e;
+    }
+    
+    .btn-gold {
+        background: #006a4e !important;
+        border: 1px solid #006a4e !important;
+        color: white !important;
+    }
+    .btn-gold:hover {
+        background: #00523c !important;
+        border-color: #00523c !important;
+    }
+
+    /* PDF Viewer Wrapper */
+    .pdf-viewer-container {
+        flex-grow: 1;
+        width: 100%;
+        height: 100%;
+        position: relative;
+        background: #525659;
+    }
+
+    .mobile-reader-cta {
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 4rem 2rem;
+        color: #0f172a;
+        height: 100%;
+    }
+
+    .mobile-reader-cta i {
+        font-size: 4rem;
+        color: #006a4e;
+        margin-bottom: 1.5rem;
+    }
+
+    /* Desktop/Mobile Responsiveness */
+    @media (max-width: 991.98px) {
+        .reader-sidebar {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            box-shadow: 10px 0 30px rgba(0, 0, 0, 0.15);
+        }
+        .reader-sidebar.collapsed {
+            left: -320px;
+            margin-left: 0;
+        }
+    }
+
+    @media (max-width: 767.98px) {
+        /* Hide embedded PDF iframe on small screens to trigger native viewer */
+        .pdf-desktop-iframe {
+            display: none;
+        }
+        .mobile-reader-cta {
+            display: flex;
+        }
+    }
+</style>
+@endpush
+
+@section('content')
+
+    <div class="reader-container" id="reader-container">
+        
+        <!-- Left Sidebar: Book Navigator -->
+        <aside class="reader-sidebar" id="reader-sidebar">
+            <div class="sidebar-header">
+                <h6 class="fw-bold mb-0" style="font-family: 'Baloo Da 2', sans-serif; color: #006a4e;"><i class="fas fa-university me-1"></i> লাইব্রেরী সূচী</h6>
+                <button class="btn btn-sm btn-link p-0 text-muted d-lg-none" id="btn-close-sidebar">
+                    <i class="fas fa-times fa-lg"></i>
+                </button>
+            </div>
+
+            <!-- Instant Search Box -->
+            <div class="sidebar-search-box">
+                <input type="text" id="sidebar-search" class="sidebar-search-input" placeholder="বইয়ের নাম খুঁজুন...">
+            </div>
+            
+            <div class="sidebar-book-list" id="sidebar-book-list">
+                <!-- Current Book listed at top for ease -->
+                <a href="{{ route('library.read', $book->slug) }}" class="sidebar-book-item active">
+                    <img src="{{ $book->image_url }}" alt="{{ $book->title }}" loading="lazy">
+                    <div style="flex-grow: 1; overflow: hidden;">
+                        <div class="small fw-bold text-truncate" title="{{ $book->title }}">{{ $book->title }}</div>
+                        <div class="text-muted small" style="font-size: 11px;">{{ Str::limit($book->writer ?? 'হেযবুত তওহীদ', 30) }}</div>
+                    </div>
+                </a>
+
+                @foreach($otherBooks as $ob)
+                    <a href="{{ route('library.read', $ob->slug) }}" class="sidebar-book-item">
+                        <img src="{{ $ob->image_url }}" alt="{{ $ob->title }}" loading="lazy">
+                        <div style="flex-grow: 1; overflow: hidden;">
+                            <div class="small fw-bold text-truncate" title="{{ $ob->title }}">{{ $ob->title }}</div>
+                            <div class="text-muted small" style="font-size: 11px;">{{ Str::limit($ob->writer ?? 'হেযবুত তওহীদ', 30) }}</div>
+                        </div>
+                    </a>
+                @endforeach
+            </div>
+        </aside>
+        
+        <!-- Main Reader Viewport -->
+        <main class="reader-viewport">
+            
+            <!-- Controls Bar -->
+            <div class="reader-controls">
+                <div class="d-flex align-items-center gap-2">
+                    <button class="btn btn-control" id="btn-toggle-sidebar" title="সূচী বন্ধ/চালু করুন">
+                        <i class="fas fa-bars"></i> <span class="d-none d-md-inline">সূচীপত্র</span>
+                    </button>
+                    <button class="btn btn-control" id="btn-fullscreen" title="ফুল স্ক্রিন ভিউ">
+                        <i class="fas fa-expand"></i> <span class="d-none d-md-inline">ফুল স্ক্রিন</span>
+                    </button>
+                    <a href="{{ route('library.index') }}" class="btn btn-control btn-gold">
+                        <i class="fas fa-arrow-left"></i> <span class="d-none d-md-inline">লাইব্রেরী</span>
+                    </a>
+                </div>
+                
+                <!-- Book Title -->
+                <div class="text-truncate fw-bold d-none d-md-block" style="max-width: 450px; font-family: 'Baloo Da 2', sans-serif; font-size: 1.15rem; color: #006a4e;" id="reader-book-title">
+                    {{ $book->title }}
+                </div>
+                
+                <!-- Download button -->
+                <div>
+                    @if($book->pdf_url)
+                        <a href="{{ asset($book->pdf_url) }}" download class="btn btn-control" title="পিডিএফ ডাউনলোড করুন">
+                            <i class="fas fa-download"></i> <span class="d-none d-md-inline">ডাউনলোড</span>
+                        </a>
+                    @endif
+                </div>
+            </div>
+            
+            <!-- PDF Viewer Area -->
+            <div class="pdf-viewer-container">
+                @if($book->pdf_url)
+                    <!-- Desktop Iframe View -->
+                    <iframe src="{{ asset($book->pdf_url) }}#toolbar=1&navpanes=0&scrollbar=1&page=1" width="100%" height="100%" class="pdf-desktop-iframe" style="border: none; background: #525659;"></iframe>
+                    
+                    <!-- Mobile View CTA -->
+                    <div class="mobile-reader-cta">
+                        <i class="fas fa-file-pdf"></i>
+                        <h4 class="fw-bold mb-3" style="font-family: 'Baloo Da 2', sans-serif;">{{ $book->title }}</h4>
+                        <p class="text-muted mb-4 small px-4">মোবাইল স্ক্রিনে স্বাচ্ছন্দ্যে পড়ার জন্য নিচের লিংকে ক্লিক করে সরাসরি পিডিএফ সংস্করণটি ওপেন করুন।</p>
+                        <a href="{{ asset($book->pdf_url) }}" target="_blank" class="btn btn-control btn-gold btn-lg px-5 py-3 rounded-pill fw-bold fs-6">
+                            <i class="fas fa-book-open"></i> পিডিএফ ফাইল খুলুন
+                        </a>
+                    </div>
+                @else
+                    <!-- Fallback to text reading if no PDF is loaded -->
+                    <div style="padding: 3rem; overflow-y: auto; height: 100%; color: #0f172a; font-family: 'SolaimanLipi', serif; line-height: 1.8; font-size: 1.2rem; background: #ffffff;">
+                        <div style="max-width: 800px; margin: 0 auto;">
+                            <h2 class="text-center fw-bold mb-4" style="color: #006a4e;">{{ $book->title }}</h2>
+                            {!! $book->content !!}
+                        </div>
+                    </div>
+                @endif
+            </div>
+            
+        </main>
+        
+    </div>
+
+@endsection
+
+@push('scripts')
+<script>
+$(document).ready(function() {
+    var sidebar = $('#reader-sidebar');
+    
+    // 1. Sidebar Toggles
+    $('#btn-toggle-sidebar').on('click', function() {
+        sidebar.toggleClass('collapsed');
+    });
+    $('#btn-close-sidebar').on('click', function() {
+        sidebar.addClass('collapsed');
+    });
+    
+    // 2. Instant JS Sidebar Search Filter
+    $('#sidebar-search').on('keyup', function() {
+        var query = $(this).val().toLowerCase();
+        
+        $('.sidebar-book-item').each(function() {
+            var title = $(this).find('.fw-bold').text().toLowerCase();
+            if (title.indexOf(query) > -1) {
+                $(this).show();
+            } else {
+                // Keep the active item visible
+                if ($(this).hasClass('active')) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            }
+        });
+    });
+
+    // 3. Fullscreen View Toggle
+    $('#btn-fullscreen').on('click', function() {
+        var elem = document.getElementById('reader-container');
+        var icon = $(this).find('i');
+        var text = $(this).find('span');
+        
+        if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement && !document.msFullscreenElement) {
+            // Enter Fullscreen
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.webkitRequestFullscreen) {
+                elem.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+            } else if (elem.mozRequestFullScreen) {
+                elem.mozRequestFullScreen();
+            } else if (elem.msRequestFullscreen) {
+                elem.msRequestFullscreen();
+            }
+            icon.removeClass('fa-expand').addClass('fa-compress');
+            text.text('ছোট করুন');
+        } else {
+            // Exit Fullscreen
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            } else if (document.mozCancelFullScreen) {
+                document.mozCancelFullScreen();
+            } else if (document.msExitFullscreen) {
+                document.msExitFullscreen();
+            }
+            icon.removeClass('fa-compress').addClass('fa-expand');
+            text.text('ফুল স্ক্রিন');
+        }
+    });
+
+    // Reset icons when exiting fullscreen via ESC key
+    function exitHandler() {
+        var icon = $('#btn-fullscreen').find('i');
+        var text = $('#btn-fullscreen').find('span');
+        if (!document.fullscreenElement && !document.webkitIsFullScreen && !document.mozFullScreen && !document.msFullscreenElement) {
+            icon.removeClass('fa-compress').addClass('fa-expand');
+            text.text('ফুল স্ক্রিন');
+        }
+    }
+    
+    document.addEventListener('fullscreenchange', exitHandler);
+    document.addEventListener('webkitfullscreenchange', exitHandler);
+    document.addEventListener('mozfullscreenchange', exitHandler);
+    document.addEventListener('MSFullscreenChange', exitHandler);
+});
+</script>
+@endpush

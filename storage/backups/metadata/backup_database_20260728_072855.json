@@ -1,0 +1,16 @@
+{
+    "type": "database",
+    "size": 8490876,
+    "hash": "05e33ed9d087253a02c0551c372278c897a4707eb385c8749ef6c23376c67259",
+    "table_count": 35,
+    "created_at": "2026-07-28T07:29:22.683315Z",
+    "database": "u516838200_hTorGD",
+    "excluded_tables": [
+        "migrations",
+        "failed_jobs",
+        "sessions",
+        "cache",
+        "cache_locks",
+        "password_resets"
+    ]
+}

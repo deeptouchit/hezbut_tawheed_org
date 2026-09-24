@@ -1,0 +1,16 @@
+AddHandler application/x-httpd-php81 .php
+RewriteEngine on
+
+# Redirect Trailing Slashes If Not A Folder...
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} (.+)/$
+RewriteRule ^ %1 [L,R=301]
+
+
+RewriteCond %{REQUEST_URI} !^public
+RewriteRule ^(.*)$ public/$1 [L]
+
+# DO NOT REMOVE THIS LINE AND THE LINES BELOW IPALLOWID:xNsgJxvZim
+allow from 103.108.146.117
+# DO NOT REMOVE THIS LINE AND THE LINES ABOVE xNsgJxvZim:IPALLOWID
+

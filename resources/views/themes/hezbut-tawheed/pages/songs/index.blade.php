@@ -1,0 +1,753 @@
+@extends('theme::layouts.app')
+
+@section('title', 'সাংস্কৃতিক কর্নার - হেযবুত তওহীদ')
+@section('meta_description', 'হেযবুত তওহীদ আন্দোলনের দলীয় সঙ্গীত, দেশাত্মবোধক গান ও জাগরণী গান শুনুন এবং লিরিক্স পড়ুন।')
+
+@section('content')
+
+    @include('theme::partials.hero_banner', [
+        'title' => 'সাংস্কৃতিক কর্নার',
+        'subtitle' => 'আন্দোলনের দলীয় সঙ্গীত, দেশাত্মবোধক গান ও জাগরণী গান শুনুন সরাসরি প্রিমিয়াম প্লেয়ারে',
+        'badge_text' => 'সাংস্কৃতিক কর্নার',
+        'badge_icon' => 'fas fa-music'
+    ])
+
+    <!-- Hidden HTML5 Audio Element -->
+    <audio id="mainAudio" class="d-none"></audio>
+
+    <!-- Main Player & Gallery Section (Theater Mode) -->
+    <section class="py-5" style="background-color: #f8fafc; min-height: 70vh;" id="song-theater-section">
+        <div class="container">
+            
+            @if(count($songs) > 0)
+                @php
+                    $firstSong = $featuredSong ?? $songs[0];
+                @endphp
+                
+                <div class="row g-4">
+                    <!-- Main Player Column (Left: col-lg-8) -->
+                    <div class="col-lg-8">
+                        <div class="player-wrapper mb-4">
+                            
+                            <!-- Video/Audio Player Card -->
+                            <div class="card border-0 shadow-lg rounded-4 overflow-hidden bg-black player-container-card" id="player-card" style="aspect-ratio: 16/9; position: relative;">
+                                
+                                <!-- Audio Cover Art (Abstract Music Gradient) -->
+                                <div class="audio-cover-art w-100 h-100 d-flex flex-column align-items-center justify-content-center bg-gradient-brand {{ $firstSong->youtube_id ? 'd-none' : '' }}" id="audioPlaybackArea">
+                                    <div class="cover-music-circle d-flex align-items-center justify-content-center shadow-lg">
+                                        <i class="fas fa-compact-disc text-success spin-cd" id="playerCdIcon" style="font-size: 3.5rem; color: #006A4E !important;"></i>
+                                    </div>
+                                    
+                                    <!-- Simulated Equalizer Waveform Overlay -->
+                                    <div class="equalizer-waveform d-flex gap-1.5 justify-content-center mt-3">
+                                        <span class="eq-bar bar-1"></span>
+                                        <span class="eq-bar bar-2"></span>
+                                        <span class="eq-bar bar-3"></span>
+                                        <span class="eq-bar bar-4"></span>
+                                        <span class="eq-bar bar-5"></span>
+                                        <span class="eq-bar bar-6"></span>
+                                    </div>
+                                </div>
+
+                                <!-- YouTube Embedded Screen -->
+                                <div class="w-100 h-100 position-relative {{ $firstSong->youtube_id ? '' : 'd-none' }}" id="youtubePlaybackArea">
+                                    <iframe id="mainVideoPlayer" 
+                                            class="w-100 h-100"
+                                            src="{{ $firstSong->youtube_id ? 'https://www.youtube.com/embed/' . $firstSong->youtube_id . '?rel=0&autoplay=1' : '' }}" 
+                                            title="Song Video Player" 
+                                            frameborder="0" 
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                            allowfullscreen></iframe>
+                                </div>
+                            </div>
+
+                            <!-- Audio progress and controller panel (Visible only for Audio tracks) -->
+                            <div class="card border-0 shadow-sm rounded-4 mt-3 p-4 bg-white {{ $firstSong->youtube_id ? 'd-none' : '' }}" id="audioControlsWrapper">
+                                <!-- Progress Seekbar -->
+                                <div class="progress-container mb-3" id="audioProgressContainer">
+                                    <div class="progress-bar-slider" id="progressWrapper" style="background-color: #e2e8f0 !important;">
+                                        <div class="progress-fill" id="progressBarFill" style="background-color: #006A4E !important;"></div>
+                                        <div class="progress-dot" id="progressHandle" style="border-color: #006A4E !important; box-shadow: 0 0 6px rgba(0, 106, 78, 0.4) !important;"></div>
+                                    </div>
+                                    <div class="d-flex justify-content-between mt-2 text-muted" style="font-size: 11px; font-family: 'Outfit', sans-serif; color: #64748b !important;">
+                                        <span id="currentTime">00:00</span>
+                                        <span id="totalDuration">00:00</span>
+                                    </div>
+                                </div>
+
+                                <!-- Audio Deck Controls -->
+                                <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <!-- Prev -->
+                                        <button class="btn-deck-control secondary-control" id="prevBtn" title="পূর্ববর্তী">
+                                            <i class="fas fa-step-backward" style="color: #475569;"></i>
+                                        </button>
+
+                                        <!-- Play/Pause -->
+                                        <button class="btn-deck-control play-control" id="playBtn" title="প্লে/পজ" style="background-color: #006A4E !important; box-shadow: 0 4px 15px rgba(0, 106, 78, 0.25) !important;">
+                                            <i class="fas fa-play" id="playIcon"></i>
+                                        </button>
+
+                                        <!-- Next -->
+                                        <button class="btn-deck-control secondary-control" id="nextBtn" title="পরবর্তী">
+                                            <i class="fas fa-step-forward" style="color: #475569;"></i>
+                                        </button>
+                                    </div>
+
+                                    <!-- Volume Slider -->
+                                    <div class="d-flex align-items-center gap-2">
+                                        <i class="fas fa-volume-up text-muted" id="volumeIcon" style="font-size: 12px; color: #64748b !important;"></i>
+                                        <input type="range" class="volume-slider" id="volumeSlider" min="0" max="1" step="0.05" value="0.8" style="width: 100px;">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Channel & Title Metadata Card -->
+                            <div class="card border-0 shadow-sm rounded-4 mt-3 p-4 bg-white">
+                                <div class="d-flex justify-content-between align-items-start gap-2 mb-3">
+                                    <div>
+                                        <span class="badge rounded-pill px-3 py-1.5 fw-bold mb-2" id="categoryBadge" style="font-family: 'Baloo Da 2', sans-serif; font-size: 11px; background-color: rgba(0, 106, 78, 0.15); color: #006A4E; border: 1px solid rgba(0, 106, 78, 0.25);">
+                                            @if($firstSong->category == 'party_anthem') দলীয় সঙ্গীত
+                                            @elseif($firstSong->category == 'national') দেশাত্মবোধক গান
+                                            @elseif($firstSong->category == 'awakening') জাগরণী গান
+                                            @else {{ $firstSong->category }}
+                                            @endif
+                                        </span>
+                                        <h3 class="fw-bold text-dark mb-1" id="mainSongTitle" style="font-family: 'Baloo Da 2', sans-serif; line-height: 1.4; font-size: 1.45rem; color: #0f172a !important;">
+                                            {{ $firstSong->title }}
+                                        </h3>
+                                        <p class="text-success small mb-0 d-flex align-items-center gap-1.5" style="font-family: 'Baloo Da 2', sans-serif; color: #006A4E !important; font-weight: 600;">
+                                            <span>মাটি সাংস্কৃতিক গোষ্ঠী</span> <i class="fas fa-check-circle" style="font-size: 11px;"></i>
+                                        </p>
+                                    </div>
+
+                                    <div class="d-flex align-items-center gap-2">
+                                        <!-- Download Button -->
+                                        <a id="downloadBtn" href="{{ $firstSong->audio_file ? $firstSong->audio_url : '#' }}" download class="btn-action-round-light {{ $firstSong->audio_file ? '' : 'd-none' }}" title="ডাউনলোড করুন">
+                                            <i class="fas fa-download"></i>
+                                        </a>
+                                        
+                                        <!-- Source Badge -->
+                                        <span class="badge rounded-pill px-2.5 py-1.5 border" id="playbackSourceBadge" style="font-size: 10px; font-family: 'Baloo Da 2', sans-serif; background-color: #f1f5f9; border-color: #e2e8f0 !important; color: #475569;">
+                                            {{ $firstSong->youtube_id ? 'YOUTUBE' : 'LOCAL AUDIO' }}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <!-- Lyrics Box -->
+                                <div class="video-description-box p-3 rounded-3" style="background-color: #f8fafc; border: 1px solid #e2e8f0;">
+                                    <h5 class="fw-bold text-dark mb-2" style="font-family: 'Baloo Da 2', sans-serif; font-size: 1.1rem; border-bottom: 1.5px solid #e2e8f0; padding-bottom: 6px;">
+                                        গানের কথা / লিরিক্স
+                                    </h5>
+                                    <div class="text-secondary text-center" id="mainSongLyrics" style="font-family: 'Baloo Da 2', sans-serif; font-size: 1.1rem; line-height: 2.1; white-space: pre-line;">
+                                        {!! e($firstSong->lyrics) !!}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Sidebar List Column (Right: col-lg-4) -->
+                    <div class="col-lg-4">
+                        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white sticky-sidebar-card">
+                            <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
+                                <h5 class="fw-bold text-dark mb-0 d-flex align-items-center gap-2" style="font-family: 'Baloo Da 2', sans-serif; font-size: 1.05rem;">
+                                    <span class="playlist-icon-wrap"><i class="fas fa-play-circle" style="color: #006A4E;"></i></span>
+                                    গানের প্লেলিস্ট
+                                </h5>
+                                <span class="badge rounded-pill bg-light text-secondary border border-light-grey" id="total-badge" style="font-family: 'Baloo Da 2', sans-serif; font-size: 10px; padding: 5px 10px;">
+                                    {{ count($songs) }} টি গান
+                                </span>
+                            </div>
+                            
+                            <div id="song-sidebar" class="d-flex flex-column gap-2" style="max-height: 62vh; overflow-y: auto; padding-right: 4px;">
+                                @foreach($songs as $song)
+                                    <div class="song-item d-flex gap-2 p-2 rounded-3 sidebar-trigger cursor-pointer transition border" 
+                                         data-id="{{ $song->id }}" 
+                                         data-title="{{ $song->title }}"
+                                         data-audio="{{ $song->audio_url }}"
+                                         data-youtube="{{ $song->youtube_id }}"
+                                         data-lyrics="{{ e($song->lyrics) }}"
+                                         data-category="{{ $song->category }}"
+                                         style="border-color: #f1f5f9;">
+                                         
+                                        <!-- Thumbnail Left -->
+                                        <div class="sidebar-thumb-container position-relative overflow-hidden rounded-3 flex-shrink-0" style="width: 110px; height: 62px; background-color: #f8fafc;">
+                                            @if($song->youtube_id)
+                                                <img src="{{ $song->thumbnail_url }}" class="w-100 h-100 object-cover" alt="thumbnail">
+                                            @else
+                                                <div class="w-100 h-100 d-flex align-items-center justify-content-center bg-gradient-brand">
+                                                    <i class="fas fa-music text-white" style="font-size: 1rem;"></i>
+                                                </div>
+                                            @endif
+                                            
+                                            <!-- Tiny play button overlay -->
+                                            <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center play-indicator-overlay" style="background-color: rgba(0, 0, 0, 0.4) !important;">
+                                                <i class="fas fa-play text-white" style="font-size: 10px;"></i>
+                                            </div>
+
+                                            <!-- Live Equalizer Animation when active -->
+                                            <div class="eq-overlay position-absolute bottom-0 start-0 w-100 h-100 bg-dark bg-opacity-70 d-none align-items-center justify-content-center gap-1">
+                                                <span class="eq-bar eq-bar-1"></span>
+                                                <span class="eq-bar eq-bar-2"></span>
+                                                <span class="eq-bar eq-bar-3"></span>
+                                            </div>
+                                        </div>
+                                         
+                                        <!-- Title Right -->
+                                        <div class="flex-grow-1 min-width-0 d-flex flex-column justify-content-between">
+                                            <h6 class="sidebar-video-title text-dark mb-1 text-truncate-2 fw-semibold" style="font-family: 'Baloo Da 2', sans-serif; font-size: 0.85rem; line-height: 1.4; color: #1e293b !important;">
+                                                {{ $song->title }}
+                                            </h6>
+                                            <div class="d-flex align-items-center justify-content-between">
+                                                <p class="text-muted mb-0" style="font-size: 9.5px; font-family: 'Baloo Da 2', sans-serif;">মাটি সাংস্কৃতিক গোষ্ঠী</p>
+                                                <span class="playing-text-badge text-success d-none fw-bold" style="font-size: 8.5px; font-family: 'Baloo Da 2', sans-serif; letter-spacing: 0.5px;">PLAYING</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
+        </div>
+    </section>
+
+    <!-- Bottom Section: All Songs Grid -->
+    <section class="py-5 bg-white border-top" style="border-color: #e2e8f0 !important;">
+        <div class="container">
+            <div class="d-flex flex-column align-items-center mb-5 mt-2">
+                <div class="search-box-container w-100 mb-4" style="max-width: 500px;">
+                    <div class="position-relative">
+                        <input type="text" id="songSearchInput" class="form-control" placeholder="গানের নাম বা লিরিক্স দিয়ে খুঁজুন..." style="font-family: 'Baloo Da 2', sans-serif; font-size: 14.5px; border-radius: 30px; padding: 12px 24px; border: 1px solid #cbd5e1; background-color: #ffffff; color: #334155; outline: none; transition: all 0.25s ease;">
+                        <span class="position-absolute end-0 top-50 translate-middle-y me-4" style="color: #94a3b8;"><i class="fas fa-search"></i></span>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-center flex-wrap gap-2" id="filterContainer">
+                    <button class="btn filter-btn active" data-filter="all">সব গান</button>
+                    <button class="btn filter-btn" data-filter="party_anthem">দলীয় সঙ্গীত</button>
+                    <button class="btn filter-btn" data-filter="national">দেশাত্মবোধক গান</button>
+                    <button class="btn filter-btn" data-filter="awakening">জাগরণী গান</button>
+                </div>
+            </div>
+
+            <!-- Grid -->
+            <div class="row g-4 justify-content-center" id="songGrid">
+                @foreach($songs as $song)
+                    <div class="col-xl-3 col-lg-4 col-sm-6 song-card-item" data-category="{{ $song->category }}" id="song-card-{{ $song->id }}">
+                        <div class="slider-song-card song-trigger" 
+                             data-id="{{ $song->id }}"
+                             data-title="{{ $song->title }}"
+                             data-audio="{{ $song->audio_url }}"
+                             data-youtube="{{ $song->youtube_id }}"
+                             data-lyrics="{{ e($song->lyrics) }}"
+                             data-category="{{ $song->category }}">
+                            
+                            <div class="slider-thumb-wrapper">
+                                @if($song->youtube_id)
+                                    <img src="{{ $song->thumbnail_url }}" class="w-100 h-100 object-cover" alt="thumbnail" loading="lazy">
+                                @else
+                                    <div class="song-card-album-art d-flex align-items-center justify-content-center bg-gradient-brand">
+                                        <i class="fas fa-music text-white" style="font-size: 1.8rem;"></i>
+                                    </div>
+                                @endif
+                                
+                                <div class="glass-play-overlay">
+                                    <div class="glass-play-circle"><i class="fas fa-play"></i></div>
+                                </div>
+                                <span class="video-duration-badge">{{ $song->youtube_id ? 'YOUTUBE' : 'AUDIO' }}</span>
+                            </div>
+                            
+                            <h6 class="slider-card-title mt-3" style="font-family: 'Baloo Da 2', sans-serif;">
+                                {{ $song->title }}
+                            </h6>
+                            <p class="slider-card-channel-name mb-0 text-muted mt-1" style="font-family: 'Baloo Da 2', sans-serif; font-size: 11.5px;">
+                                মাটি সাংস্কৃতিক গোষ্ঠী <i class="fas fa-check-circle text-success"></i>
+                            </p>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+
+            <!-- Empty State -->
+            <div class="text-center py-5 d-none" id="emptySearchState">
+                <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                <h5 class="fw-bold" style="font-family: 'Baloo Da 2', sans-serif; color: #94a3b8;">আপনার অনুসন্ধানের সাথে মিলছে এমন কোনো গান পাওয়া যায়নি</h5>
+            </div>
+
+            <!-- Load More -->
+            <div class="text-center mt-5" id="loadMoreContainer">
+                <button class="btn btn-load-more" id="loadMoreBtn">
+                    আরো গান দেখুন <i class="fas fa-chevron-down ms-1"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Spotify-style Sticky Bottom Player Bar -->
+    <div class="sticky-bottom-player d-none" id="stickyBottomPlayer">
+        <div class="container h-100">
+            <div class="d-flex align-items-center justify-content-between h-100 gap-3">
+                
+                <!-- Track Details -->
+                <div class="d-flex align-items-center gap-3" style="min-width: 180px; max-width: 320px;">
+                    <div class="sticky-thumb-wrapper flex-shrink-0" id="stickyThumbContainer">
+                        <i class="fas fa-music text-white" id="stickyDefaultThumb"></i>
+                        <img src="" class="w-100 h-100 object-cover d-none" id="stickyImgThumb" alt="thumb">
+                    </div>
+                    <div class="overflow-hidden">
+                        <h6 class="sticky-track-title text-white mb-0 text-truncate" id="stickyTrackTitle">গানের নাম</h6>
+                        <small class="text-muted text-truncate d-block" style="font-size: 11px;">মাটি সাংস্কৃতিক গোষ্ঠী</small>
+                    </div>
+                </div>
+
+                <!-- Controls -->
+                <div class="d-flex flex-column align-items-center gap-1.5 flex-grow-1" style="max-width: 480px;">
+                    <div class="d-flex align-items-center gap-3">
+                        <button class="sticky-control-btn" id="stickyPrevBtn"><i class="fas fa-step-backward"></i></button>
+                        <button class="sticky-play-btn" id="stickyPlayBtn"><i class="fas fa-play" id="stickyPlayIcon"></i></button>
+                        <button class="sticky-control-btn" id="stickyNextBtn"><i class="fas fa-step-forward"></i></button>
+                    </div>
+                    <div class="w-100 sticky-progress-container px-2">
+                        <div class="sticky-slider-bar" id="stickyProgressWrapper">
+                            <div class="sticky-slider-fill" id="stickyProgressBarFill"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Utilities -->
+                <div class="d-flex align-items-center gap-3 justify-content-end" style="min-width: 150px;">
+                    <div class="d-flex align-items-center gap-2 d-none d-md-flex">
+                        <i class="fas fa-volume-up text-muted" style="font-size: 12px;" id="stickyVolumeIcon"></i>
+                        <input type="range" class="volume-slider" id="stickyVolumeSlider" min="0" max="1" step="0.05" value="0.8" style="width: 80px;">
+                    </div>
+                    <button class="sticky-control-btn ms-2 text-danger" id="stickyCloseBtn" title="প্লেয়ার বন্ধ করুন"><i class="fas fa-times-circle" style="font-size: 18px;"></i></button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom CSS Styles -->
+    
+
+@endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const audio = document.getElementById('mainAudio');
+    const playBtn = document.getElementById('playBtn');
+    const playIcon = document.getElementById('playIcon');
+    const progressWrapper = document.getElementById('progressWrapper');
+    const progressBarFill = document.getElementById('progressBarFill');
+    const progressHandle = document.getElementById('progressHandle');
+    const currentTimeEl = document.getElementById('currentTime');
+    const totalDurationEl = document.getElementById('totalDuration');
+    const playerCdIcon = document.getElementById('playerCdIcon');
+    const volumeSlider = document.getElementById('volumeSlider');
+    const volumeIcon = document.getElementById('volumeIcon');
+
+    const stickyBottomPlayer = document.getElementById('stickyBottomPlayer');
+    const stickyPlayBtn = document.getElementById('stickyPlayBtn');
+    const stickyPlayIcon = document.getElementById('stickyPlayIcon');
+    const stickyProgressBarFill = document.getElementById('stickyProgressBarFill');
+    const stickyProgressWrapper = document.getElementById('stickyProgressWrapper');
+    const stickyTrackTitle = document.getElementById('stickyTrackTitle');
+    const stickyImgThumb = document.getElementById('stickyImgThumb');
+    const stickyDefaultThumb = document.getElementById('stickyDefaultThumb');
+    const stickyVolumeSlider = document.getElementById('stickyVolumeSlider');
+    const stickyVolumeIcon = document.getElementById('stickyVolumeIcon');
+
+    const songItems = document.querySelectorAll('.song-item');
+    const songCardsGrid = document.querySelectorAll('.song-card-item');
+    const mainSongTitle = document.getElementById('mainSongTitle');
+    const mainSongLyrics = document.getElementById('mainSongLyrics');
+
+    const audioPlaybackArea = document.getElementById('audioPlaybackArea');
+    const youtubePlaybackArea = document.getElementById('youtubePlaybackArea');
+    const mainVideoPlayer = document.getElementById('mainVideoPlayer');
+    const playbackSourceBadge = document.getElementById('playbackSourceBadge');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const categoryBadge = document.getElementById('categoryBadge');
+    const audioControlsWrapper = document.getElementById('audioControlsWrapper');
+
+    const categoryNames = {
+        'party_anthem': 'দলীয় সঙ্গীত',
+        'national': 'দেশাত্মবোধক গান',
+        'awakening': 'জাগরণী গান'
+    };
+
+    // Load Playlist items with fallback checks
+    const playlist = Array.from(songItems).map(item => {
+        const youtubeId = item.getAttribute('data-youtube') || '';
+        return {
+            id: item.getAttribute('data-id') || '',
+            title: item.getAttribute('data-title') || '',
+            audio: item.getAttribute('data-audio') || '',
+            youtube: youtubeId,
+            lyrics: item.getAttribute('data-lyrics') || '',
+            category: item.getAttribute('data-category') || '',
+            thumb: youtubeId ? `https://img.youtube.com/vi/${youtubeId}/mqdefault.jpg` : ''
+        };
+    });
+
+    let currentTrackIndex = 0;
+    window.isTrackPlaying = false;
+    window.currentTrack = playlist[0] || null;
+
+    // Set first active
+    if (songItems.length > 0) {
+        songItems[0].classList.add('active-item');
+    }
+
+    // Toggle Play/Pause for Audio
+    function togglePlay() {
+        if (!audio) return;
+        const track = playlist[currentTrackIndex];
+        if (track && track.youtube) return;
+
+        if (!audio.src) return;
+        if (audio.paused) {
+            audio.play().catch(err => console.log('Audio autoplay blocked or interrupted'));
+            window.isTrackPlaying = true;
+            updatePlayPauseUI(true);
+        } else {
+            audio.pause();
+            window.isTrackPlaying = false;
+            updatePlayPauseUI(false);
+        }
+    }
+
+    if (playBtn) playBtn.addEventListener('click', togglePlay);
+    if (stickyPlayBtn) stickyPlayBtn.addEventListener('click', togglePlay);
+
+    function updatePlayPauseUI(playing) {
+        if (playIcon) playIcon.className = playing ? 'fas fa-pause' : 'fas fa-play';
+        if (stickyPlayIcon) stickyPlayIcon.className = playing ? 'fas fa-pause' : 'fas fa-play';
+        if (playerCdIcon) {
+            if (playing) playerCdIcon.classList.add('playing');
+            else playerCdIcon.classList.remove('playing');
+        }
+        
+        // Highlight active track
+        const activeTrack = playlist[currentTrackIndex];
+        if (!activeTrack) return;
+        
+        songItems.forEach(item => {
+            if (item.getAttribute('data-id') === activeTrack.id) {
+                item.classList.add('active-item');
+            } else {
+                item.classList.remove('active-item');
+            }
+        });
+
+        const allSongTriggers = document.querySelectorAll('.song-trigger');
+        allSongTriggers.forEach(card => {
+            if (card.getAttribute('data-id') === activeTrack.id) {
+                card.classList.add('now-playing');
+            } else {
+                card.classList.remove('now-playing');
+            }
+        });
+    }
+
+    // Audio metadata & progress updates
+    if (audio) {
+        audio.addEventListener('timeupdate', function () {
+            const track = playlist[currentTrackIndex];
+            if (track && track.youtube) return; 
+
+            if (audio.duration) {
+                const percent = (audio.currentTime / audio.duration) * 100;
+                if (progressBarFill) progressBarFill.style.width = `${percent}%`;
+                if (progressHandle) progressHandle.style.left = `${percent}%`;
+                if (currentTimeEl) currentTimeEl.textContent = formatTimeHelper(audio.currentTime);
+                if (stickyProgressBarFill) stickyProgressBarFill.style.width = `${percent}%`;
+            }
+        });
+
+        audio.addEventListener('loadedmetadata', function () {
+            if (totalDurationEl) totalDurationEl.textContent = formatTimeHelper(audio.duration);
+        });
+
+        audio.addEventListener('ended', function () {
+            updatePlayPauseUI(false);
+            nextTrack();
+        });
+    }
+
+    // Seek Click
+    if (progressWrapper) {
+        progressWrapper.addEventListener('click', function (e) {
+            if (!audio) return;
+            const width = this.clientWidth;
+            const clickX = e.offsetX;
+            if (audio.duration) {
+                audio.currentTime = (clickX / width) * audio.duration;
+            }
+        });
+    }
+
+    // Volume change
+    function setVolume(val) {
+        if (!audio) return;
+        audio.volume = val;
+        if (volumeSlider) volumeSlider.value = val;
+        if (stickyVolumeSlider) stickyVolumeSlider.value = val;
+
+        let iconClass = 'fas fa-volume-up';
+        if (val == 0) {
+            iconClass = 'fas fa-volume-mute';
+        } else if (val < 0.5) {
+            iconClass = 'fas fa-volume-down';
+        }
+
+        if (volumeIcon) volumeIcon.className = iconClass;
+        if (stickyVolumeIcon) stickyVolumeIcon.className = iconClass;
+    }
+
+    if (volumeSlider) volumeSlider.addEventListener('input', function() { setVolume(this.value); });
+    if (stickyVolumeSlider) stickyVolumeSlider.addEventListener('input', function() { setVolume(this.value); });
+
+    function formatTimeHelper(secs) {
+        if (isNaN(secs)) return '00:00';
+        const minutes = Math.floor(secs / 60);
+        const seconds = Math.floor(secs % 60);
+        return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }
+
+    // Load Track
+    function loadTrack(index) {
+        if (index >= 0 && index < playlist.length) {
+            currentTrackIndex = index;
+            const track = playlist[index];
+            window.currentTrack = track;
+            
+            // Text sync
+            if (mainSongTitle) mainSongTitle.textContent = track.title;
+            if (stickyTrackTitle) stickyTrackTitle.textContent = track.title;
+            if (mainSongLyrics) mainSongLyrics.innerHTML = track.lyrics || 'কোনো লিরিক্স নেই।';
+            if (categoryBadge) categoryBadge.textContent = categoryNames[track.category] || track.category;
+
+            // Reset progress
+            if (progressBarFill) progressBarFill.style.width = '0%';
+            if (progressHandle) progressHandle.style.left = '0%';
+            if (currentTimeEl) currentTimeEl.textContent = '00:00';
+            if (totalDurationEl) totalDurationEl.textContent = '00:00';
+
+            // Stop audio
+            if (audio) {
+                audio.pause();
+            }
+            updatePlayPauseUI(false);
+
+            if (track.youtube) {
+                // Show YouTube, Hide Audio
+                if (audioPlaybackArea) audioPlaybackArea.classList.add('d-none');
+                if (youtubePlaybackArea) youtubePlaybackArea.classList.remove('d-none');
+                if (audioControlsWrapper) audioControlsWrapper.classList.add('d-none');
+                
+                if (playbackSourceBadge) {
+                    playbackSourceBadge.textContent = "YOUTUBE";
+                    playbackSourceBadge.className = "badge bg-danger text-white rounded-pill px-2.5 py-1.5 border border-danger";
+                }
+                if (downloadBtn) downloadBtn.classList.add('d-none');
+                if (stickyBottomPlayer) stickyBottomPlayer.classList.add('d-none');
+
+                // Load YouTube video in iframe directly
+                if (mainVideoPlayer) mainVideoPlayer.src = `https://www.youtube.com/embed/${track.youtube}?autoplay=1&rel=0`;
+            } else {
+                // Show Audio, Hide YouTube
+                if (youtubePlaybackArea) youtubePlaybackArea.classList.add('d-none');
+                if (mainVideoPlayer) mainVideoPlayer.src = ""; // Reset video
+                
+                if (audioPlaybackArea) audioPlaybackArea.classList.remove('d-none');
+                if (audioControlsWrapper) audioControlsWrapper.classList.remove('d-none');
+                
+                if (downloadBtn) {
+                    if (track.audio) {
+                        downloadBtn.href = track.audio;
+                        downloadBtn.classList.remove('d-none');
+                    } else {
+                        downloadBtn.classList.add('d-none');
+                    }
+                }
+                
+                if (playbackSourceBadge) {
+                    playbackSourceBadge.textContent = "LOCAL AUDIO";
+                    playbackSourceBadge.className = "badge bg-success text-white rounded-pill px-2.5 py-1.5 border border-success";
+                }
+
+                if (audio) {
+                    audio.src = track.audio;
+                    audio.load();
+                    audio.play().catch(err => console.log('Autoplay block handled'));
+                }
+                window.isTrackPlaying = true;
+                updatePlayPauseUI(true);
+
+                checkStickyVisibility();
+            }
+        }
+    }
+
+    function prevTrack() {
+        let newIndex = currentTrackIndex - 1;
+        if (newIndex < 0) newIndex = playlist.length - 1;
+        loadTrack(newIndex);
+    }
+
+    function nextTrack() {
+        let newIndex = currentTrackIndex + 1;
+        if (newIndex >= playlist.length) newIndex = 0;
+        loadTrack(newIndex);
+    }
+
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const stickyPrevBtn = document.getElementById('stickyPrevBtn');
+    const stickyNextBtn = document.getElementById('stickyNextBtn');
+
+    if (prevBtn) prevBtn.addEventListener('click', prevTrack);
+    if (nextBtn) nextBtn.addEventListener('click', nextTrack);
+    if (stickyPrevBtn) stickyPrevBtn.addEventListener('click', prevTrack);
+    if (stickyNextBtn) stickyNextBtn.addEventListener('click', nextTrack);
+
+    // Robust Event Delegation for Click Triggers (Handles Children Click Properly)
+    document.addEventListener('click', function(e) {
+        const trigger = e.target.closest('.sidebar-trigger, .song-trigger');
+        if (trigger) {
+            const songId = trigger.getAttribute('data-id');
+            const foundIndex = playlist.findIndex(p => String(p.id) === String(songId));
+            if (foundIndex !== -1) {
+                loadTrack(foundIndex);
+                const theater = document.getElementById('song-theater-section');
+                if (theater) {
+                    window.scrollTo({ top: theater.offsetTop - 20, behavior: 'smooth' });
+                }
+            }
+        }
+    });
+
+    // Sticky Player Close
+    const stickyCloseBtn = document.getElementById('stickyCloseBtn');
+    if (stickyCloseBtn) {
+        stickyCloseBtn.addEventListener('click', function() {
+            if (audio) audio.pause();
+            updatePlayPauseUI(false);
+            if (stickyBottomPlayer) stickyBottomPlayer.classList.add('d-none');
+        });
+    }
+
+    // Sticky visibility
+    function checkStickyVisibility() {
+        const theaterSection = document.getElementById('song-theater-section');
+        if (!theaterSection) return;
+
+        const theaterBottom = theaterSection.offsetTop + theaterSection.clientHeight;
+        const currentScroll = window.scrollY || window.pageYOffset;
+        const activeTrack = playlist[currentTrackIndex];
+
+        if (currentScroll > theaterBottom && activeTrack && !activeTrack.youtube && window.isTrackPlaying) {
+            if (stickyBottomPlayer) stickyBottomPlayer.classList.remove('d-none');
+        } else {
+            if (stickyBottomPlayer) stickyBottomPlayer.classList.add('d-none');
+        }
+    }
+
+    window.addEventListener('scroll', checkStickyVisibility);
+
+    // Filter, Search, Load More (Safe against missing elements)
+    const songSearchInput = document.getElementById('songSearchInput');
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const loadMoreBtn = document.getElementById('loadMoreBtn');
+    const emptySearchState = document.getElementById('emptySearchState');
+    
+    let visibleCount = 8;
+    const itemsPerLoad = 8;
+    let currentFilter = 'all';
+    let searchQuery = '';
+
+    function applyFilterAndLimits() {
+        let matchCount = 0;
+
+        songCardsGrid.forEach(card => {
+            const category = card.getAttribute('data-category') || '';
+            const titleEl = card.querySelector('.slider-card-title');
+            const title = titleEl ? titleEl.textContent.toLowerCase() : '';
+            const triggerEl = card.querySelector('.song-trigger');
+            const lyrics = triggerEl ? (triggerEl.getAttribute('data-lyrics') || '').toLowerCase() : '';
+            
+            const matchesFilter = (currentFilter === 'all' || category === currentFilter);
+            const matchesSearch = (searchQuery === '' || title.includes(searchQuery) || lyrics.includes(searchQuery));
+
+            if (matchesFilter && matchesSearch) {
+                matchCount++;
+                if (matchCount <= visibleCount) {
+                    card.classList.remove('d-none');
+                } else {
+                    card.classList.add('d-none');
+                }
+            } else {
+                card.classList.add('d-none');
+            }
+        });
+
+        const totalMatches = Array.from(songCardsGrid).filter(card => {
+            const category = card.getAttribute('data-category') || '';
+            const titleEl = card.querySelector('.slider-card-title');
+            const title = titleEl ? titleEl.textContent.toLowerCase() : '';
+            const triggerEl = card.querySelector('.song-trigger');
+            const lyrics = triggerEl ? (triggerEl.getAttribute('data-lyrics') || '').toLowerCase() : '';
+            
+            const matchesFilter = (currentFilter === 'all' || category === currentFilter);
+            const matchesSearch = (searchQuery === '' || title.includes(searchQuery) || lyrics.includes(searchQuery));
+            
+            return matchesFilter && matchesSearch;
+        }).length;
+
+        if (totalMatches === 0) {
+            if (emptySearchState) emptySearchState.classList.remove('d-none');
+            if (loadMoreBtn) loadMoreBtn.classList.add('d-none');
+        } else {
+            if (emptySearchState) emptySearchState.classList.add('d-none');
+            if (visibleCount >= totalMatches) {
+                if (loadMoreBtn) loadMoreBtn.classList.add('d-none');
+            } else {
+                if (loadMoreBtn) loadMoreBtn.classList.remove('d-none');
+            }
+        }
+    }
+
+    if (songSearchInput) {
+        songSearchInput.addEventListener('input', function() {
+            searchQuery = this.value.toLowerCase().trim();
+            visibleCount = 8;
+            applyFilterAndLimits();
+        });
+    }
+
+    filterButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+            filterButtons.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            currentFilter = this.getAttribute('data-filter') || 'all';
+            visibleCount = 8;
+            applyFilterAndLimits();
+        });
+    });
+
+    if (loadMoreBtn) {
+        loadMoreBtn.addEventListener('click', function() {
+            visibleCount += itemsPerLoad;
+            applyFilterAndLimits();
+        });
+    }
+
+    applyFilterAndLimits();
+});
+</script>
+@endpush
