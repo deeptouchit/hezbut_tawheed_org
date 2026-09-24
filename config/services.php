@@ -67,4 +67,9 @@ return [
         'redirect'      => env('FACEBOOK_REDIRECT_URI'),
     ],
 
+    'github' => [
+        'webhook_secret' => env('GITHUB_WEBHOOK_SECRET'),
+        'webhook_branch' => env('GITHUB_WEBHOOK_BRANCH', 'main'),
+    ],
+
 ];

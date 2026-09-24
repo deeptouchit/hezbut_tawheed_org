@@ -47,5 +47,4 @@ Route::get('/gallery', function () {
         })
     ]);
 });
-
-
+Route::post('/webhook/github-deploy', [\App\Http\Controllers\GitHubDeployController::class, 'deploy']);
