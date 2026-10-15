@@ -120,9 +120,11 @@
         #heroCarousel .slider-content-wrapper {
             position: relative;
             z-index: 3;
-            max-width: 530px;
+            max-width: 520px;
             border-left: 3.5px solid #10b981;
             padding-left: 1.25rem;
+            padding-top: 0.4rem;
+            padding-bottom: 0.4rem;
         }
         #heroCarousel .slider-badge {
             background-color: rgba(255, 255, 255, 0.12);
