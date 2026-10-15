@@ -113,13 +113,16 @@
             height: 100%;
             z-index: 2;
             display: flex;
-            align-items: center;
-            background: linear-gradient(90deg, rgba(8, 23, 17, 0.88) 0%, rgba(8, 23, 17, 0.65) 45%, rgba(8, 23, 17, 0.2) 100%);
+            align-items: flex-end;
+            padding-bottom: 4rem;
+            background: linear-gradient(90deg, rgba(8, 23, 17, 0.94) 0%, rgba(8, 23, 17, 0.82) 32%, rgba(8, 23, 17, 0.3) 55%, transparent 100%);
         }
         #heroCarousel .slider-content-wrapper {
             position: relative;
             z-index: 3;
-            max-width: 780px;
+            max-width: 530px;
+            border-left: 3.5px solid #10b981;
+            padding-left: 1.25rem;
         }
         #heroCarousel .slider-badge {
             background-color: rgba(255, 255, 255, 0.12);
@@ -129,37 +132,45 @@
             color: #ffffff;
             font-family: 'Hind Siliguri', var(--font-bengali), sans-serif;
             font-weight: 600;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             letter-spacing: 0.3px;
         }
         #heroCarousel .slider-title {
             font-family: 'Baloo Da 2', var(--font-bengali), sans-serif;
-            font-weight: 700;
-            font-size: clamp(1.35rem, 2.2vw, 1.95rem);
-            line-height: 1.35;
+            font-weight: 800;
+            font-size: clamp(1.4rem, 2.2vw, 1.95rem);
+            line-height: 1.32;
             color: #ffffff !important;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8), 0 4px 20px rgba(0, 0, 0, 0.5);
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.85), 0 4px 22px rgba(0, 0, 0, 0.55);
         }
         #heroCarousel .slider-subtitle {
             font-family: 'Hind Siliguri', var(--font-bengali), sans-serif;
-            font-size: clamp(0.9rem, 1.2vw, 1.05rem);
+            font-size: clamp(0.88rem, 1.15vw, 1.02rem);
             font-weight: 400;
-            line-height: 1.6;
-            color: #f1f5f9 !important;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+            line-height: 1.65;
+            color: rgba(241, 245, 249, 0.92) !important;
+            text-shadow: 0 1px 6px rgba(0, 0, 0, 0.75);
+            max-width: 490px;
         }
         #heroCarousel .btn-slider-premium {
             font-family: 'Hind Siliguri', var(--font-bengali), sans-serif;
-            font-weight: 700;
-            padding: 12px 32px;
+            font-weight: 600;
+            padding: 9px 28px;
             border-radius: 50px;
             transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-            font-size: 1.02rem;
+            font-size: 0.95rem;
             letter-spacing: 0.3px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             text-decoration: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+        #heroCarousel .btn-slider-premium .btn-icon {
+            transition: transform 0.3s ease;
+        }
+        #heroCarousel .btn-slider-premium:hover .btn-icon {
+            transform: translateX(4px);
         }
         #heroCarousel .btn-slider-primary {
             background-color: #006A4E;
@@ -259,39 +270,47 @@
 
         @media (max-width: 767.98px) {
             #heroCarousel .carousel-item {
-                height: 52vh;
-                min-height: 420px;
+                height: 55vh;
+                min-height: 430px;
             }
             #heroCarousel .carousel-item-overlay {
-                background: linear-gradient(180deg, rgba(8, 23, 17, 0.25) 0%, rgba(8, 23, 17, 0.72) 42%, rgba(8, 23, 17, 0.94) 100%);
+                background: linear-gradient(180deg, rgba(8, 23, 17, 0.2) 0%, rgba(8, 23, 17, 0.75) 45%, rgba(8, 23, 17, 0.96) 100%);
                 align-items: flex-end;
-                padding-bottom: 2.8rem;
+                padding-bottom: 2.2rem !important;
+            }
+            #heroCarousel .slider-content-wrapper {
+                max-width: 100%;
+                border-left: 2.5px solid #10b981;
+                padding-left: 0.85rem;
+            }
+            #heroCarousel .row {
+                padding-bottom: 2.2rem !important;
             }
             #heroCarousel .slider-title {
                 font-size: 1.2rem !important;
-                line-height: 1.35 !important;
-                margin-bottom: 0.4rem !important;
+                line-height: 1.32 !important;
+                margin-bottom: 0.35rem !important;
             }
             #heroCarousel .slider-subtitle {
-                font-size: 0.85rem !important;
+                font-size: 0.84rem !important;
                 line-height: 1.45 !important;
-                margin-bottom: 0.75rem !important;
+                margin-bottom: 0.65rem !important;
             }
             #heroCarousel .slider-badge {
-                font-size: 0.78rem;
-                padding: 3px 10px !important;
-                margin-bottom: 0.5rem !important;
+                font-size: 0.75rem;
+                padding: 2px 9px !important;
+                margin-bottom: 0.4rem !important;
             }
             #heroCarousel .btn-slider-premium {
-                padding: 8px 20px;
-                font-size: 0.88rem;
+                padding: 7px 20px;
+                font-size: 0.85rem;
             }
             #heroCarousel .carousel-control-prev,
             #heroCarousel .carousel-control-next {
                 display: none;
             }
             #heroCarousel .carousel-indicators {
-                bottom: 12px;
+                bottom: 10px;
             }
         }
     </style>
@@ -340,8 +359,8 @@
                             <!-- Gradient Overlay & Rich Content -->
                             <div class="carousel-item-overlay">
                                 <div class="container h-100">
-                                    <div class="row h-100 align-items-center">
-                                        <div class="col-lg-8 col-xl-7 col-md-10">
+                                    <div class="row h-100 align-items-end" style="padding-bottom: 4rem;">
+                                        <div class="col-xl-5 col-lg-6 col-md-7 col-12">
                                             <div class="slider-content-wrapper text-start">
                                                 @if (!empty($subTitle) && empty($title))
                                                     <div class="slider-badge d-inline-flex align-items-center gap-2 px-3 py-1.5 rounded-pill mb-3">
@@ -370,7 +389,7 @@
                                                                 class="btn btn-slider-premium btn-slider-primary shadow-sm"
                                                                 style="background-color: {{ $btnColor }} !important; border-color: {{ $btnColor }} !important;">
                                                                 <span>{{ $btnText ?: $slider->button_text }}</span>
-                                                                <i class="fas fa-arrow-right ms-2" style="font-size: 0.85rem;"></i>
+                                                                <i class="fas fa-arrow-right ms-2 btn-icon" style="font-size: 0.82rem;"></i>
                                                             </a>
                                                         @endif
 
@@ -379,7 +398,7 @@
                                                             <a href="{{ $linkUrl }}" target="{{ $target }}"
                                                                 class="btn btn-slider-premium btn-slider-secondary shadow-sm">
                                                                 <span>{{ $linkText ?: 'আরও দেখুন' }}</span>
-                                                                <i class="fas fa-angle-double-right ms-2" style="font-size: 0.85rem;"></i>
+                                                                <i class="fas fa-angle-double-right ms-2 btn-icon" style="font-size: 0.82rem;"></i>
                                                             </a>
                                                         @endif
                                                     </div>
@@ -402,8 +421,8 @@
                         </div>
                         <div class="carousel-item-overlay">
                             <div class="container h-100">
-                                <div class="row h-100 align-items-center">
-                                    <div class="col-lg-8 col-xl-7">
+                                <div class="row h-100 align-items-end" style="padding-bottom: 4rem;">
+                                    <div class="col-xl-5 col-lg-6 col-md-7 col-12">
                                         <div class="slider-content-wrapper text-start">
                                             <div class="slider-badge d-inline-flex align-items-center gap-2 px-3 py-1.5 rounded-pill mb-3">
                                                 <i class="fas fa-star text-warning"></i>
