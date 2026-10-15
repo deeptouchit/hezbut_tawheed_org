@@ -88,13 +88,16 @@ class GitHubDeployController extends Controller
         // Public HTTPS repository fallback (no SSH key required)
         $publicRepoUrl = 'https://github.com/deeptouchit/hezbut_tawheed_org.git';
 
+        $cleanBranch = preg_replace('/[^a-zA-Z0-9_\-\/]/', '', $targetBranch) ?: 'main';
+
         // Deployment commands with SSH auto-fix and safe git fetch & reset
         $commands = [
+            "rm -f .git/index.lock 2>/dev/null || true",
             "chmod 700 ~/.ssh 2>/dev/null || true",
             "chmod 600 ~/.ssh/id_* 2>/dev/null || true",
             "chmod 600 /home/u516838200/.ssh/id_* 2>/dev/null || true",
-            "git -c safe.directory='*' fetch origin {$escapedBranch}",
-            "git -c safe.directory='*' reset --hard origin/{$escapedBranch}",
+            "git -c safe.directory='*' fetch origin {$cleanBranch}",
+            "git -c safe.directory='*' reset --hard origin/{$cleanBranch}",
             "php artisan migrate --force || true",
             "php artisan optimize:clear",
         ];
