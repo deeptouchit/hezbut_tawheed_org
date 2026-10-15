@@ -134,16 +134,16 @@
         }
         #heroCarousel .slider-title {
             font-family: 'Baloo Da 2', var(--font-bengali), sans-serif;
-            font-weight: 800;
-            font-size: clamp(2rem, 4vw, 3.2rem);
-            line-height: 1.22;
+            font-weight: 700;
+            font-size: clamp(1.35rem, 2.2vw, 1.95rem);
+            line-height: 1.35;
             color: #ffffff !important;
-            text-shadow: 0 3px 12px rgba(0, 0, 0, 0.8), 0 6px 28px rgba(0, 0, 0, 0.5);
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8), 0 4px 20px rgba(0, 0, 0, 0.5);
         }
         #heroCarousel .slider-subtitle {
             font-family: 'Hind Siliguri', var(--font-bengali), sans-serif;
-            font-size: clamp(1.05rem, 1.8vw, 1.25rem);
-            font-weight: 500;
+            font-size: clamp(0.9rem, 1.2vw, 1.05rem);
+            font-weight: 400;
             line-height: 1.6;
             color: #f1f5f9 !important;
             text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
@@ -268,13 +268,14 @@
                 padding-bottom: 2.8rem;
             }
             #heroCarousel .slider-title {
-                font-size: 1.6rem !important;
-                margin-bottom: 0.5rem !important;
+                font-size: 1.2rem !important;
+                line-height: 1.35 !important;
+                margin-bottom: 0.4rem !important;
             }
             #heroCarousel .slider-subtitle {
-                font-size: 0.92rem !important;
-                line-height: 1.5;
-                margin-bottom: 0.85rem !important;
+                font-size: 0.85rem !important;
+                line-height: 1.45 !important;
+                margin-bottom: 0.75rem !important;
             }
             #heroCarousel .slider-badge {
                 font-size: 0.78rem;
