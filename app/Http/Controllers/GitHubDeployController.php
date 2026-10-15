@@ -61,14 +61,40 @@ class GitHubDeployController extends Controller
         // Base project path
         $basePath = base_path();
 
-        // Detect PHP binary path
-        $phpBinary = defined('PHP_BINARY') && !empty(PHP_BINARY) ? PHP_BINARY : 'php';
-        $escapedBranch = escapeshellarg($targetBranch);
+        // Auto-fix SSH key permissions if they are too open (0644 -> 0600)
+        $homeDir = getenv('HOME') ?: ('/home/' . get_current_user());
+        $possibleSshDirs = array_unique(array_filter([
+            $homeDir . '/.ssh',
+            '/home/u516838200/.ssh',
+        ]));
 
-        // Deployment commands with git safe directory bypass & hard reset
+        foreach ($possibleSshDirs as $sshDir) {
+            if (is_dir($sshDir)) {
+                @chmod($sshDir, 0700);
+                $keyFiles = glob($sshDir . '/id_*');
+                if ($keyFiles) {
+                    foreach ($keyFiles as $file) {
+                        if (!str_ends_with($file, '.pub')) {
+                            @chmod($file, 0600);
+                        }
+                    }
+                }
+                if (file_exists($sshDir . '/config')) {
+                    @chmod($sshDir . '/config', 0600);
+                }
+            }
+        }
+
+        // Public HTTPS repository fallback (no SSH key required)
+        $publicRepoUrl = 'https://github.com/deeptouchit/hezbut_tawheed_org.git';
+
+        // Deployment commands with SSH auto-fix, HTTPS fallback & FETCH_HEAD reset
         $commands = [
-            "git -c safe.directory='*' fetch origin {$escapedBranch}",
-            "git -c safe.directory='*' reset --hard origin/{$escapedBranch}",
+            "chmod 700 ~/.ssh 2>/dev/null || true",
+            "chmod 600 ~/.ssh/id_* 2>/dev/null || true",
+            "chmod 600 /home/u516838200/.ssh/id_* 2>/dev/null || true",
+            "(git -c safe.directory='*' fetch origin {$escapedBranch} || git -c safe.directory='*' fetch {$publicRepoUrl} {$escapedBranch})",
+            "git -c safe.directory='*' reset --hard FETCH_HEAD",
             escapeshellcmd($phpBinary) . ' artisan migrate --force',
             escapeshellcmd($phpBinary) . ' artisan optimize:clear',
             escapeshellcmd($phpBinary) . ' artisan config:cache',
