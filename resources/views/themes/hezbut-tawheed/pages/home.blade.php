@@ -72,6 +72,227 @@
             height: 2.9em;
             line-height: 1.45;
         }
+
+        /* =========================================
+           Hero Carousel Custom Premium Styling
+           ========================================= */
+        #heroCarousel {
+            position: relative;
+            background-color: #0b1a13;
+        }
+        #heroCarousel .carousel-item {
+            height: 70vh;
+            min-height: 480px;
+            max-height: 680px;
+            position: relative;
+            overflow: hidden;
+            background-color: #0b1a13;
+        }
+        #heroCarousel .carousel-item-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: 1;
+            transition: transform 9s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        #heroCarousel .carousel-item.active .carousel-item-bg {
+            transform: scale(1.08);
+        }
+        #heroCarousel .carousel-item-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            background: linear-gradient(90deg, rgba(8, 23, 17, 0.88) 0%, rgba(8, 23, 17, 0.65) 45%, rgba(8, 23, 17, 0.2) 100%);
+        }
+        #heroCarousel .slider-content-wrapper {
+            position: relative;
+            z-index: 3;
+            max-width: 780px;
+        }
+        #heroCarousel .slider-badge {
+            background-color: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            color: #ffffff;
+            font-family: 'Hind Siliguri', var(--font-bengali), sans-serif;
+            font-weight: 600;
+            font-size: 0.9rem;
+            letter-spacing: 0.3px;
+        }
+        #heroCarousel .slider-title {
+            font-family: 'Baloo Da 2', var(--font-bengali), sans-serif;
+            font-weight: 800;
+            font-size: clamp(2rem, 4vw, 3.2rem);
+            line-height: 1.22;
+            color: #ffffff !important;
+            text-shadow: 0 3px 12px rgba(0, 0, 0, 0.8), 0 6px 28px rgba(0, 0, 0, 0.5);
+        }
+        #heroCarousel .slider-subtitle {
+            font-family: 'Hind Siliguri', var(--font-bengali), sans-serif;
+            font-size: clamp(1.05rem, 1.8vw, 1.25rem);
+            font-weight: 500;
+            line-height: 1.6;
+            color: #f1f5f9 !important;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+        }
+        #heroCarousel .btn-slider-premium {
+            font-family: 'Hind Siliguri', var(--font-bengali), sans-serif;
+            font-weight: 700;
+            padding: 12px 32px;
+            border-radius: 50px;
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            font-size: 1.02rem;
+            letter-spacing: 0.3px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+        }
+        #heroCarousel .btn-slider-primary {
+            background-color: #006A4E;
+            color: #ffffff !important;
+            border: 2px solid #006A4E;
+            box-shadow: 0 4px 18px rgba(0, 106, 78, 0.4);
+        }
+        #heroCarousel .btn-slider-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 106, 78, 0.55);
+            filter: brightness(1.1);
+            color: #ffffff !important;
+        }
+        #heroCarousel .btn-slider-secondary {
+            background-color: rgba(255, 255, 255, 0.12);
+            color: #ffffff !important;
+            border: 2px solid rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        #heroCarousel .btn-slider-secondary:hover {
+            background-color: #ffffff;
+            color: #006A4E !important;
+            border-color: #ffffff;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 255, 255, 0.3);
+        }
+        #heroCarousel .carousel-control-prev,
+        #heroCarousel .carousel-control-next {
+            width: 46px;
+            height: 46px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(11, 26, 19, 0.45);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            opacity: 0.8;
+            transition: all 0.3s ease;
+            z-index: 4;
+        }
+        #heroCarousel .carousel-control-prev { left: 24px; }
+        #heroCarousel .carousel-control-next { right: 24px; }
+        #heroCarousel .carousel-control-prev:hover,
+        #heroCarousel .carousel-control-next:hover {
+            background-color: #006A4E;
+            border-color: #006A4E;
+            opacity: 1;
+            transform: translateY(-50%) scale(1.1);
+        }
+        #heroCarousel .carousel-indicators {
+            bottom: 22px;
+            margin-bottom: 0;
+            z-index: 4;
+        }
+        #heroCarousel .carousel-indicators [data-bs-target] {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            border: none;
+            background-color: rgba(255, 255, 255, 0.55);
+            margin: 0 5px;
+            transition: all 0.35s ease;
+        }
+        #heroCarousel .carousel-indicators .active {
+            width: 32px;
+            border-radius: 12px;
+            background-color: #006A4E;
+            box-shadow: 0 0 12px rgba(0, 106, 78, 0.8);
+        }
+
+        /* Slide Entrance Animations */
+        @keyframes heroContentFadeUp {
+            0% {
+                opacity: 0;
+                transform: translateY(24px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        #heroCarousel .carousel-item.active .slider-badge {
+            animation: heroContentFadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.05s both;
+        }
+        #heroCarousel .carousel-item.active .slider-title {
+            animation: heroContentFadeUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both;
+        }
+        #heroCarousel .carousel-item.active .slider-subtitle {
+            animation: heroContentFadeUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.28s both;
+        }
+        #heroCarousel .carousel-item.active .slider-actions {
+            animation: heroContentFadeUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.4s both;
+        }
+
+        @media (max-width: 767.98px) {
+            #heroCarousel .carousel-item {
+                height: 52vh;
+                min-height: 420px;
+            }
+            #heroCarousel .carousel-item-overlay {
+                background: linear-gradient(180deg, rgba(8, 23, 17, 0.25) 0%, rgba(8, 23, 17, 0.72) 42%, rgba(8, 23, 17, 0.94) 100%);
+                align-items: flex-end;
+                padding-bottom: 2.8rem;
+            }
+            #heroCarousel .slider-title {
+                font-size: 1.6rem !important;
+                margin-bottom: 0.5rem !important;
+            }
+            #heroCarousel .slider-subtitle {
+                font-size: 0.92rem !important;
+                line-height: 1.5;
+                margin-bottom: 0.85rem !important;
+            }
+            #heroCarousel .slider-badge {
+                font-size: 0.78rem;
+                padding: 3px 10px !important;
+                margin-bottom: 0.5rem !important;
+            }
+            #heroCarousel .btn-slider-premium {
+                padding: 8px 20px;
+                font-size: 0.88rem;
+            }
+            #heroCarousel .carousel-control-prev,
+            #heroCarousel .carousel-control-next {
+                display: none;
+            }
+            #heroCarousel .carousel-indicators {
+                bottom: 12px;
+            }
+        }
     </style>
 @endpush
 
@@ -80,23 +301,97 @@
     <!-- 1. Hero Slider Section -->
     <div class="homepage-section-wrapper" id="section-wrapper-hero_slider">
         <div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
+            @if ($sliders->count() > 1)
+                <div class="carousel-indicators">
+                    @foreach ($sliders as $idx => $s)
+                        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="{{ $idx }}"
+                            class="{{ $idx === 0 ? 'active' : '' }}" aria-current="{{ $idx === 0 ? 'true' : 'false' }}"
+                            aria-label="Slide {{ $idx + 1 }}"></button>
+                    @endforeach
+                </div>
+            @endif
+
             <div class="carousel-inner">
                 @forelse($sliders as $key => $slider)
+                    @php
+                        $rawAttrs       = $slider->getAttributes();
+                        $title          = $rawAttrs['title'] ?? null;
+                        $subTitle       = $rawAttrs['sub_title'] ?? null;
+                        $btnText        = $rawAttrs['button_text'] ?? null;
+                        $btnLink        = $slider->button_link ?? null;
+                        $linkText       = $rawAttrs['link_text'] ?? null;
+                        $linkUrl        = $rawAttrs['link'] ?? null;
+                        $btnColor       = $slider->button_color ?: '#006A4E';
+                        $target         = $slider->target ?: '_self';
+
+                        // Check if text or button content exists
+                        $hasTextContent = !empty($title) || !empty($subTitle) || !empty($btnText) || !empty($linkText);
+                    @endphp
+
                     <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
-                        @if ($slider->hasLink())
-                            <a href="{{ $slider->button_link }}" target="{{ $slider->target }}">
-                                <div class="carousel-item-bg d-none d-md-block"
-                                    style="background-image: url('{{ asset($slider->image_url) }}');"></div>
-                                <div class="carousel-item-bg d-block d-md-none"
-                                    style="background-image: url('{{ asset($slider->mobile_image_url) }}');"></div>
-                            </a>
-                        @else
-                            <div class="carousel-item-bg d-none d-md-block"
-                                style="background-image: url('{{ asset($slider->image_url) }}');">
+                        <!-- Background Images: Desktop & Mobile -->
+                        <div class="carousel-item-bg d-none d-md-block"
+                            style="background-image: url('{{ asset($slider->image_url) }}');"></div>
+                        <div class="carousel-item-bg d-block d-md-none"
+                            style="background-image: url('{{ asset($slider->mobile_image_url) }}');"></div>
+
+                        @if ($hasTextContent)
+                            <!-- Gradient Overlay & Rich Content -->
+                            <div class="carousel-item-overlay">
+                                <div class="container h-100">
+                                    <div class="row h-100 align-items-center">
+                                        <div class="col-lg-8 col-xl-7 col-md-10">
+                                            <div class="slider-content-wrapper text-start">
+                                                @if (!empty($subTitle) && empty($title))
+                                                    <div class="slider-badge d-inline-flex align-items-center gap-2 px-3 py-1.5 rounded-pill mb-3">
+                                                        <i class="fas fa-bullhorn text-warning" style="font-size: 0.85rem;"></i>
+                                                        <span>{{ $subTitle }}</span>
+                                                    </div>
+                                                @endif
+
+                                                @if (!empty($title))
+                                                    <h1 class="slider-title text-shadow-premium mb-3">
+                                                        {{ $title }}
+                                                    </h1>
+                                                @endif
+
+                                                @if (!empty($subTitle) && !empty($title))
+                                                    <p class="slider-subtitle mb-4">
+                                                        {{ $subTitle }}
+                                                    </p>
+                                                @endif
+
+                                                @if (!empty($btnLink) || !empty($linkUrl))
+                                                    <div class="slider-actions d-flex flex-wrap align-items-center gap-3 mt-3">
+                                                        {{-- বাটন (Primary Button) --}}
+                                                        @if (!empty($btnLink))
+                                                            <a href="{{ $btnLink }}" target="{{ $target }}"
+                                                                class="btn btn-slider-premium btn-slider-primary shadow-sm"
+                                                                style="background-color: {{ $btnColor }} !important; border-color: {{ $btnColor }} !important;">
+                                                                <span>{{ $btnText ?: $slider->button_text }}</span>
+                                                                <i class="fas fa-arrow-right ms-2" style="font-size: 0.85rem;"></i>
+                                                            </a>
+                                                        @endif
+
+                                                        {{-- লিংক URL ও লিংক টেক্সট (Secondary Action / Link) --}}
+                                                        @if (!empty($linkUrl) && $linkUrl !== $btnLink)
+                                                            <a href="{{ $linkUrl }}" target="{{ $target }}"
+                                                                class="btn btn-slider-premium btn-slider-secondary shadow-sm">
+                                                                <span>{{ $linkText ?: 'আরও দেখুন' }}</span>
+                                                                <i class="fas fa-angle-double-right ms-2" style="font-size: 0.85rem;"></i>
+                                                            </a>
+                                                        @endif
+                                                    </div>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="carousel-item-bg d-block d-md-none"
-                                style="background-image: url('{{ asset($slider->mobile_image_url) }}');">
-                            </div>
+                        @elseif ($slider->hasLink())
+                            <!-- Pure image banner with full clickable link -->
+                            <a href="{{ $slider->button_link }}" target="{{ $target }}" class="stretched-link"
+                                aria-label="{{ $slider->alt_text }}"></a>
                         @endif
                     </div>
                 @empty
@@ -104,17 +399,38 @@
                         <div class="carousel-item-bg"
                             style="background-image: url('https://images.unsplash.com/photo-1541872703-74c5e44368f9?q=80&width=1920');">
                         </div>
+                        <div class="carousel-item-overlay">
+                            <div class="container h-100">
+                                <div class="row h-100 align-items-center">
+                                    <div class="col-lg-8 col-xl-7">
+                                        <div class="slider-content-wrapper text-start">
+                                            <div class="slider-badge d-inline-flex align-items-center gap-2 px-3 py-1.5 rounded-pill mb-3">
+                                                <i class="fas fa-star text-warning"></i>
+                                                <span>মানবতার কল্যাণে একটি অরাজনৈতিক আন্দোলন</span>
+                                            </div>
+                                            <h1 class="slider-title text-shadow-premium mb-3">
+                                                হেযবুত তওহীদ
+                                            </h1>
+                                            <p class="slider-subtitle text-white-50 mb-4">
+                                                সত্য ও ন্যায়ের আহ্বানে ঐক্যবদ্ধ জাতি গঠনে আমাদের প্রত্যয়।
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 @endforelse
             </div>
+
             @if ($sliders->count() > 1)
-                <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+                <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev" aria-label="পূর্ববর্তী">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Previous</span>
+                    <span class="visually-hidden">পূর্ববর্তী</span>
                 </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+                <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next" aria-label="পরবর্তী">
                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Next</span>
+                    <span class="visually-hidden">পরবর্তী</span>
                 </button>
             @endif
         </div>
