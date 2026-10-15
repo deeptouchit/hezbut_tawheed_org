@@ -61,30 +61,50 @@ class GitHubDeployController extends Controller
         // Base project path
         $basePath = base_path();
 
-        // Deployment commands
+        // Detect PHP binary path
+        $phpBinary = defined('PHP_BINARY') && !empty(PHP_BINARY) ? PHP_BINARY : 'php';
+        $escapedBranch = escapeshellarg($targetBranch);
+
+        // Deployment commands with git safe directory bypass & hard reset
         $commands = [
-            'git pull origin ' . escapeshellarg($targetBranch),
-            'php artisan migrate --force',
-            'php artisan optimize:clear',
-            'php artisan config:cache',
-            'php artisan route:cache',
+            "git -c safe.directory='*' fetch origin {$escapedBranch}",
+            "git -c safe.directory='*' reset --hard origin/{$escapedBranch}",
+            escapeshellcmd($phpBinary) . ' artisan migrate --force',
+            escapeshellcmd($phpBinary) . ' artisan optimize:clear',
+            escapeshellcmd($phpBinary) . ' artisan config:cache',
+            escapeshellcmd($phpBinary) . ' artisan route:cache',
         ];
 
         $fullCommand = implode(' && ', $commands);
 
         // Execute command
-        $output = [];
+        $output = '';
+        $errorOutput = '';
         $exitCode = 0;
 
-        // Run process in project root
-        $process = Process::fromShellCommandline($fullCommand, $basePath);
-        $process->setTimeout(300); // 5 minutes timeout
-
         try {
-            $process->run();
-            $output = $process->getOutput();
-            $errorOutput = $process->getErrorOutput();
-            $exitCode = $process->getExitCode();
+            if (function_exists('proc_open')) {
+                $process = Process::fromShellCommandline($fullCommand, $basePath);
+                $process->setTimeout(300); // 5 minutes timeout
+                $process->run();
+                $output = $process->getOutput();
+                $errorOutput = $process->getErrorOutput();
+                $exitCode = $process->getExitCode();
+            } elseif (function_exists('exec')) {
+                $cmd = "cd " . escapeshellarg($basePath) . " && (" . $fullCommand . ") 2>&1";
+                $execLines = [];
+                exec($cmd, $execLines, $exitCode);
+                $output = implode("\n", $execLines);
+                if ($exitCode !== 0) {
+                    $errorOutput = $output;
+                }
+            } elseif (function_exists('shell_exec')) {
+                $cmd = "cd " . escapeshellarg($basePath) . " && (" . $fullCommand . ") 2>&1";
+                $output = (string) shell_exec($cmd);
+                $exitCode = 0;
+            } else {
+                throw new \RuntimeException('Neither proc_open, exec, nor shell_exec is enabled on this PHP installation.');
+            }
 
             $logData = [
                 'timestamp' => now()->toIso8601String(),
@@ -97,9 +117,13 @@ class GitHubDeployController extends Controller
             ];
 
             // Write to dedicated deploy log
-            file_put_contents(
+            $logDir = storage_path('logs');
+            if (!file_exists($logDir)) {
+                @mkdir($logDir, 0755, true);
+            }
+            @file_put_contents(
                 storage_path('logs/deploy.log'),
-                "[" . date('Y-m-d H:i:s') . "] Deploy by {$pusher}\nOutput:\n" . $output . "\nErrors:\n" . $errorOutput . "\n" . str_repeat('=', 60) . "\n\n",
+                "[" . date('Y-m-d H:i:s') . "] Deploy by {$pusher}\nCommand: {$fullCommand}\nExit Code: {$exitCode}\nOutput:\n" . $output . "\nErrors:\n" . $errorOutput . "\n" . str_repeat('=', 60) . "\n\n",
                 FILE_APPEND
             );
 
@@ -109,6 +133,7 @@ class GitHubDeployController extends Controller
                     'success' => false,
                     'message' => 'Deployment failed',
                     'exit_code' => $exitCode,
+                    'command' => $fullCommand,
                     'output' => $output,
                     'error' => $errorOutput,
                 ], 500);
