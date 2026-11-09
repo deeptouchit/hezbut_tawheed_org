@@ -9,33 +9,120 @@
         background-color: #f8fafc;
     }
 
-    /* Filter Pills */
-    .tabs-scroll-wrapper {
+    /* Directory Toolbar */
+    .directory-toolbar {
+        background: #ffffff;
+        border: 1px solid #cbd5e1;
+        border-radius: 0.5rem;
+        padding: 0.65rem 0.85rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    }
+
+    .search-input-wrap {
+        position: relative;
+        display: flex;
+        align-items: center;
+        width: 100%;
+    }
+
+    .search-input-wrap .search-icon {
+        position: absolute;
+        left: 12px;
+        font-size: 13px;
+        color: #006A4E !important;
+        pointer-events: none;
+        z-index: 4;
+    }
+
+    .branch-search-input {
+        height: 38px !important;
+        padding-left: 34px !important;
+        padding-right: 32px !important;
+        font-size: 0.88rem !important;
+        font-family: 'Baloo Da 2', sans-serif !important;
+        border: 1px solid #cbd5e1 !important;
+        border-radius: 20px !important;
+        background-color: #f8fafc !important;
+        box-shadow: none !important;
+        transition: all 0.2s ease !important;
+    }
+
+    .branch-search-input:focus {
+        background-color: #ffffff !important;
+        border-color: #006A4E !important;
+        box-shadow: 0 0 0 3px rgba(0, 106, 78, 0.1) !important;
+    }
+
+    .clear-search-btn {
+        position: absolute;
+        right: 4px;
+        z-index: 4;
+        padding: 4px 8px;
+        font-size: 14px;
+        color: #94a3b8;
+        box-shadow: none !important;
+        text-decoration: none !important;
+    }
+    .clear-search-btn:hover {
+        color: #64748b;
+    }
+
+    /* Filter Horizontal Scroll Strip */
+    .filter-scroll-container {
         width: 100%;
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
         scrollbar-width: none;
+        padding: 2px 0;
     }
-    .tabs-scroll-wrapper::-webkit-scrollbar {
+    .filter-scroll-container::-webkit-scrollbar {
         display: none;
     }
+
+    .filter-pills-track {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        white-space: nowrap;
+    }
+
     .btn-filter {
-        border: 1px solid #d1d5db;
+        border: 1px solid #cbd5e1;
         color: #475569;
         background-color: #ffffff;
         transition: all 0.15s ease;
-        font-size: 0.85rem;
+        font-size: 0.82rem;
         font-family: 'Baloo Da 2', sans-serif;
+        font-weight: 600;
+        padding: 5px 12px;
+        border-radius: 20px;
+        display: inline-flex;
+        align-items: center;
         white-space: nowrap;
+        cursor: pointer;
+        line-height: 1.2;
     }
+
     .btn-filter:hover {
         border-color: #006A4E;
         color: #006A4E;
+        background-color: #f0fdf4;
     }
+
     .btn-filter.active {
         background: #006A4E !important;
         color: #ffffff !important;
         border-color: #006A4E !important;
+        box-shadow: 0 1px 3px rgba(0, 106, 78, 0.2) !important;
+    }
+
+    @media (max-width: 767.98px) {
+        .directory-toolbar {
+            padding: 0.55rem 0.65rem;
+        }
+        .filter-pills-track {
+            padding-top: 2px;
+        }
     }
 
     /* Natural Table Card */
@@ -268,61 +355,57 @@
     <section class="py-4 grid-pattern-mask" style="min-height: 70vh; position: relative;">
         <div class="container">
             
-            <!-- Smart Interactive Filter & Search Bar -->
-            <div class="card border border-light-subtle shadow-sm rounded-3 p-3 mb-3 bg-white">
-                
-                <!-- Search Input Row -->
-                <div class="d-flex justify-content-center mb-2.5">
-                    <div class="input-group rounded-pill border shadow-sm bg-white overflow-hidden p-1 search-container-premium" style="max-width: 550px; width: 100%;">
-                        <span class="input-group-text bg-white border-0 ps-3 pe-2"><i class="fas fa-search text-success" style="font-size: 14px;"></i></span>
-                        <input type="text" id="branch-search" class="form-control border-0 py-1.5 ps-1 pe-3" 
-                               placeholder="কার্যালয়, জেলা, পদবি বা কর্মকর্তা খুঁজুন..." autocomplete="off" style="font-size: 0.92rem; box-shadow: none; font-family: 'Baloo Da 2', sans-serif;">
-                        <button class="btn btn-link text-muted pe-3 d-none" id="clear-search-btn" type="button" title="মুছে ফেলুন">
-                            <i class="fas fa-times-circle"></i>
-                        </button>
+            <!-- Sleek Compact Filter & Search Toolbar -->
+            <div class="directory-toolbar mb-2.5">
+                <div class="row g-2 align-items-center">
+                    <!-- Search Input Box -->
+                    <div class="col-12 col-md-5 col-lg-4">
+                        <div class="search-input-wrap">
+                            <i class="fas fa-search search-icon"></i>
+                            <input type="text" id="branch-search" class="form-control branch-search-input" 
+                                   placeholder="কার্যালয়, জেলা বা কর্মকর্তা খুঁজুন..." autocomplete="off">
+                            <button class="btn btn-link clear-search-btn d-none" id="clear-search-btn" type="button" title="মুছে ফেলুন">
+                                <i class="fas fa-times-circle"></i>
+                            </button>
+                        </div>
                     </div>
-                </div>
 
-                <!-- Tabs Row -->
-                <div class="tabs-scroll-wrapper">
-                    <div class="d-flex justify-content-start justify-content-md-center gap-1.5" id="filter-controls">
-                        <button class="btn btn-filter active rounded-pill px-3 py-1 fw-bold" data-filter="all">
-                            <i class="fas fa-border-all me-1"></i> সকল কার্যালয়
-                        </button>
-                        <button class="btn btn-filter rounded-pill px-3 py-1 fw-bold" data-filter="central">
-                            <i class="fas fa-hotel me-1"></i> কেন্দ্রীয় কার্যালয়
-                        </button>
-                        <button class="btn btn-filter rounded-pill px-3 py-1 fw-bold" data-filter="division">
-                            <i class="fas fa-sitemap me-1"></i> বিভাগীয়
-                        </button>
-                        <button class="btn btn-filter rounded-pill px-3 py-1 fw-bold" data-filter="district">
-                            <i class="fas fa-map-marked-alt me-1"></i> জেলা কার্যালয়
-                        </button>
-                        <button class="btn btn-filter rounded-pill px-3 py-1 fw-bold" data-filter="upazila">
-                            <i class="fas fa-street-view me-1"></i> উপজেলা কার্যালয়
-                        </button>
-                        <button class="btn btn-filter rounded-pill px-3 py-1 fw-bold" data-filter="international">
-                            <i class="fas fa-globe-americas me-1"></i> আন্তর্জাতিক
-                        </button>
+                    <!-- Filter Pills Horizontal Strip -->
+                    <div class="col-12 col-md-7 col-lg-8">
+                        <div class="filter-scroll-container">
+                            <div class="filter-pills-track" id="filter-controls">
+                                <button class="btn btn-filter active" data-filter="all">
+                                    <i class="fas fa-border-all me-1"></i>সকল
+                                </button>
+                                <button class="btn btn-filter" data-filter="central">
+                                    <i class="fas fa-hotel me-1"></i>কেন্দ্রীয়
+                                </button>
+                                <button class="btn btn-filter" data-filter="division">
+                                    <i class="fas fa-sitemap me-1"></i>বিভাগীয়
+                                </button>
+                                <button class="btn btn-filter" data-filter="district">
+                                    <i class="fas fa-map-marked-alt me-1"></i>জেলা
+                                </button>
+                                <button class="btn btn-filter" data-filter="upazila">
+                                    <i class="fas fa-street-view me-1"></i>উপজেলা
+                                </button>
+                                <button class="btn btn-filter" data-filter="international">
+                                    <i class="fas fa-globe-americas me-1"></i>আন্তর্জাতিক
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Mobile Table Scroll Hint -->
-            <div class="d-lg-none alert alert-light py-1.5 px-3 mb-2 border rounded-2 text-muted small d-flex align-items-center justify-content-between">
-                <span style="font-family: 'Baloo Da 2', sans-serif; font-size: 0.82rem;">
-                    <i class="fas fa-arrows-left-right text-success me-1"></i> সম্পূর্ণ টেবিল দেখতে বামে-ডানে স্ক্রল করুন
-                </span>
-                <span class="badge bg-light text-secondary border" style="font-size: 9.5px;">স্ক্রলেবল</span>
-            </div>
-
-            <!-- Status counter strip -->
+            <!-- Natural Clean Status & Mobile Scroll Hint Row -->
             <div class="d-flex align-items-center justify-content-between mb-2 px-1">
-                <span class="text-secondary small fw-medium" style="font-family: 'Baloo Da 2', sans-serif; font-size: 0.82rem;">
+                <span class="text-secondary small fw-medium" style="font-family: 'Baloo Da 2', sans-serif; font-size: 0.83rem;">
                     <i class="fas fa-building text-success me-1"></i> মোট কার্যালয়: <strong class="text-dark">{{ count($branches) }}</strong> টি
+                    <span class="text-muted ms-1" id="filtered-status-text">(সবগুলো প্রদর্শিত হচ্ছে)</span>
                 </span>
-                <span class="text-muted small" id="filtered-status-text" style="font-family: 'Baloo Da 2', sans-serif; font-size: 0.82rem;">
-                    সবগুলো প্রদর্শিত হচ্ছে
+                <span class="d-md-none text-muted small" style="font-family: 'Baloo Da 2', sans-serif; font-size: 0.78rem;">
+                    <i class="fas fa-arrows-left-right text-success me-1"></i>ডানে স্ক্রল করুন
                 </span>
             </div>
 
@@ -649,14 +732,14 @@ $(document).ready(function() {
         if (visibleCount === 0) {
             $('#no-search-results').removeClass('d-none');
             $('#branches-table').addClass('d-none');
-            $('#filtered-status-text').text('কোনো মিল পাওয়া যায়নি');
+            $('#filtered-status-text').text('(কোনো মিল পাওয়া যায়নি)');
         } else {
             $('#no-search-results').addClass('d-none');
             $('#branches-table').removeClass('d-none');
             if (visibleCount < totalBranches) {
-                $('#filtered-status-text').text(visibleCount + ' টি প্রদর্শিত হচ্ছে');
+                $('#filtered-status-text').text('(' + visibleCount + ' টি প্রদর্শিত হচ্ছে)');
             } else {
-                $('#filtered-status-text').text('সবগুলো প্রদর্শিত হচ্ছে');
+                $('#filtered-status-text').text('(সবগুলো প্রদর্শিত হচ্ছে)');
             }
         }
     }
