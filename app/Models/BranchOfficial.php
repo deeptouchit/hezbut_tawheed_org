@@ -47,6 +47,27 @@ class BranchOfficial extends Model
         }
 
         // Return a clean default avatar path
-        return 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&background=006A4E&color=fff&size=128';
+        return asset('uploads/avatars/default.svg');
+    }
+
+    /**
+     * Get formatted designation label.
+     */
+    public function getFormattedDesignationAttribute(): string
+    {
+        $d = trim((string) $this->designation);
+
+        if ($d === 'দায়িত্বশীল' || $d === 'দায়িত্বশীল') {
+            return 'জেলা আমির';
+        }
+
+        if ($d === 'সহকারী দায়িত্বশীল' || $d === 'সহকারী দায়িত্বশীল') {
+            return 'সহকারী আমির';
+        }
+
+        $d = str_replace(['সহকারী দায়িত্বশীল', 'সহকারী দায়িত্বশীল'], 'সহকারী আমির', $d);
+        $d = str_replace(['দায়িত্বশীল', 'দায়িত্বশীল'], 'জেলা আমির', $d);
+
+        return $d ?: 'জেলা আমির';
     }
 }
