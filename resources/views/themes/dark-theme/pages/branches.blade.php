@@ -55,93 +55,88 @@
 
     /* Modern Table Container */
     .directory-table-card {
-        border: 1px solid #e2e8f0 !important;
-        border-radius: 1rem !important;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04) !important;
+        border: 1px solid #cbd5e1 !important;
+        border-radius: 0.75rem !important;
+        box-shadow: 0 6px 24px rgba(0, 0, 0, 0.04) !important;
         background: #ffffff;
         overflow: hidden;
     }
 
+    /* Custom Bordered Small Table */
     .directory-table {
         margin-bottom: 0 !important;
+        border-collapse: collapse !important;
+        border: 1px solid #cbd5e1 !important;
         font-family: 'Baloo Da 2', sans-serif;
     }
 
-    .directory-table thead th {
+    .directory-table th, 
+    .directory-table td {
+        border: 1px solid #cbd5e1 !important;
+        padding: 0.5rem 0.7rem !important;
+        vertical-align: middle;
+        font-size: 0.92rem;
+    }
+
+    /* Main Header Row */
+    .directory-table thead tr.header-row-main th {
         background: #006A4E !important;
         color: #ffffff !important;
         font-weight: 700;
         font-size: 0.96rem;
         letter-spacing: 0.3px;
-        padding: 1rem 1.15rem;
-        border: none !important;
-        vertical-align: middle;
+        border: 1px solid #005a42 !important;
+        text-align: center;
     }
 
-    .directory-table tbody tr {
-        transition: background-color 0.2s ease;
-        border-bottom: 1px solid #eef2f6;
+    /* Sub Header Row */
+    .directory-table thead tr.header-row-sub th {
+        background: #047857 !important;
+        color: #ffffff !important;
+        font-weight: 700;
+        font-size: 0.88rem;
+        border: 1px solid #006A4E !important;
+        text-align: center;
+    }
+
+    /* Alternating branch backgrounds */
+    .branch-even {
+        background-color: #ffffff !important;
+    }
+    .branch-odd {
+        background-color: #f8fafc !important;
     }
 
     .directory-table tbody tr:hover {
         background-color: #f0fdf4 !important;
     }
 
-    .directory-table td {
-        padding: 1rem 1.15rem;
-        vertical-align: middle;
-        font-size: 0.95rem;
-        border-top: 1px solid #f1f5f9;
+    /* Clear Separator line between different branches */
+    .branch-last-row td {
+        border-bottom: 2px solid #94a3b8 !important;
     }
 
-    /* Serial number pill */
+    /* Serial number */
     .serial-badge {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 34px;
-        height: 34px;
-        border-radius: 50%;
-        background: #f1f5f9;
+        font-weight: 800;
+        font-size: 0.98rem;
         color: #006A4E;
-        font-weight: 700;
-        font-size: 0.92rem;
-        border: 1px solid #e2e8f0;
+        display: inline-block;
     }
 
-    .directory-table tbody tr:hover .serial-badge {
-        background: #006A4E;
-        color: #ffffff;
-        border-color: #006A4E;
-    }
-
-    /* 2 Rows inside 'দায়িত্বপ্রাপ্ত ব্যক্তিবৃন্দ' cell */
-    .official-row-box {
-        background: #f8fafc;
-        border: 1px solid #e2e8f0;
-        border-radius: 0.65rem;
-        padding: 0.5rem 0.75rem;
-        transition: all 0.2s ease;
-    }
-
-    .directory-table tbody tr:hover .official-row-box {
-        background: #ffffff;
-        border-color: #cbd5e1;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
-    }
-
+    /* Avatar Thumbnail */
     .avatar-frame {
-        width: 44px;
-        height: 44px;
-        border: 2px solid #ffffff;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+        width: 36px;
+        height: 36px;
+        border: 1.5px solid #cbd5e1;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
         background-color: #e2e8f0;
     }
 
-    .official-name-text {
+    .official-name {
         font-weight: 700;
         color: #0f172a;
-        font-size: 0.98rem;
+        font-size: 0.95rem;
         line-height: 1.25;
     }
 
@@ -152,8 +147,9 @@
         border: 1px solid rgba(0, 106, 78, 0.3) !important;
         font-weight: 700 !important;
         font-size: 10px !important;
-        padding: 0.2rem 0.6rem !important;
+        padding: 0.18rem 0.55rem !important;
         border-radius: 50rem !important;
+        white-space: nowrap;
     }
 
     .badge-assistant-pill {
@@ -162,14 +158,26 @@
         border: 1px solid rgba(14, 116, 144, 0.3) !important;
         font-weight: 700 !important;
         font-size: 10px !important;
-        padding: 0.2rem 0.6rem !important;
+        padding: 0.18rem 0.55rem !important;
         border-radius: 50rem !important;
+        white-space: nowrap;
     }
 
-    /* Direct Call Action Button */
+    .badge-other-pill {
+        background: rgba(100, 116, 139, 0.12) !important;
+        color: #475569 !important;
+        border: 1px solid rgba(100, 116, 139, 0.3) !important;
+        font-weight: 600 !important;
+        font-size: 10px !important;
+        padding: 0.18rem 0.55rem !important;
+        border-radius: 50rem !important;
+        white-space: nowrap;
+    }
+
+    /* Direct Call Mini Button */
     .btn-call-mini {
-        width: 36px;
-        height: 36px;
+        width: 28px;
+        height: 28px;
         border-radius: 50%;
         background: linear-gradient(135deg, #006A4E, #059669);
         color: #ffffff !important;
@@ -177,23 +185,23 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        font-size: 13.5px;
+        font-size: 11px;
         transition: all 0.2s ease;
-        box-shadow: 0 2px 6px rgba(0, 106, 78, 0.25);
+        box-shadow: 0 1px 4px rgba(0, 106, 78, 0.25);
     }
 
     .btn-call-mini:hover {
         background: linear-gradient(135deg, #059669, #10b981);
-        transform: scale(1.1);
-        box-shadow: 0 4px 10px rgba(0, 106, 78, 0.35);
+        transform: scale(1.15);
         color: #ffffff !important;
     }
 
     .phone-link {
-        color: #334155;
+        color: #1e293b;
         font-size: 0.88rem;
         font-weight: 600;
         transition: color 0.2s;
+        white-space: nowrap;
     }
 
     .phone-link:hover {
@@ -207,14 +215,14 @@
     /* Address Box styling */
     .address-text-styled {
         color: #475569;
-        font-size: 0.9rem;
-        line-height: 1.55;
+        font-size: 0.88rem;
+        line-height: 1.45;
         font-weight: 500;
     }
 
     .copy-address-btn {
         transition: all 0.2s ease;
-        font-size: 11.5px !important;
+        font-size: 11px !important;
         font-family: 'Baloo Da 2', sans-serif !important;
     }
 
@@ -224,52 +232,20 @@
         color: #ffffff !important;
     }
 
-    /* Row filter handling */
-    .branch-table-row.filtered-out {
-        display: none !important;
+    /* Custom Responsive Scrollbar */
+    .table-responsive::-webkit-scrollbar {
+        height: 8px;
     }
-
-    /* Mobile Responsive Card adaptation */
-    @media (max-width: 991.98px) {
-        .directory-table thead {
-            display: none;
-        }
-
-        .directory-table, 
-        .directory-table tbody, 
-        .directory-table tr, 
-        .directory-table td {
-            display: block;
-            width: 100%;
-        }
-
-        .directory-table tbody tr {
-            margin-bottom: 1.25rem;
-            border: 1px solid #e2e8f0;
-            border-radius: 1rem;
-            padding: 1.25rem;
-            background: #ffffff;
-            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.03);
-        }
-
-        .directory-table td {
-            padding: 0.65rem 0;
-            border-top: none;
-            border-bottom: 1px dashed #e2e8f0;
-        }
-
-        .directory-table td:last-child {
-            border-bottom: none;
-            padding-bottom: 0;
-        }
-
-        .mobile-label {
-            display: inline-block;
-            font-size: 0.8rem;
-            font-weight: 700;
-            color: #64748b;
-            margin-bottom: 0.35rem;
-        }
+    .table-responsive::-webkit-scrollbar-track {
+        background: #f1f5f9;
+        border-radius: 4px;
+    }
+    .table-responsive::-webkit-scrollbar-thumb {
+        background: #94a3b8;
+        border-radius: 4px;
+    }
+    .table-responsive::-webkit-scrollbar-thumb:hover {
+        background: #006A4E;
     }
 </style>
 @endpush
@@ -328,10 +304,18 @@
                 </div>
             </div>
 
+            <!-- Mobile Table Scroll Hint -->
+            <div class="d-lg-none alert alert-light py-2 px-3 mb-3 border rounded-3 text-muted small d-flex align-items-center justify-content-between">
+                <span style="font-family: 'Baloo Da 2', sans-serif; font-size: 0.85rem;">
+                    <i class="fas fa-arrows-left-right text-success me-1.5"></i> সম্পূর্ণ টেবিল দেখতে বামে-ডানে স্ক্রল করুন
+                </span>
+                <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25" style="font-size: 10px;">স্ক্রলেবল</span>
+            </div>
+
             <!-- Status counter strip -->
-            <div class="d-flex align-items-center justify-content-between mb-3 px-2">
+            <div class="d-flex align-items-center justify-content-between mb-2.5 px-1">
                 <span class="text-secondary small fw-medium" style="font-family: 'Baloo Da 2', sans-serif;">
-                    <i class="fas fa-database text-success me-1"></i> তালিকাভুক্ত মোট কার্যালয়: <strong class="text-dark">{{ count($branches) }}</strong> টি
+                    <i class="fas fa-building text-success me-1"></i> তালিকাভুক্ত মোট কার্যালয়: <strong class="text-dark">{{ count($branches) }}</strong> টি
                 </span>
                 <span class="text-muted small" id="filtered-status-text" style="font-family: 'Baloo Da 2', sans-serif;">
                     সবগুলো প্রদর্শিত হচ্ছে
@@ -341,228 +325,216 @@
             @php
                 $bnDigits = ['০','১','২','৩','৪','৫','৬','৭','৮','৯'];
                 $enDigits = ['0','1','2','3','4','5','6','7','8','9'];
+
+                $formatDesig = function($desig, $isAmir = false) {
+                    $d = trim((string)$desig);
+                    if ($d === 'দায়িত্বশীল' || $d === 'দায়িত্বশীল') {
+                        return 'জেলা আমির';
+                    }
+                    if ($d === 'সহকারী দায়িত্বশীল' || $d === 'সহকারী দায়িত্বশীল') {
+                        return 'সহকারী আমির';
+                    }
+                    $d = str_replace(['সহকারী দায়িত্বশীল', 'সহকারী দায়িত্বশীল'], 'সহকারী আমির', $d);
+                    $d = str_replace(['দায়িত্বশীল', 'দায়িত্বশীল'], 'জেলা আমির', $d);
+                    return $d ?: ($isAmir ? 'জেলা আমির' : 'সহকারী আমির');
+                };
             @endphp
 
             <!-- Directory Data Table Card -->
             <div class="directory-table-card">
                 <div class="table-responsive">
-                    <table class="table directory-table" id="branches-table">
+                    <table class="table table-sm table-bordered directory-table" id="branches-table">
                         <thead>
-                            <tr>
-                                <th class="text-center" style="width: 70px;">#</th>
-                                <th style="width: 220px;">জেলার নাম</th>
-                                <th style="width: 280px;">ঠিকানা</th>
-                                <th>দায়িত্বপ্রাপ্ত ব্যক্তিবৃন্দ</th>
+                            <!-- Header Row 1 -->
+                            <tr class="header-row-main">
+                                <th rowspan="2" class="text-center align-middle" style="width: 45px;">#</th>
+                                <th rowspan="2" class="align-middle" style="min-width: 170px;">জেলার নাম</th>
+                                <th rowspan="2" class="align-middle" style="min-width: 200px;">ঠিকানা</th>
+                                <th colspan="4" class="text-center align-middle">দায়িত্বপ্রাপ্ত ব্যক্তিবৃন্দ</th>
+                            </tr>
+                            <!-- Header Row 2: Sub-headers under দায়িত্বপ্রাপ্ত ব্যক্তিবৃন্দ -->
+                            <tr class="header-row-sub">
+                                <th class="text-center align-middle" style="width: 55px;">ছবি</th>
+                                <th class="align-middle" style="min-width: 160px;">নাম</th>
+                                <th class="text-center align-middle" style="width: 125px;">পদবী</th>
+                                <th class="align-middle" style="min-width: 170px;">মোবাইল নাম্বার</th>
                             </tr>
                         </thead>
                         <tbody id="branches-tbody">
                             @forelse($branches as $index => $branch)
                                 @php
-                                    $serialBn = str_replace($enDigits, $bnDigits, str_pad($index + 1, 2, '0', STR_PAD_LEFT));
+                                    $serialBn = str_replace($enDigits, $bnDigits, $index + 1);
 
-                                    // Primary: জেলা আমির
-                                    $amir = $branch->officials->first(function($off) {
+                                    // Sort officials: Amir first, then others
+                                    $officials = $branch->officials;
+                                    $amir = $officials->first(function($off) {
                                         $d = trim($off->designation);
                                         return in_array($d, ['দায়িত্বশীল', 'দায়িত্বশীল', 'জেলা আমির', 'বিভাগীয় আমির', 'আমির']);
-                                    }) ?? $branch->officials->first();
+                                    }) ?? $officials->first();
 
-                                    // Secondary: সহকারী আমির (অন্যান্য দায়িত্বশীল)
-                                    $assistant = $branch->officials->first(function($off) use ($amir) {
+                                    $otherOfficials = $officials->filter(function($off) use ($amir) {
                                         return !$amir || $off->id !== $amir->id;
                                     });
 
-                                    // More assistants if any
-                                    $otherAssistants = $branch->officials->filter(function($off) use ($amir, $assistant) {
-                                        $excludeIds = array_filter([$amir ? $amir->id : null, $assistant ? $assistant->id : null]);
-                                        return !in_array($off->id, $excludeIds);
-                                    });
+                                    $sortedOfficials = collect();
+                                    if ($amir) {
+                                        $sortedOfficials->push($amir);
+                                    }
+                                    foreach ($otherOfficials as $other) {
+                                        $sortedOfficials->push($other);
+                                    }
+
+                                    $rowCount = max(1, $sortedOfficials->count());
+                                    $firstOfficial = $sortedOfficials->first();
+                                    $branchBgClass = ($index % 2 == 0) ? 'branch-even' : 'branch-odd';
                                 @endphp
-                                <tr class="branch-table-row" 
-                                    data-type="{{ $branch->type }}"
+
+                                <!-- Row 1 of this branch -->
+                                <tr class="branch-row {{ $branchBgClass }} @if($rowCount == 1) branch-last-row @endif" 
+                                    data-branch-id="{{ $branch->id }}" 
+                                    data-type="{{ $branch->type }}" 
                                     data-name="{{ strtolower($branch->name) }} {{ strtolower($branch->address) }} @foreach($branch->officials as $off){{ strtolower($off->name) }} {{ strtolower($off->formatted_designation) }} {{ strtolower($off->designation) }} {{ $off->phone }} @endforeach">
                                     
                                     <!-- 1. # -->
-                                    <td class="text-center align-middle">
-                                        <span class="d-md-none mobile-label">ক্রমিক:</span>
+                                    <td rowspan="{{ $rowCount }}" class="text-center align-middle">
                                         <span class="serial-badge">{{ $serialBn }}</span>
                                     </td>
 
                                     <!-- 2. জেলার নাম -->
-                                    <td class="align-middle">
-                                        <span class="d-md-none mobile-label">জেলার নাম:</span>
-                                        <div>
-                                            <h6 class="fw-bold text-dark mb-1" style="font-size: 1.05rem; line-height: 1.35;">
-                                                {{ $branch->name }}
-                                            </h6>
-                                            <div class="d-flex align-items-center gap-2 flex-wrap">
-                                                <span class="badge rounded-pill px-2.5 py-1 fw-bold text-white shadow-xs @if($branch->type === 'central') bg-danger-gradient @elseif($branch->type === 'international') bg-purple-gradient @else bg-success-gradient @endif" 
-                                                      style="font-size: 10px; letter-spacing: 0.3px;">
-                                                    <i class="fas @if($branch->type === 'central') fa-hotel @elseif($branch->type === 'international') fa-globe @elseif($branch->type === 'division') fa-sitemap @else fa-map-marked-alt @endif me-1"></i>
-                                                    {{ $branch->type_label }}
-                                                </span>
-
-                                                @if($branch->phone)
-                                                    <a href="tel:{{ $branch->phone }}" class="text-muted small text-decoration-none" title="অফিসের হটলাইনে কল করুন">
-                                                        <i class="fas fa-phone-volume text-success me-1"></i> {{ $branch->phone }}
-                                                    </a>
-                                                @endif
-                                            </div>
+                                    <td rowspan="{{ $rowCount }}" class="align-middle">
+                                        <div class="fw-bold text-dark" style="font-size: 0.98rem; line-height: 1.35;">
+                                            {{ $branch->name }}
+                                        </div>
+                                        <div class="mt-1 d-flex align-items-center gap-1.5 flex-wrap">
+                                            <span class="badge rounded-pill px-2 py-0.5 fw-bold text-white shadow-xs @if($branch->type === 'central') bg-danger-gradient @elseif($branch->type === 'international') bg-purple-gradient @else bg-success-gradient @endif" style="font-size: 9.5px;">
+                                                {{ $branch->type_label }}
+                                            </span>
+                                            @if($branch->phone)
+                                                <a href="tel:{{ $branch->phone }}" class="text-muted small text-decoration-none" title="অফিসের হটলাইন">
+                                                    <i class="fas fa-phone-volume text-success" style="font-size: 10px;"></i> {{ $branch->phone }}
+                                                </a>
+                                            @endif
                                         </div>
                                     </td>
 
                                     <!-- 3. ঠিকানা -->
-                                    <td class="align-middle">
-                                        <span class="d-md-none mobile-label">ঠিকানা:</span>
-                                        <div>
-                                            <div class="address-text-styled mb-2">
-                                                <i class="fas fa-map-marker-alt text-danger me-1.5"></i>
-                                                {{ $branch->address }}
-                                            </div>
-                                            <div class="d-flex align-items-center gap-1.5 flex-wrap">
-                                                <button class="btn btn-sm btn-outline-secondary rounded-pill px-2.5 py-1 copy-address-btn" 
-                                                        data-address="{{ $branch->address }}"
-                                                        title="ঠিকানা ক্লিপবোর্ডে কপি করুন">
-                                                    <i class="far fa-copy me-1"></i> কপি
+                                    <td rowspan="{{ $rowCount }}" class="align-middle">
+                                        <div class="address-text-styled mb-1.5">
+                                            <i class="fas fa-map-marker-alt text-danger me-1" style="font-size: 11px;"></i>
+                                            {{ $branch->address }}
+                                        </div>
+                                        <div class="d-flex align-items-center gap-1 flex-wrap">
+                                            <button class="btn btn-xs btn-outline-secondary rounded px-2 py-0.5 copy-address-btn" 
+                                                    data-address="{{ $branch->address }}" 
+                                                    title="ঠিকানা কপি করুন">
+                                                <i class="far fa-copy me-1"></i>কপি
+                                            </button>
+                                            @if($branch->google_map_url)
+                                                <button class="btn btn-xs btn-success rounded px-2 py-0.5 show-map-btn fw-bold" 
+                                                        data-name="{{ $branch->name }}" 
+                                                        data-map="{{ $branch->google_map_url }}" 
+                                                        title="ম্যাপ দেখুন">
+                                                    <i class="fas fa-map-marked-alt me-1"></i>ম্যাপ
                                                 </button>
-
-                                                @if($branch->google_map_url)
-                                                    <button class="btn btn-sm btn-success rounded-pill px-2.5 py-1 show-map-btn fw-bold" 
-                                                            data-name="{{ $branch->name }}" 
-                                                            data-map="{{ $branch->google_map_url }}"
-                                                            title="গুগল ম্যাপে কার্যালয়ের অবস্থান দেখুন">
-                                                        <i class="fas fa-map-marked-alt me-1"></i> ম্যাপ
-                                                    </button>
-                                                @endif
-                                            </div>
+                                            @endif
                                         </div>
                                     </td>
 
-                                    <!-- 4. দায়িত্বপ্রাপ্ত ব্যক্তিবৃন্দ (রো ১: জেলা আমির, রো ২: সহকারী আমির) -->
-                                    <td class="align-middle">
-                                        <span class="d-md-none mobile-label">দায়িত্বপ্রাপ্ত ব্যক্তিবৃন্দ:</span>
-                                        <div class="d-flex flex-column gap-2" style="min-width: 320px;">
-                                            
-                                            <!-- রো ১: জেলা আমির -->
-                                            @if($amir)
-                                                <div class="official-row-box d-flex align-items-center justify-content-between gap-2.5">
-                                                    <div class="d-flex align-items-center gap-2.5 min-w-0">
-                                                        <!-- ছবি -->
-                                                        <div class="rounded-circle overflow-hidden flex-shrink-0 avatar-frame">
-                                                            <img src="{{ $amir->image_url }}" 
-                                                                 alt="{{ $amir->name }}" 
-                                                                 onerror="this.onerror=null;this.src='{{ asset('uploads/avatars/default.svg') }}';" 
-                                                                 class="w-100 h-100" 
-                                                                 style="object-fit: cover;">
-                                                        </div>
-                                                        <!-- নাম, পদবী ও ফোন -->
-                                                        <div class="min-w-0">
-                                                            <div class="d-flex align-items-center gap-2 flex-wrap">
-                                                                <span class="official-name-text text-truncate">{{ $amir->name }}</span>
-                                                                <span class="badge badge-amir-pill">জেলা আমির</span>
-                                                            </div>
-                                                            @if($amir->phone)
-                                                                <div class="mt-1">
-                                                                    <a href="tel:{{ $amir->phone }}" class="phone-link text-decoration-none" title="কল করতে ট্যাপ করুন">
-                                                                        <i class="fas fa-phone-alt text-success me-1.5" style="font-size: 11px;"></i>
-                                                                        <span class="phone-text">{{ $amir->phone }}</span>
-                                                                    </a>
-                                                                </div>
-                                                            @else
-                                                                <span class="text-muted small">ফোন নম্বর নেই</span>
-                                                            @endif
-                                                        </div>
-                                                    </div>
-                                                    <!-- সরাসরি কল বোতাম -->
-                                                    @if($amir->phone)
-                                                        <a href="tel:{{ $amir->phone }}" class="btn-call-mini flex-shrink-0" title="{{ $amir->name }}-কে সরাসরি কল করুন">
-                                                            <i class="fas fa-phone-alt"></i>
-                                                        </a>
-                                                    @endif
+                                    <!-- 4. ছবি (রো ১: জেলা আমির) -->
+                                    @if($firstOfficial)
+                                        <td class="text-center align-middle p-1" style="width: 55px;">
+                                            <div class="avatar-frame rounded-circle overflow-hidden mx-auto">
+                                                <img src="{{ $firstOfficial->image_url }}" 
+                                                     alt="{{ $firstOfficial->name }}" 
+                                                     onerror="this.onerror=null;this.src='{{ asset('uploads/avatars/default.svg') }}';" 
+                                                     class="w-100 h-100" 
+                                                     style="object-fit: cover;">
+                                            </div>
+                                        </td>
+                                        <!-- 5. নাম -->
+                                        <td class="align-middle">
+                                            <span class="official-name d-block">{{ $firstOfficial->name }}</span>
+                                        </td>
+                                        <!-- 6. পদবী -->
+                                        <td class="text-center align-middle" style="width: 125px;">
+                                            @php
+                                                $desig1 = $formatDesig($firstOfficial->designation, true);
+                                            @endphp
+                                            <span class="badge badge-amir-pill">{{ $desig1 }}</span>
+                                        </td>
+                                        <!-- 7. মোবাইল নাম্বার -->
+                                        <td class="align-middle" style="min-width: 170px;">
+                                            @if($firstOfficial->phone)
+                                                <div class="d-flex align-items-center justify-content-between gap-1.5">
+                                                    <a href="tel:{{ $firstOfficial->phone }}" class="phone-link text-decoration-none" title="কল করতে ট্যাপ করুন">
+                                                        <i class="fas fa-phone-alt text-success me-1" style="font-size: 10px;"></i>
+                                                        <span class="phone-text">{{ $firstOfficial->phone }}</span>
+                                                    </a>
+                                                    <a href="tel:{{ $firstOfficial->phone }}" class="btn-call-mini flex-shrink-0" title="{{ $firstOfficial->name }}-কে সরাসরি কল করুন">
+                                                        <i class="fas fa-phone-alt"></i>
+                                                    </a>
                                                 </div>
                                             @else
-                                                <div class="text-muted small ps-2">— জেলা আমির নির্ধারিত নেই —</div>
+                                                <span class="text-muted small">—</span>
                                             @endif
-
-                                            <!-- রো ২: সহকারী আমির -->
-                                            @if($assistant)
-                                                <div class="official-row-box d-flex align-items-center justify-content-between gap-2.5">
-                                                    <div class="d-flex align-items-center gap-2.5 min-w-0">
-                                                        <!-- ছবি -->
-                                                        <div class="rounded-circle overflow-hidden flex-shrink-0 avatar-frame">
-                                                            <img src="{{ $assistant->image_url }}" 
-                                                                 alt="{{ $assistant->name }}" 
-                                                                 onerror="this.onerror=null;this.src='{{ asset('uploads/avatars/default.svg') }}';" 
-                                                                 class="w-100 h-100" 
-                                                                 style="object-fit: cover;">
-                                                        </div>
-                                                        <!-- নাম, পদবী ও ফোন -->
-                                                        <div class="min-w-0">
-                                                            <div class="d-flex align-items-center gap-2 flex-wrap">
-                                                                <span class="official-name-text text-truncate">{{ $assistant->name }}</span>
-                                                                <span class="badge badge-assistant-pill">সহকারী আমির</span>
-                                                            </div>
-                                                            @if($assistant->phone)
-                                                                <div class="mt-1">
-                                                                    <a href="tel:{{ $assistant->phone }}" class="phone-link text-decoration-none" title="কল করতে ট্যাপ করুন">
-                                                                        <i class="fas fa-phone-alt text-success me-1.5" style="font-size: 11px;"></i>
-                                                                        <span class="phone-text">{{ $assistant->phone }}</span>
-                                                                    </a>
-                                                                </div>
-                                                            @else
-                                                                <span class="text-muted small">ফোন নম্বর নেই</span>
-                                                            @endif
-                                                        </div>
-                                                    </div>
-                                                    <!-- সরাসরি কল বোতাম -->
-                                                    @if($assistant->phone)
-                                                        <a href="tel:{{ $assistant->phone }}" class="btn-call-mini flex-shrink-0" title="{{ $assistant->name }}-কে সরাসরি কল করুন">
-                                                            <i class="fas fa-phone-alt"></i>
-                                                        </a>
-                                                    @endif
-                                                </div>
-                                            @endif
-
-                                            <!-- অতিরিক্ত সহকারী বা কর্মকর্তা থাকলে -->
-                                            @foreach($otherAssistants as $other)
-                                                <div class="official-row-box d-flex align-items-center justify-content-between gap-2.5">
-                                                    <div class="d-flex align-items-center gap-2.5 min-w-0">
-                                                        <div class="rounded-circle overflow-hidden flex-shrink-0 avatar-frame">
-                                                            <img src="{{ $other->image_url }}" 
-                                                                 alt="{{ $other->name }}" 
-                                                                 onerror="this.onerror=null;this.src='{{ asset('uploads/avatars/default.svg') }}';" 
-                                                                 class="w-100 h-100" 
-                                                                 style="object-fit: cover;">
-                                                        </div>
-                                                        <div class="min-w-0">
-                                                            <div class="d-flex align-items-center gap-2 flex-wrap">
-                                                                <span class="official-name-text text-truncate">{{ $other->name }}</span>
-                                                                <span class="badge badge-assistant-pill">{{ $other->formatted_designation }}</span>
-                                                            </div>
-                                                            @if($other->phone)
-                                                                <div class="mt-1">
-                                                                    <a href="tel:{{ $other->phone }}" class="phone-link text-decoration-none" title="কল করতে ট্যাপ করুন">
-                                                                        <i class="fas fa-phone-alt text-success me-1.5" style="font-size: 11px;"></i>
-                                                                        <span class="phone-text">{{ $other->phone }}</span>
-                                                                    </a>
-                                                                </div>
-                                                            @endif
-                                                        </div>
-                                                    </div>
-                                                    @if($other->phone)
-                                                        <a href="tel:{{ $other->phone }}" class="btn-call-mini flex-shrink-0" title="{{ $other->name }}-কে সরাসরি কল করুন">
-                                                            <i class="fas fa-phone-alt"></i>
-                                                        </a>
-                                                    @endif
-                                                </div>
-                                            @endforeach
-
-                                        </div>
-                                    </td>
-
+                                        </td>
+                                    @else
+                                        <td colspan="4" class="text-center text-muted small py-2">— কোনো কর্মকর্তা তালিকাভুক্ত নেই —</td>
+                                    @endif
                                 </tr>
+
+                                <!-- Subsequent rows for this branch (e.g. Row 2 for সহকারী আমির) -->
+                                @foreach($sortedOfficials->slice(1) as $subIndex => $nextOfficial)
+                                    @php
+                                        $desigNext = $formatDesig($nextOfficial->designation, false);
+                                        $badgeClass = ($desigNext === 'সহকারী আমির') ? 'badge-assistant-pill' : 'badge-other-pill';
+                                        $isLastSubRow = ($subIndex == count($sortedOfficials) - 2);
+                                    @endphp
+                                    <tr class="branch-row {{ $branchBgClass }} @if($isLastSubRow) branch-last-row @endif" 
+                                        data-branch-id="{{ $branch->id }}" 
+                                        data-type="{{ $branch->type }}" 
+                                        data-name="{{ strtolower($branch->name) }} {{ strtolower($branch->address) }} @foreach($branch->officials as $off){{ strtolower($off->name) }} {{ strtolower($off->formatted_designation) }} {{ strtolower($off->designation) }} {{ $off->phone }} @endforeach">
+                                        
+                                        <!-- ছবি -->
+                                        <td class="text-center align-middle p-1" style="width: 55px;">
+                                            <div class="avatar-frame rounded-circle overflow-hidden mx-auto">
+                                                <img src="{{ $nextOfficial->image_url }}" 
+                                                     alt="{{ $nextOfficial->name }}" 
+                                                     onerror="this.onerror=null;this.src='{{ asset('uploads/avatars/default.svg') }}';" 
+                                                     class="w-100 h-100" 
+                                                     style="object-fit: cover;">
+                                            </div>
+                                        </td>
+                                        <!-- নাম -->
+                                        <td class="align-middle">
+                                            <span class="official-name d-block">{{ $nextOfficial->name }}</span>
+                                        </td>
+                                        <!-- পদবী -->
+                                        <td class="text-center align-middle" style="width: 125px;">
+                                            <span class="badge {{ $badgeClass }}">{{ $desigNext }}</span>
+                                        </td>
+                                        <!-- মোবাইল নাম্বার -->
+                                        <td class="align-middle" style="min-width: 170px;">
+                                            @if($nextOfficial->phone)
+                                                <div class="d-flex align-items-center justify-content-between gap-1.5">
+                                                    <a href="tel:{{ $nextOfficial->phone }}" class="phone-link text-decoration-none" title="কল করতে ট্যাপ করুন">
+                                                        <i class="fas fa-phone-alt text-success me-1" style="font-size: 10px;"></i>
+                                                        <span class="phone-text">{{ $nextOfficial->phone }}</span>
+                                                    </a>
+                                                    <a href="tel:{{ $nextOfficial->phone }}" class="btn-call-mini flex-shrink-0" title="{{ $nextOfficial->name }}-কে সরাসরি কল করুন">
+                                                        <i class="fas fa-phone-alt"></i>
+                                                    </a>
+                                                </div>
+                                            @else
+                                                <span class="text-muted small">—</span>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @endforeach
+
                             @empty
                                 <tr>
-                                    <td colspan="4" class="text-center py-5 text-muted">
+                                    <td colspan="7" class="text-center py-5 text-muted">
                                         <i class="fas fa-map-marker-alt fa-3x mb-3 text-secondary"></i>
                                         <p class="mb-0">কোনো কার্যালয় বা শাখা পাওয়া যায়নি।</p>
                                     </td>
@@ -611,8 +583,7 @@ $(document).ready(function() {
 
     function filterBranches() {
         var searchVal = $('#branch-search').val().toLowerCase().trim();
-        var visibleCount = 0;
-        var totalCount = $('.branch-table-row').length;
+        var totalBranches = {{ count($branches) }};
 
         // Toggle clear search button
         if (searchVal.length > 0) {
@@ -621,8 +592,11 @@ $(document).ready(function() {
             $('#clear-search-btn').addClass('d-none');
         }
         
-        $('.branch-table-row').each(function() {
+        var visibleBranchIds = {};
+
+        $('.branch-row').each(function() {
             var row = $(this);
+            var branchId = row.data('branch-id');
             var type = row.data('type');
             var name = row.data('name');
 
@@ -630,12 +604,22 @@ $(document).ready(function() {
             var searchMatch = (!searchVal || name.indexOf(searchVal) > -1);
 
             if (typeMatch && searchMatch) {
-                row.removeClass('filtered-out');
-                visibleCount++;
-            } else {
-                row.addClass('filtered-out');
+                visibleBranchIds[branchId] = true;
             }
         });
+
+        // Show/hide all corresponding rows for matching branches
+        $('.branch-row').each(function() {
+            var row = $(this);
+            var branchId = row.data('branch-id');
+            if (visibleBranchIds[branchId]) {
+                row.show();
+            } else {
+                row.hide();
+            }
+        });
+
+        var visibleCount = Object.keys(visibleBranchIds).length;
 
         // Show/hide empty state
         if (visibleCount === 0) {
@@ -645,7 +629,7 @@ $(document).ready(function() {
         } else {
             $('#no-search-results').addClass('d-none');
             $('#branches-table').removeClass('d-none');
-            if (visibleCount < totalCount) {
+            if (visibleCount < totalBranches) {
                 $('#filtered-status-text').text(visibleCount + ' টি প্রদর্শিত হচ্ছে');
             } else {
                 $('#filtered-status-text').text('সবগুলো প্রদর্শিত হচ্ছে');
