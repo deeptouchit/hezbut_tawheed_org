@@ -13,3 +13,4 @@
   <circle cx="64" cy="48" r="22" fill="url(#iconGrad)" />
   <path d="M64 78 C42 78, 26 94, 22 118 C33 124, 48 128, 64 128 C80 128, 95 124, 106 118 C102 94, 86 78, 64 78 Z" fill="url(#iconGrad)" />
 </svg>
+
