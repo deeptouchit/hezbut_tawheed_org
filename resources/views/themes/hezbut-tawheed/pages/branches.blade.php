@@ -281,7 +281,8 @@
         text-decoration: underline;
     }
 
-    .btn-call-mini {
+    .btn-call-mini,
+    .btn-copy-contact {
         width: 22px;
         height: 22px;
         border-radius: 3px;
@@ -291,14 +292,24 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        font-size: 9.5px;
+        font-size: 10px;
         transition: all 0.15s ease;
+        cursor: pointer;
+        padding: 0;
+        outline: none;
     }
 
-    .btn-call-mini:hover {
+    .btn-call-mini:hover,
+    .btn-copy-contact:hover {
         background: #006A4E;
         color: #ffffff !important;
         border-color: #006A4E;
+    }
+
+    .btn-copy-contact.copied {
+        background: #10b981 !important;
+        color: #ffffff !important;
+        border-color: #10b981 !important;
     }
 
     /* Compact Address Text */
@@ -473,6 +484,23 @@
 
                                     $rowCount = max(1, $sortedOfficials->count());
                                     $firstOfficial = $sortedOfficials->first();
+
+                                    // Prepare branch contact copy text (clean multiline format)
+                                    $copyLines = [];
+                                    $copyLines[] = trim($branch->name);
+                                    foreach ($sortedOfficials as $sIdx => $off) {
+                                        if (!empty($off->name)) {
+                                            $copyLines[] = trim($off->name);
+                                        }
+                                        $offDesig = ($sIdx === 0) ? $formatDesig($off->designation, true) : $formatDesig($off->designation, false);
+                                        if (!empty($offDesig)) {
+                                            $copyLines[] = trim($offDesig);
+                                        }
+                                        if (!empty($off->phone)) {
+                                            $copyLines[] = trim($off->phone);
+                                        }
+                                    }
+                                    $branchCopyText = implode("\n", $copyLines);
                                 @endphp
 
                                 <!-- Row 1 of this branch -->
@@ -551,19 +579,19 @@
                                         </td>
                                         <!-- 7. মোবাইল নাম্বার -->
                                         <td class="align-middle" style="min-width: 160px;">
-                                            @if($firstOfficial->phone)
-                                                <div class="d-flex align-items-center justify-content-between gap-1">
+                                            <div class="d-flex align-items-center justify-content-between gap-1">
+                                                @if($firstOfficial->phone)
                                                     <a href="tel:{{ $firstOfficial->phone }}" class="phone-link text-decoration-none" title="কল করতে ট্যাপ করুন">
                                                         <i class="fas fa-phone-alt text-success me-1" style="font-size: 9px;"></i>
                                                         <span class="phone-text">{{ $firstOfficial->phone }}</span>
                                                     </a>
-                                                    <a href="tel:{{ $firstOfficial->phone }}" class="btn-call-mini flex-shrink-0" title="{{ $firstOfficial->name }}-কে সরাসরি কল করুন">
-                                                        <i class="fas fa-phone-alt"></i>
-                                                    </a>
-                                                </div>
-                                            @else
-                                                <span class="text-muted small">—</span>
-                                            @endif
+                                                @else
+                                                    <span class="text-muted small">—</span>
+                                                @endif
+                                                <button type="button" class="btn-copy-contact flex-shrink-0" data-copy="{{ str_replace("\n", '&#10;', e($branchCopyText)) }}" title="শাখা ও কর্মকর্তাদের সম্পূর্ণ তথ্য কপি করুন">
+                                                    <i class="far fa-copy"></i>
+                                                </button>
+                                            </div>
                                         </td>
                                     @else
                                         <td colspan="4" class="text-center text-muted small py-1">— কোনো কর্মকর্তা তালিকাভুক্ত নেই —</td>
@@ -604,19 +632,19 @@
                                         </td>
                                         <!-- মোবাইল নাম্বার -->
                                         <td class="align-middle" style="min-width: 160px;">
-                                            @if($nextOfficial->phone)
-                                                <div class="d-flex align-items-center justify-content-between gap-1">
+                                            <div class="d-flex align-items-center justify-content-between gap-1">
+                                                @if($nextOfficial->phone)
                                                     <a href="tel:{{ $nextOfficial->phone }}" class="phone-link text-decoration-none" title="কল করতে ট্যাপ করুন">
                                                         <i class="fas fa-phone-alt text-success me-1" style="font-size: 9px;"></i>
                                                         <span class="phone-text">{{ $nextOfficial->phone }}</span>
                                                     </a>
-                                                    <a href="tel:{{ $nextOfficial->phone }}" class="btn-call-mini flex-shrink-0" title="{{ $nextOfficial->name }}-কে সরাসরি কল করুন">
-                                                        <i class="fas fa-phone-alt"></i>
-                                                    </a>
-                                                </div>
-                                            @else
-                                                <span class="text-muted small">—</span>
-                                            @endif
+                                                @else
+                                                    <span class="text-muted small">—</span>
+                                                @endif
+                                                <button type="button" class="btn-copy-contact flex-shrink-0" data-copy="{{ str_replace("\n", '&#10;', e($branchCopyText)) }}" title="শাখা ও কর্মকর্তাদের সম্পূর্ণ তথ্য কপি করুন">
+                                                    <i class="far fa-copy"></i>
+                                                </button>
+                                            </div>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -815,11 +843,55 @@ $(document).ready(function() {
         }
     });
 
+    // 4. Click to copy branch officials contact info
+    $(document).on('click', '.btn-copy-contact', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var btn = $(this);
+        var copyText = btn.attr('data-copy');
+        if (!copyText) return;
+
+        var originalHtml = btn.html();
+
+        function showSuccess() {
+            btn.html('<i class="fas fa-check text-white"></i>').addClass('copied');
+            setTimeout(function() {
+                btn.html(originalHtml).removeClass('copied');
+            }, 1800);
+
+            if (typeof toastr !== 'undefined') {
+                toastr.success('শাখা ও কর্মকর্তাদের সম্পূর্ণ তথ্য কপি করা হয়েছে!');
+            }
+        }
+
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(copyText).then(function() {
+                showSuccess();
+            }).catch(function() {
+                fallbackCopyText(copyText, showSuccess);
+            });
+        } else {
+            fallbackCopyText(copyText, showSuccess);
+        }
+    });
+
     function fallbackCopyText(text, callback) {
-        var tempInput = $('<input>');
+        var tempInput = $('<textarea>');
+        tempInput.css({
+            position: 'fixed',
+            left: '-9999px',
+            top: '0',
+            opacity: '0'
+        });
         $('body').append(tempInput);
-        tempInput.val(text).select();
-        document.execCommand('copy');
+        tempInput.val(text);
+        tempInput.focus();
+        tempInput.select();
+        try {
+            document.execCommand('copy');
+        } catch (err) {
+            console.error('Fallback copy failed', err);
+        }
         tempInput.remove();
         if (callback) callback();
     }
