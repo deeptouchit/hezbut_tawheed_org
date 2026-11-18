@@ -487,7 +487,16 @@
 
                                     // Prepare branch contact copy text (clean multiline format)
                                     $copyLines = [];
-                                    $copyLines[] = trim($branch->name);
+                                    $branchTitle = trim($branch->name);
+                                    if (!str_contains($branchTitle, 'হেযবুত তওহীদ') && !str_contains($branchTitle, 'হেযবুত তওহিদ')) {
+                                        if (str_contains($branchTitle, 'কার্যালয়') || str_contains($branchTitle, 'কার্যালয়')) {
+                                            $branchTitle = trim(str_replace(['কার্যালয়', 'কার্যালয়'], 'হেযবুত তওহীদ', $branchTitle));
+                                        } else {
+                                            $branchTitle = $branchTitle . ' হেযবুত তওহীদ';
+                                        }
+                                    }
+                                    $copyLines[] = $branchTitle;
+
                                     foreach ($sortedOfficials as $sIdx => $off) {
                                         if (!empty($off->name)) {
                                             $copyLines[] = trim($off->name);
@@ -501,6 +510,7 @@
                                         }
                                     }
                                     $branchCopyText = implode("\n", $copyLines);
+                                    $branchCopyEncoded = rawurlencode($branchCopyText);
                                 @endphp
 
                                 <!-- Row 1 of this branch -->
@@ -588,7 +598,7 @@
                                                 @else
                                                     <span class="text-muted small">—</span>
                                                 @endif
-                                                <button type="button" class="btn-copy-contact flex-shrink-0" data-copy="{{ str_replace("\n", '&#10;', e($branchCopyText)) }}" title="শাখা ও কর্মকর্তাদের সম্পূর্ণ তথ্য কপি করুন">
+                                                <button type="button" class="btn-copy-contact flex-shrink-0" data-copy="{{ $branchCopyEncoded }}" title="শাখা ও কর্মকর্তাদের সম্পূর্ণ তথ্য কপি করুন">
                                                     <i class="far fa-copy"></i>
                                                 </button>
                                             </div>
@@ -641,7 +651,7 @@
                                                 @else
                                                     <span class="text-muted small">—</span>
                                                 @endif
-                                                <button type="button" class="btn-copy-contact flex-shrink-0" data-copy="{{ str_replace("\n", '&#10;', e($branchCopyText)) }}" title="শাখা ও কর্মকর্তাদের সম্পূর্ণ তথ্য কপি করুন">
+                                                <button type="button" class="btn-copy-contact flex-shrink-0" data-copy="{{ $branchCopyEncoded }}" title="শাখা ও কর্মকর্তাদের সম্পূর্ণ তথ্য কপি করুন">
                                                     <i class="far fa-copy"></i>
                                                 </button>
                                             </div>
@@ -848,8 +858,15 @@ $(document).ready(function() {
         e.preventDefault();
         e.stopPropagation();
         var btn = $(this);
-        var copyText = btn.attr('data-copy');
-        if (!copyText) return;
+        var rawData = btn.attr('data-copy');
+        if (!rawData) return;
+
+        var copyText = '';
+        try {
+            copyText = decodeURIComponent(rawData);
+        } catch (err) {
+            copyText = rawData;
+        }
 
         var originalHtml = btn.html();
 
