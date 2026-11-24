@@ -203,7 +203,7 @@ class CacheToolsController extends Controller
     }
 
     /**
-     * Get log output (last 400 lines)
+     * Get log output (last 400 lines safely without loading huge files into memory)
      */
     private function getLogOutput(): string
     {
@@ -213,13 +213,35 @@ class CacheToolsController extends Controller
             return 'laravel.log file does not exist.';
         }
 
-        $content = File::get($logFile);
+        $fileSize = filesize($logFile);
+        if ($fileSize === 0) {
+            return 'laravel.log is currently empty.';
+        }
 
-        if (trim($content) === '') {
+        // Read only the last ~256KB to avoid memory exhaustion and 503 timeouts on large log files
+        $maxBytes = 256 * 1024;
+        $fp = fopen($logFile, 'rb');
+        if (!$fp) {
+            return 'Unable to open laravel.log.';
+        }
+
+        if ($fileSize > $maxBytes) {
+            fseek($fp, -$maxBytes, SEEK_END);
+        }
+
+        $content = stream_get_contents($fp);
+        fclose($fp);
+
+        if ($content === false || trim($content) === '') {
             return 'laravel.log is currently empty.';
         }
 
         $lines = preg_split('/\r\n|\r|\n/', $content) ?: [];
+        // If we read from the middle of the file, drop the incomplete first line
+        if ($fileSize > $maxBytes && count($lines) > 1) {
+            array_shift($lines);
+        }
+
         $tail = array_slice($lines, -400);
 
         return implode(PHP_EOL, $tail);
