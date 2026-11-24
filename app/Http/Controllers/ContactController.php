@@ -32,6 +32,9 @@ class ContactController extends Controller
     public function index()
     {
         $branches = \App\Models\Branch::where('is_active', true)
+            ->with(['officials' => function($q) {
+                $q->orderBy('sort_order', 'asc');
+            }])
             ->orderBy('sort_order', 'asc')
             ->get();
         return view('theme::pages.contact', compact('branches'));

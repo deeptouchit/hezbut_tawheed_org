@@ -1,6 +1,346 @@
 @extends('theme::layouts.app')
 
 @section('title', 'যোগাযোগ - হেজবুত তওহীদ')
+@section('meta_description', 'হেযবুত তওহীদের সাথে যোগাযোগ করুন। যেকোনো জিজ্ঞাসা, মতামত বা পরামর্শের জন্য আমাদের কেন্দ্রীয় কার্যালয় বা শাখা সমূহের সাথে সরাসরি যোগাযোগ করতে পারেন।')
+
+@push('styles')
+    <!-- Leaflet.js CSS for Interactive map -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
+    <style>
+        /* Directory Toolbar */
+        .directory-toolbar {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 0.5rem;
+            padding: 0.65rem 0.85rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        }
+
+        .search-input-wrap {
+            position: relative;
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+
+        .search-input-wrap .search-icon {
+            position: absolute;
+            left: 12px;
+            font-size: 13px;
+            color: #006A4E !important;
+            pointer-events: none;
+            z-index: 4;
+        }
+
+        .branch-search-input {
+            height: 38px !important;
+            padding-left: 34px !important;
+            padding-right: 32px !important;
+            font-size: 0.88rem !important;
+            font-family: 'Baloo Da 2', sans-serif !important;
+            border: 1px solid #cbd5e1 !important;
+            border-radius: 20px !important;
+            background-color: #f8fafc !important;
+            box-shadow: none !important;
+            transition: all 0.2s ease !important;
+        }
+
+        .branch-search-input:focus {
+            background-color: #ffffff !important;
+            border-color: #006A4E !important;
+            box-shadow: 0 0 0 3px rgba(0, 106, 78, 0.1) !important;
+        }
+
+        .clear-search-btn {
+            position: absolute;
+            right: 4px;
+            z-index: 4;
+            padding: 4px 8px;
+            font-size: 14px;
+            color: #94a3b8;
+            box-shadow: none !important;
+            text-decoration: none !important;
+        }
+        .clear-search-btn:hover {
+            color: #64748b;
+        }
+
+        /* Filter Horizontal Scroll Strip */
+        .filter-scroll-container {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            padding: 2px 0;
+        }
+        .filter-scroll-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .filter-pills-track {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
+
+        .btn-filter {
+            border: 1px solid #cbd5e1;
+            color: #475569;
+            background-color: #ffffff;
+            transition: all 0.15s ease;
+            font-size: 0.82rem;
+            font-family: 'Baloo Da 2', sans-serif;
+            font-weight: 600;
+            padding: 5px 12px;
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            white-space: nowrap;
+            cursor: pointer;
+            line-height: 1.2;
+        }
+
+        .btn-filter:hover {
+            border-color: #006A4E;
+            color: #006A4E;
+            background-color: #f0fdf4;
+        }
+
+        .btn-filter.active {
+            background: #006A4E !important;
+            color: #ffffff !important;
+            border-color: #006A4E !important;
+            box-shadow: 0 1px 3px rgba(0, 106, 78, 0.2) !important;
+        }
+
+        @media (max-width: 767.98px) {
+            .directory-toolbar {
+                padding: 0.55rem 0.65rem;
+            }
+            .filter-pills-track {
+                padding-top: 2px;
+            }
+        }
+
+        /* Natural Table Card */
+        .directory-table-card {
+            border: 1px solid #cbd5e1 !important;
+            border-radius: 0.375rem !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+            background: #ffffff;
+            overflow: hidden;
+        }
+
+        /* Natural, Compact, Bordered Table */
+        .directory-table {
+            margin-bottom: 0 !important;
+            border-collapse: collapse !important;
+            border: 1px solid #cbd5e1 !important;
+            font-family: 'Baloo Da 2', sans-serif;
+            background: #ffffff;
+            font-size: 0.88rem;
+        }
+
+        .directory-table th, 
+        .directory-table td {
+            border: 1px solid #cbd5e1 !important;
+            padding: 4px 7px !important;
+            vertical-align: middle;
+            line-height: 1.25 !important;
+        }
+
+        .directory-table thead tr.header-row-main th {
+            background-color: #f1f5f9 !important;
+            color: #1e293b !important;
+            font-weight: 700;
+            font-size: 0.9rem;
+            padding: 6px 8px !important;
+            border: 1px solid #cbd5e1 !important;
+            text-align: center;
+        }
+
+        .directory-table thead tr.header-row-sub th {
+            background-color: #f8fafc !important;
+            color: #475569 !important;
+            font-weight: 600;
+            font-size: 0.84rem;
+            padding: 5px 8px !important;
+            border: 1px solid #cbd5e1 !important;
+            text-align: center;
+        }
+
+        .directory-table tbody tr {
+            background-color: #ffffff;
+            transition: background-color 0.1s ease;
+        }
+
+        .directory-table tbody tr:hover {
+            background-color: #f8fafc !important;
+        }
+
+        .branch-last-row td {
+            border-bottom: 2px solid #94a3b8 !important;
+        }
+
+        .serial-badge {
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: #334155;
+            display: inline-block;
+        }
+
+        .avatar-frame {
+            width: 28px;
+            height: 28px;
+            border-radius: 4px !important;
+            border: 1px solid #cbd5e1;
+            background-color: #f1f5f9;
+            cursor: pointer;
+            display: inline-block;
+            overflow: hidden;
+            transition: transform 0.15s ease, border-color 0.15s ease;
+            vertical-align: middle;
+        }
+
+        .avatar-frame:hover {
+            transform: scale(1.2);
+            border-color: #006A4E !important;
+        }
+
+        .avatar-frame img {
+            border-radius: 3px !important;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .official-name {
+            font-weight: 600;
+            color: #0f172a;
+            font-size: 0.89rem;
+            line-height: 1.2;
+        }
+
+        .badge-amir-pill {
+            background: #f1f5f9 !important;
+            color: #006A4E !important;
+            border: 1px solid #cbd5e1 !important;
+            font-weight: 700 !important;
+            font-size: 10px !important;
+            padding: 1px 5px !important;
+            border-radius: 3px !important;
+            white-space: nowrap;
+            display: inline-block;
+        }
+
+        .badge-assistant-pill {
+            background: #f8fafc !important;
+            color: #475569 !important;
+            border: 1px solid #cbd5e1 !important;
+            font-weight: 600 !important;
+            font-size: 10px !important;
+            padding: 1px 5px !important;
+            border-radius: 3px !important;
+            white-space: nowrap;
+            display: inline-block;
+        }
+
+        .badge-other-pill {
+            background: #f8fafc !important;
+            color: #64748b !important;
+            border: 1px solid #cbd5e1 !important;
+            font-weight: 600 !important;
+            font-size: 10px !important;
+            padding: 1px 5px !important;
+            border-radius: 3px !important;
+            white-space: nowrap;
+            display: inline-block;
+        }
+
+        .phone-link {
+            color: #1e293b;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .phone-link:hover {
+            color: #006A4E !important;
+            text-decoration: underline;
+        }
+
+        .btn-call-mini,
+        .btn-copy-contact {
+            width: 22px;
+            height: 22px;
+            border-radius: 3px;
+            background: #f1f5f9;
+            color: #006A4E !important;
+            border: 1px solid #cbd5e1;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            transition: all 0.15s ease;
+            cursor: pointer;
+            padding: 0;
+            outline: none;
+        }
+
+        .btn-call-mini:hover,
+        .btn-copy-contact:hover {
+            background: #006A4E;
+            color: #ffffff !important;
+            border-color: #006A4E;
+        }
+
+        .btn-copy-contact.copied {
+            background: #10b981 !important;
+            color: #ffffff !important;
+            border-color: #10b981 !important;
+        }
+
+        .address-text-styled {
+            color: #334155;
+            font-size: 0.84rem;
+            line-height: 1.3;
+            font-weight: 500;
+        }
+
+        .copy-address-btn {
+            transition: all 0.15s ease;
+            font-size: 10px !important;
+            padding: 1px 5px !important;
+            font-family: 'Baloo Da 2', sans-serif !important;
+            border-color: #cbd5e1 !important;
+            color: #475569 !important;
+        }
+
+        .copy-address-btn:hover {
+            background-color: #f1f5f9 !important;
+            color: #006A4E !important;
+            border-color: #94a3b8 !important;
+        }
+
+        .table-responsive::-webkit-scrollbar {
+            height: 6px;
+        }
+        .table-responsive::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 3px;
+        }
+        .table-responsive::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+        .table-responsive::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+@endpush
 
 @section('content')
 
@@ -12,133 +352,146 @@
     ])
 
     <!-- Contact Main Section -->
-    <div class="py-5" style="background-color: #f8fafc; font-family: 'Baloo Da 2', sans-serif;">
+    <div class="contact-page-wrapper py-5">
         <div class="container">
             <div class="row g-4">
                 
                 <!-- Contact Information Column -->
                 <div class="col-lg-5">
-                    <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white h-100 border-light-grey">
-                        <span class="fw-bold text-uppercase tracking-wider text-success-brand" style="font-size: 0.8rem; letter-spacing: 1px;">যোগাযোগের বিবরণ</span>
-                        <h3 class="fw-bold mb-4 mt-1" style="color: #0f172a; font-size: 1.6rem;">আমাদের কার্যালয়</h3>
-                        <p class="text-muted lh-lg mb-5" style="font-size: 0.95rem;">
-                            হেজবুত তওহীদের আদর্শ প্রচার, সমাজ সংস্কার এবং আমাদের বিভিন্ন মানবিক কার্যক্রম সম্পর্কে যেকোনো তথ্য জানতে নিচে দেওয়া ঠিকানায় বা ফর্ম ব্যবহার করে যোগাযোগ করতে পারেন।
-                        </p>
+                    <div class="card premium-contact-card p-4 p-md-5 h-100">
+                        <div class="mb-4">
+                            <span class="section-badge-premium">যোগাযোগের বিবরণ</span>
+                            <h3 class="section-title-premium">আমাদের কার্যালয়</h3>
+                            <p class="text-muted lh-lg mb-0" style="font-size: 0.95rem;">
+                                হেযবুত তওহীদের আদর্শ প্রচার, সমাজ সংস্কার এবং আমাদের বিভিন্ন মানবিক কার্যক্রম সম্পর্কে যেকোনো তথ্য জানতে নিচে দেওয়া ঠিকানায় বা ফর্ম ব্যবহার করে যোগাযোগ করতে পারেন।
+                            </p>
+                        </div>
 
                         <!-- Address -->
                         <div class="d-flex align-items-start mb-4">
-                            <div class="icon-box-brand rounded-circle d-flex justify-content-center align-items-center me-3" style="width: 50px; height: 50px; flex-shrink: 0;">
+                            <div class="icon-box-brand me-3">
                                 <i class="fas fa-map-marker-alt fa-lg"></i>
                             </div>
                             <div>
                                 <h6 class="fw-bold text-dark mb-1" style="font-size: 0.98rem;">কেন্দ্রীয় কার্যালয়</h6>
-                                <p class="text-secondary mb-0" style="font-size: 0.9rem;">{{ $setting->getSetting('contact_address', 'ঢাকা, বাংলাদেশ') }}</p>
+                                <p class="text-secondary mb-0" style="font-size: 0.9rem;">{{ $setting->getSetting('company_address', 'বাড়ী # ০৩, রোড # ২০/এ, সেক্টর # ১৪, উত্তরা আজমপুর, ঢাকা-১২৩০') }}</p>
                             </div>
                         </div>
 
                         <!-- Phone -->
                         <div class="d-flex align-items-start mb-4">
-                            <div class="icon-box-brand rounded-circle d-flex justify-content-center align-items-center me-3" style="width: 50px; height: 50px; flex-shrink: 0;">
+                            <div class="icon-box-brand me-3">
                                 <i class="fas fa-phone-alt fa-lg"></i>
                             </div>
                             <div>
-                                <h6 class="fw-bold text-dark mb-1" style="font-size: 0.98rem;">ফোন নম্বর</h6>
-                                <p class="text-secondary mb-0" style="font-size: 0.9rem;">{{ $setting->getSetting('contact_phone', '+880 1234 567890') }}</p>
+                                <h6 class="fw-bold text-dark mb-1" style="font-size: 0.98rem;">হটলাইন ও ফোন</h6>
+                                <p class="text-secondary mb-0" style="font-size: 0.9rem;">
+                                    <a href="tel:{{ $setting->getSetting('company_phone', '01711000000') }}" class="text-decoration-none text-secondary hover-brand-link">
+                                        {{ $setting->getSetting('company_phone', '01711000000') }}
+                                    </a>
+                                </p>
                             </div>
                         </div>
 
                         <!-- Email -->
                         <div class="d-flex align-items-start mb-4">
-                            <div class="icon-box-brand rounded-circle d-flex justify-content-center align-items-center me-3" style="width: 50px; height: 50px; flex-shrink: 0;">
+                            <div class="icon-box-brand me-3">
                                 <i class="fas fa-envelope fa-lg"></i>
                             </div>
                             <div>
-                                <h6 class="fw-bold text-dark mb-1" style="font-size: 0.98rem;">ইমেইল ঠিকানা</h6>
-                                <p class="text-secondary mb-0" style="font-size: 0.9rem;">{{ $setting->getSetting('contact_email', 'info@hezbuttawheed.org') }}</p>
+                                <h6 class="fw-bold text-dark mb-1" style="font-size: 0.98rem;">ইমেইল এড্রেস</h6>
+                                <p class="text-secondary mb-0" style="font-size: 0.9rem;">
+                                    <a href="mailto:{{ $setting->getSetting('company_email', 'info@hezbuttawheed.org') }}" class="text-decoration-none text-secondary hover-brand-link">
+                                        {{ $setting->getSetting('company_email', 'info@hezbuttawheed.org') }}
+                                    </a>
+                                </p>
                             </div>
                         </div>
 
-                        <!-- Office Hours -->
+                        <!-- Work Hours -->
                         <div class="d-flex align-items-start">
-                            <div class="icon-box-brand rounded-circle d-flex justify-content-center align-items-center me-3" style="width: 50px; height: 50px; flex-shrink: 0;">
-                                <i class="far fa-clock fa-lg"></i>
+                            <div class="icon-box-brand me-3">
+                                <i class="fas fa-clock fa-lg"></i>
                             </div>
                             <div>
-                                <h6 class="fw-bold text-dark mb-1" style="font-size: 0.98rem;">কার্য্যালয়ের সময়</h6>
-                                <p class="text-secondary mb-0" style="font-size: 0.9rem;">শনিবার - বৃহস্পতিবার: সকাল ৯টা থেকে বিকেল ৫টা</p>
+                                <h6 class="fw-bold text-dark mb-1" style="font-size: 0.98rem;">কার্যক্রমের সময়</h6>
+                                <p class="text-secondary mb-0" style="font-size: 0.9rem;">শনিবার - বৃহস্পতিবার: সকাল ৯:০০ - রাত ৮:০০</p>
+                                <small class="text-muted" style="font-size: 0.8rem;">(শুক্রবার কার্যালয় বন্ধ থাকে)</small>
                             </div>
                         </div>
+
+                        <!-- Social Media Links -->
+                        <div class="mt-4 pt-4 border-top">
+                            <h6 class="fw-bold text-dark mb-3" style="font-size: 0.92rem;">আমাদের সামাজিক যোগাযোগ মাধ্যম</h6>
+                            <div class="d-flex gap-2">
+                                @if($setting->getSetting('facebook_url'))
+                                    <a href="{{ $setting->getSetting('facebook_url') }}" target="_blank" class="social-btn-round" title="Facebook">
+                                        <i class="fab fa-facebook-f"></i>
+                                    </a>
+                                @endif
+                                @if($setting->getSetting('youtube_url'))
+                                    <a href="{{ $setting->getSetting('youtube_url') }}" target="_blank" class="social-btn-round" title="YouTube">
+                                        <i class="fab fa-youtube"></i>
+                                    </a>
+                                @endif
+                                @if($setting->getSetting('twitter_url'))
+                                    <a href="{{ $setting->getSetting('twitter_url') }}" target="_blank" class="social-btn-round" title="Twitter">
+                                        <i class="fab fa-twitter"></i>
+                                    </a>
+                                @endif
+                            </div>
+                        </div>
+
                     </div>
                 </div>
 
                 <!-- Contact Form Column -->
                 <div class="col-lg-7">
-                    <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white h-100 border-light-grey">
-                        <span class="fw-bold text-uppercase tracking-wider text-success-brand" style="font-size: 0.8rem; letter-spacing: 1px;">বার্তা পাঠান</span>
-                        <h3 class="fw-bold mb-4 mt-1" style="color: #0f172a; font-size: 1.6rem;">আপনার মতামত লিখুন</h3>
-                        
-                        <form action="{{ route('contact.send') }}" method="POST">
+                    <div class="card premium-contact-card p-4 p-md-5 h-100">
+                        <div class="mb-4">
+                            <span class="section-badge-premium">সরাসরি বার্তা</span>
+                            <h3 class="section-title-premium">আমাদের একটি বার্তা পাঠান</h3>
+                            <p class="text-muted" style="font-size: 0.92rem;">আপনার যেকোনো জিজ্ঞাসা বা মতামতের জন্য নিচের ফর্মটি পূরণ করুন।</p>
+                        </div>
+
+                        <form id="contactForm" action="{{ route('contact.send') }}" method="POST">
                             @csrf
+                            
+                            {{-- Anti-Spam Security Layer 1: Honeypot trap (Hidden from normal humans) --}}
+                            <div style="display:none !important; position:absolute; left:-9999px;">
+                                <label for="website_url_hp">Do not fill this</label>
+                                <input type="text" name="website" id="website_url_hp" tabindex="-1" autocomplete="off">
+                            </div>
+
+                            {{-- Anti-Spam Security Layer 2: Form submission timestamp (Detect sub-3s bot submission) --}}
+                            <input type="hidden" name="_form_time" value="{{ time() }}">
+
                             <div class="row g-3">
-                                <!-- Name -->
                                 <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="name" class="form-label text-dark fw-semibold small">আপনার নাম *</label>
-                                        <input type="text" name="name" id="name" class="form-control py-3 rounded-3 @error('name') is-invalid @enderror" placeholder="নাম লিখুন..." value="{{ old('name') }}" required style="font-size: 0.9rem; box-shadow: none;">
-                                        @error('name')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
+                                    <label class="form-label fw-bold small text-secondary">আপনার নাম <span class="text-danger">*</span></label>
+                                    <input type="text" name="name" class="form-control premium-input" placeholder="আপনার পূর্ণ নাম লিখুন" required>
                                 </div>
-
-                                <!-- Email -->
                                 <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="email" class="form-label text-dark fw-semibold small">আপনার ইমেল *</label>
-                                        <input type="email" name="email" id="email" class="form-control py-3 rounded-3 @error('email') is-invalid @enderror" placeholder="ইমেল লিখুন..." value="{{ old('email') }}" required style="font-size: 0.9rem; box-shadow: none;">
-                                        @error('email')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
+                                    <label class="form-label fw-bold small text-secondary">ইমেইল এড্রেস <span class="text-danger">*</span></label>
+                                    <input type="email" name="email" class="form-control premium-input" placeholder="example@domain.com" required>
                                 </div>
-
-                                <!-- Phone -->
                                 <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="phone" class="form-label text-dark fw-semibold small">মোবাইল নম্বর *</label>
-                                        <input type="text" name="phone" id="phone" class="form-control py-3 rounded-3 @error('phone') is-invalid @enderror" placeholder="মোবাইল নম্বর..." value="{{ old('phone') }}" required style="font-size: 0.9rem; box-shadow: none;">
-                                        @error('phone')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
+                                    <label class="form-label fw-bold small text-secondary">ফোন নাম্বার <span class="text-danger">*</span></label>
+                                    <input type="tel" name="phone" class="form-control premium-input" placeholder="০১XXXXXXXXX" required>
                                 </div>
-
-                                <!-- Subject -->
                                 <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="subject" class="form-label text-dark fw-semibold small">বার্তার বিষয় *</label>
-                                        <input type="text" name="subject" id="subject" class="form-control py-3 rounded-3 @error('subject') is-invalid @enderror" placeholder="বিষয়..." value="{{ old('subject') }}" required style="font-size: 0.9rem; box-shadow: none;">
-                                        @error('subject')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
+                                    <label class="form-label fw-bold small text-secondary">বিষয় <span class="text-danger">*</span></label>
+                                    <input type="text" name="subject" class="form-control premium-input" placeholder="বার্তার মূল বিষয়" required>
                                 </div>
-
-                                <!-- Message -->
                                 <div class="col-12">
-                                    <div class="form-group">
-                                        <label for="message" class="form-label text-dark fw-semibold small">বার্তা *</label>
-                                        <textarea name="message" id="message" rows="6" class="form-control rounded-3 @error('message') is-invalid @enderror" placeholder="আপনার বার্তাটি বিস্তারিত লিখুন..." required style="font-size: 0.9rem; box-shadow: none;">{{ old('message') }}</textarea>
-                                        @error('message')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
+                                    <label class="form-label fw-bold small text-secondary">আপনার বার্তা <span class="text-danger">*</span></label>
+                                    <textarea name="message" class="form-control premium-input" rows="5" placeholder="বিস্তারিতভাবে আপনার মতামত বা জিজ্ঞাসা এখানে লিখুন..." required></textarea>
                                 </div>
-
-                                <!-- Submit Button -->
-                                <div class="col-12 text-end mt-4">
-                                    <button type="submit" class="btn btn-brand-success text-white fw-bold px-4 py-3 rounded shadow-sm transition">
-                                        বার্তা পাঠান <i class="fas fa-paper-plane ms-2 text-warning" style="font-size: 13px;"></i>
+                                <div class="col-12 pt-2">
+                                    <button type="submit" id="submitBtn" class="btn btn-brand-primary w-100 py-3 shadow-sm">
+                                        <span class="btn-text fw-bold">বার্তা পাঠান</span>
+                                        <span class="spinner-border spinner-border-sm d-none ms-2" role="status" aria-hidden="true"></span>
+                                        <i class="fas fa-paper-plane ms-2 btn-icon"></i>
                                     </button>
                                 </div>
                             </div>
@@ -147,191 +500,732 @@
                 </div>
             </div>
 
-            <!-- Branch-Based Contact Section -->
+            <!-- Branch-Based Contact Section (Directory Table) -->
             <div class="row mt-5">
-                <div class="col-12 text-center mb-4">
-                    <h3 class="fw-bold text-dark" style="font-size: 1.6rem;"><i class="fas fa-map-marked-alt text-success-brand me-2"></i>শাখা ও জেলা ভিত্তিক যোগাযোগ</h3>
-                    <p class="text-secondary small mb-4">সারাদেশে বিস্তৃত আমাদের শাখা কার্যালয়ের নাম, ঠিকানা ও প্রতিনিধিদের তালিকা</p>
-                    
-                    <!-- Branch Search Input -->
-                    <div class="input-group border rounded-pill bg-white overflow-hidden p-1 shadow-sm mx-auto" style="max-width: 500px;">
-                        <input type="text" id="branchSearch" class="form-control border-0 px-3" placeholder="শাখা কার্যালয় বা জেলার নাম লিখে খুঁজুন..." style="box-shadow: none; font-size: 0.9rem;">
-                        <span class="btn btn-brand-success rounded-circle d-flex align-items-center justify-content-center" style="width: 38px; height: 38px; padding: 0; pointer-events: none;"><i class="fas fa-search"></i></span>
-                    </div>
+                <div class="col-12 text-center mb-3">
+                    <span class="section-badge-premium">শাখা ও প্রতিনিধি</span>
+                    <h3 class="section-title-premium mt-2"><i class="fas fa-map-marked-alt text-success-brand me-2"></i>শাখা ও জেলা ভিত্তিক যোগাযোগ</h3>
+                    <p class="text-secondary small mb-3">সারাদেশে বিস্তৃত আমাদের শাখা কার্যালয়ের নাম, ঠিকানা ও দায়িত্বপ্রাপ্ত প্রতিনিধিদের তালিকা</p>
                 </div>
             </div>
 
-            <!-- Branches Grid -->
-            <div class="row g-4 mb-5" id="branchesContainer">
-                @foreach($branches as $branch)
-                    <div class="col-md-6 col-lg-4 branch-item" data-name="{{ $branch->name }}" data-address="{{ $branch->address }}">
-                        <div class="card h-100 border-0 shadow-sm rounded-4 p-4 bg-white border-light-grey d-flex flex-column justify-content-between transition hover-grow-card">
-                            <div>
-                                <div class="d-flex align-items-center mb-3">
-                                    <div class="icon-box-brand rounded-circle d-flex justify-content-center align-items-center me-3" style="width: 42px; height: 42px; font-size: 0.95rem; flex-shrink: 0;">
-                                        <i class="fas fa-building"></i>
-                                    </div>
-                                    <h5 class="fw-bold text-dark mb-0" style="font-size: 1rem; line-height: 1.45;">{{ $branch->name }}</h5>
-                                </div>
-                                
-                                <p class="text-secondary mb-2 lh-base" style="font-size: 0.85rem; text-align: justify;">
-                                    <i class="fas fa-map-marker-alt text-success-brand me-2" style="width: 15px;"></i> <strong>ঠিকানা:</strong> {{ $branch->address }}
-                                </p>
-                                
-                                @if($branch->phone)
-                                    <p class="text-secondary mb-0" style="font-size: 0.85rem;">
-                                        <i class="fas fa-phone-alt text-success-brand me-2" style="width: 15px;"></i> <strong>ফোন:</strong> {{ $branch->phone }}
-                                    </p>
-                                @endif
-                            </div>
-                            
-                            @if($branch->google_map_url)
-                                <div class="pt-3 border-top border-light mt-3">
-                                    <button type="button" class="btn btn-sm btn-outline-success w-100 rounded-pill py-2 view-map-btn" data-url="{{ $branch->google_map_url }}" data-name="{{ $branch->name }}" style="font-size: 11.5px; font-weight: 600; transition: all 0.2s;">
-                                        <i class="fas fa-map-marked-alt me-2"></i> ম্যাপে দেখুন
-                                    </button>
-                                </div>
-                            @endif
+            <!-- Sleek Compact Filter & Search Toolbar -->
+            <div class="directory-toolbar mb-2.5">
+                <div class="row g-2 align-items-center">
+                    <!-- Search Input Box -->
+                    <div class="col-12 col-md-5 col-lg-4">
+                        <div class="search-input-wrap">
+                            <i class="fas fa-search search-icon"></i>
+                            <input type="text" id="branch-search" class="form-control branch-search-input" 
+                                   placeholder="কার্যালয়, জেলা বা কর্মকর্তা খুঁজুন..." autocomplete="off">
+                            <button class="btn btn-link clear-search-btn d-none" id="clear-search-btn" type="button" title="মুছে ফেলুন">
+                                <i class="fas fa-times-circle"></i>
+                            </button>
                         </div>
                     </div>
-                @endforeach
-                
-                <!-- No branch match message -->
-                <div class="col-12 text-center py-5" id="noBranchMsg" style="display: none;">
-                    <div class="text-muted mb-2"><i class="far fa-frown fa-2x"></i></div>
-                    <p class="text-secondary mb-0">দুঃখিত, এই নামের কোনো শাখা খুঁজে পাওয়া যায়নি!</p>
+
+                    <!-- Filter Pills Horizontal Strip -->
+                    <div class="col-12 col-md-7 col-lg-8">
+                        <div class="filter-scroll-container">
+                            <div class="filter-pills-track" id="filter-controls">
+                                <button class="btn btn-filter active" data-filter="all">
+                                    <i class="fas fa-border-all me-1"></i>সকল
+                                </button>
+                                <button class="btn btn-filter" data-filter="central">
+                                    <i class="fas fa-hotel me-1"></i>কেন্দ্রীয়
+                                </button>
+                                <button class="btn btn-filter" data-filter="division">
+                                    <i class="fas fa-sitemap me-1"></i>বিভাগীয়
+                                </button>
+                                <button class="btn btn-filter" data-filter="district">
+                                    <i class="fas fa-map-marked-alt me-1"></i>জেলা
+                                </button>
+                                <button class="btn btn-filter" data-filter="upazila">
+                                    <i class="fas fa-street-view me-1"></i>উপজেলা
+                                </button>
+                                <button class="btn btn-filter" data-filter="international">
+                                    <i class="fas fa-globe-americas me-1"></i>আন্তর্জাতিক
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Full-width Google Map Embed -->
+            <!-- Natural Clean Status & Mobile Scroll Hint Row -->
+            <div class="d-flex align-items-center justify-content-between mb-2 px-1">
+                <span class="text-secondary small fw-medium" style="font-family: 'Baloo Da 2', sans-serif; font-size: 0.83rem;">
+                    <i class="fas fa-building text-success me-1"></i> মোট কার্যালয়: <strong class="text-dark">{{ count($branches) }}</strong> টি
+                    <span class="text-muted ms-1" id="filtered-status-text">(সবগুলো প্রদর্শিত হচ্ছে)</span>
+                </span>
+                <span class="d-md-none text-muted small" style="font-family: 'Baloo Da 2', sans-serif; font-size: 0.78rem;">
+                    <i class="fas fa-arrows-left-right text-success me-1"></i>ডানে স্ক্রল করুন
+                </span>
+            </div>
+
+            @php
+                $bnDigits = ['০','১','২','৩','৪','৫','৬','৭','৮','৯'];
+                $enDigits = ['0','1','2','3','4','5','6','7','8','9'];
+
+                $formatDesig = function($desig, $isAmir = false) {
+                    $d = trim((string)$desig);
+                    if ($d === 'দায়িত্বশীল' || $d === 'দায়িত্বশীল') {
+                        return 'জেলা আমির';
+                    }
+                    if ($d === 'সহকারী দায়িত্বশীল' || $d === 'সহকারী দায়িত্বশীল') {
+                        return 'সহকারী আমির';
+                    }
+                    $d = str_replace(['সহকারী দায়িত্বশীল', 'সহকারী দায়িত্বশীল'], 'সহকারী আমির', $d);
+                    $d = str_replace(['দায়িত্বশীল', 'দায়িত্বশীল'], 'জেলা আমির', $d);
+                    return $d ?: ($isAmir ? 'জেলা আমির' : 'সহকারী আমির');
+                };
+            @endphp
+
+            <!-- Natural Compact Directory Data Table Card -->
+            <div class="directory-table-card mb-5">
+                <div class="table-responsive">
+                    <table class="table table-sm table-bordered directory-table" id="branches-table">
+                        <thead>
+                            <tr class="header-row-main">
+                                <th rowspan="2" class="text-center align-middle" style="width: 42px;">#</th>
+                                <th rowspan="2" class="align-middle" style="min-width: 160px;">জেলার নাম</th>
+                                <th rowspan="2" class="align-middle" style="min-width: 190px;">ঠিকানা</th>
+                                <th colspan="4" class="text-center align-middle">দায়িত্বপ্রাপ্ত ব্যক্তিবৃন্দ</th>
+                            </tr>
+                            <tr class="header-row-sub">
+                                <th class="text-center align-middle" style="width: 44px;">ছবি</th>
+                                <th class="align-middle" style="min-width: 150px;">নাম</th>
+                                <th class="text-center align-middle" style="width: 110px;">পদবী</th>
+                                <th class="align-middle" style="min-width: 160px;">মোবাইল নাম্বার</th>
+                            </tr>
+                        </thead>
+                        <tbody id="branches-tbody">
+                            @forelse($branches as $index => $branch)
+                                @php
+                                    $serialBn = str_replace($enDigits, $bnDigits, $index + 1);
+
+                                    // Sort officials: Amir first, then others
+                                    $officials = $branch->officials;
+                                    $amir = $officials->first(function($off) {
+                                        $d = trim($off->designation);
+                                        return in_array($d, ['দায়িত্বশীল', 'দায়িত্বশীল', 'জেলা আমির', 'বিভাগীয় আমির', 'আমির']);
+                                    }) ?? $officials->first();
+
+                                    $otherOfficials = $officials->filter(function($off) use ($amir) {
+                                        return !$amir || $off->id !== $amir->id;
+                                    });
+
+                                    $sortedOfficials = collect();
+                                    if ($amir) {
+                                        $sortedOfficials->push($amir);
+                                    }
+                                    foreach ($otherOfficials as $other) {
+                                        $sortedOfficials->push($other);
+                                    }
+
+                                    $rowCount = max(1, $sortedOfficials->count());
+                                    $firstOfficial = $sortedOfficials->first();
+
+                                    // Prepare branch contact copy text (clean multiline format)
+                                    $copyLines = [];
+                                    $branchTitle = trim($branch->name);
+                                    if (!str_contains($branchTitle, 'হেযবুত তওহীদ') && !str_contains($branchTitle, 'হেযবুত তওহিদ')) {
+                                        if (str_contains($branchTitle, 'কার্যালয়') || str_contains($branchTitle, 'কার্যালয়')) {
+                                            $branchTitle = trim(str_replace(['কার্যালয়', 'কার্যালয়'], 'হেযবুত তওহীদ', $branchTitle));
+                                        } else {
+                                            $branchTitle = $branchTitle . ' হেযবুত তওহীদ';
+                                        }
+                                    }
+                                    $copyLines[] = $branchTitle;
+
+                                    foreach ($sortedOfficials as $sIdx => $off) {
+                                        if (!empty($off->name)) {
+                                            $copyLines[] = trim($off->name);
+                                        }
+                                        $offDesig = ($sIdx === 0) ? $formatDesig($off->designation, true) : $formatDesig($off->designation, false);
+                                        if (!empty($offDesig)) {
+                                            $copyLines[] = trim($offDesig);
+                                        }
+                                        if (!empty($off->phone)) {
+                                            $copyLines[] = trim($off->phone);
+                                        }
+                                    }
+                                    $branchCopyText = implode("\n", $copyLines);
+                                    $branchCopyEncoded = rawurlencode($branchCopyText);
+                                @endphp
+
+                                <!-- Row 1 of this branch -->
+                                <tr class="branch-row @if($rowCount == 1) branch-last-row @endif" 
+                                    data-branch-id="{{ $branch->id }}" 
+                                    data-type="{{ $branch->type }}" 
+                                    data-name="{{ strtolower($branch->name) }} {{ strtolower($branch->address) }} @foreach($branch->officials as $off){{ strtolower($off->name) }} {{ strtolower($off->formatted_designation) }} {{ strtolower($off->designation) }} {{ $off->phone }} @endforeach">
+                                    
+                                    <!-- 1. # -->
+                                    <td rowspan="{{ $rowCount }}" class="text-center align-middle">
+                                        <span class="serial-badge">{{ $serialBn }}</span>
+                                    </td>
+
+                                    <!-- 2. জেলার নাম -->
+                                    <td rowspan="{{ $rowCount }}" class="align-middle">
+                                        <div class="fw-bold text-dark" style="font-size: 0.92rem; line-height: 1.35;">
+                                            {{ $branch->name }}
+                                        </div>
+                                    </td>
+
+                                    <!-- 3. ঠিকানা -->
+                                    <td rowspan="{{ $rowCount }}" class="align-middle">
+                                        <div class="address-text-styled mb-0.5">
+                                            <i class="fas fa-map-marker-alt text-danger me-1" style="font-size: 9.5px;"></i>
+                                            {{ $branch->address }}
+                                        </div>
+                                        @if($branch->phone)
+                                            <div class="mb-1">
+                                                <a href="tel:{{ $branch->phone }}" class="phone-link text-decoration-none" style="font-size: 0.83rem;" title="অফিসের মোবাইল নাম্বার: কল করতে ক্লিক করুন">
+                                                    <i class="fas fa-phone-alt text-success me-1" style="font-size: 9px;"></i>
+                                                    <span class="phone-text">{{ $branch->phone }}</span>
+                                                </a>
+                                            </div>
+                                        @endif
+                                        <div class="d-flex align-items-center gap-1 flex-wrap">
+                                            <button class="btn btn-xs btn-outline-secondary rounded copy-address-btn" 
+                                                    data-address="{{ $branch->address }}" 
+                                                    title="ঠিকানা কপি করুন">
+                                                <i class="far fa-copy me-1"></i>কপি
+                                            </button>
+                                            @if($branch->google_map_url)
+                                                <button class="btn btn-xs btn-outline-success rounded show-map-btn fw-bold" 
+                                                        data-name="{{ $branch->name }}" 
+                                                        data-map="{{ $branch->google_map_url }}" 
+                                                        data-id="{{ $branch->id }}"
+                                                        data-lat="{{ $branch->latitude }}"
+                                                        data-lng="{{ $branch->longitude }}"
+                                                        style="font-size: 10px !important; padding: 1px 5px !important;"
+                                                        title="ম্যাপ দেখুন">
+                                                    <i class="fas fa-map-marked-alt me-1"></i>ম্যাপ
+                                                </button>
+                                            @endif
+                                        </div>
+                                    </td>
+
+                                    <!-- 4. ছবি -->
+                                    @if($firstOfficial)
+                                        @php
+                                            $desig1 = $formatDesig($firstOfficial->designation, true);
+                                        @endphp
+                                        <td class="text-center align-middle avatar-cell" style="width: 44px; padding: 2px 4px !important;">
+                                            <div class="avatar-frame zoomable-avatar mx-auto" 
+                                                 data-name="{{ $firstOfficial->name }}" 
+                                                 data-desig="{{ $desig1 }}" 
+                                                 data-img="{{ $firstOfficial->image_url }}"
+                                                 title="ছবি বড় করে দেখতে ক্লিক করুন">
+                                                <img src="{{ $firstOfficial->image_url }}" 
+                                                     alt="{{ $firstOfficial->name }}" 
+                                                     onerror="this.onerror=null;this.src='{{ asset('uploads/avatars/default.svg') }}';">
+                                            </div>
+                                        </td>
+                                        <!-- 5. নাম -->
+                                        <td class="align-middle">
+                                            <span class="official-name d-block">{{ $firstOfficial->name }}</span>
+                                        </td>
+                                        <!-- 6. পদবী -->
+                                        <td class="text-center align-middle" style="width: 110px;">
+                                            <span class="badge badge-amir-pill">{{ $desig1 }}</span>
+                                        </td>
+                                        <!-- 7. মোবাইল নাম্বার -->
+                                        <td class="align-middle" style="min-width: 160px;">
+                                            <div class="d-flex align-items-center justify-content-between gap-1">
+                                                @if($firstOfficial->phone)
+                                                    <a href="tel:{{ $firstOfficial->phone }}" class="phone-link text-decoration-none" title="কল করতে ট্যাপ করুন">
+                                                        <i class="fas fa-phone-alt text-success me-1" style="font-size: 9px;"></i>
+                                                        <span class="phone-text">{{ $firstOfficial->phone }}</span>
+                                                    </a>
+                                                @else
+                                                    <span class="text-muted small">—</span>
+                                                @endif
+                                                <button type="button" class="btn-copy-contact flex-shrink-0" data-copy="{{ $branchCopyEncoded }}" title="শাখা ও কর্মকর্তাদের সম্পূর্ণ তথ্য কপি করুন">
+                                                    <i class="far fa-copy"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    @else
+                                        <td colspan="4" class="text-center text-muted small py-1">— কোনো কর্মকর্তা তালিকাভুক্ত নেই —</td>
+                                    @endif
+                                </tr>
+
+                                <!-- Subsequent rows for this branch -->
+                                @foreach($sortedOfficials->slice(1) as $subIndex => $nextOfficial)
+                                    @php
+                                        $desigNext = $formatDesig($nextOfficial->designation, false);
+                                        $badgeClass = ($desigNext === 'সহকারী আমির') ? 'badge-assistant-pill' : 'badge-other-pill';
+                                        $isLastSubRow = ($subIndex == count($sortedOfficials) - 2);
+                                    @endphp
+                                    <tr class="branch-row @if($isLastSubRow) branch-last-row @endif" 
+                                        data-branch-id="{{ $branch->id }}" 
+                                        data-type="{{ $branch->type }}" 
+                                        data-name="{{ strtolower($branch->name) }} {{ strtolower($branch->address) }} @foreach($branch->officials as $off){{ strtolower($off->name) }} {{ strtolower($off->formatted_designation) }} {{ strtolower($off->designation) }} {{ $off->phone }} @endforeach">
+                                        
+                                        <!-- ছবি -->
+                                        <td class="text-center align-middle avatar-cell" style="width: 44px; padding: 2px 4px !important;">
+                                            <div class="avatar-frame zoomable-avatar mx-auto" 
+                                                 data-name="{{ $nextOfficial->name }}" 
+                                                 data-desig="{{ $desigNext }}" 
+                                                 data-img="{{ $nextOfficial->image_url }}"
+                                                 title="ছবি বড় করে দেখতে ক্লিক করুন">
+                                                <img src="{{ $nextOfficial->image_url }}" 
+                                                     alt="{{ $nextOfficial->name }}" 
+                                                     onerror="this.onerror=null;this.src='{{ asset('uploads/avatars/default.svg') }}';">
+                                            </div>
+                                        </td>
+                                        <!-- নাম -->
+                                        <td class="align-middle">
+                                            <span class="official-name d-block">{{ $nextOfficial->name }}</span>
+                                        </td>
+                                        <!-- পদবী -->
+                                        <td class="text-center align-middle" style="width: 110px;">
+                                            <span class="badge {{ $badgeClass }}">{{ $desigNext }}</span>
+                                        </td>
+                                        <!-- মোবাইল নাম্বার -->
+                                        <td class="align-middle" style="min-width: 160px;">
+                                            <div class="d-flex align-items-center justify-content-between gap-1">
+                                                @if($nextOfficial->phone)
+                                                    <a href="tel:{{ $nextOfficial->phone }}" class="phone-link text-decoration-none" title="কল করতে ট্যাপ করুন">
+                                                        <i class="fas fa-phone-alt text-success me-1" style="font-size: 9px;"></i>
+                                                        <span class="phone-text">{{ $nextOfficial->phone }}</span>
+                                                    </a>
+                                                @else
+                                                    <span class="text-muted small">—</span>
+                                                @endif
+                                                <button type="button" class="btn-copy-contact flex-shrink-0" data-copy="{{ $branchCopyEncoded }}" title="শাখা ও কর্মকর্তাদের সম্পূর্ণ তথ্য কপি করুন">
+                                                    <i class="far fa-copy"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforeach
+
+                            @empty
+                                <tr>
+                                    <td colspan="7" class="text-center py-4 text-muted">
+                                        <i class="fas fa-map-marker-alt fa-2x mb-2 text-secondary"></i>
+                                        <p class="mb-0">কোনো কার্যালয় বা শাখা পাওয়া যায়নি।</p>
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- No Results message when search filters everything out -->
+                <div id="no-search-results" class="text-center py-4 d-none">
+                    <i class="fas fa-search fa-2x mb-2 text-muted"></i>
+                    <h6 class="fw-bold text-dark mb-1" style="font-size: 0.95rem;">কোনো তথ্য পাওয়া যায়নি</h6>
+                    <p class="text-muted small mb-0">আপনার সার্চ করা কিওয়ার্ডের সাথে কোনো কার্যালয় বা কর্মকর্তার নাম মেলেনি।</p>
+                </div>
+            </div>
+
+            <!-- Full-width Google My Map Layout (Leaflet Integration) -->
             <div class="row mt-5">
                 <div class="col-12">
-                    <div class="card border-0 shadow-sm rounded-4 overflow-hidden border-light-grey">
-                        <div class="card-body p-0" style="height: 380px;">
-                            <iframe 
-                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m13!1m7!1s0x3755b8b087026b81:0x8fa563bbd1ca690d!2sDhaka!3m2!1d23.810332!2d90.4125181!5e0!3m2!1sen!2sbd!4v1700000000000!5m2!1sen!2sbd" 
-                                width="100%" 
-                                height="100%" 
-                                style="border:0;" 
-                                allowfullscreen="" 
-                                loading="lazy" 
-                                referrerpolicy="no-referrer-when-downgrade">
-                            </iframe>
-                        </div>
+                    <div class="mb-3 text-center">
+                        <span class="section-badge-premium">ইন্টারেক্টিভ নেটওয়ার্ক ম্যাপ</span>
+                        <h4 class="fw-bold mt-2 text-dark">দেশজুড়ে আমাদের জেলা কার্যালয়সমূহ</h4>
                     </div>
+                    <div id="branchMap" class="premium-map-container" style="height: 500px; width: 100%;"></div>
                 </div>
             </div>
 
         </div>
     </div>
 
-    <!-- Map Modal -->
-    <div class="modal fade" id="mapModal" tabindex="-1" aria-labelledby="mapModalLabel" aria-hidden="true" style="font-family: 'Baloo Da 2', sans-serif;">
+    <!-- Bootstrap Google Map Modal with Premium Backdrop Blur -->
+    <div class="modal fade" id="mapModal" tabindex="-1" aria-labelledby="mapModalLabel" aria-hidden="true" style="backdrop-filter: blur(8px); background: rgba(0,0,0,0.45);">
         <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content border-0 rounded-4 shadow">
-                <div class="modal-header border-0 pb-0">
-                    <h5 class="modal-title fw-bold text-dark" id="mapModalLabel">ম্যাপ লোকেশন</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="box-shadow: none;"></button>
+            <div class="modal-content border-0 rounded-4 shadow-lg overflow-hidden" style="background: #ffffff;">
+                <div class="modal-header bg-dark text-white p-3 border-0 d-flex justify-content-between align-items-center">
+                    <h5 class="modal-title fw-bold" id="mapModalLabel" style="font-family: 'Baloo Da 2', sans-serif; font-size: 1.05rem;"><i class="fas fa-map-marked-alt me-2 text-success"></i> কার্যালয়ের অবস্থান</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body pt-3">
-                    <div class="rounded-3 overflow-hidden shadow-sm border border-light-grey" style="height: 450px;">
-                        <iframe id="mapIframe" src="" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                <div class="modal-body p-0 bg-dark">
+                    <div class="ratio ratio-16x9">
+                        <iframe id="map-iframe" src="" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Custom CSS Styles -->
-    <style>
-        .border-light-grey {
-            border: 1px solid #e2e8f0 !important;
-        }
-        .text-success-brand {
-            color: #006A4E !important;
-        }
-        .icon-box-brand {
-            background-color: rgba(0, 106, 78, 0.06) !important;
-            color: #006A4E !important;
-            transition: all 0.3s ease;
-        }
-        .icon-box-brand:hover {
-            background-color: #006A4E !important;
-            color: #ffffff !important;
-            transform: scale(1.08);
-        }
-        .btn-brand-success {
-            background: linear-gradient(135deg, #006A4E 0%, #00563F 100%);
-            color: #ffffff;
-            border: none;
-            border-radius: 8px !important;
-            transition: all 0.25s ease;
-        }
-        .btn-brand-success:hover {
-            background: linear-gradient(135deg, #00805E 0%, #006A4E 100%);
-            color: #ffffff;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0, 106, 78, 0.2) !important;
-        }
-        .form-control:focus {
-            border-color: rgba(0, 106, 78, 0.5) !important;
-            box-shadow: 0 0 0 0.25rem rgba(0, 106, 78, 0.15) !important;
-        }
-        .hover-grow-card {
-            transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
-        }
-        .hover-grow-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0, 106, 78, 0.05) !important;
-            border-color: rgba(16, 185, 129, 0.2) !important;
-        }
-    </style>
+    <!-- Bootstrap Image Zoom Modal -->
+    <div class="modal fade" id="imageZoomModal" tabindex="-1" aria-hidden="true" style="backdrop-filter: blur(8px); background: rgba(0,0,0,0.45);">
+        <div class="modal-dialog modal-dialog-centered" style="max-width: 300px;">
+            <div class="modal-content border-0 rounded-4 shadow-lg overflow-hidden text-center" style="background: #ffffff;">
+                <div class="modal-header border-0 pb-0 pt-2.5 pe-2.5 justify-content-end">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-3 pt-0">
+                    <div class="rounded-3 overflow-hidden shadow-sm mx-auto mb-2 border border-light" style="max-width: 220px; aspect-ratio: 1/1; background-color: #f1f5f9;">
+                        <img id="zoomModalImg" src="" alt="" class="w-100 h-100" style="object-fit: cover;" onerror="this.onerror=null;this.src='{{ asset('uploads/avatars/default.svg') }}';">
+                    </div>
+                    <h5 class="fw-bold text-dark mb-1" id="zoomModalName" style="font-family: 'Baloo Da 2', sans-serif; font-size: 1.05rem;"></h5>
+                    <span class="badge badge-amir-pill" id="zoomModalDesig" style="font-size: 10.5px;"></span>
+                </div>
+            </div>
+        </div>
+    </div>
 
 @endsection
 
 @push('scripts')
-<script>
-    $(document).ready(function() {
-        // Client side Search Filter
-        $('#branchSearch').on('keyup', function() {
-            var value = $(this).val().toLowerCase().trim();
-            var visibleCount = 0;
+    <!-- Leaflet.js JavaScript for Interactive Map -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    
+    <script>
+        $(document).ready(function() {
+            // Fetch branches collection from Blade
+            const branches = @json($branches);
             
-            $('.branch-item').each(function() {
-                var name = $(this).data('name').toLowerCase();
-                var address = $(this).data('address').toLowerCase();
-                
-                if (name.indexOf(value) > -1 || address.indexOf(value) > -1) {
-                    $(this).show();
-                    visibleCount++;
-                } else {
-                    $(this).hide();
+            // Initialize Leaflet Map centered on Bangladesh coordinates
+            var map = L.map('branchMap', {
+                scrollWheelZoom: false
+            }).setView([23.6850, 90.3563], 7);
+
+            // Add standard OpenStreetMap tiles
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 18,
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+
+            // Custom Leaflet Pin Icon (Emerald Green to match our branding color palette)
+            var brandMapIcon = L.icon({
+                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+                iconSize: [25, 41],
+                iconAnchor: [12, 41],
+                popupAnchor: [1, -34],
+                shadowSize: [41, 41]
+            });
+
+            // Keep reference to all markers on the map by branch ID
+            var markers = {};
+
+            // Add markers dynamically for all branches with valid lat/long
+            branches.forEach(function(branch) {
+                if (branch.latitude && branch.longitude) {
+                    var popupHtml = `
+                        <div style="font-family: 'SolaimanLipi', 'Baloo Da 2', sans-serif; padding: 4px; max-width: 220px;">
+                            <h6 style="font-weight: 700; color: #006A4E; margin: 0 0 6px 0; font-size: 13px; line-height: 1.4;">${branch.name}</h6>
+                            <p style="margin: 0 0 6px 0; font-size: 11px; color: #475569; line-height: 1.5;"><i class="fas fa-map-marker-alt text-success-brand me-1"></i> ${branch.address}</p>
+                            ${branch.phone ? `<p style="margin: 0; font-size: 11px; color: #475569;"><i class="fas fa-phone-alt text-success-brand me-1"></i> <strong>ফোন:</strong> <a href="tel:${branch.phone}" style="color: #006A4E; text-decoration: none; font-weight: 600;">${branch.phone}</a></p>` : ''}
+                        </div>
+                    `;
+
+                    var marker = L.marker([parseFloat(branch.latitude), parseFloat(branch.longitude)], { icon: brandMapIcon })
+                        .bindPopup(popupHtml)
+                        .addTo(map);
+
+                    markers[branch.id] = marker;
                 }
             });
-            
-            if (visibleCount === 0) {
-                $('#noBranchMsg').show();
-            } else {
-                $('#noBranchMsg').hide();
-            }
-        });
 
-        // Open Map Modal
-        $('.view-map-btn').on('click', function() {
-            var mapUrl = $(this).data('url');
-            var branchName = $(this).data('name');
-            
-            $('#mapModalLabel').text(branchName + ' - ম্যাপ লোকেশন');
-            $('#mapIframe').attr('src', mapUrl);
-            
-            var myModal = new bootstrap.Modal(document.getElementById('mapModal'));
-            myModal.show();
+            // Clear invalid status when user starts typing/editing
+            $('#contactForm').on('input change', '.premium-input', function() {
+                $(this).removeClass('is-invalid');
+                $(this).siblings('.invalid-feedback').remove();
+            });
+
+            // Form Submit via AJAX
+            $('#contactForm').on('submit', function(e) {
+                e.preventDefault();
+                
+                var form = $(this);
+                var btn = $('#submitBtn');
+                var btnText = btn.find('.btn-text');
+                var spinner = btn.find('.spinner-border');
+                var icon = btn.find('.btn-icon');
+                
+                // Clear any existing validation style/errors
+                form.find('.premium-input').removeClass('is-invalid');
+                form.find('.invalid-feedback').remove();
+
+                // Loading State
+                btn.prop('disabled', true);
+                btnText.text('বার্তা পাঠানো হচ্ছে...');
+                spinner.removeClass('d-none');
+                icon.addClass('d-none');
+
+                $.ajax({
+                    url: form.attr('action'),
+                    method: form.attr('method'),
+                    data: form.serialize(),
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.success) {
+                            toastr.success(response.message || 'আপনার বার্তা সফলভাবে পাঠানো হয়েছে!');
+                            form[0].reset();
+                        } else {
+                            toastr.error(response.message || 'বার্তা পাঠাতে সমস্যা হয়েছে! দয়া করে পুনরায় চেষ্টা করুন।');
+                        }
+                    },
+                    error: function(xhr) {
+                        var response = xhr.responseJSON;
+                        if (xhr.status === 422 && response && response.errors) {
+                            $.each(response.errors, function(field, messages) {
+                                var input = form.find('[name="' + field + '"]');
+                                input.addClass('is-invalid');
+                                var errorMsg = messages[0];
+                                input.after('<div class="invalid-feedback">' + errorMsg + '</div>');
+                            });
+                        } else {
+                            toastr.error(response && response.message ? response.message : 'বার্তা পাঠাতে সমস্যা হয়েছে! দয়া করে পুনরায় চেষ্টা করুন।');
+                        }
+                    },
+                    complete: function() {
+                        btn.prop('disabled', false);
+                        btnText.text('বার্তা পাঠান');
+                        spinner.addClass('d-none');
+                        icon.removeClass('d-none');
+                    }
+                });
+            });
+
+            // -------------------------------------------------------------
+            // Branches Directory Table Filtering & Search
+            // -------------------------------------------------------------
+            var activeFilter = 'all';
+
+            function filterBranches() {
+                var searchVal = $('#branch-search').val().toLowerCase().trim();
+                var totalBranches = {{ count($branches) }};
+
+                if (searchVal.length > 0) {
+                    $('#clear-search-btn').removeClass('d-none');
+                } else {
+                    $('#clear-search-btn').addClass('d-none');
+                }
+                
+                var visibleBranchIds = {};
+
+                $('.branch-row').each(function() {
+                    var row = $(this);
+                    var branchId = row.data('branch-id');
+                    var type = row.data('type');
+                    var name = row.data('name');
+
+                    var typeMatch = (activeFilter === 'all' || type === activeFilter);
+                    var searchMatch = (!searchVal || name.indexOf(searchVal) > -1);
+
+                    if (typeMatch && searchMatch) {
+                        visibleBranchIds[branchId] = true;
+                    }
+                });
+
+                // Show/hide all corresponding rows for matching branches
+                $('.branch-row').each(function() {
+                    var row = $(this);
+                    var branchId = row.data('branch-id');
+                    if (visibleBranchIds[branchId]) {
+                        row.show();
+                    } else {
+                        row.hide();
+                    }
+                });
+
+                // Update Map markers to reflect current filtered branches
+                branches.forEach(function(branch) {
+                    if (markers[branch.id]) {
+                        if (visibleBranchIds[branch.id]) {
+                            if (!map.hasLayer(markers[branch.id])) {
+                                map.addLayer(markers[branch.id]);
+                            }
+                        } else {
+                            if (map.hasLayer(markers[branch.id])) {
+                                map.removeLayer(markers[branch.id]);
+                            }
+                        }
+                    }
+                });
+
+                var visibleCount = Object.keys(visibleBranchIds).length;
+
+                if (visibleCount === 0) {
+                    $('#no-search-results').removeClass('d-none');
+                    $('#branches-table').addClass('d-none');
+                    $('#filtered-status-text').text('(কোনো মিল পাওয়া যায়নি)');
+                } else {
+                    $('#no-search-results').addClass('d-none');
+                    $('#branches-table').removeClass('d-none');
+                    if (visibleCount < totalBranches) {
+                        $('#filtered-status-text').text('(' + visibleCount + ' টি প্রদর্শিত হচ্ছে)');
+                    } else {
+                        $('#filtered-status-text').text('(সবগুলো প্রদর্শিত হচ্ছে)');
+                    }
+                }
+            }
+
+            // Filter pill click
+            $('#filter-controls button').on('click', function() {
+                $('#filter-controls button').removeClass('active');
+                $(this).addClass('active');
+                
+                activeFilter = $(this).data('filter');
+                filterBranches();
+            });
+
+            // Real-time search keyup & input
+            $('#branch-search').on('input keyup', function() {
+                filterBranches();
+            });
+
+            // Clear search
+            $('#clear-search-btn').on('click', function() {
+                $('#branch-search').val('').focus();
+                filterBranches();
+            });
+
+            // Google Map Modal dynamic loading
+            $(document).on('click', '.show-map-btn', function() {
+                var btn = $(this);
+                var branchName = btn.data('name');
+                var mapUrl = btn.data('map');
+                var branchId = btn.data('id');
+                var lat = btn.data('lat');
+                var lng = btn.data('lng');
+
+                if (lat && lng) {
+                    $('html, body').animate({
+                        scrollTop: $("#branchMap").offset().top - 80
+                    }, 600);
+
+                    map.setView([parseFloat(lat), parseFloat(lng)], 13, {
+                        animate: true,
+                        duration: 1.2
+                    });
+
+                    if (markers[branchId]) {
+                        setTimeout(function() {
+                            markers[branchId].openPopup();
+                        }, 1200);
+                    }
+                    return;
+                }
+
+                if (mapUrl) {
+                    if (mapUrl.includes('iframe') && mapUrl.includes('src=')) {
+                        var match = mapUrl.match(/src="([^"]+)"/);
+                        if (match && match[1]) {
+                            mapUrl = match[1];
+                        }
+                    }
+
+                    $('#mapModalLabel').html('<i class="fas fa-map-marked-alt me-2 text-success"></i> ' + branchName + ' - অবস্থান');
+                    $('#map-iframe').attr('src', mapUrl);
+                    $('#mapModal').modal('show');
+                }
+            });
+
+            $('#mapModal').on('hidden.bs.modal', function () {
+                $('#map-iframe').attr('src', '');
+            });
+
+            // Copy address
+            $(document).on('click', '.copy-address-btn', function(e) {
+                e.preventDefault();
+                var address = $(this).data('address');
+                var btn = $(this);
+                
+                function showSuccess() {
+                    var originalHtml = btn.html();
+                    btn.html('<i class="fas fa-check text-success me-1"></i>কপি').addClass('btn-light');
+                    setTimeout(function() {
+                        btn.html(originalHtml).removeClass('btn-light');
+                    }, 2000);
+
+                    if (typeof toastr !== 'undefined') {
+                        toastr.success('ঠিকানাটি ক্লিপবোর্ডে কপি করা হয়েছে!');
+                    }
+                }
+
+                if (navigator.clipboard && window.isSecureContext) {
+                    navigator.clipboard.writeText(address).then(function() {
+                        showSuccess();
+                    }).catch(function() {
+                        fallbackCopyText(address, showSuccess);
+                    });
+                } else {
+                    fallbackCopyText(address, showSuccess);
+                }
+            });
+
+            // Copy contact info
+            $(document).on('click', '.btn-copy-contact', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                var btn = $(this);
+                var rawData = btn.attr('data-copy');
+                if (!rawData) return;
+
+                var copyText = '';
+                try {
+                    copyText = decodeURIComponent(rawData);
+                } catch (err) {
+                    copyText = rawData;
+                }
+
+                var originalHtml = btn.html();
+
+                function showSuccess() {
+                    btn.html('<i class="fas fa-check text-white"></i>').addClass('copied');
+                    setTimeout(function() {
+                        btn.html(originalHtml).removeClass('copied');
+                    }, 1800);
+
+                    if (typeof toastr !== 'undefined') {
+                        toastr.success('শাখা ও কর্মকর্তাদের সম্পূর্ণ তথ্য কপি করা হয়েছে!');
+                    }
+                }
+
+                if (navigator.clipboard && window.isSecureContext) {
+                    navigator.clipboard.writeText(copyText).then(function() {
+                        showSuccess();
+                    }).catch(function() {
+                        fallbackCopyText(copyText, showSuccess);
+                    });
+                } else {
+                    fallbackCopyText(copyText, showSuccess);
+                }
+            });
+
+            function fallbackCopyText(text, callback) {
+                var tempInput = $('<textarea>');
+                tempInput.css({
+                    position: 'fixed',
+                    left: '-9999px',
+                    top: '0',
+                    opacity: '0'
+                });
+                $('body').append(tempInput);
+                tempInput.val(text);
+                tempInput.focus();
+                tempInput.select();
+                try {
+                    document.execCommand('copy');
+                } catch (err) {
+                    console.error('Fallback copy failed', err);
+                }
+                tempInput.remove();
+                if (callback) callback();
+            }
+
+            // Click to zoom official image
+            $(document).on('click', '.zoomable-avatar', function() {
+                var imgUrl = $(this).data('img');
+                var name = $(this).data('name');
+                var desig = $(this).data('desig');
+
+                $('#zoomModalImg').attr('src', imgUrl);
+                $('#zoomModalName').text(name);
+                $('#zoomModalDesig').text(desig);
+                $('#imageZoomModal').modal('show');
+            });
         });
-        
-        // Clear iframe src on modal close
-        $('#mapModal').on('hidden.bs.modal', function () {
-            $('#mapIframe').attr('src', '');
-        });
-    });
-</script>
+    </script>
 @endpush
