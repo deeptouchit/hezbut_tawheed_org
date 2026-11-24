@@ -26,6 +26,33 @@ class BranchOfficial extends Model
     ];
 
     /**
+     * Mutator to ensure phone is always saved in English digits with hyphen format.
+     */
+    public function setPhoneAttribute($value): void
+    {
+        if (empty($value)) {
+            $this->attributes['phone'] = $value;
+            return;
+        }
+
+        $bnDigits = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
+        $enDigits = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+
+        $converted = str_replace($bnDigits, $enDigits, trim($value));
+        $digitsOnly = preg_replace('/[^0-9]/', '', $converted);
+
+        if (str_starts_with($digitsOnly, '8801') && strlen($digitsOnly) === 13) {
+            $digitsOnly = substr($digitsOnly, 2);
+        }
+
+        if (strlen($digitsOnly) === 11 && str_starts_with($digitsOnly, '01')) {
+            $this->attributes['phone'] = substr($digitsOnly, 0, 5) . '-' . substr($digitsOnly, 5);
+        } else {
+            $this->attributes['phone'] = preg_replace('/[^\d\-\+]/', '', $converted) ?: $converted;
+        }
+    }
+
+    /**
      * Get parent branch.
      */
     public function branch()
